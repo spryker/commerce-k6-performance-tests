@@ -1,0 +1,75 @@
+version: '3.4'
+
+services:
+  k6:
+    container_name: "loadtesting_environment"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - loadtesting
+    environment:
+        - K6_SCRIPT=${K6_SCRIPT}
+        - K6_HOSTENV=${K6_HOSTENV}
+        - K6_STATSD_ENABLE_TAGS=true
+        - K6_OUT=${K6_OUT}
+        - K6_STATSD_ADDR=${K6_STATSD_ADDR}
+        - K6_STATSD_NAMESPACE=${K6_STATSD_NAMESPACE}
+        - K6_HTTP_DEBUG=${K6_HTTP_DEBUG}
+        - GIT_HASH=${GIT_HASH}
+        - GIT_BRANCH=${GIT_BRANCH}
+        - GIT_REPO=${GIT_REPO}
+        - B2B_MP_AUTH_USERNAME=${B2B_MP_AUTH_USERNAME}
+        - B2B_MP_AUTH_PASSWORD=${B2B_MP_AUTH_PASSWORD}
+        - B2C_MP_AUTH_USERNAME=${B2C_MP_AUTH_USERNAME}
+        - B2C_MP_AUTH_PASSWORD=${B2C_MP_AUTH_PASSWORD}
+        - B2B_AUTH_USERNAME=${B2B_AUTH_USERNAME}
+        - B2B_AUTH_PASSWORD=${B2B_AUTH_PASSWORD}
+        - B2C_AUTH_USERNAME=${B2C_AUTH_USERNAME}
+        - B2C_AUTH_PASSWORD=${B2C_AUTH_PASSWORD}
+    volumes:  
+      - .:/home/k6
+    ports:
+      - "6565:6565"
+    links:
+      - "nrstatsd"
+      - "newrelic"
+
+  newrelic-php-daemon:
+    image: newrelic/php-daemon
+    networks:
+      - loadtesting
+
+  nrstatsd:
+    container_name: "new_relic_statsd"
+    image: newrelic/nri-statsd:latest
+    environment: 
+      - NR_ACCOUNT_ID=${NR_ACCOUNT_ID}
+      # It appears to be a bug in the statsd image. Despite calling the API key, it only works with a New Relic license key.
+      - NR_API_KEY=${NRIA_LICENSE_KEY}
+      - NR_EU_REGION=${NR_EU_REGION}
+      - NR_LOG_METRICS=true
+    hostname: "localpocmachine"
+    ports:
+      - 8125:8125/udp
+    networks:
+      - loadtesting
+    restart: unless-stopped
+  
+  newrelic:
+    container_name: newrelic-infra
+    image: newrelic/infrastructure:latest
+    cap_add:
+      - SYS_PTRACE
+    network_mode: host
+    pid: host 
+    privileged: true
+    volumes:
+      - "/:/host:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      - NRIA_LICENSE_KEY=${NRIA_LICENSE_KEY}
+    restart: unless-stopped
+    
+networks:
+  loadtesting:
