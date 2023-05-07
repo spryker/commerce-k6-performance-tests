@@ -1,5 +1,5 @@
-import { SharedCartsScenario } from "../../../cross-product/storefront/scenarios/shared-carts-scenario";
-import { loadDefaultOptions } from "../../../../lib/utils.js";
+import { SharedCartsScenario } from "../../../../cross-product/storefront/scenarios/cart/shared-carts-scenario";
+import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
 
@@ -8,7 +8,8 @@ options.scenarios = {
         exec: 'executeCartsScenario',
         executor: 'shared-iterations',
         tags: {
-            testId: 'SAPI4'
+            testId: 'SAPI4',
+            testGroup: 'Cart',
         },
         iterations: 10
     },

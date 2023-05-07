@@ -1,4 +1,4 @@
-import { AbstractScenario } from '../../../abstract-scenario.js';
+import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
 export class SharedCartsScenario extends AbstractScenario {

@@ -1,5 +1,5 @@
-import { ProductSearchScenario } from "../scenarios/product-search-scenario.js";
-import { loadDefaultOptions } from "../../../../lib/utils.js";
+import { ProductSearchScenario } from "../../scenarios/product-search/product-search-scenario.js";
+import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -7,7 +7,8 @@ options.scenarios = {
         exec: 'executeProductSearchScenario',
         executor: 'shared-iterations',
         tags: {
-            testId: 'SAPI2'
+            testId: 'SAPI2',
+            testGroup: 'Product Search',
         },
         iterations: 10
     },

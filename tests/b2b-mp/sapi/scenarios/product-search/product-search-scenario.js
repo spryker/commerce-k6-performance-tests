@@ -1,4 +1,4 @@
-import { AbstractB2bMpScenario } from '../../abstract-b2b-mp-scenario.js';
+import { AbstractB2bMpScenario } from '../../../abstract-b2b-mp-scenario.js';
 import { group } from 'k6';
 
 export class ProductSearchScenario extends AbstractB2bMpScenario {

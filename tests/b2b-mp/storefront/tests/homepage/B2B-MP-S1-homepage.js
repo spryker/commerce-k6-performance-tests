@@ -1,5 +1,5 @@
-import { HomepageScenario } from "../scenarios/homepage-scenario.js";
-import { loadDefaultOptions } from "../../../../lib/utils.js";
+import { HomepageScenario } from "../../scenarios/homepage/homepage-scenario.js";
+import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
 
@@ -8,7 +8,8 @@ options.scenarios = {
         exec: 'executeHomepageScenario',
         executor: 'shared-iterations',
         tags: {
-            testId: 'S1'
+            testId: 'S1',
+            testGroup: 'Homepage',
         },
         iterations: 10
     },

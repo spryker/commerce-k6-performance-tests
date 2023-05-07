@@ -1,5 +1,5 @@
-import { CheckoutScenario } from "../scenarios/checkout-scenario.js";
-import { loadDefaultOptions } from "../../../../lib/utils.js";
+import { CheckoutScenario } from "../../scenarios/checkout/checkout-scenario.js";
+import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -10,7 +10,8 @@ options.scenarios = {
             numberOfItems: __ENV.numberOfItems || '70'
         },
         tags: {
-            testId: 'S4'
+            testId: 'S4',
+            testGroup: 'Checkout',
         },
         iterations: 10,
     },
