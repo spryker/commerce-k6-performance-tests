@@ -4,7 +4,7 @@ import { CartHelper } from '../helpers/cart-helper.js';
 import { StorefrontHelper } from '../helpers/storefront-helper.js';
 import { UrlHelper } from '../helpers/url-helper.js';
 import { Trend } from 'k6/metrics';
-import { fail, check } from "k6";
+import { fail, check } from 'k6';
 
 export class AbstractScenario {
     constructor(environment) {
@@ -38,6 +38,15 @@ export class AbstractScenario {
                 gitRepo: this._getRequiredEnvVariable('GIT_REPO')
             }
         );
+    }
+
+    assertRequestDurationIsLowerOrEqualTo(response, max) {
+        const duration = response.timings.duration;
+        const assertionName = `Response duration ${duration} is lower or equal to ${max}ms`;
+
+        check(response, {
+            [assertionName]: () => duration <= max
+        });
     }
 
     assertResponseBodyIncludes(response, text) {
