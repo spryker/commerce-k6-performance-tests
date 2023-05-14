@@ -4,7 +4,7 @@ export class CartHelper {
         this.http = http;
     }
 
-    haveCartWithProducts(quantity = 1) {
+    haveCartWithProducts(quantity = 1, sku = '100429') {
         const defaultCartName = 'k6_testing_cart';
         const params = this.getParamsWithAuthorization();
         const carts = this.getCarts(params);
@@ -28,21 +28,7 @@ export class CartHelper {
         ).body);
 
         if (quantity > 0) {
-            this.http.sendPostRequest(
-                `${this.getCartsUrl()}/${cartsResponse.data.id}/items`,
-                JSON.stringify({
-                    data: {
-                        type: 'items',
-                        attributes: {
-                            sku: '100429',
-                            quantity: quantity,
-                            merchantReference: 'MER000008'
-                        }
-                    }
-                }),
-                params,
-                false
-            );
+            this.addItemToCart(cartsResponse.data.id, quantity, params, sku);
         }
 
         this.deleteCarts(carts, params);
@@ -91,5 +77,23 @@ export class CartHelper {
                 self.http.sendDeleteRequest(`${self.getCartsUrl()}/${cart.id}`, null, params, false);
             });
         }
+    }
+
+    addItemToCart(cartId, quantity, params, sku) {
+        this.http.sendPostRequest(
+            `${this.getCartsUrl()}/${cartId}/items`,
+            JSON.stringify({
+                data: {
+                    type: 'items',
+                    attributes: {
+                        sku: sku,
+                        quantity: quantity,
+                        merchantReference: 'MER000008'
+                    }
+                }
+            }),
+            params,
+            false
+        );
     }
 }
