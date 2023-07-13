@@ -1,0 +1,7 @@
+{
+  "name": "spryker/commerce-k6-performance-tests",
+  "description": "K6 performance tests",
+  "type": "library",
+  "license": "MIT",
+  "require": {}
+}
