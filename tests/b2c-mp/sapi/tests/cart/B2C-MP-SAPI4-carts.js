@@ -1,4 +1,4 @@
-import { SharedCartsScenario } from "../../../../cross-product/storefront/scenarios/cart/shared-carts-scenario";
+import { SharedCartsScenario } from "../../../../cross-product/storefront/scenarios/cart/shared-carts-scenario.js";
 import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
