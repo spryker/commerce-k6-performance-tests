@@ -9,7 +9,7 @@ export class ProductDetailsScenario extends AbstractB2bMpScenario {
             const requestParams = self.cartHelper.getParamsWithAuthorization();
 
             const productDetailsResponse = self.http.sendGetRequest(
-                self.getStorefrontApiBaseUrl() + `/concrete-products/657712`, requestParams, false
+                self.http.url`${self.getStorefrontApiBaseUrl()}/concrete-products/${'657712'}`, requestParams, false
             );
             self.assertResponseStatus(productDetailsResponse, 200);
         });

@@ -7,7 +7,7 @@ export class StorefrontHelper {
     }
 
     loginUser() {
-        const loginResponse = this.http.sendGetRequest(`${this.urlHelper.getStorefrontBaseUrl()}/en/login`);
+        const loginResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/login`);
 
         if (
             !check(loginResponse, {
@@ -22,7 +22,7 @@ export class StorefrontHelper {
             fields: { 'loginForm[email]': 'sonia@spryker.com', 'loginForm[password]': 'change123' }
         });
 
-        const overviewResponse = this.http.sendGetRequest(`${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`);
+        const overviewResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`);
 
         if (
             !check(overviewResponse, {

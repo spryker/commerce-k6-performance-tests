@@ -10,7 +10,7 @@ export class CartHelper {
         const carts = this.getCarts(params);
 
         const cartsResponse = JSON.parse(this.http.sendPostRequest(
-            `${this.urlHelper.getStorefrontApiBaseUrl()}/carts`,
+            this.http.url`${this.urlHelper.getStorefrontApiBaseUrl()}/carts`,
             JSON.stringify({
                 data: {
                     type: 'carts',
@@ -44,7 +44,7 @@ export class CartHelper {
         };
         const urlAccessTokens = `${this.urlHelper.getStorefrontApiBaseUrl()}/access-tokens`;
         const accessTokensResponse = JSON.parse(this.http.sendPostRequest(
-            `${urlAccessTokens}`,
+            this.http.url`${urlAccessTokens}`,
             JSON.stringify({
                 data: {
                     type: 'access-tokens',
@@ -67,21 +67,21 @@ export class CartHelper {
     }
 
     getCarts(params) {
-        return JSON.parse(this.http.sendGetRequest(`${this.getCartsUrl()}`, params, false).body);
+        return JSON.parse(this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false).body);
     }
 
     deleteCarts(carts, params) {
         if (carts.data) {
             const self = this;
             carts.data.forEach(function (cart) {
-                self.http.sendDeleteRequest(`${self.getCartsUrl()}/${cart.id}`, null, params, false);
+                self.http.sendDeleteRequest(self.http.url`${self.getCartsUrl()}/${cart.id}`, null, params, false);
             });
         }
     }
 
     addItemToCart(cartId, quantity, params, sku) {
         this.http.sendPostRequest(
-            `${this.getCartsUrl()}/${cartId}/items`,
+            this.http.url`${this.getCartsUrl()}/${cartId}/items`,
             JSON.stringify({
                 data: {
                     type: 'items',
