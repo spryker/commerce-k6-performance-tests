@@ -6,7 +6,7 @@ export class HomepageScenario extends AbstractB2bMpScenario {
         let self = this;
 
         group('Homepage', function () {
-            const homePageResponse = self.http.sendGetRequest(self.getStorefrontBaseUrl());
+            const homePageResponse = self.http.sendGetRequest(self.http.url`${self.getStorefrontBaseUrl()}`);
             self.assertResponseBodyIncludes(homePageResponse, 'Your Experience is Our Priority');
         });
     }

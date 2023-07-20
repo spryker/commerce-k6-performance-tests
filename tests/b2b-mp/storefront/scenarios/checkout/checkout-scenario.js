@@ -21,7 +21,7 @@ export class CheckoutScenario extends AbstractB2bMpScenario {
 
      productPage() {
         //product page
-        const productPageResponse = this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/stapelstuhl-mit-geschlossenem-ruecken-M83`);
+        const productPageResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/${'stapelstuhl-mit-geschlossenem-ruecken-M83'}`);
         this.assertResponseBodyIncludes(productPageResponse, '<span itemprop="sku">657712</span>');
 
         // add to cart form submit
@@ -35,19 +35,19 @@ export class CheckoutScenario extends AbstractB2bMpScenario {
     }
 
      cartPage() {
-        const cartPageResponse = this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/cart`);
+        const cartPageResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/cart`);
         this.assertResponseBodyIncludes(cartPageResponse, '1 Items');
         this.assertResponseBodyIncludes(cartPageResponse, 'FRIWA stackable chair - with closed back');
     }
 
     checkoutPage() {
-        const checkoutResponse = this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/checkout`, { redirects: 0});
+        const checkoutResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout`, { redirects: 0});
         this.assertResponseStatus(checkoutResponse, 302);
     }
 
     addressPage() {
         //address
-        const addressStepResponse = this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/checkout/address`);
+        const addressStepResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/address`);
         this.assertResponseBodyIncludes(addressStepResponse, 'Delivery Address');
 
         //address form submit
@@ -62,7 +62,7 @@ export class CheckoutScenario extends AbstractB2bMpScenario {
     }
 
     shipmentPage() {
-        const shipmentStepResponse =  this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/checkout/shipment`);
+        const shipmentStepResponse =  this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/shipment`);
         this.assertResponseBodyIncludes(shipmentStepResponse, 'Shipment 1 of 1');
 
         //shipment submit form
@@ -75,7 +75,7 @@ export class CheckoutScenario extends AbstractB2bMpScenario {
     }
 
     paymentPage() {
-        const paymentStepResponse =  this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/checkout/payment`);
+        const paymentStepResponse =  this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/payment`);
         this.assertResponseBodyIncludes(paymentStepResponse, 'Payment method');
 
         //payment submit form
@@ -89,7 +89,7 @@ export class CheckoutScenario extends AbstractB2bMpScenario {
     }
 
     summaryPage() {
-        const summaryStepResponse =  this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/checkout/summary`);
+        const summaryStepResponse =  this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/summary`);
         this.assertResponseBodyIncludes(summaryStepResponse, 'Complete checkout');
 
         //summary submit form and place order
@@ -100,8 +100,8 @@ export class CheckoutScenario extends AbstractB2bMpScenario {
             },
         });
 
-        this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/checkout/place-order`, { redirects: 0});
-        const successPageResponse = this.http.sendGetRequest(`${this.getStorefrontBaseUrl()}/en/checkout/success`);
+        this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/place-order`, { redirects: 0});
+        const successPageResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/success`);
 
         this.assertResponseBodyIncludes(successPageResponse, 'Your order has been placed successfully.');
     }

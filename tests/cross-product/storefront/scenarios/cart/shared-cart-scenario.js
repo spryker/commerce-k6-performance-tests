@@ -9,7 +9,7 @@ export class SharedCartScenario extends AbstractScenario {
 
         group('Cart', function () {
             const cartResponse = self.http.sendGetRequest(
-                `${self.cartHelper.getCartsUrl()}/${cartId}/?include=items`, requestParams, false
+                self.http.url`${self.cartHelper.getCartsUrl()}/${cartId}/?include=items`, requestParams, false
             );
 
             self.assertResponseStatus(cartResponse);

@@ -9,7 +9,7 @@ export class ProductSearchScenario extends AbstractB2bMpScenario {
             const requestParams = self.cartHelper.getParamsWithAuthorization();
 
             const productSearchResponse = self.http.sendGetRequest(
-                self.getStorefrontApiBaseUrl() + `/catalog-search?q=657712`, requestParams, false
+                self.http.url`${self.getStorefrontApiBaseUrl()}/catalog-search?q=${657712}`, requestParams, false
             );
             self.assertResponseStatus(productSearchResponse, 200);
         });

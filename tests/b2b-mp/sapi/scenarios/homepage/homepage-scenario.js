@@ -9,7 +9,7 @@ export class HomepageScenario extends AbstractB2bMpScenario {
             const requestParams = self.cartHelper.getParamsWithAuthorization();
 
             const homepageResponse = self.http.sendGetRequest(
-                self.getStorefrontApiBaseUrl() + `/cms-pages/10014bd9-4bba-5a54-b84f-31b4b7efd064`, requestParams, false
+                self.http.url`${self.getStorefrontApiBaseUrl()}/cms-pages/${'10014bd9-4bba-5a54-b84f-31b4b7efd064'}`, requestParams, false
             );
             self.assertResponseStatus(homepageResponse, 200);
         });
