@@ -1,7 +1,5 @@
 import { AbstractB2bMpScenario } from '../../../abstract-b2b-mp-scenario.js';
 import { group } from 'k6';
-import http from 'k6/http';
-
 
 export class HomepageScenario extends AbstractB2bMpScenario {
     execute() {
