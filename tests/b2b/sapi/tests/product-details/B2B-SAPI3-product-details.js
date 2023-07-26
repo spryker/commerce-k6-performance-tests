@@ -14,7 +14,7 @@ options.scenarios = {
     },
 };
 
-const productDetailsScenario = new SharedProductDetailsScenario('B2B_MP');
+const productDetailsScenario = new SharedProductDetailsScenario('B2B');
 
 export function executeProductDetailsScenario() {
     productDetailsScenario.execute();

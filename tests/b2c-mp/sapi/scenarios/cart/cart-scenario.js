@@ -1,4 +1,4 @@
-import { SharedCartScenario } from "../../../../cross-product/storefront/scenarios/cart/shared-cart-scenario.js";
+import { SharedCartScenario } from "../../../../cross-product/sapi/scenarios/cart/shared-cart-scenario.js";
 
 export class CartScenario extends SharedCartScenario {
     _setUp(requestParams) {

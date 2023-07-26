@@ -14,7 +14,7 @@ options.scenarios = {
     },
 };
 
-const productSearchScenario = new SharedProductSearchScenario('B2B_MP');
+const productSearchScenario = new SharedProductSearchScenario('B2B');
 
 export function executeProductSearchScenario() {
     productSearchScenario.execute();

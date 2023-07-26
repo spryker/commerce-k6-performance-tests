@@ -14,7 +14,7 @@ options.scenarios = {
     },
 };
 
-const homepageScenario = new SharedHomepageScenario('B2B_MP');
+const homepageScenario = new SharedHomepageScenario('B2B');
 
 export function executeHomepageScenario() {
     homepageScenario.execute();

@@ -17,7 +17,7 @@ options.scenarios = {
     },
 };
 
-const sharedCartScenario = new SharedCartScenario('B2B_MP');
+const sharedCartScenario = new SharedCartScenario('B2B');
 
 export function executeSharedCartScenario() {
     sharedCartScenario.execute();

@@ -4,6 +4,7 @@ import { group } from 'k6';
 export class SharedCartsScenario extends AbstractScenario {
     execute() {
         let self = this;
+        this.cartHelper.haveCartWithProducts(1);
 
         group('Cart', function () {
             const requestParams = self.cartHelper.getParamsWithAuthorization();

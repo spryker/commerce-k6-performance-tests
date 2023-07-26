@@ -1,7 +1,7 @@
-import { AbstractB2bMpScenario } from '../../../abstract-b2b-mp-scenario.js';
+import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
-export class HomepageScenario extends AbstractB2bMpScenario {
+export class SharedHomepageScenario extends AbstractScenario {
     execute() {
         let self = this;
 

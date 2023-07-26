@@ -1,4 +1,4 @@
-import { CheckoutScenario } from "../../scenarios/checkout/checkout-scenario.js";
+import { SharedCheckoutScenario } from "../../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js";
 import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
@@ -17,7 +17,7 @@ options.scenarios = {
     },
 };
 
-const checkoutScenario = new CheckoutScenario('B2B_MP');
+const checkoutScenario = new SharedCheckoutScenario('B2B');
 
 export function executeCheckoutScenario() {
     checkoutScenario.execute();

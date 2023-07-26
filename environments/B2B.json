@@ -1,0 +1,16 @@
+{
+    "local": {
+        "storefrontUrl": "http://yves.%store%.spryker.local",
+        "storefrontApiUrl": "http://glue.%store%.spryker.local",
+        "backofficeUrl": "",
+        "backofficeApiUrl": "",
+        "stores": ["de", "us", "at"]
+    },
+    "testing": {
+        "storefrontUrl": "https://www.%store%.b2b.demo-spryker.com",
+        "storefrontApiUrl": "https://glue.%store%.b2b.demo-spryker.com",
+        "backofficeUrl": "https://backoffice.%store%.b2b.demo-spryker.com",
+        "backofficeApiUrl": "https://backend-api.%store%.b2b.demo-spryker.com",
+        "stores": ["de", "us", "at"]
+    }
+}

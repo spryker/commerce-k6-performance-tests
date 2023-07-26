@@ -1,4 +1,4 @@
-import { HomepageScenario } from "../../scenarios/homepage/homepage-scenario.js";
+import { SharedHomepageScenario } from "../../../../cross-product/storefront/scenarios/homepage/shared-homepage-scenario.js";
 import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
@@ -15,7 +15,7 @@ options.scenarios = {
     },
 };
 
-const homepageScenario= new HomepageScenario();
+const homepageScenario = new SharedHomepageScenario('B2B_MP');
 
 export function executeHomepageScenario() {
     homepageScenario.execute();
