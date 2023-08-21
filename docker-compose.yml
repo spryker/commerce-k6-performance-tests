@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - loadtesting
+      - spryker_b2b_dev_private
+#      - spryker_b2c_dev_private
     environment:
         - K6_SCRIPT=${K6_SCRIPT}
         - K6_HOSTENV=${K6_HOSTENV}
@@ -71,6 +73,10 @@ services:
     environment:
       - NRIA_LICENSE_KEY=${NRIA_LICENSE_KEY}
     restart: unless-stopped
-    
+
 networks:
   loadtesting:
+  spryker_b2b_dev_private:
+    external: true
+#  spryker_b2c_dev_private:
+#    external: true

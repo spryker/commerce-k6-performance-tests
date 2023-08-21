@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Generate a timestamp
+timestamp=$(date +%Y%m%d%H%M%S)
+
 # Remember the list of .js files in the current directory and their paths
 files=$(find "$(pwd)/tests" -name '*.js' -type f)
 
@@ -14,8 +17,16 @@ for file in $files
 do
   # Get the path of the current file relative to the original directory
   relative_path=${file#$(pwd)/}
-echo "docker-compose run --rm k6 run $@ $relative_path"
+
+  # Construct the docker command
+  command="docker-compose run --rm -i \
+          -v $(pwd):/scripts \
+          -u $(id -u):$(id -g) \
+          k6 run $relative_path \
+          --out json=/scripts/results/result_$timestamp.json"
+
+  echo "Running command: $command"
+
   # Run k6 on the current file using its original path
-  docker-compose run --rm k6 run $@ "$relative_path"
-  wait
+  eval "$command"
 done

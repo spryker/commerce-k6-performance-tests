@@ -2,8 +2,8 @@
     "local": {
         "storefrontUrl": "http://yves.%store%.spryker.local",
         "storefrontApiUrl": "http://glue.%store%.spryker.local",
-        "backofficeUrl": "",
-        "backofficeApiUrl": "",
+        "backofficeUrl": "http://backoffice.%store%.spryker.local",
+        "backofficeApiUrl": "http://backend-api.%store%.spryker.local",
         "stores": ["de", "us", "at"]
     },
     "testing": {

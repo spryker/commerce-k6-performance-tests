@@ -2,6 +2,7 @@ import { SharedCheckoutScenario } from "../../../../cross-product/storefront/sce
 import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
+
 options.scenarios = {
     S3_Checkout_1_item: {
         exec: 'executeCheckoutScenario',
