@@ -1,0 +1,75 @@
+I am a developer, and I am creating an automatic test code using the k6 framework.
+I need to create a test to check the web page functionality.
+Test settings and test tags should be considered and placed in options.:
+
+settings:
+  executor: shared-iterations
+  iterations: 10
+
+tags:
+  testId: {{testId}}
+  testGroup: {{testGroup}}
+
+Inside the test I need to send an HTTP request to the page: {{url}} and assert that the response status code is 200.
+
+As a base url for the page please use a variable: self.getStorefrontBaseUrl()
+
+Respond with a javascript code snippets only.
+Please split the code into 2 files: move the test logic to the separate file and import it into the main file.
+The test logic should be represented as a {{scenarioClassName}} class  and extend the AbstractScenario from '../../../../abstract-scenario.js' file. Do not override the constructor.
+
+Use the following rules for the code:
+- load options using loadDefaultOptions() function.
+- options.scenarios should be extended.
+- the scenario should be executed in the separate function.
+- '{{product}}' should be used as a product name.
+
+Use the following code example for test:
+```js
+import { SharedCartsScenario } from "../../../../cross-product/sapi/scenarios/cart/shared-carts-scenario.js";
+import { loadDefaultOptions } from "../../../../../lib/utils.js";
+
+export const options = loadDefaultOptions();
+
+options.scenarios = {
+    SAPI4_Carts: {
+        exec: 'executeCartsScenario',
+        executor: 'shared-iterations',
+        tags: {
+            testId: 'SAPI4',
+            testGroup: 'Cart',
+        },
+        iterations: 10
+    },
+};
+
+const sharedCartsScenario = new SharedCartsScenario('{{product}}');
+export function executeCartsScenario() {
+    sharedCartsScenario.execute();
+}
+```
+
+And the following code example for scenario:
+```js
+import { AbstractScenario } from '../../../../abstract-scenario.js';
+import { group } from 'k6';
+
+
+export class SharedCartsScenario extends AbstractScenario {
+    execute() {
+        let self = this;
+        this.cartHelper.haveCartWithProducts(1);
+
+        group('Cart', function () {
+            const requestParams = self.cartHelper.getParamsWithAuthorization();
+
+            const cartsResponse = self.http.sendGetRequest(
+                self.http.url`${self.getStorefrontBaseUrl()}/carts`, requestParams, false
+            );
+            self.assertResponseStatus(cartsResponse, 200);
+        });
+    }
+}
+```
+
+And return the code snippet for scenario first and then for test.
