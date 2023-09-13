@@ -65,6 +65,12 @@ export class AbstractScenario {
         });
     }
 
+    assertNotEmpty(value) {
+        check(value, {
+            'Value is not empty': (v) => v !== null && v !== undefined && v !== ''
+        });
+    }
+
     getStorefrontBaseUrl() {
         return this.urlHelper.getStorefrontBaseUrl();
     }
