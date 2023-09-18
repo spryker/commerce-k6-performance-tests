@@ -1,7 +1,8 @@
 export class CartHelper {
-    constructor(urlHelper, http) {
+    constructor(urlHelper, http, customerHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
+        this.customerHelper = customerHelper;
     }
 
     haveCartWithProducts(quantity = 1, sku = '100429') {
@@ -49,7 +50,7 @@ export class CartHelper {
                 data: {
                     type: 'access-tokens',
                     attributes: {
-                        username: 'sonia@spryker.com',
+                        username: this.customerHelper.getDefaultCustomerEmail(),
                         password: 'change123'
                     }
                 }
