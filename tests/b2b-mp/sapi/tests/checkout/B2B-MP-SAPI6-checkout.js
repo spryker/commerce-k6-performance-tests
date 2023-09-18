@@ -3,18 +3,17 @@ import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI8_Checkout: {
+    SAPI6_Checkout: {
         exec: 'executeCheckoutScenario',
         executor: 'shared-iterations',
         env: {
-            numberOfItems: '1',
             sku: __ENV.sku || '100429'
         },
         tags: {
-            testId: 'SAPI8',
+            testId: 'SAPI6',
             testGroup: 'Checkout',
         },
-        iterations: 10
+        iterations: 1
     },
 };
 
