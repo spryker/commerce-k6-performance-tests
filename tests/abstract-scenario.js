@@ -2,6 +2,7 @@ import { Http } from '../lib/http.js';
 import { loadEnvironmentConfig } from '../lib/utils.js';
 import { CartHelper } from '../helpers/cart-helper.js';
 import { StorefrontHelper } from '../helpers/storefront-helper.js';
+import { BrowserHelper } from '../helpers/browser-helper.js';
 import { UrlHelper } from '../helpers/url-helper.js';
 import { Trend } from 'k6/metrics';
 import { fail, check } from 'k6';
@@ -23,6 +24,7 @@ export class AbstractScenario {
         this.urlHelper = new UrlHelper(this.environmentConfig);
         this.cartHelper = new CartHelper(this.urlHelper, this.http);
         this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http);
+        this.browserHelper = new BrowserHelper(this.urlHelper);
     }
 
     createTrendMetric(name) {
