@@ -13,7 +13,7 @@ options.scenarios = {
             testId: 'SAPI6',
             testGroup: 'Checkout',
         },
-        iterations: 1
+        iterations: 10
     },
 };
 
