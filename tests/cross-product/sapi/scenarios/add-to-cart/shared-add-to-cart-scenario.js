@@ -1,35 +1,35 @@
 import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
-export class SharedCheckoutScenario extends AbstractScenario {
+export class SharedAddToCartScenario extends AbstractScenario {
     execute() {
         let self = this;
 
-        group('Checkout', function () {
-            self.checkoutWith1Item();
-            self.checkoutWith70Items();
+        group('AddToCart', function () {
+            self.add1ItemToCart();
+            self.add70ItemsToCart();
         });
     }
 
-    checkoutWith1Item() {
+    add1ItemToCart() {
         let self = this;
 
         const cartUuid = self.cartHelper.haveCartWithProducts(0);
-        const response = this.checkout(cartUuid, 1, __ENV.sku);
+        const response = this.addToCart(cartUuid, 1, __ENV.sku);
 
         self.assertResponseStatus(response, 201);
     }
 
-    checkoutWith70Items() {
+    add70ItemsToCart() {
         let self = this;
 
         const cartUuid = self.cartHelper.haveCartWithProducts(0);
-        const response = this.checkout(cartUuid, 70, __ENV.sku);
+        const response = this.addToCart(cartUuid, 70, __ENV.sku);
 
         self.assertResponseStatus(response, 201);
     }
 
-    checkout(cartId, quantity, sku, merchantReference = 'MER000008') {
+    addToCart(cartId, quantity, sku, merchantReference = 'MER000008') {
         return this.http.sendPostRequest(
             this.http.url`${this.cartHelper.getCartsUrl()}/${cartId}/items`,
             JSON.stringify({
