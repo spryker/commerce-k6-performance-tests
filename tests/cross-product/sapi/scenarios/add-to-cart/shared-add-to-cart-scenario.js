@@ -4,46 +4,11 @@ import { group } from 'k6';
 export class SharedAddToCartScenario extends AbstractScenario {
     execute() {
         let self = this;
+        const cartId = self.cartHelper.haveCartWithProducts(0);
 
-        group('AddToCart', function () {
-            self.add1ItemToCart();
-            self.add70ItemsToCart();
+        group('Checkout', function () {
+            const params = self.cartHelper.getParamsWithAuthorization();
+            self.cartHelper.addItemToCart(cartId, __ENV.quantity, params, __ENV.sku)
         });
-    }
-
-    add1ItemToCart() {
-        let self = this;
-
-        const cartUuid = self.cartHelper.haveCartWithProducts(0);
-        const response = this.addToCart(cartUuid, 1, __ENV.sku);
-
-        self.assertResponseStatus(response, 201);
-    }
-
-    add70ItemsToCart() {
-        let self = this;
-
-        const cartUuid = self.cartHelper.haveCartWithProducts(0);
-        const response = this.addToCart(cartUuid, 70, __ENV.sku);
-
-        self.assertResponseStatus(response, 201);
-    }
-
-    addToCart(cartId, quantity, sku, merchantReference = 'MER000008') {
-        return this.http.sendPostRequest(
-            this.http.url`${this.cartHelper.getCartsUrl()}/${cartId}/items`,
-            JSON.stringify({
-                data: {
-                    type: 'items',
-                    attributes: {
-                        sku: sku,
-                        quantity: quantity,
-                        merchantReference: merchantReference
-                    }
-                }
-            }),
-            this.cartHelper.getParamsWithAuthorization(),
-            false
-        );
     }
 }
