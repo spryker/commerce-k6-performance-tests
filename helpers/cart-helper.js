@@ -51,7 +51,7 @@ export class CartHelper {
                     type: 'access-tokens',
                     attributes: {
                         username: this.customerHelper.getDefaultCustomerEmail(),
-                        password: 'change123'
+                        password: this.customerHelper.getDefaultCustomerPassword()
                     }
                 }
             }),
