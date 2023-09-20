@@ -1,4 +1,4 @@
-import { check } from 'k6';
+import { check,fail } from 'k6';
 
 export class CartHelper {
     constructor(urlHelper, http) {
@@ -61,11 +61,15 @@ export class CartHelper {
             false
         );
 
-        check(response, {
-            'Verify that Auth Token Request status is s 201': (response) => response.status === 201,
-        });
+        if (
+            !check(response, {
+                'Verify that Auth Token Request status is s 201': (response) => response.status === 201,
+            })
+        ) {
+            fail('Getting access token response status was not 201 but ' + response.status);
+        }
 
-        const responseJson = JSON.parse(response.body)
+        const responseJson = JSON.parse(response);
 
         check(responseJson, {
             'Verify token response body has `data` defined': (responseJson) => responseJson.data !== undefined,
