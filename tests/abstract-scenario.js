@@ -5,6 +5,7 @@ import { StorefrontHelper } from '../helpers/storefront-helper.js';
 import { UrlHelper } from '../helpers/url-helper.js';
 import { Trend } from 'k6/metrics';
 import { fail, check } from 'k6';
+import CustomerHelper from "../helpers/customer-helper.js";
 
 export class AbstractScenario {
     constructor(environment) {
@@ -21,8 +22,9 @@ export class AbstractScenario {
         this.http = new Http(this.environment);
         this.environmentConfig = loadEnvironmentConfig(this.environment);
         this.urlHelper = new UrlHelper(this.environmentConfig);
-        this.cartHelper = new CartHelper(this.urlHelper, this.http);
-        this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http);
+        this.customerHelper = new CustomerHelper();
+        this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper);
+        this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper);
     }
 
     createTrendMetric(name) {
