@@ -23,6 +23,7 @@ do
           -v $(pwd):/scripts \
           -u $(id -u):$(id -g) \
           k6 run $relative_path \
+          --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
           --out json=/scripts/results/result_$timestamp.json"
 
   echo "Running command: $command"
