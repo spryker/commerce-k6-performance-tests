@@ -15,6 +15,18 @@ else
   echo "Folder '$outputFolder2' already exists."
 fi
 
+# Generate a unique test run ID
+if command -v uuidgen &>/dev/null; then
+    # If uuidgen is available, use it to generate a UUID
+    uuid=$(uuidgen)
+else
+    # If uuidgen is not available, generate a unique value using timestamp and random number
+    timestamp=$(date +%s%N)
+    randnum=$((RANDOM))
+    unique_value="${timestamp}_${randnum}"
+    uuid="fallback_${unique_value}"
+fi
+
 # Remember the list of .js files in the current directory and their paths
 files=$(find "$(pwd)/tests" -name '*.js' -type f)
 
@@ -32,6 +44,7 @@ do
           -v $(pwd):/scripts \
           -u $(id -u):$(id -g) \
           k6 run $relativePath \
+          --tag=test_run_id=$uuid \
           --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
           --out json='/scripts/$outputFolder/$reportFile'"
 

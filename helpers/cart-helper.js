@@ -70,7 +70,7 @@ export class CartHelper {
             fail('Getting access token response status was not 201 but ' + response.status);
         }
 
-        const responseJson = JSON.parse(response);
+        const responseJson = JSON.parse(response.body);
 
         check(responseJson, {
             'Verify token response body has `data` defined': (responseJson) => responseJson.data !== undefined,
