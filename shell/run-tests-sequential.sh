@@ -2,9 +2,10 @@
 
 # Generate a timestamp
 timestamp=$(date +%Y%m%d_%H%M%S)
-reportFile='k6_result_'$timestamp'.json';
+reportFile='k6_report_'$timestamp'.json';
 outputFolder='results/'$(date +%Y/%m/%d);
 outputFolder2='../../../'$outputFolder;
+testRunnerHostname=$(hostname)
 
 # Check if the folder exists
 if [ ! -d "$outputFolder2" ]; then
@@ -44,7 +45,8 @@ do
           -v $(pwd):/scripts \
           -u $(id -u):$(id -g) \
           k6 run $relativePath \
-          --tag=test_run_id=$uuid \
+          --tag='test_run_id=$uuid' \
+          --tag='test_runner_hostname=$testRunnerHostname' \
           --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
           --out json='/scripts/$outputFolder/$reportFile'"
 
