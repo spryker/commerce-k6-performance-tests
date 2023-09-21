@@ -2,13 +2,12 @@
 
 source shell/functions.sh
 
-# Generate a timestamp
-timestamp=$(date +%Y%m%d_%H%M%S)
-reportFile='k6_report_'$timestamp'.json';
-outputFolder='results/'$(date +%Y/%m/%d);
-outputFolder2=$outputFolder;
+# Generate the output file
+reportFile=$(create_report_file)
+outputFolder=$(create_report_folder)
+reportFile="$outputFolder/$reportFile"
 
-$(create_folder_if_not_existant "$outputFolder2")
+$(create_folder_if_not_existant "$outputFolder")
 
 # Create arrays for file lists
 filesDirectory1=($(find "tests/b2b-mp/sapi/tests" -name '*.js' -type f))
@@ -21,11 +20,10 @@ files=("${filesDirectory1[@]}" "${filesDirectory2[@]}")
 for file in "${files[@]}"
 do
   # Get the path of the current file relative to the original directory
-  relativePath=${file#$(pwd)/}
-  reportFile="'/scripts/$outputFolder/$reportFile'"
+  testFile=${file#$(pwd)/}
 
   # Construct the docker command
-  command=$(build_k6_docker_command "$relativePath" "$reportFile")
+  command=$(build_k6_docker_command "$testFile" "$reportFile")
 
   echo "Running command: '$command'"
 

@@ -12,7 +12,6 @@ generate_uuid() {
         uuid="fallback_${unique_value}"
     fi
 
-    # Return the UUID to the caller
     echo "$uuid"
 }
 
@@ -35,9 +34,16 @@ build_k6_docker_command() {
 create_folder_if_not_existant() {
     folder="$1"
 
-    # Check if the folder exists
     if [ ! -d "$folder" ]; then
         # If it doesn't exist, create it and its parent directories recursively
         mkdir -p "$folder"
     fi
+}
+
+create_report_folder() {
+    echo "results/$(date +%Y/%m/%d)"
+}
+
+create_report_file() {
+    echo "k6_report_$(date +%Y%m%d_%H%M%S).json";
 }
