@@ -1,9 +1,10 @@
 import { fail, check } from "k6";
 
 export class StorefrontHelper {
-    constructor(urlHelper, http) {
+    constructor(urlHelper, http, customerHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
+        this.customerHelper = customerHelper;
     }
 
     loginUser() {
@@ -19,7 +20,7 @@ export class StorefrontHelper {
 
         this.http.submitForm(loginResponse, {
             formSelector: 'form[name="loginForm"]',
-            fields: { 'loginForm[email]': 'sonia@spryker.com', 'loginForm[password]': 'change123' }
+            fields: { 'loginForm[email]': this.customerHelper.getDefaultCustomerEmail(), 'loginForm[password]': this.customerHelper.getDefaultCustomerPassword() }
         });
 
         const overviewResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`);

@@ -1,9 +1,10 @@
 import { check,fail } from 'k6';
 
 export class CartHelper {
-    constructor(urlHelper, http) {
+    constructor(urlHelper, http, customerHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
+        this.customerHelper = customerHelper;
     }
 
     haveCartWithProducts(quantity = 1, sku = '100429') {
@@ -52,8 +53,8 @@ export class CartHelper {
                 data: {
                     type: 'access-tokens',
                     attributes: {
-                        username: 'sonia@spryker.com',
-                        password: 'change123'
+                        username: this.customerHelper.getDefaultCustomerEmail(),
+                        password: this.customerHelper.getDefaultCustomerPassword()
                     }
                 }
             }),
