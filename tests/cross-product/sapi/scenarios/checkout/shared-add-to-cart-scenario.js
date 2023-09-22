@@ -1,7 +1,7 @@
 import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
-export class SharedCheckoutScenario extends AbstractScenario {
+export class SharedAddToCartScenario extends AbstractScenario {
     execute(sku, quantity) {
         let self = this;
         const cartId = self.cartHelper.haveCartWithProducts(0);

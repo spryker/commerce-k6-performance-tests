@@ -1,4 +1,4 @@
-import { SharedCheckoutScenario } from "../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js";
+import { SharedAddToCartScenario } from "../../../../cross-product/sapi/scenarios/checkout/shared-add-to-cart-scenario.js";
 import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
@@ -19,7 +19,7 @@ options.scenarios = {
     },
 };
 
-const addToCartScenario = new SharedCheckoutScenario('B2B_MP');
+const addToCartScenario = new SharedAddToCartScenario('B2B_MP');
 
 export function executeAddToCartScenario() {
     addToCartScenario.execute(__ENV.sku, __ENV.quantity);
