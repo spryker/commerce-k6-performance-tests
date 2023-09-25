@@ -8,6 +8,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
         try {
             await this.openQuickOrderPage(page);
             await this.searchForProduct(page);
+            await this.selectProduct(page);
             await this.inputProductQuantity(page);
             await this.createOrder(page);
         } finally {
@@ -31,12 +32,23 @@ export class SharedQuickOrderScenario extends AbstractScenario {
 
     async searchForProduct(page) {
         const productSearchInputSelector = 'quick-order-row:nth-child(2)  .product-search-autocomplete-form__input';
-        const productSearchItemSelector = 'quick-order-row:nth-child(2) .js-product-search-autocomplete-form__suggestions-ajax-provider0 ul li';
-
+        const productSearchItemSelector = 'quick-order-row:nth-child(2) li.products-list__item--selected';
         const productSearchInput = page.locator(productSearchInputSelector);
 
         await Promise.all([productSearchInput.type(__ENV.productSku), page.waitForSelector(productSearchItemSelector)]);
-        await productSearchInput.press('Enter');
+
+        this.assertPageState(
+            page,
+            'Product is found',
+            (page) => page.locator('quick-order-row:nth-child(2) li.products-list__item--selected').isVisible(),
+        );
+    }
+
+    async selectProduct(page) {
+        const productSearchInputSelector = 'quick-order-row:nth-child(2)  .product-search-autocomplete-form__input';
+
+        page.locator(productSearchInputSelector)
+            .press('Enter');
 
         this.assertPageState(
             page,
