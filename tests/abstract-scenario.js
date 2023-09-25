@@ -67,6 +67,16 @@ export class AbstractScenario {
         });
     }
 
+    assertPageState(page, assertionDescription, assertion) {
+        if (
+            !check(page, {
+                [assertionDescription]: (page) => assertion(page),
+            })
+        ) {
+            fail();
+        }
+    }
+
     getStorefrontBaseUrl() {
         return this.urlHelper.getStorefrontBaseUrl();
     }

@@ -21,7 +21,7 @@ export class BrowserHelper {
         ]);
 
         if (!check(loginPage, {
-            'Verify Overview page': (page) => page.locator('.user-navigation__user-name .user-navigation__text').textContent().trim() === 'Sonia Wagner'
+            'Verify Customer is logged in': (page) => page.locator('.user-navigation__user-name .user-navigation__text').textContent().trim() === 'Sonia Wagner'
         })) {
             fail();
         }

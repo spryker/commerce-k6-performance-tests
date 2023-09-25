@@ -1,5 +1,4 @@
 import { AbstractScenario } from '../../../../abstract-scenario.js';
-import { check } from 'k6';
 
 export class SharedCreateCartScenario extends AbstractScenario {
     async execute() {
@@ -8,9 +7,12 @@ export class SharedCreateCartScenario extends AbstractScenario {
 
         try {
             await page.goto(`${this.getStorefrontBaseUrl()}/en/multi-cart/create`);
-            check(page, {
-                'Create cart form is visible': (page) => page.locator('form[name=quoteForm]').isVisible()
-            });
+
+            this.assertPageState(
+                page,
+                'Create cart form is visible',
+                (page) => page.locator('form[name=quoteForm]').isVisible(),
+            );
 
             const cartName = 'K6 Test cart ' + new Date().getTime();
             await page.locator('#quoteForm_name').type(cartName);
@@ -19,12 +21,16 @@ export class SharedCreateCartScenario extends AbstractScenario {
                 page.waitForNavigation(),
             ]);
 
-            check(page, {
-                'Success flash message is shown': (page) => page.locator('.flash-message--success').isVisible()
-            });
-            check(page, {
-                'Flash message has correct text': (page) => page.locator('.flash-message__message .flash-message__text').innerText().trim() === `Cart '${cartName}' was created successfully`
-            });
+            this.assertPageState(
+                page,
+                'Success flash message is shown',
+                (page) => page.locator('.flash-message--success').isVisible(),
+            );
+            this.assertPageState(
+                page,
+                'Flash message has the correct text',
+                (page) => page.locator('.flash-message__message .flash-message__text').innerText().trim() === `Cart '${cartName}' was created successfully`,
+            );
         } finally {
             page.close();
         }
