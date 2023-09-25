@@ -2,8 +2,9 @@ import {fail, check} from "k6";
 import {browser} from 'k6/experimental/browser';
 
 export class BrowserHelper {
-    constructor(urlHelper) {
+    constructor(urlHelper, customerHelper) {
         this.urlHelper = urlHelper;
+        this.customerHelper = customerHelper;
     }
 
     async getLoggedInUserContext() {
@@ -11,8 +12,8 @@ export class BrowserHelper {
         await loginPage.goto(`${this.urlHelper.getStorefrontBaseUrl()}/en/login`);
 
         await Promise.all([
-            loginPage.locator('#loginForm_email').type('sonia@spryker.com'),
-            loginPage.locator('#loginForm_password').type('change123')
+            loginPage.locator('#loginForm_email').type(this.customerHelper.getDefaultCustomerEmail()),
+            loginPage.locator('#loginForm_password').type(this.customerHelper.getDefaultCustomerPassword())
         ]);
 
         await Promise.all([
