@@ -81,7 +81,7 @@ export class CartHelper {
     }
 
     addItemToCart(cartId, quantity, params, sku) {
-        this.http.sendPostRequest(
+        return this.http.sendPostRequest(
             this.http.url`${this.getCartsUrl()}/${cartId}/items`,
             JSON.stringify({
                 data: {
