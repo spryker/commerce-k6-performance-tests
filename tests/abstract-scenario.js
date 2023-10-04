@@ -8,7 +8,7 @@ import { fail, check } from 'k6';
 import CustomerHelper from "../helpers/customer-helper.js";
 
 export class AbstractScenario {
-    constructor(environment) {
+    constructor(environment, options = {}) {
         if (this.constructor === AbstractScenario) {
             throw new Error("Abstract classes can't be instantiated.");
         }
