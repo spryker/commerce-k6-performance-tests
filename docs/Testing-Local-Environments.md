@@ -1,8 +1,14 @@
 # Testing Local Environments
 
-You must edit `docker-compose.yml` to be able to run tests against your local demo stores and configure the correct network. Due to limitations you **can not** use networks that don't exists, therefore add/edit or comment the right network for the product you want to test.
+## Problem
 
----
+By default the internal networks of the products Docker containers are not available in the K6 container. Therefore, when trying to test products running on the same machine, the endpoints are not reachable for the K6 container.
+
+## Solution
+
+## Setting up docker-compose.yml
+
+You must edit `docker-compose.yml` to be able to run tests against your local demo stores and configure the correct network. Due to limitations you **can not** use networks that don't exists, therefore add/edit or comment the right network for the product you want to test.
 
 In your networks section of the file add the network with the **same** name that your demo store is using!
 
@@ -31,7 +37,7 @@ services:
 ```
 
 
-## Getting the list of networks
+### Getting the list of networks
 
 To get a list of networks run this command:
 
@@ -52,3 +58,12 @@ cd3caf00ba22   none                                        null      local
 38935fd96309   spryker_b2b_dev_private                     bridge    local
 d4cbd4cf6fca   spryker_b2b_dev_public                      bridge    local
 ```
+
+## Errors
+
+If you get this error message
+
+> network spryker_b2b_marketplace_private declared as external, but could not be found
+
+when running K6 tests, your network names in K6s config and your product are not aligned.
+

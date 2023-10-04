@@ -16,4 +16,10 @@ AWS_DEFAULT_REGION=TESTS_ARTIFACTS_BUCKET_REGION
 AWS_ACCESS_KEY_ID=TESTS_ARTIFACTS_KEY
 AWS_SECRET_ACCESS_KEY=TESTS_ARTIFACTS_SECRET
 
-aws s3 cp $directory s3://$TESTS_ARTIFACTS_BUCKET/k6-tests/ --recursive
+# Check if AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY are empty
+if [ -z "$AWS_DEFAULT_REGION" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+    echo "Error: One or more of the required AWS environment variables is empty."
+    exit 1
+fi
+
+aws s3 cp $directory s3://$TESTS_ARTIFACTS_BUCKET/k6-test-results/ --recursive

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Deprecated! Please don't use this anymore.
+
 # Generate a timestamp
 timestamp=$(date +%Y%m%d_%H%M%S)
 reportFile='k6_report_'$timestamp'.json';

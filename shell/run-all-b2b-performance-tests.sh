@@ -10,8 +10,7 @@ reportFile="$outputFolder/$reportFile"
 $(create_folder_if_not_existant "$outputFolder")
 
 # Create arrays for file lists
-filesDirectory1=($(find "tests/b2b/sapi/tests" -name '*.js' -type f))
-filesDirectory2=($(find "tests/b2b/storefront/tests" -name '*.js' -type f))
+filesDirectory1=($(find "tests/b2b/$app/tests" -name '*-test.js' -type f))
 
 # Merge the arrays
 files=("${filesDirectory1[@]}" "${filesDirectory2[@]}")
