@@ -36,7 +36,6 @@ services:
 #      - spryker_b2c_dev_private
 ```
 
-
 ### Getting the list of networks
 
 To get a list of networks run this command:

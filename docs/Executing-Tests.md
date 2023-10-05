@@ -33,8 +33,6 @@ Or simply run it without an argument and the script will ask for an input.
 shell/run-a-single-test.sh
 ```
 
-
-
 ## Running all Tests for a Product
 
 Execute this command **from the root of the project!**
