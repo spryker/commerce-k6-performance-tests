@@ -12,12 +12,12 @@ shell/run-a-single-test.sh
 
 The following env vars **MUST** be set in the K6 container. Pay attention to the descriptions of them, some of them are very important! The data from those variables is used to generate reports and compare products and versions of them. You must ensure that the data is accurate when providing the result report data to our analytics system!
 
- * **GIT_REPO** - The repository we test, we use it to identify which product we test.
- * **GIT_BRANCH** - The branch of the repository.
- * **GIT_HASH** - The commit hash.
- * **GIT_TAG** - The tag if any was present.
- * **K6_TEST_RUN_ID** - This **MUST** be a **NEW** UUID version 4 for each test run!
- * **K6_TEST_RUNNER_HOSTNAME** - Required to identify the used environment.
+* **GIT_REPO** - The repository we test, we use it to identify which product we test.
+* **GIT_BRANCH** - The branch of the repository.
+* **GIT_HASH** - The commit hash.
+* **GIT_TAG** - The tag if any was present.
+* **K6_TEST_RUN_ID** - This **MUST** be a **NEW** UUID version 4 for each test run!
+* **K6_TEST_RUNNER_HOSTNAME** - Required to identify the used environment.
 
 ## Running a single test
 

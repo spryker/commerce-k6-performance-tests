@@ -110,6 +110,5 @@ run_k6_tests() {
         ((i++));
     done
 
-    touch finalReportFile
     merge_and_delte_files "$finalReportFile" "${reportFiles[@]}"
 }
