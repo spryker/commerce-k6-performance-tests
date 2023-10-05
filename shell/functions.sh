@@ -38,7 +38,7 @@ build_k6_docker_command() {
     echo "$command"
 }
 
-# Helper method to create a folder if it does exist
+# Helper method to create a folder if it does not exist
 create_folder_if_not_existant() {
     folder="$1"
 
