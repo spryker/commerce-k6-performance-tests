@@ -31,6 +31,7 @@ build_k6_docker_command() {
             -u $(id -u):$(id -g) \
             -e 'K6_TEST_RUN_ID=$(generate_uuid)' \
             -e 'K6_TEST_RUNNER_HOSTNAME=$(hostname)' \
+            -e 'K6_BROWSER_ENABLED=true' \
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
             --out json='$reportFile'"
@@ -56,4 +57,24 @@ create_report_folder() {
 # Creates a report file
 create_report_file() {
     echo "k6_report_$(date +%Y%m%d_%H%M%S).json";
+}
+
+# Merges files into one and deletes the input files after that.
+#
+# This is used to merge the report files from multiple executions of K6.
+merge_and_delte_files() {
+    # Check if at least two arguments are provided
+    if [ $# -lt 2 ]; then
+        echo "Usage: merge_files <output_file> <input_file1> <input_file2> [input_file3 ...]"
+        return 1
+    fi
+
+    # Extract the first argument as the output file
+    outputFile="$1"
+    shift
+
+    # Use cat to concatenate input files and append to the output file
+    cat "$@" > "$outputFile"
+
+    rm $@
 }
