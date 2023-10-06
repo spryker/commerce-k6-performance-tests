@@ -22,6 +22,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
     productPage() {
         //product page
         const productPageResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/${'stapelstuhl-mit-geschlossenem-ruecken-M83'}`);
+        this.assertResponseStatus(productPageResponse, 200);
         this.assertResponseBodyIncludes(productPageResponse, '<span itemprop="sku">657712</span>');
 
         // add to cart form submit

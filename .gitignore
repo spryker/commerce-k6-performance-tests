@@ -2,3 +2,5 @@
 settings.json
 /node_modules/
 /.env
+/results/
+!/results/.gitkeep

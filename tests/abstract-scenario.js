@@ -8,7 +8,7 @@ import { fail, check } from 'k6';
 import CustomerHelper from "../helpers/customer-helper.js";
 
 export class AbstractScenario {
-    constructor(environment) {
+    constructor(environment, options = {}) {
         if (this.constructor === AbstractScenario) {
             throw new Error("Abstract classes can't be instantiated.");
         }
@@ -46,23 +46,19 @@ export class AbstractScenario {
         const duration = response.timings.duration;
         const assertionName = `Response duration ${duration} is lower or equal to ${max}ms`;
 
-        check(response, {
+        return check(response, {
             [assertionName]: () => duration <= max
         });
     }
 
     assertResponseBodyIncludes(response, text) {
-        if (
-            !check(response, {
-                [`Verify ${text} text`]: (r) => r.body.includes(text),
-            })
-        ) {
-            fail();
-        }
+        return check(response, {
+            [`Verify ${text} text`]: (r) => r.body.includes(text),
+        })
     }
 
     assertResponseStatus(response, expectedStatus = 200) {
-        check(response, {
+        return check(response, {
             [`Response status is ${expectedStatus}`]: r => r.status === expectedStatus
         });
     }
