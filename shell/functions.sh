@@ -112,3 +112,10 @@ run_k6_tests() {
 
     merge_and_delte_files "$finalReportFile" "${reportFiles[@]}"
 }
+
+check_env_var() {
+    if [ -z "${!1}" ]; then
+        echo "Error: ${1} environment variable is empty or not set."
+        exit 1
+    fi
+}
