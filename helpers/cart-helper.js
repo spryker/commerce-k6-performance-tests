@@ -1,3 +1,5 @@
+import { check,fail } from 'k6';
+
 export class CartHelper {
     constructor(urlHelper, http, customerHelper) {
         this.urlHelper = urlHelper;
@@ -44,7 +46,8 @@ export class CartHelper {
             },
         };
         const urlAccessTokens = `${this.urlHelper.getStorefrontApiBaseUrl()}/access-tokens`;
-        const accessTokensResponse = JSON.parse(this.http.sendPostRequest(
+
+        const response = this.http.sendPostRequest(
             this.http.url`${urlAccessTokens}`,
             JSON.stringify({
                 data: {
@@ -57,8 +60,24 @@ export class CartHelper {
             }),
             defaultParams,
             false
-        ).body);
-        defaultParams.headers.Authorization = `${accessTokensResponse.data.attributes.tokenType} ${accessTokensResponse.data.attributes.accessToken}`;
+        );
+
+        if (
+            !check(response, {
+                'Verify that Auth Token Request status is s 201': (response) => response.status === 201,
+            })
+        ) {
+            fail('Getting access token response status was not 201 but ' + response.status);
+        }
+
+        const responseJson = JSON.parse(response.body);
+
+        check(responseJson, {
+            'Verify token response body has `data` defined': (responseJson) => responseJson.data !== undefined,
+            'Verify token response body has `data.attributes` defined': (responseJson) => responseJson.data.attributes !== undefined
+        });
+
+        defaultParams.headers.Authorization = `${responseJson.data.attributes.tokenType} ${responseJson.data.attributes.accessToken}`;
 
         return defaultParams;
     }
