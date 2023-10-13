@@ -53,7 +53,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
         this.assertPageState(
             page,
             `Product quantity field is editable`,
-            (page) => page.locator('quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input').isVisible(),
+            (page) => page.locator('quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input').isEditable(),
         );
     }
 
