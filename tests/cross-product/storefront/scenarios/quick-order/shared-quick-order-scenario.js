@@ -31,7 +31,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
     }
 
     async searchForProduct(page) {
-        const productSearchInputSelector = 'quick-order-row:nth-child(2)  .product-search-autocomplete-form__input';
+        const productSearchInputSelector = 'quick-order-row:nth-child(2) .product-search-autocomplete-form__input';
         const productSearchItemSelector = 'quick-order-row:nth-child(2) li.products-list__item--selected';
         const productSearchInput = page.locator(productSearchInputSelector);
 
@@ -53,13 +53,13 @@ export class SharedQuickOrderScenario extends AbstractScenario {
         this.assertPageState(
             page,
             `Product quantity field is editable`,
-            (page) => page.locator('quick-order-row:nth-child(2) .quick-order-row-partial__quantity').isEditable(),
+            (page) => page.locator('quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input').isVisible(),
         );
     }
 
     async inputProductQuantity(page) {
         const quantity = __ENV.numberOfItems;
-        const quantityInputSelector = 'quick-order-row:nth-child(2) .quick-order-row-partial__quantity';
+        const quantityInputSelector = 'quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input';
         const quantityInput = page.locator(quantityInputSelector);
 
         await quantityInput.type(quantity);
@@ -67,7 +67,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
         this.assertPageState(
             page,
             `Product quantity is ${quantity}`,
-            (page) => page.locator('quick-order-row:nth-child(2) .quick-order-row-partial__quantity').inputValue() === quantity,
+            (page) => page.locator('quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input').inputValue() === quantity,
         );
     }
 
