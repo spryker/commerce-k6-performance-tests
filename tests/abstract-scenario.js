@@ -2,6 +2,7 @@ import { Http } from '../lib/http.js';
 import { loadEnvironmentConfig } from '../lib/utils.js';
 import { CartHelper } from '../helpers/cart-helper.js';
 import { StorefrontHelper } from '../helpers/storefront-helper.js';
+import { BrowserHelper } from '../helpers/browser-helper.js';
 import { UrlHelper } from '../helpers/url-helper.js';
 import { Trend } from 'k6/metrics';
 import { fail, check } from 'k6';
@@ -25,6 +26,7 @@ export class AbstractScenario {
         this.customerHelper = new CustomerHelper();
         this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper);
         this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper);
+        this.browserHelper = new BrowserHelper(this.urlHelper, this.customerHelper);
     }
 
     createTrendMetric(name) {
@@ -61,6 +63,16 @@ export class AbstractScenario {
         return check(response, {
             [`Response status is ${expectedStatus}`]: r => r.status === expectedStatus
         });
+    }
+
+    assertPageState(page, assertionDescription, assertion) {
+        if (
+            !check(page, {
+                [assertionDescription]: (page) => assertion(page),
+            })
+        ) {
+            fail();
+        }
     }
 
     getStorefrontBaseUrl() {
