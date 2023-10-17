@@ -8,6 +8,7 @@ This repository contains the test scenarios and helpers that are used to perform
 
 * [Executing Tests](docs/Executing-Tests.md)
 * [Testing Local Environments](docs/Testing-Local-Environments.md)
+* [Uploading Test Result Artifacts to S3](docs/Uploading-Results-to-S3.md)
 
 ### Official K6
 
@@ -16,4 +17,4 @@ This repository contains the test scenarios and helpers that are used to perform
 
 ### Spryker Performance Framework
 
- * [Testing local Environments](docs/Testing-Local-Environments.md)
+* [Testing local Environments](docs/Testing-Local-Environments.md)

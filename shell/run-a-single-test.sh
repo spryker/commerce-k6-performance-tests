@@ -27,5 +27,11 @@ command=$(build_k6_docker_command "$testFile" "$reportFile")
 
 echo "Running command: '$command'"
 
+# Record the start time
+start_timer
+
 # Run k6 on the current file using its original path
 eval "$command"
+
+# Record the end time
+stop_timer

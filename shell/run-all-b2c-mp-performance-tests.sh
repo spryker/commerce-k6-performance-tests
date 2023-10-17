@@ -6,8 +6,7 @@ source shell/functions.sh
 start_timer
 
 # Create arrays for file lists
-filesDirectory1=($(find "tests/b2b-mp/sapi/tests" -name '*.js' -type f))
-filesDirectory2=($(find "tests/b2b-mp/storefront/tests" -name '*.js' -type f))
+filesDirectory1=($(find "tests/b2c-mp/sapi/tests" -name '*.js' -type f))
 
 # Merge the arrays
 files=("${filesDirectory1[@]}" "${filesDirectory2[@]}")

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source shell/functions.sh
+
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <directory>"
     exit 1
@@ -12,14 +14,11 @@ if [ ! -d "$directory" ]; then
     exit 1
 fi
 
-AWS_DEFAULT_REGION=TESTS_ARTIFACTS_BUCKET_REGION
 AWS_ACCESS_KEY_ID=TESTS_ARTIFACTS_KEY
 AWS_SECRET_ACCESS_KEY=TESTS_ARTIFACTS_SECRET
 
-# Check if AWS_DEFAULT_REGION, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY are empty
-if [ -z "$AWS_DEFAULT_REGION" ] || [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-    echo "Error: One or more of the required AWS environment variables is empty."
-    exit 1
-fi
+check_env_var "TEST_ARTIFACTS_BUCKET"
+check_env_var "TESTS_ARTIFACTS_KEY"
+check_env_var "TESTS_ARTIFACTS_SECRET"
 
 aws s3 cp $directory s3://$TESTS_ARTIFACTS_BUCKET/k6-test-results/ --recursive
