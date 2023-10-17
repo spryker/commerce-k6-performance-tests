@@ -119,3 +119,17 @@ check_env_var() {
         exit 1
     fi
 }
+
+# Function to start the timer
+start_timer() {
+    start_time=$(date +%s)
+}
+
+# Function to stop the timer and display the elapsed time
+stop_timer() {
+    end_time=$(date +%s)
+    elapsed_time=$((end_time - start_time))
+    formatted_time=$(date -u -d @"$elapsed_time" +'%H:%M:%S')
+
+    echo "Elapsed time: $formatted_time"
+}
