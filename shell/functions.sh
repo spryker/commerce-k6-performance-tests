@@ -25,11 +25,17 @@ generate_uuid() {
 build_k6_docker_command() {
     relativePath="$1"
     reportFile="$2"
+    testRunId="$3"
+
+    # Check if testRunId is empty
+    if [ -z "$testRunId" ]; then
+        testRunId=$(generate_uuid)  # Call generate_uuid to get a UUID
+    fi
 
     command="docker-compose run --rm -i \
             -v $(pwd):/scripts \
             -u $(id -u):$(id -g) \
-            -e 'K6_TEST_RUN_ID=$(generate_uuid)' \
+            -e 'K6_TEST_RUN_ID=$testRunId' \
             -e 'K6_TEST_RUNNER_HOSTNAME=$(hostname)' \
             -e 'K6_BROWSER_ENABLED=true' \
             k6 run $relativePath \
@@ -41,7 +47,7 @@ build_k6_docker_command() {
 
 # Helper method to create a folder if it does not exist
 create_folder_if_not_existant() {
-    folder="$1"
+    local folder="$1"
 
     if [ ! -d "$folder" ]; then
         # If it doesn't exist, create it and its parent directories recursively
@@ -86,8 +92,13 @@ run_k6_tests() {
     reportFile=$(create_report_file)
     outputFolder=$(create_report_folder)
     finalReportFile="$outputFolder/$reportFile"
+    testRunId=$(generate_uuid)
 
     $(create_folder_if_not_existant "$outputFolder")
+
+    # If the folder existed and previously generated tmp files remained
+    # e.g. in the case the script execution was interrupted
+    $(delete_tmp_report_files "outputFolder")
 
     # Iterate over the merged array
     i=1;
@@ -100,7 +111,7 @@ run_k6_tests() {
         reportFiles+=($reportFile)
 
         # Construct the docker command
-        command=$(build_k6_docker_command "$testFile" "$reportFile")
+        command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId")
 
         echo "Running command: '$command'"
 
@@ -132,4 +143,26 @@ stop_timer() {
     formatted_time=$(date -u -d @"$elapsed_time" +'%H:%M:%S')
 
     echo "Elapsed time: $formatted_time"
+}
+
+delete_tmp_report_files() {
+    local folder_path="$1"  # The folder path
+    local pattern="tmp_report_[0-9]*"  # Define the file pattern
+
+    # Check if the folder exists
+    if [ ! -d "$folder_path" ]; then
+        echo "Error: The specified folder '$folder_path' does not exist."
+        return 1
+    fi
+
+    # Change to the target directory
+    cd "$folder_path" || return 1
+
+    # Loop through files matching the pattern and delete them
+    for file in $pattern; do
+        if [ -f "$file" ]; then
+            rm "$file"
+            echo "Deleted $file"
+        fi
+    done
 }

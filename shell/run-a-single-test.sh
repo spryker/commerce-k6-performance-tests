@@ -15,7 +15,8 @@ fi
 # Generate the output file
 reportFile=$(basename "$file" .js)
 outputFolder=$(create_report_folder)
-reportFile="$outputFolder/K6_result_report_$reportFile.json"
+reportFile="$outputFolder/K6_result_report_${reportFile}_$(date +%Y%m%d_%H%M%S).json"
+testRunId=$(generate_uuid)
 
 $(create_folder_if_not_existant "$outputFolder")
 
@@ -23,7 +24,7 @@ $(create_folder_if_not_existant "$outputFolder")
 testFile=${file#$(pwd)/}
 
 # Construct the docker command
-command=$(build_k6_docker_command "$testFile" "$reportFile")
+command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId")
 
 echo "Running command: '$command'"
 
