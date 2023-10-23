@@ -18,6 +18,7 @@ The following env vars **MUST** be set in the K6 container. Pay attention to the
 * **GIT_TAG** - The tag if any was present.
 * **K6_TEST_RUN_ID** - This **MUST** be a **NEW** UUID version 4 for each test run!
 * **K6_TEST_RUNNER_HOSTNAME** - Required to identify the used environment.
+* **K6_TEST_ENVIRONMENT** - The name of the AWS environment used e.g. "Production 2.1"
 
 ## Running a single test
 

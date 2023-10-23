@@ -26,10 +26,28 @@ build_k6_docker_command() {
     relativePath="$1"
     reportFile="$2"
     testRunId="$3"
+    testEnvironment="$4"
 
-    # Check if testRunId is empty
     if [ -z "$testRunId" ]; then
         testRunId=$(generate_uuid)  # Call generate_uuid to get a UUID
+            echo
+            echo "--------------------------------------------------------------------------------"
+            echo -e "\e[33mYou did not specify the test run id.\e[0m"
+            echo -e "\e[33mA UUId will be generated and used.\e[0m"
+            echo "--------------------------------------------------------------------------------"
+    fi
+
+    if [ -z "$testEnvironment" ]; then
+        if [ -z "$K6_TEST_ENVIRONMENT" ]; then
+            testEnvironment="UNSPECIFIED"
+            echo
+            echo "--------------------------------------------------------------------------------"
+            echo -e "\e[31mYou did not specify the test environment name that is tested!\e[0m"
+            echo -e "\e[31mThe environment name will be set to UNSPECIFIED for that reason.\e[0m"
+            echo "--------------------------------------------------------------------------------"
+        else
+            testEnvironment=$K6_TEST_ENVIRONMENT
+        fi
     fi
 
     command="docker-compose run --rm -i \
@@ -37,6 +55,7 @@ build_k6_docker_command() {
             -u $(id -u):$(id -g) \
             -e 'K6_TEST_RUN_ID=$testRunId' \
             -e 'K6_TEST_RUNNER_HOSTNAME=$(hostname)' \
+            -e 'K6_TEST_ENVIRONMENT=$testEnvironment' \
             -e 'K6_BROWSER_ENABLED=true' \
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
