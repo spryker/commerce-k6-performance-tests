@@ -28,4 +28,3 @@ const quickOrderScenario = new SharedQuickOrderScenario('B2B_MP');
 export async function executeQuickOrderScenario() {
     await quickOrderScenario.execute();
 }
-
