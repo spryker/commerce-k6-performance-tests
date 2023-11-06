@@ -43,3 +43,11 @@ upload: results/2023/10/05/k6_report_20231005_224948.json to s3://robot-api-ci/k
 upload: results/2023/10/05/k6_report_20231005_225017.json to s3://robot-api-ci/k6-test-results/2023/10/05/k6_report_20231005_225017.json
 upload: results/2023/10/05/k6_report_20231005_231233.json to s3://robot-api-ci/k6-test-results/2023/10/05/k6_report_20231005_231233.json
 ```
+
+## How data is stored in the Bucket
+
+The shell script `shell/upload-results-to-s3.sh` will mirror the structure of the folder passed to it to the configured S3 bucket (via the env var TESTS_ARTIFACTS_BUCKET) and use there a folder called `k6-test-results` to mirror the provided folder into it.
+
+ ```text
+ s3://<TESTS_ARTIFACTS_BUCKET>/k6-test-results/<mirror-of-results-folder>
+ ```
