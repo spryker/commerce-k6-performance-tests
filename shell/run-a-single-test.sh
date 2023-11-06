@@ -24,7 +24,9 @@ $(create_folder_if_not_existant "$outputFolder")
 testFile=${file#$(pwd)/}
 
 # Construct the docker command
-command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId")
+if ! command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId"); then
+    exit 1;
+fi
 
 echo "Running command: '$command'"
 
