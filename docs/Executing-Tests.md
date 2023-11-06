@@ -49,3 +49,27 @@ There is one shell script file per product, following this pattern:
 ```bash
 ./shell/run-all-<product>-<test-type>-tests.sh
 ```
+
+### Adding more applications/layer tests of a product
+
+Each of the scripts to run tests for a product has a section like this, that find all the test files in the given folder.
+
+The example below has just SAPI and Storefront tests, to add BAPI tests
+
+```bash
+# Create arrays for file lists
+filesDirectory1=($(find "tests/b2b-mp/sapi/tests" -name '*.js' -type f))
+filesDirectory2=($(find "tests/b2b-mp/storefront/tests" -name '*.js' -type f))
+```
+
+To add BAPI tests you would have to add this line
+
+```bash
+filesDirectory3=($(find "tests/b2b-mp/storefront/tests" -name '*.js' -type f))
+``` 
+
+and also add the new variable `filesDirectory3` here:
+
+```bash
+files=("${filesDirectory1[@]}" "${filesDirectory2[@]}" "${filesDirectory3[@]}")
+```
