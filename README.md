@@ -11,6 +11,7 @@ This repository contains the test scenarios and helpers that are used to perform
   * [Testing Local Environments](docs/Testing-Local-Environments.md)
 * [Uploading Test Result Artifacts to S3](docs/Uploading-Results-to-S3.md)
 * [ESLint](docs/Eslint.md)
+* [Possible Problems and Solutions](docs/Possible-Problems-and-Solutions.md)
 
 ## Official K6 Documentation
 
