@@ -1,4 +1,4 @@
-import { SharedQuickOrderScenario } from "../../../../cross-product/storefront/scenarios/quick-order/shared-quick-order-scenario.js";
+import { QuickOrderScenario } from "../../scenarios/quick-order/quick-order-scenario.js";
 import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
@@ -23,7 +23,7 @@ options.scenarios = {
     },
 };
 
-const quickOrderScenario = new SharedQuickOrderScenario('B2B_MP');
+const quickOrderScenario = new QuickOrderScenario('B2B');
 
 export async function executeQuickOrderScenario() {
     await quickOrderScenario.execute();

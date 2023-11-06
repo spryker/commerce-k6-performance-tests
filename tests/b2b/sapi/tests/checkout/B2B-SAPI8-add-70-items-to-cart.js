@@ -4,22 +4,22 @@ import { loadDefaultOptions } from "../../../../../lib/utils.js";
 export const options = loadDefaultOptions();
 
 options.scenarios = {
-    SAPI6_Add_1_item_to_cart: {
+    SAPI8_Add_70_items_to_cart: {
         exec: 'executeAddToCartScenario',
         executor: 'shared-iterations',
         env: {
             sku: '100429',
-            quantity: '1'
+            quantity: '70'
         },
         tags: {
-            testId: 'SAPI6',
+            testId: 'SAPI8',
             testGroup: 'Checkout',
         },
         iterations: 10
     },
 };
 
-const addToCartScenario = new SharedAddToCartScenario('B2B_MP');
+const addToCartScenario = new SharedAddToCartScenario('B2B');
 
 export function executeAddToCartScenario() {
     addToCartScenario.execute(__ENV.sku, __ENV.quantity);

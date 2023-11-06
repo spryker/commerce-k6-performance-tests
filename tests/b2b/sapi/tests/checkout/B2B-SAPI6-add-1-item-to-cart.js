@@ -19,7 +19,7 @@ options.scenarios = {
     },
 };
 
-const addToCartScenario = new SharedAddToCartScenario('B2B_MP');
+const addToCartScenario = new SharedAddToCartScenario('B2B');
 
 export function executeAddToCartScenario() {
     addToCartScenario.execute(__ENV.sku, __ENV.quantity);

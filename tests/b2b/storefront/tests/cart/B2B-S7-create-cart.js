@@ -19,7 +19,7 @@ options.scenarios = {
     },
 };
 
-const createCartScenario = new SharedCreateCartScenario('B2B_MP');
+const createCartScenario = new SharedCreateCartScenario('B2B');
 
 export async function executeCreateCartScenario() {
     await createCartScenario.execute();
