@@ -7,7 +7,7 @@ options.scenarios = {
         exec: 'executeCheckoutScenario',
         executor: 'shared-iterations',
         env: {
-            numberOfItems: __ENV.numberOfItems || '70'
+            numberOfItems: '70'
         },
         tags: {
             testId: 'S4',

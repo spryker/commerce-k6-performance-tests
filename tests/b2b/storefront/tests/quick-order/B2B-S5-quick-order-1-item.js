@@ -7,8 +7,8 @@ options.scenarios = {
         exec: 'executeQuickOrderScenario',
         executor: 'shared-iterations',
         env: {
-            productSku: __ENV.productSku || '657712',
-            numberOfItems: __ENV.numberOfItems || '1',
+            productSku: '657712',
+            numberOfItems: '1',
         },
         tags: {
             testId: 'S5',

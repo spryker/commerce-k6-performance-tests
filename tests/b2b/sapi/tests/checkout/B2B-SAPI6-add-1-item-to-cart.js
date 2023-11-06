@@ -8,8 +8,8 @@ options.scenarios = {
         exec: 'executeAddToCartScenario',
         executor: 'shared-iterations',
         env: {
-            sku: __ENV.sku || '100429',
-            quantity: __ENV.quantity || '1'
+            sku: '100429',
+            quantity: '1'
         },
         tags: {
             testId: 'SAPI6',
