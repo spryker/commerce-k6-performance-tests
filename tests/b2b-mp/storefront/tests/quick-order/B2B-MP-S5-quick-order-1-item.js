@@ -7,8 +7,8 @@ options.scenarios = {
         exec: 'executeQuickOrderScenario',
         executor: 'shared-iterations',
         env: {
-            productSku: __ENV.productSku || '657712',
-            numberOfItems: __ENV.numberOfItems || '1',
+            productSku: '657712',
+            numberOfItems: '1',
         },
         tags: {
             testId: 'S5',
@@ -28,4 +28,3 @@ const quickOrderScenario = new SharedQuickOrderScenario('B2B_MP');
 export async function executeQuickOrderScenario() {
     await quickOrderScenario.execute();
 }
-

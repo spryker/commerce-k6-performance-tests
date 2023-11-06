@@ -7,7 +7,7 @@ options.scenarios = {
         exec: 'executeCartScenario',
         executor: 'shared-iterations',
         env: {
-            numberOfItems: __ENV.numberOfItems || '1'
+            numberOfItems: '1'
         },
         tags: {
             testId: 'SAPI5',

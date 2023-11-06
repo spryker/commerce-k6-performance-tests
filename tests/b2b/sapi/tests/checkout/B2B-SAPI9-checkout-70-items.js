@@ -1,23 +1,23 @@
-import { SharedCheckoutScenario } from "../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js";
+import { CheckoutScenario } from "../../scenarios/checkout/checkout-scenario.js";
 import { loadDefaultOptions } from "../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI7_Checkout_1_item: {
+    SAPI9_Checkout_70_items: {
         exec: 'executeCheckoutScenario',
         executor: 'shared-iterations',
         env: {
-            numberOfItems: '1'
+            numberOfItems: '70'
         },
         tags: {
-            testId: 'SAPI7',
+            testId: 'SAPI9',
             testGroup: 'Checkout',
         },
         iterations: 10
     },
 };
 
-const checkoutScenario = new SharedCheckoutScenario('B2B_MP');
+const checkoutScenario = new CheckoutScenario('B2B');
 
 export function executeCheckoutScenario() {
     checkoutScenario.execute(__ENV.numberOfItems);

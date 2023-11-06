@@ -45,29 +45,25 @@ export class SharedQuickOrderScenario extends AbstractScenario {
     }
 
     async selectProduct(page) {
-        const productSearchInputSelector = 'quick-order-row:nth-child(2)  .product-search-autocomplete-form__input';
-
-        page.locator(productSearchInputSelector)
-            .press('Enter');
+        page.locator('quick-order-row:nth-child(2) li.products-list__item--selected').click();
 
         this.assertPageState(
             page,
             `Product quantity field is editable`,
-            (page) => page.locator('quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input').isEditable(),
+            (page) => page.locator(this._getQuantityInputSelector()).isEditable(),
         );
     }
 
     async inputProductQuantity(page) {
         const quantity = __ENV.numberOfItems;
-        const quantityInputSelector = 'quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input';
-        const quantityInput = page.locator(quantityInputSelector);
+        const quantityInput = page.locator(this._getQuantityInputSelector());
 
         await quantityInput.type(quantity);
 
         this.assertPageState(
             page,
             `Product quantity is ${quantity}`,
-            (page) => page.locator('quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input').inputValue() === quantity,
+            (page) => page.locator(this._getQuantityInputSelector()).inputValue() === quantity,
         );
     }
 
@@ -81,5 +77,9 @@ export class SharedQuickOrderScenario extends AbstractScenario {
             'Checkout form is visible',
             (page) => page.locator('form[name=addressesForm]').isVisible(),
         );
+    }
+
+    _getQuantityInputSelector() {
+        return 'quick-order-row:nth-child(2) .quick-order-row-partial__quantity-input';
     }
 }
