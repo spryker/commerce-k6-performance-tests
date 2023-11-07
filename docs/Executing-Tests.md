@@ -5,17 +5,27 @@
 This repository contains a folder `shell` that contains a lot of scripts that help with running tests. The important part is that they must be executed from the project root!
 
 ```bash
-shell/run-a-single-test.sh
+./shell/run-a-single-test <path/to/the/test-file.js>
 ```
 
-## Environment variabales for the K6 Container
+Or run all tests for a product.
 
-The following env vars **MUST** be present **in the K6 container**. Pay attention to the descriptions of them, some of them are very important! The data from those variables is used to generate reports and compare products and versions of them. You must ensure that the data is accurate when providing the result report data to our analytics system!
+```bash
+./shell/run-all-b2b-mp-performance-tests.sh
+```
+
+## Environment variabales for the k6 Container
+
+The following env vars **MUST** be present **in the k6 container**. Pay attention to the descriptions of them, some of them are very important! The data from those variables is used to generate reports and compare products and versions of them. You must ensure that the data is accurate when providing the result report data to our analytics system!
 
 * **GIT_REPO** (required)- The repository we test, we use it to identify which product we test.
 * **GIT_BRANCH** (required) - The branch of the repository.
 * **GIT_HASH** (required) - The commit hash ID.
 * **GIT_TAG** (optional)- The tag if any was present, **SHOULD** be set. Without it you won't be able to filter your test data later by a convenient Git tag.
+
+### Automatically passed to the k6 Container
+
+* **SPRYKER_TEST_RUNNER_HOSTNAME** is automatically passed to the k6 container and built as part of the command inside `build_k6_docker_command()`. The data is also stored in the test results to provide the possibility to identify an test run that was executed on a specific system. This can be for example useful in the case data was accidentally mixed.
 
 ## Environment Variables for your System
 
@@ -33,7 +43,7 @@ This is pretty useful for testing scenarious. By running this script it will ask
 Or simply run it without an argument and the script will ask for an input.
 
 ```bash
-shell/run-a-single-test.sh
+./shell/run-a-single-test.sh
 ```
 
 ## Running all Tests for a Product
