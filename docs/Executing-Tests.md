@@ -25,7 +25,8 @@ The following env vars **MUST** be present **in the k6 container**. Pay attentio
 
 ### Automatically passed to the k6 Container
 
-* **SPRYKER_TEST_RUNNER_HOSTNAME** is automatically passed to the k6 container and built as part of the command inside `build_k6_docker_command()`. The data is also stored in the test results to provide the possibility to identify an test run that was executed on a specific system. This can be for example useful in the case data was accidentally mixed.
+* **SPRYKER_TEST_RUNNER_HOSTNAME** is automatically passed to the k6 container and built as part of the command inside `build_k6_docker_command()`. The data is also stored in the test results to provide the possibility to identify a test run that was executed on a specific system. This can be for example useful in the case data was accidentally mixed.
+
 
 ## Environment Variables for your System
 
