@@ -30,7 +30,8 @@ The following env vars **MUST** be present **in the k6 container**. Pay attentio
 
 ## Environment Variables for your System
 
-* **SPRYKER_TEST_RUN_ID** (optional): This **MUST** be a **NEW** UUID version 4 for each test run or you will end up with duplicate identifiers and you won't be able to distinguish different test runs. If not provided a UUID will be generated when running the shell scripts.
+* **SPRYKER_TEST_RUN_ID** (optional): This **MUST** be a **NEW** UUID version for each test run or you will end up with duplicate identifiers and you won't be able to distinguish different test runs. If not provided a UUID will be generated when running the shell scripts.
+
 * **SPRYKER_TEST_ENVIRONMENT** - The name of the (AWS) environment used e.g. "Production 2.1". This should be an identifier that helps you to identify the environment that was used for the test.
 
 ## Running a single test
