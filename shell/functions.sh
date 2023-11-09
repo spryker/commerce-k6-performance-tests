@@ -16,6 +16,29 @@ generate_uuid() {
     echo "$uuid"
 }
 
+check_env_vars() {
+    local required_vars=(
+        "GIT_REPO" "GIT_BRANCH" "GIT_HASH" "GIT_TAG"
+        "SPRYKER_TEST_ENVIRONMENT"
+    )
+
+    local unset_vars=()
+
+    for var_name in "${required_vars[@]}"; do
+        if [ -z "${!var_name}" ]; then
+            unset_vars+=("$var_name")
+        fi
+    done
+
+    if [ ${#unset_vars[@]} -gt 0 ]; then
+        echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
+        echo -e "\e[31mThe following required environment variables are not set:\e[0m" >&2
+        printf '%s\n' "${unset_vars[@]}" >&2
+        echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
+        return 1
+    fi
+}
+
 # Builds the command to run the K6 docker container with all required arguments.
 # 
 # Notice that we inject test run id and test runner host via env vars to the docker container
@@ -23,39 +46,40 @@ generate_uuid() {
 # you can't pass tags and define them internally. If you start using --tag here, then the 
 # custom tags WON'T WORK!
 build_k6_docker_command() {
-    relativePath="$1"
-    reportFile="$2"
-    testRunId="$3"
-    testEnvironment="$4"
+    local relativePath="$1"
+    local reportFile="$2"
+    local testRunId="$3"
+    local testEnvironment="$4"
 
     if [ -z "$testRunId" ]; then
         testRunId=$(generate_uuid)  # Call generate_uuid to get a UUID
-            echo
-            echo "--------------------------------------------------------------------------------"
-            echo -e "\e[33mYou did not specify the test run id.\e[0m"
-            echo -e "\e[33mA UUId will be generated and used.\e[0m"
-            echo "--------------------------------------------------------------------------------"
+            echo >&2
+            echo -e "\e[33m--------------------------------------------------------------------------------\e[0m" >&2
+            echo -e "\e[33mYou did not specify the test run id.\e[0m" >&2
+            echo -e "\e[33mA UUId will be generated and used.\e[0m" >&2
+            echo -e "\e[33m--------------------------------------------------------------------------------\e[0m" >&2
+            return 1;
     fi
 
     if [ -z "$testEnvironment" ]; then
-        if [ -z "$K6_TEST_ENVIRONMENT" ]; then
+        if [ -z "$SPRYKER_TEST_ENVIRONMENT" ]; then
             testEnvironment="UNSPECIFIED"
-            echo
-            echo "--------------------------------------------------------------------------------"
-            echo -e "\e[31mYou did not specify the test environment name that is tested!\e[0m"
-            echo -e "\e[31mThe environment name will be set to UNSPECIFIED for that reason.\e[0m"
-            echo "--------------------------------------------------------------------------------"
+            echo >&2
+            echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
+            echo -e "\e[31mYou did not set the SPRYKER_TEST_ENVIRONMENT variable!\e[0m" >&2
+            echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
+            return 1;
         else
-            testEnvironment=$K6_TEST_ENVIRONMENT
+            testEnvironment=$SPRYKER_TEST_ENVIRONMENT
         fi
     fi
 
     command="docker-compose run --rm -i \
             -v $(pwd):/scripts \
             -u $(id -u):$(id -g) \
-            -e 'K6_TEST_RUN_ID=$testRunId' \
-            -e 'K6_TEST_RUNNER_HOSTNAME=$(hostname)' \
-            -e 'K6_TEST_ENVIRONMENT=$testEnvironment' \
+            -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
+            -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
+            -e 'SPRYKER_TEST_ENVIRONMENT=$testEnvironment' \
             -e 'K6_BROWSER_ENABLED=true' \
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
@@ -117,7 +141,7 @@ run_k6_tests() {
 
     # If the folder existed and previously generated tmp files remained
     # e.g. in the case the script execution was interrupted
-    $(delete_tmp_report_files "outputFolder")
+    $(delete_tmp_report_files "$outputFolder")
 
     # Iterate over the merged array
     i=1;
@@ -130,8 +154,10 @@ run_k6_tests() {
         reportFiles+=($reportFile)
 
         # Construct the docker command
-        command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId")
-
+        if ! command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId"); then
+            return 1;
+        fi
+      
         echo "Running command: '$command'"
 
         # Run k6 on the current file using its original path
