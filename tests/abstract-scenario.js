@@ -7,6 +7,7 @@ import { UrlHelper } from '../helpers/url-helper.js';
 import { Trend } from 'k6/metrics';
 import { fail, check } from 'k6';
 import CustomerHelper from "../helpers/customer-helper.js";
+import { ResponseValidatorHelper } from "../helpers/response-validator-helper.js";
 
 export class AbstractScenario {
     constructor(environment, options = {}) {
@@ -24,8 +25,9 @@ export class AbstractScenario {
         this.environmentConfig = loadEnvironmentConfig(this.environment);
         this.urlHelper = new UrlHelper(this.environmentConfig);
         this.customerHelper = new CustomerHelper();
-        this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper);
-        this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper);
+        this.responseValidatorHelper = new ResponseValidatorHelper();
+        this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper, this.responseValidatorHelper);
+        this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper, this.responseValidatorHelper);
         this.browserHelper = new BrowserHelper(this.urlHelper, this.customerHelper);
     }
 
@@ -53,28 +55,25 @@ export class AbstractScenario {
         });
     }
 
-    //TODO
     assertResponseBodyIncludes(response, text) {
-        return check(response, {
-            [`Verify ${text} text`]: (r) => r.body.includes(text),
-        })
+        this.responseValidatorHelper.validateResponseContainsText(response, text);
     }
 
-    //TODO
     assertResponseStatus(response, expectedStatus = 200) {
-        return check(response, {
-            [`Response status is ${expectedStatus}`]: r => r.status === expectedStatus
-        });
+        this.responseValidatorHelper.validateResponseStatus(response, expectedStatus);
     }
 
-    //TODO - done
+    assertSingleResourceResponseBodyJson(response) {
+        this.responseValidatorHelper.validateSingleResourceResponseJson(response);
+    }
+
     assertPageState(page, assertionDescription, assertion) {
         if (
             !check(page, {
                 [assertionDescription]: (page) => assertion(page),
             })
         ) {
-            fail('Page state assertion failed');
+            fail('Page state assertion failed.');
         }
     }
 

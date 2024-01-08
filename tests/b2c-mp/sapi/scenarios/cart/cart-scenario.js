@@ -5,16 +5,20 @@ export class CartScenario extends SharedCartScenario {
         let self = this;
 
         const cart = this.cartHelper.getCarts(requestParams).data[0];
-        //TODO
         const cartResponse = this.http.sendGetRequest(
             this.http.url`${this.cartHelper.getCartsUrl()}/${cart.id}/?include=items`, requestParams, false
         );
-        const cartRelationships = JSON.parse(cartResponse.body).data.relationships;
+        this.assertResponseStatus(cartResponse, 200);
+
+        const cartResponseJson = JSON.parse(cartResponse.body);
+        this.assertSingleResourceResponseBodyJson(cartResponseJson);
+
+        const cartRelationships = cartResponseJson.data.relationships;
         if (cartRelationships) {
             const items = JSON.parse(cartResponse.body).data.relationships.items;
             items.data.forEach(function (item) {
-                //TODO
-                self.http.sendDeleteRequest(self.http.url`${self.cartHelper.getCartsUrl()}/${cart.id}/items/${item.id}`, null, requestParams, false);
+                let cartItemDeleteResponse = self.http.sendDeleteRequest(self.http.url`${self.cartHelper.getCartsUrl()}/${cart.id}/items/${item.id}`, null, requestParams, false);
+                self.assertResponseStatus(cartItemDeleteResponse, 204);
             });
         }
         this.cartHelper.addItemToCart(cart.id, __ENV.numberOfItems, requestParams, '009_30692991');

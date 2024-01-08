@@ -7,7 +7,6 @@ export class BrowserHelper {
         this.customerHelper = customerHelper;
     }
 
-    //TODO
     async getLoggedInUserContext() {
         const loginPage = browser.newPage();
         await loginPage.goto(`${this.urlHelper.getStorefrontBaseUrl()}/en/login`);
@@ -25,7 +24,7 @@ export class BrowserHelper {
         if (!check(loginPage, {
             'Verify Customer is logged in': (page) => page.locator('.user-navigation__user-name .user-navigation__text').textContent().trim() === 'Sonia Wagner'
         })) {
-            fail('Customer is logged in assertion failed: element with selector ".user-navigation__user-name .user-navigation__text" does not exist or does not contain "Sonia Wagner" text');
+            fail('Customer is logged in assertion failed: element with selector ".user-navigation__user-name .user-navigation__text" does not exist or does not contain "Sonia Wagner" text.');
         }
 
         loginPage.close();

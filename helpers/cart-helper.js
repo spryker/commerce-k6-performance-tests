@@ -1,10 +1,9 @@
-import { check,fail } from 'k6';
-
 export class CartHelper {
-    constructor(urlHelper, http, customerHelper) {
+    constructor(urlHelper, http, customerHelper, responseValidatorHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
         this.customerHelper = customerHelper;
+        this.responseValidatorHelper = responseValidatorHelper;
     }
 
     haveCartWithProducts(quantity = 1, sku = '100429') {
@@ -12,7 +11,6 @@ export class CartHelper {
         const params = this.getParamsWithAuthorization();
         const carts = this.getCarts(params);
 
-        //TODO - done
         const cartsResponse = this.http.sendPostRequest(
             this.http.url`${this.urlHelper.getStorefrontApiBaseUrl()}/carts`,
             JSON.stringify({
@@ -30,17 +28,10 @@ export class CartHelper {
             params,
             false
         );
+        this.responseValidatorHelper.validateResponseStatus(cartsResponse, 201, 'Create cart');
 
-        if (
-            !check(cartsResponse, {
-                'Verify that Create cart response status is 201': (cartsResponse) => cartsResponse.status === 201,
-            })
-        ) {
-            fail('Create cart response status was not 201 but ' + cartsResponse.status);
-        }
-
-        //TODO
         const cartsResponseJson = JSON.parse(cartsResponse.body);
+        this.responseValidatorHelper.validateSingleResourceResponseJson(cartsResponseJson, 'Create cart');
 
         if (quantity > 0) {
             this.addItemToCart(cartsResponseJson.data.id, quantity, params, sku);
@@ -73,21 +64,10 @@ export class CartHelper {
             defaultParams,
             false
         );
-
-        if (
-            !check(response, {
-                'Verify that Auth Token response status is 201': (response) => response.status === 201,
-            })
-        ) {
-            fail('Getting access token response status was not 201 but ' + response.status);
-        }
+        this.responseValidatorHelper.validateResponseStatus(response, 201, 'Auth Token');
 
         const responseJson = JSON.parse(response.body);
-
-        check(responseJson, {
-            'Verify token response body has `data` defined': (responseJson) => responseJson.data !== undefined,
-            'Verify token response body has `data.attributes` defined': (responseJson) => responseJson.data.attributes !== undefined
-        });
+        this.responseValidatorHelper.validateSingleResourceResponseJson(responseJson, 'Auth Token');
 
         defaultParams.headers.Authorization = `${responseJson.data.attributes.tokenType} ${responseJson.data.attributes.accessToken}`;
 
@@ -99,23 +79,27 @@ export class CartHelper {
     }
 
     getCarts(params) {
-        //TODO
-        return JSON.parse(this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false).body);
+        const getCartsResponse = this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false);
+        this.responseValidatorHelper.validateResponseStatus(getCartsResponse, 200, 'Get Carts');
+
+        const getCartsResponseJson = JSON.parse(getCartsResponse.body);
+        this.responseValidatorHelper.validateResourceCollectionResponseJson(getCartsResponseJson, 'Get Carts');
+
+        return getCartsResponseJson;
     }
 
     deleteCarts(carts, params) {
         if (carts.data) {
             const self = this;
             carts.data.forEach(function (cart) {
-                //TODO
-                self.http.sendDeleteRequest(self.http.url`${self.getCartsUrl()}/${cart.id}`, null, params, false);
+                let deleteCartResponse = self.http.sendDeleteRequest(self.http.url`${self.getCartsUrl()}/${cart.id}`, null, params, false);
+                self.responseValidatorHelper.validateResponseStatus(deleteCartResponse, 204, 'Delete cart');
             });
         }
     }
 
     addItemToCart(cartId, quantity, params, sku) {
-        //TODO - done
-        const addItemToCart = this.http.sendPostRequest(
+        const addItemToCartResponse = this.http.sendPostRequest(
             this.http.url`${this.getCartsUrl()}/${cartId}/items`,
             JSON.stringify({
                 data: {
@@ -131,14 +115,8 @@ export class CartHelper {
             false
         );
 
-        if (
-            !check(addItemToCart, {
-                'Verify that Add Item to Cart response status is 201': (addItemToCart) => addItemToCart.status === 201,
-            })
-        ) {
-            fail('Add Item to Cart response status was not 201 but ' + addItemToCart.status);
-        }
+        this.responseValidatorHelper.validateResponseStatus(addItemToCartResponse, 201, 'Add Item to Cart');
 
-        return addItemToCart;
+        return addItemToCartResponse;
     }
 }
