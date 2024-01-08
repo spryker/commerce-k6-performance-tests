@@ -53,25 +53,28 @@ export class AbstractScenario {
         });
     }
 
+    //TODO
     assertResponseBodyIncludes(response, text) {
         return check(response, {
             [`Verify ${text} text`]: (r) => r.body.includes(text),
         })
     }
 
+    //TODO
     assertResponseStatus(response, expectedStatus = 200) {
         return check(response, {
             [`Response status is ${expectedStatus}`]: r => r.status === expectedStatus
         });
     }
 
+    //TODO - done
     assertPageState(page, assertionDescription, assertion) {
         if (
             !check(page, {
                 [assertionDescription]: (page) => assertion(page),
             })
         ) {
-            fail();
+            fail('Page state assertion failed');
         }
     }
 

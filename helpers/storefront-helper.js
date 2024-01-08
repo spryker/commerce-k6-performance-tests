@@ -10,12 +10,13 @@ export class StorefrontHelper {
     loginUser() {
         const loginResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/login`);
 
+        //TODO - done
         if (
             !check(loginResponse, {
                 'Verify Login page text': (r) => r.body.includes('Access your account'),
             })
         ) {
-            fail();
+            fail('Login response does not contain "Access your account" text');
         }
 
         this.http.submitForm(loginResponse, {
@@ -25,12 +26,13 @@ export class StorefrontHelper {
 
         const overviewResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`);
 
+        //TODO - done
         if (
             !check(overviewResponse, {
                 'Verify Overview page': (r) => r.body.includes('Overview'),
             })
         ) {
-            fail();
+            fail('Overview response does not contain "Overview" text');
         }
     }
 }

@@ -5,6 +5,7 @@ export class CartScenario extends SharedCartScenario {
         let self = this;
 
         const cart = this.cartHelper.getCarts(requestParams).data[0];
+        //TODO
         const cartResponse = this.http.sendGetRequest(
             this.http.url`${this.cartHelper.getCartsUrl()}/${cart.id}/?include=items`, requestParams, false
         );
@@ -12,6 +13,7 @@ export class CartScenario extends SharedCartScenario {
         if (cartRelationships) {
             const items = JSON.parse(cartResponse.body).data.relationships.items;
             items.data.forEach(function (item) {
+                //TODO
                 self.http.sendDeleteRequest(self.http.url`${self.cartHelper.getCartsUrl()}/${cart.id}/items/${item.id}`, null, requestParams, false);
             });
         }

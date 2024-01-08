@@ -12,7 +12,8 @@ export class CartHelper {
         const params = this.getParamsWithAuthorization();
         const carts = this.getCarts(params);
 
-        const cartsResponse = JSON.parse(this.http.sendPostRequest(
+        //TODO - done
+        const cartsResponse = this.http.sendPostRequest(
             this.http.url`${this.urlHelper.getStorefrontApiBaseUrl()}/carts`,
             JSON.stringify({
                 data: {
@@ -28,15 +29,26 @@ export class CartHelper {
             }),
             params,
             false
-        ).body);
+        );
+
+        if (
+            !check(cartsResponse, {
+                'Verify that Create cart response status is 201': (cartsResponse) => cartsResponse.status === 201,
+            })
+        ) {
+            fail('Create cart response status was not 201 but ' + cartsResponse.status);
+        }
+
+        //TODO
+        const cartsResponseJson = JSON.parse(cartsResponse.body);
 
         if (quantity > 0) {
-            this.addItemToCart(cartsResponse.data.id, quantity, params, sku);
+            this.addItemToCart(cartsResponseJson.data.id, quantity, params, sku);
         }
 
         this.deleteCarts(carts, params);
 
-        return cartsResponse.data.id;
+        return cartsResponseJson.data.id;
     }
 
     getParamsWithAuthorization() {
@@ -64,7 +76,7 @@ export class CartHelper {
 
         if (
             !check(response, {
-                'Verify that Auth Token Request status is s 201': (response) => response.status === 201,
+                'Verify that Auth Token response status is 201': (response) => response.status === 201,
             })
         ) {
             fail('Getting access token response status was not 201 but ' + response.status);
@@ -87,6 +99,7 @@ export class CartHelper {
     }
 
     getCarts(params) {
+        //TODO
         return JSON.parse(this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false).body);
     }
 
@@ -94,13 +107,15 @@ export class CartHelper {
         if (carts.data) {
             const self = this;
             carts.data.forEach(function (cart) {
+                //TODO
                 self.http.sendDeleteRequest(self.http.url`${self.getCartsUrl()}/${cart.id}`, null, params, false);
             });
         }
     }
 
     addItemToCart(cartId, quantity, params, sku) {
-        return this.http.sendPostRequest(
+        //TODO - done
+        const addItemToCart = this.http.sendPostRequest(
             this.http.url`${this.getCartsUrl()}/${cartId}/items`,
             JSON.stringify({
                 data: {
@@ -115,5 +130,15 @@ export class CartHelper {
             params,
             false
         );
+
+        if (
+            !check(addItemToCart, {
+                'Verify that Add Item to Cart response status is 201': (addItemToCart) => addItemToCart.status === 201,
+            })
+        ) {
+            fail('Add Item to Cart response status was not 201 but ' + addItemToCart.status);
+        }
+
+        return addItemToCart;
     }
 }
