@@ -56,15 +56,15 @@ export class AbstractScenario {
     }
 
     assertResponseBodyIncludes(response, text) {
-        this.responseValidatorHelper.validateResponseContainsText(response, text);
+        return check(response, {
+            [`Verify ${text} text`]: (r) => r.body.includes(text),
+        })
     }
 
     assertResponseStatus(response, expectedStatus = 200) {
-        this.responseValidatorHelper.validateResponseStatus(response, expectedStatus);
-    }
-
-    assertSingleResourceResponseBodyJson(response) {
-        this.responseValidatorHelper.validateSingleResourceResponseJson(response);
+        return check(response, {
+            [`Response status is ${expectedStatus}`]: r => r.status === expectedStatus
+        });
     }
 
     assertPageState(page, assertionDescription, assertion) {
@@ -73,7 +73,7 @@ export class AbstractScenario {
                 [assertionDescription]: (page) => assertion(page),
             })
         ) {
-            fail('Page state assertion failed.');
+            fail(`Page state assertion "${assertionDescription}" failed.`);
         }
     }
 

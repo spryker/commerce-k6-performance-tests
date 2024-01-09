@@ -22,9 +22,9 @@ export class BrowserHelper {
         ]);
 
         if (!check(loginPage, {
-            'Verify Customer is logged in': (page) => page.locator('.user-navigation__user-name .user-navigation__text').textContent().trim() === 'Sonia Wagner'
+            'Verify Customer is logged in': (page) => page.url() === `${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`
         })) {
-            fail('Customer is logged in assertion failed: element with selector ".user-navigation__user-name .user-navigation__text" does not exist or does not contain "Sonia Wagner" text.');
+            fail('Customer is logged in assertion failed: customer is not redirected to customer overview page.');
         }
 
         loginPage.close();
