@@ -11,7 +11,7 @@ export class SharedProductSearchScenario extends AbstractScenario {
             const productSearchResponse = self.http.sendGetRequest(
                 self.http.url`${self.getStorefrontApiBaseUrl()}/catalog-search?q=${657712}`, requestParams, false
             );
-            self.assertResponseStatus(productSearchResponse, 200);
+            self.assertionsHelper.assertResponseStatus(productSearchResponse, 200);
         });
     }
 }

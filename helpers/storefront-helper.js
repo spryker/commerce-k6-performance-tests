@@ -1,14 +1,14 @@
 export class StorefrontHelper {
-    constructor(urlHelper, http, customerHelper, responseValidatorHelper) {
+    constructor(urlHelper, http, customerHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
         this.customerHelper = customerHelper;
-        this.responseValidatorHelper = responseValidatorHelper;
+        this.assertionsHelper = assertionsHelper;
     }
 
     loginUser() {
         const loginResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/login`);
-        this.responseValidatorHelper.validateResponseContainsText(loginResponse, 'Access your account', 'Login');
+        this.assertionsHelper.assertResponseContainsText(loginResponse, 'Access your account');
 
         this.http.submitForm(loginResponse, {
             formSelector: 'form[name="loginForm"]',
@@ -16,6 +16,6 @@ export class StorefrontHelper {
         });
 
         const overviewResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`);
-        this.responseValidatorHelper.validateResponseContainsText(overviewResponse, 'Overview', 'Overview');
+        this.assertionsHelper.assertResponseContainsText(overviewResponse, 'Overview');
     }
 }

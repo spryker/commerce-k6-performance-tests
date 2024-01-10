@@ -12,7 +12,7 @@ export class SharedCartsScenario extends AbstractScenario {
             const cartsResponse = self.http.sendGetRequest(
                 self.http.url`${self.getStorefrontApiBaseUrl()}/carts`, requestParams, false
             );
-            self.assertResponseStatus(cartsResponse, 200);
+            self.assertionsHelper.assertResponseStatus(cartsResponse, 200);
         });
     }
 }

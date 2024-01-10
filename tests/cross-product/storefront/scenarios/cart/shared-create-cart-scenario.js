@@ -8,7 +8,7 @@ export class SharedCreateCartScenario extends AbstractScenario {
         try {
             await page.goto(`${this.getStorefrontBaseUrl()}/en/multi-cart/create`);
 
-            this.assertPageState(
+            this.assertionsHelper.assertPageState(
                 page,
                 'Create cart form is visible',
                 (page) => page.locator('form[name=quoteForm]').isVisible(),
@@ -21,12 +21,12 @@ export class SharedCreateCartScenario extends AbstractScenario {
                 page.waitForNavigation(),
             ]);
 
-            this.assertPageState(
+            this.assertionsHelper.assertPageState(
                 page,
                 'Success flash message is shown',
                 (page) => page.locator('.flash-message--success').isVisible(),
             );
-            this.assertPageState(
+            this.assertionsHelper.assertPageState(
                 page,
                 'Flash message has the correct text',
                 (page) => page.locator('.flash-message__message .flash-message__text').innerText().trim() === `Cart '${cartName}' was created successfully`,

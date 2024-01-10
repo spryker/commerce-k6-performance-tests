@@ -11,7 +11,7 @@ export class SharedProductDetailsScenario extends AbstractScenario {
             const productDetailsResponse = self.http.sendGetRequest(
                 self.http.url`${self.getStorefrontApiBaseUrl()}/concrete-products/${'657712'}`, requestParams, false
             );
-            self.assertResponseStatus(productDetailsResponse, 200);
+            self.assertionsHelper.assertResponseStatus(productDetailsResponse, 200);
         });
     }
 }

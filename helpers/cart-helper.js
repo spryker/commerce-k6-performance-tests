@@ -1,9 +1,9 @@
 export class CartHelper {
-    constructor(urlHelper, http, customerHelper, responseValidatorHelper) {
+    constructor(urlHelper, http, customerHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
         this.customerHelper = customerHelper;
-        this.responseValidatorHelper = responseValidatorHelper;
+        this.assertionsHelper = assertionsHelper;
     }
 
     haveCartWithProducts(quantity = 1, sku = '100429') {
@@ -28,10 +28,10 @@ export class CartHelper {
             params,
             false
         );
-        this.responseValidatorHelper.validateResponseStatus(cartsResponse, 201, 'Create cart');
+        this.assertionsHelper.assertResponseStatus(cartsResponse, 201, 'Create cart');
 
         const cartsResponseJson = JSON.parse(cartsResponse.body);
-        this.responseValidatorHelper.validateSingleResourceResponseJson(cartsResponseJson, 'Create cart');
+        this.assertionsHelper.assertSingleResourceResponseBodyStructure(cartsResponseJson, 'Create cart');
 
         if (quantity > 0) {
             this.addItemToCart(cartsResponseJson.data.id, quantity, params, sku);
@@ -64,10 +64,10 @@ export class CartHelper {
             defaultParams,
             false
         );
-        this.responseValidatorHelper.validateResponseStatus(response, 201, 'Auth Token');
+        this.assertionsHelper.assertResponseStatus(response, 201, 'Auth Token');
 
         const responseJson = JSON.parse(response.body);
-        this.responseValidatorHelper.validateSingleResourceResponseJson(responseJson, 'Auth Token');
+        this.assertionsHelper.assertSingleResourceResponseBodyStructure(responseJson, 'Auth Token');
 
         defaultParams.headers.Authorization = `${responseJson.data.attributes.tokenType} ${responseJson.data.attributes.accessToken}`;
 
@@ -80,10 +80,10 @@ export class CartHelper {
 
     getCarts(params) {
         const getCartsResponse = this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false);
-        this.responseValidatorHelper.validateResponseStatus(getCartsResponse, 200, 'Get Carts');
+        this.assertionsHelper.assertResponseStatus(getCartsResponse, 200, 'Get Carts');
 
         const getCartsResponseJson = JSON.parse(getCartsResponse.body);
-        this.responseValidatorHelper.validateResourceCollectionResponseJson(getCartsResponseJson, 'Get Carts');
+        this.assertionsHelper.assertResourceCollectionResponseBodyStructure(getCartsResponseJson, 'Get Carts');
 
         return getCartsResponseJson;
     }
@@ -93,7 +93,7 @@ export class CartHelper {
             const self = this;
             carts.data.forEach(function (cart) {
                 let deleteCartResponse = self.http.sendDeleteRequest(self.http.url`${self.getCartsUrl()}/${cart.id}`, null, params, false);
-                self.responseValidatorHelper.validateResponseStatus(deleteCartResponse, 204, 'Delete cart');
+                self.assertionsHelper.assertResponseStatus(deleteCartResponse, 204, 'Delete cart');
             });
         }
     }
@@ -115,7 +115,7 @@ export class CartHelper {
             false
         );
 
-        this.responseValidatorHelper.validateResponseStatus(addItemToCartResponse, 201, 'Add Item to Cart');
+        this.assertionsHelper.assertResponseStatus(addItemToCartResponse, 201, 'Add Item to Cart');
 
         return addItemToCartResponse;
     }
