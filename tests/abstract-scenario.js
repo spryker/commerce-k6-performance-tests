@@ -57,7 +57,7 @@ export class AbstractScenario {
 
     assertResponseBodyIncludes(response, text) {
         return check(response, {
-            [`Verify ${text} text`]: (r) => r.body.includes(text),
+            [`Verify ${text} text`]: (r) => r.body && r.body.includes(text),
         })
     }
 
