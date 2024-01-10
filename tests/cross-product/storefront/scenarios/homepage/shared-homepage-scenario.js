@@ -7,7 +7,7 @@ export class SharedHomepageScenario extends AbstractScenario {
 
         group('Homepage', function () {
             const homePageResponse = self.http.sendGetRequest(self.http.url`${self.getStorefrontBaseUrl()}`);
-            self.assertResponseBodyIncludes(homePageResponse, 'Your Experience is Our Priority');
+            self.assertResponseBodyIncludes(homePageResponse, 'technology with quality');
         });
     }
 }
