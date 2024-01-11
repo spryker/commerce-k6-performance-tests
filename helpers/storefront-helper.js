@@ -1,22 +1,14 @@
-import { fail, check } from "k6";
-
 export class StorefrontHelper {
-    constructor(urlHelper, http, customerHelper) {
+    constructor(urlHelper, http, customerHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
         this.customerHelper = customerHelper;
+        this.assertionsHelper = assertionsHelper;
     }
 
     loginUser() {
         const loginResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/login`);
-
-        if (
-            !check(loginResponse, {
-                'Verify Login page text': (r) => r.body.includes('Access your account'),
-            })
-        ) {
-            fail();
-        }
+        this.assertionsHelper.assertResponseContainsText(loginResponse, 'Access your account');
 
         this.http.submitForm(loginResponse, {
             formSelector: 'form[name="loginForm"]',
@@ -24,13 +16,6 @@ export class StorefrontHelper {
         });
 
         const overviewResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`);
-
-        if (
-            !check(overviewResponse, {
-                'Verify Overview page': (r) => r.body.includes('Overview'),
-            })
-        ) {
-            fail();
-        }
+        this.assertionsHelper.assertResponseContainsText(overviewResponse, 'Overview');
     }
 }

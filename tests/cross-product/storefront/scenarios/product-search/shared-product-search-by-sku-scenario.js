@@ -8,8 +8,8 @@ export class SharedProductSearchBySkuScenario extends AbstractScenario {
         group('ProductSearch', function () {
             const searchPageResponse = self.http.sendGetRequest(self.getStorefrontBaseUrl() + '/search?q=657712');
 
-            self.assertResponseStatus(searchPageResponse, 200);
-            self.assertResponseBodyIncludes(searchPageResponse, 'FRIWA stackable chair');
+            self.assertionsHelper.assertResponseStatus(searchPageResponse, 200);
+            self.assertionsHelper.assertResponseContainsText(searchPageResponse, 'FRIWA stackable chair');
         });
     }
 }

@@ -22,8 +22,8 @@ export class SharedCheckoutScenario extends AbstractScenario {
     productPage() {
         //product page
         const productPageResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/${'stapelstuhl-mit-geschlossenem-ruecken-M83'}`);
-        this.assertResponseStatus(productPageResponse, 200);
-        this.assertResponseBodyIncludes(productPageResponse, '<span itemprop="sku">657712</span>');
+        this.assertionsHelper.assertResponseStatus(productPageResponse, 200);
+        this.assertionsHelper.assertResponseContainsText(productPageResponse, '<span itemprop="sku">657712</span>');
 
         // add to cart form submit
         const addToCartFormSubmitResponse = this.http.submitForm(productPageResponse, {
@@ -32,7 +32,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
                 'quantity': __ENV.numberOfItems,
             },
         });
-        this.assertResponseStatus(addToCartFormSubmitResponse, 302);
+        this.assertionsHelper.assertResponseStatus(addToCartFormSubmitResponse, 302);
     }
 
     cartPage() {
@@ -45,13 +45,13 @@ export class SharedCheckoutScenario extends AbstractScenario {
 
     checkoutPage() {
         const checkoutResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout`, { redirects: 0});
-        this.assertResponseStatus(checkoutResponse, 302);
+        this.assertionsHelper.assertResponseStatus(checkoutResponse, 302);
     }
 
     addressPage() {
         //address
         const addressStepResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/address`);
-        this.assertResponseBodyIncludes(addressStepResponse, 'Delivery Address');
+        this.assertionsHelper.assertResponseContainsText(addressStepResponse, 'Delivery Address');
 
         //address form submit
         this.http.submitForm(addressStepResponse, {
@@ -66,7 +66,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
 
     shipmentPage() {
         const shipmentStepResponse =  this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/shipment`);
-        this.assertResponseBodyIncludes(shipmentStepResponse, 'Shipment 1 of 1');
+        this.assertionsHelper.assertResponseContainsText(shipmentStepResponse, 'Shipment 1 of 1');
 
         //shipment submit form
         this.http.submitForm(shipmentStepResponse, {
@@ -79,7 +79,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
 
     paymentPage() {
         const paymentStepResponse =  this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/payment`);
-        this.assertResponseBodyIncludes(paymentStepResponse, 'Payment method');
+        this.assertionsHelper.assertResponseContainsText(paymentStepResponse, 'Payment method');
 
         //payment submit form
         this.http.submitForm(paymentStepResponse, {
@@ -90,7 +90,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
 
     summaryPage() {
         const summaryStepResponse =  this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/summary`);
-        this.assertResponseBodyIncludes(summaryStepResponse, 'Complete checkout');
+        this.assertionsHelper.assertResponseContainsText(summaryStepResponse, 'Complete checkout');
 
         //summary submit form and place order
         this.http.submitForm(summaryStepResponse, {
@@ -103,7 +103,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
         this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/place-order`, { redirects: 0});
         const successPageResponse = this.http.sendGetRequest(this.http.url`${this.getStorefrontBaseUrl()}/en/checkout/success`);
 
-        this.assertResponseBodyIncludes(successPageResponse, 'Your order has been placed successfully.');
+        this.assertionsHelper.assertResponseContainsText(successPageResponse, 'Your order has been placed successfully.');
     }
 
     _getPaymentFormFields() {

@@ -16,7 +16,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
                 false
             );
 
-            self.assertResponseStatus(checkoutResponse, 201);
+            self.assertionsHelper.assertResponseStatus(checkoutResponse, 201);
         });
     }
 

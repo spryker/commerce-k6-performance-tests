@@ -12,7 +12,7 @@ export class SharedCartScenario extends AbstractScenario {
                 self.http.url`${self.cartHelper.getCartsUrl()}/${cartId}/?include=items`, requestParams, false
             );
 
-            self.assertResponseStatus(cartResponse);
+            self.assertionsHelper.assertResponseStatus(cartResponse, 200);
         });
     }
 

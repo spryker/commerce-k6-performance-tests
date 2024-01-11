@@ -1,10 +1,10 @@
-import {fail, check} from "k6";
 import {browser} from 'k6/experimental/browser';
 
 export class BrowserHelper {
-    constructor(urlHelper, customerHelper) {
+    constructor(urlHelper, customerHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
         this.customerHelper = customerHelper;
+        this.assertionsHelper = assertionsHelper;
     }
 
     async getLoggedInUserContext() {
@@ -21,11 +21,11 @@ export class BrowserHelper {
             loginPage.waitForNavigation(),
         ]);
 
-        if (!check(loginPage, {
-            'Verify Customer is logged in': (page) => page.locator('.user-navigation__user-name .user-navigation__text').textContent().trim() === 'Sonia Wagner'
-        })) {
-            fail();
-        }
+        this.assertionsHelper.assertPageState(
+            loginPage,
+            'Verify Customer is logged in',
+            (page) => page.url() === `${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`,
+        );
 
         loginPage.close();
 

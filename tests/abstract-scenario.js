@@ -5,8 +5,8 @@ import { StorefrontHelper } from '../helpers/storefront-helper.js';
 import { BrowserHelper } from '../helpers/browser-helper.js';
 import { UrlHelper } from '../helpers/url-helper.js';
 import { Trend } from 'k6/metrics';
-import { fail, check } from 'k6';
 import CustomerHelper from "../helpers/customer-helper.js";
+import { AssertionsHelper } from "../helpers/assertions-helper.js";
 
 export class AbstractScenario {
     constructor(environment, options = {}) {
@@ -24,9 +24,10 @@ export class AbstractScenario {
         this.environmentConfig = loadEnvironmentConfig(this.environment);
         this.urlHelper = new UrlHelper(this.environmentConfig);
         this.customerHelper = new CustomerHelper();
-        this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper);
-        this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper);
-        this.browserHelper = new BrowserHelper(this.urlHelper, this.customerHelper);
+        this.assertionsHelper = new AssertionsHelper();
+        this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper);
+        this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper);
+        this.browserHelper = new BrowserHelper(this.urlHelper, this.customerHelper, this.assertionsHelper);
     }
 
     createTrendMetric(name) {
@@ -42,37 +43,6 @@ export class AbstractScenario {
                 gitRepo: this._getRequiredEnvVariable('GIT_REPO')
             }
         );
-    }
-
-    assertRequestDurationIsLowerOrEqualTo(response, max) {
-        const duration = response.timings.duration;
-        const assertionName = `Response duration ${duration} is lower or equal to ${max}ms`;
-
-        return check(response, {
-            [assertionName]: () => duration <= max
-        });
-    }
-
-    assertResponseBodyIncludes(response, text) {
-        return check(response, {
-            [`Verify ${text} text`]: (r) => r.body.includes(text),
-        })
-    }
-
-    assertResponseStatus(response, expectedStatus = 200) {
-        return check(response, {
-            [`Response status is ${expectedStatus}`]: r => r.status === expectedStatus
-        });
-    }
-
-    assertPageState(page, assertionDescription, assertion) {
-        if (
-            !check(page, {
-                [assertionDescription]: (page) => assertion(page),
-            })
-        ) {
-            fail();
-        }
     }
 
     getStorefrontBaseUrl() {

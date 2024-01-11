@@ -18,12 +18,12 @@ export class SharedQuickOrderScenario extends AbstractScenario {
 
     async openQuickOrderPage(page) {
         await page.goto(`${this.getStorefrontBaseUrl()}/en/quick-order`);
-        this.assertPageState(
+        this.assertionsHelper.assertPageState(
             page,
             'Quick order page is opened',
             (page) => page.locator('form[name=quick_order_form]').isVisible(),
         );
-        this.assertPageState(
+        this.assertionsHelper.assertPageState(
             page,
             'Create order button is visible',
             (page) => page.locator('button[name=createOrder]').isVisible(),
@@ -37,7 +37,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
 
         await Promise.all([productSearchInput.type(__ENV.productSku), page.waitForSelector(productSearchItemSelector)]);
 
-        this.assertPageState(
+        this.assertionsHelper.assertPageState(
             page,
             'Product is found',
             (page) => page.locator('quick-order-row:nth-child(2) li.products-list__item--selected').isVisible(),
@@ -47,7 +47,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
     async selectProduct(page) {
         page.locator('quick-order-row:nth-child(2) li.products-list__item--selected').click();
 
-        this.assertPageState(
+        this.assertionsHelper.assertPageState(
             page,
             `Product quantity field is editable`,
             (page) => page.locator(this._getQuantityInputSelector()).isEditable(),
@@ -60,7 +60,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
 
         await quantityInput.type(quantity);
 
-        this.assertPageState(
+        this.assertionsHelper.assertPageState(
             page,
             `Product quantity is ${quantity}`,
             (page) => page.locator(this._getQuantityInputSelector()).inputValue() === quantity,
@@ -72,7 +72,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
 
         await Promise.all([submitButton.click(), page.waitForNavigation()]);
 
-        this.assertPageState(
+        this.assertionsHelper.assertPageState(
             page,
             'Checkout form is visible',
             (page) => page.locator('form[name=addressesForm]').isVisible(),

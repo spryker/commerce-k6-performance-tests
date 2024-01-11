@@ -9,7 +9,7 @@ export class SharedAddToCartScenario extends AbstractScenario {
 
         group('Checkout', function () {
             const addToCartResponse = self.cartHelper.addItemToCart(cartId, quantity, params, sku)
-            self.assertResponseStatus(addToCartResponse, 201);
+            self.assertionsHelper.assertResponseStatus(addToCartResponse, 201);
         });
     }
 }

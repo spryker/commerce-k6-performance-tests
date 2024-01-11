@@ -1,10 +1,9 @@
-import { check,fail } from 'k6';
-
 export class CartHelper {
-    constructor(urlHelper, http, customerHelper) {
+    constructor(urlHelper, http, customerHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
         this.customerHelper = customerHelper;
+        this.assertionsHelper = assertionsHelper;
     }
 
     haveCartWithProducts(quantity = 1, sku = '100429') {
@@ -12,7 +11,7 @@ export class CartHelper {
         const params = this.getParamsWithAuthorization();
         const carts = this.getCarts(params);
 
-        const cartsResponse = JSON.parse(this.http.sendPostRequest(
+        const cartsResponse = this.http.sendPostRequest(
             this.http.url`${this.urlHelper.getStorefrontApiBaseUrl()}/carts`,
             JSON.stringify({
                 data: {
@@ -28,15 +27,19 @@ export class CartHelper {
             }),
             params,
             false
-        ).body);
+        );
+        this.assertionsHelper.assertResponseStatus(cartsResponse, 201, 'Create cart');
+
+        const cartsResponseJson = JSON.parse(cartsResponse.body);
+        this.assertionsHelper.assertSingleResourceResponseBodyStructure(cartsResponseJson, 'Create cart');
 
         if (quantity > 0) {
-            this.addItemToCart(cartsResponse.data.id, quantity, params, sku);
+            this.addItemToCart(cartsResponseJson.data.id, quantity, params, sku);
         }
 
         this.deleteCarts(carts, params);
 
-        return cartsResponse.data.id;
+        return cartsResponseJson.data.id;
     }
 
     getParamsWithAuthorization() {
@@ -61,21 +64,10 @@ export class CartHelper {
             defaultParams,
             false
         );
-
-        if (
-            !check(response, {
-                'Verify that Auth Token Request status is s 201': (response) => response.status === 201,
-            })
-        ) {
-            fail('Getting access token response status was not 201 but ' + response.status);
-        }
+        this.assertionsHelper.assertResponseStatus(response, 201, 'Auth Token');
 
         const responseJson = JSON.parse(response.body);
-
-        check(responseJson, {
-            'Verify token response body has `data` defined': (responseJson) => responseJson.data !== undefined,
-            'Verify token response body has `data.attributes` defined': (responseJson) => responseJson.data.attributes !== undefined
-        });
+        this.assertionsHelper.assertSingleResourceResponseBodyStructure(responseJson, 'Auth Token');
 
         defaultParams.headers.Authorization = `${responseJson.data.attributes.tokenType} ${responseJson.data.attributes.accessToken}`;
 
@@ -87,20 +79,27 @@ export class CartHelper {
     }
 
     getCarts(params) {
-        return JSON.parse(this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false).body);
+        const getCartsResponse = this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false);
+        this.assertionsHelper.assertResponseStatus(getCartsResponse, 200, 'Get Carts');
+
+        const getCartsResponseJson = JSON.parse(getCartsResponse.body);
+        this.assertionsHelper.assertResourceCollectionResponseBodyStructure(getCartsResponseJson, 'Get Carts');
+
+        return getCartsResponseJson;
     }
 
     deleteCarts(carts, params) {
         if (carts.data) {
             const self = this;
             carts.data.forEach(function (cart) {
-                self.http.sendDeleteRequest(self.http.url`${self.getCartsUrl()}/${cart.id}`, null, params, false);
+                let deleteCartResponse = self.http.sendDeleteRequest(self.http.url`${self.getCartsUrl()}/${cart.id}`, null, params, false);
+                self.assertionsHelper.assertResponseStatus(deleteCartResponse, 204, 'Delete cart');
             });
         }
     }
 
     addItemToCart(cartId, quantity, params, sku) {
-        return this.http.sendPostRequest(
+        const addItemToCartResponse = this.http.sendPostRequest(
             this.http.url`${this.getCartsUrl()}/${cartId}/items`,
             JSON.stringify({
                 data: {
@@ -115,5 +114,9 @@ export class CartHelper {
             params,
             false
         );
+
+        this.assertionsHelper.assertResponseStatus(addItemToCartResponse, 201, 'Add Item to Cart');
+
+        return addItemToCartResponse;
     }
 }
