@@ -22,8 +22,8 @@ export class BrowserHelper {
         ]);
 
         this.assertionsHelper.assertPageState(
-            'Verify Customer is logged in',
             loginPage,
+            'Verify Customer is logged in',
             (page) => page.url() === `${this.urlHelper.getStorefrontBaseUrl()}/en/customer/overview`,
         );
 
