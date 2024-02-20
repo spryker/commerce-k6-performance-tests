@@ -13,7 +13,7 @@ services:
     environment:
         - K6_SCRIPT=${K6_SCRIPT}
         - K6_HOSTENV=local
-        - K6_INSECURE_SKIP_TLS_VERIFY=${K6_INSECURE_SKIP_TLS_VERIFY}
+        - K6_INSECURE_SKIP_TLS_VERIFY=true
         - K6_STATSD_ENABLE_TAGS=true
         - K6_OUT=
         - K6_STATSD_ADDR=${K6_STATSD_ADDR}
