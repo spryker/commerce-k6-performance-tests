@@ -7,6 +7,8 @@ import { UrlHelper } from '../helpers/url-helper.js';
 import { Trend } from 'k6/metrics';
 import CustomerHelper from "../helpers/customer-helper.js";
 import { AssertionsHelper } from "../helpers/assertions-helper.js";
+import { BapiHelper } from '../helpers/bapi-helper.js';
+import AdminHelper from '../helpers/admin-helper.js';
 
 export class AbstractScenario {
     constructor(environment, options = {}) {
@@ -24,8 +26,10 @@ export class AbstractScenario {
         this.environmentConfig = loadEnvironmentConfig(this.environment);
         this.urlHelper = new UrlHelper(this.environmentConfig);
         this.customerHelper = new CustomerHelper();
+        this.adminHelper = new AdminHelper();
         this.assertionsHelper = new AssertionsHelper();
         this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper);
+        this.bapiHelper = new BapiHelper(this.urlHelper, this.http, this.adminHelper, this.assertionsHelper);
         this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper);
         this.browserHelper = new BrowserHelper(this.urlHelper, this.customerHelper, this.assertionsHelper);
     }
@@ -55,6 +59,10 @@ export class AbstractScenario {
 
     getBackofficeBaseUrl() {
         return this.urlHelper.getBackofficeBaseUrl();
+    }
+
+    getBackendApiUrl() {
+        return this.urlHelper.getBackendApiBaseUrl();
     }
 
     getBackofficeApiBaseUrl() {

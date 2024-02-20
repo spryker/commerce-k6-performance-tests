@@ -1,0 +1,76 @@
+version: '3.4'
+
+services:
+  k6:
+    container_name: "loadtesting_environment"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - loadtesting
+      - spryker_demo_private
+      - spryker_demo_public
+    environment:
+        - K6_SCRIPT=${K6_SCRIPT}
+        - K6_HOSTENV=local
+        - K6_INSECURE_SKIP_TLS_VERIFY=${K6_INSECURE_SKIP_TLS_VERIFY}
+        - K6_STATSD_ENABLE_TAGS=true
+        - K6_OUT=
+        - K6_STATSD_ADDR=${K6_STATSD_ADDR}
+        - K6_STATSD_NAMESPACE=${K6_STATSD_NAMESPACE}
+        - K6_HTTP_DEBUG=${K6_HTTP_DEBUG}
+        - K6_NO_THRESHOLDS=${K6_NO_THRESHOLDS:-true}
+        - DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE=${DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE:-1500}
+        - DATA_EXCHANGE_TARGET_CATALOG_SIZE=${DATA_EXCHANGE_TARGET_CATALOG_SIZE:-1500}
+        - DATA_EXCHANGE_THREADS=${DATA_EXCHANGE_THREADS:-1}
+        - DATA_EXCHANGE_DEBUG=${DATA_EXCHANGE_DEBUG:-0}
+        - GIT_HASH=${GIT_HASH:-'-'}
+        - GIT_BRANCH=${GIT_BRANCH:-'-'}
+        - GIT_REPO=${GIT_REPO:-'-'}
+        - GIT_TAG=${GIT_TAG:-'-'}
+        - SPRYKER_TEST_RUN_ID=${SPRYKER_TEST_RUN_ID:-'-'}
+        - SPRYKER_TEST_RUNNER_HOSTNAME=${SPRYKER_TEST_RUNNER_HOSTNAME:-'-'}
+        - SPRYKER_TEST_ENVIRONMENT=${SPRYKER_TEST_ENVIRONMENT:-'-'}
+        - B2B_MP_AUTH_USERNAME=${B2B_MP_AUTH_USERNAME}
+        - B2B_MP_AUTH_PASSWORD=${B2B_MP_AUTH_PASSWORD}
+        - B2C_MP_AUTH_USERNAME=${B2C_MP_AUTH_USERNAME}
+        - B2C_MP_AUTH_PASSWORD=${B2C_MP_AUTH_PASSWORD}
+        - B2B_AUTH_USERNAME=${B2B_AUTH_USERNAME}
+        - B2B_AUTH_PASSWORD=${B2B_AUTH_PASSWORD}
+        - B2C_AUTH_USERNAME=${B2C_AUTH_USERNAME}
+        - B2C_AUTH_PASSWORD=${B2C_AUTH_PASSWORD}
+    volumes:  
+      - .:/home/k6
+    ports:
+      - "6565:6565"
+ 
+networks:
+  loadtesting:
+  spryker-cloud_private:
+    external: true
+  spryker-cloud_public:
+    external: true
+  spryker_public:
+    external: true
+  spryker_private:
+    external: true
+  spryker_demo_public:
+    external: true
+  spryker_demo_private:
+    external: true
+  spryker_b2b_marketplace_private:
+    external: true
+  spryker_b2b_marketplace_dev_private:
+    external: true
+  spryker_b2c_marketplace_dev_private:
+    external: true
+  spryker_b2c_dev_private:
+    external: true
+  spryker_b2b_dev_private:
+    external: true
+  spryker_b2c_marketplace_private:
+    external: true
+  spryker_b2c_private:
+    external: true
+  spryker_b2b_private:
+    external: true
