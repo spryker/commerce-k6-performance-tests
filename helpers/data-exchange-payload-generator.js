@@ -25,7 +25,14 @@ export class DataExchangePayloadGenerator {
                     
                 },
                 productAbstractPriceProducts: {
-                    price: Math.round(Math.random() * 100)
+                    price: Math.round(Math.random() * 100),
+                    priceProductStores:{
+                        id_price_product_store: 'toInt',
+                        priceProductStoreDefaults: {
+                            id_price_product_default: "toInt",
+                            fk_price_product_store: "toInt"
+                        }
+                    }
                 },
                 productAbstractLocalizedAttributes: {
                     description:  `productAbstractLocalizedAttributes Updated at: ${new Date().toISOString()}`
@@ -39,7 +46,27 @@ export class DataExchangePayloadGenerator {
                         for (const thirdLevelKey of Object.keys(secondLevel[secondLevelKey])) {
                             product[firstLevelKey].map((el) => {
                                 return el[secondLevelKey].map((key) => {
-                                    key[thirdLevelKey] = secondLevel[secondLevelKey][thirdLevelKey]
+                                    // console.log('key[thirdLevelKey]', key[thirdLevelKey], key, thirdLevelKey,  'Array.isArray(key[thirdLevelKey])', Array.isArray(key[thirdLevelKey]))
+                                    if (Array.isArray(key[thirdLevelKey])) {
+                                        key[thirdLevelKey] = key[thirdLevelKey].map((tr) => {
+                                            for (const forthLevelKey of Object.keys(tr)) {
+                                                if (forthLevelKey in secondLevel[secondLevelKey][thirdLevelKey]) {
+                                                    if (secondLevel[secondLevelKey][thirdLevelKey][forthLevelKey] === 'toInt') {
+                                                        tr[forthLevelKey] = parseInt(tr[forthLevelKey])
+                                                    } else {
+                                                        tr[forthLevelKey] = secondLevel[secondLevelKey][thirdLevelKey][forthLevelKey]
+                                                    }
+                                                }
+                                            }
+                                            return tr
+                                        })
+                                    } else {
+                                        if (secondLevel[secondLevelKey][thirdLevelKey] === 'toInt') {
+                                            key[thirdLevelKey] = parseInt(key[thirdLevelKey])
+                                        } else {
+                                            key[thirdLevelKey] = secondLevel[secondLevelKey][thirdLevelKey]
+                                        }
+                                    }
                                 })
                             })
                         }

@@ -1,16 +1,9 @@
-import { loadDefaultOptions } from "../../../../../../lib/utils.js";
+import { getExecutionConfiguration, loadDefaultOptions } from "../../../../../../lib/utils.js";
 import { ApiPutPayloadScenario } from "../scenarios/api-put-payload-scenario.js";
 
 export const options = loadDefaultOptions();
 
-const chunkSize = __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE ? __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE : 1000
-const threads = __ENV.DATA_EXCHANGE_THREADS ? __ENV.DATA_EXCHANGE_THREADS : 1
-
-let targetCatalogSize = __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE ? __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE : 10000
-
-const amountOfIteration = Math.ceil(targetCatalogSize / chunkSize)
-
-console.info('amountOfIteration', amountOfIteration, 'targetCatalogSize', targetCatalogSize, 'chunkSize', chunkSize, 'target product amount', chunkSize * amountOfIteration)
+let executionConfig = getExecutionConfiguration(__ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, __ENV.DATA_EXCHANGE_PAYLOAD_UPDATE_CHUNK_SIZE, __ENV.DATA_EXCHANGE_THREADS)
 
 let productTemplate = open("../template/product.json")
 let productLabelTemplate = open("../template/productLabel.json")
@@ -23,13 +16,14 @@ options.scenarios = {
             testId: 'DX-PUT',
             testGroup: 'DataExchange',
         },
-        iterations: amountOfIteration,
-        vus: threads,
+        iterations: executionConfig.amountOfIteration,
+        vus: executionConfig.threads,
         maxDuration: "1200m"
     },
 };
 
-const productPutCreateScenario = new ApiPutPayloadScenario('DEX', chunkSize);
+const productPutCreateScenario = new ApiPutPayloadScenario('DEX', executionConfig.chunkSize);
+
 export function productPutScenario() {
     productPutCreateScenario.execute(productTemplate, productLabelTemplate);
 }

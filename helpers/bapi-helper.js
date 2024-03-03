@@ -1,9 +1,12 @@
+import { Counter } from 'k6/metrics';
+
 export class BapiHelper {
     constructor(urlHelper, http, adminHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
         this.adminHelper = adminHelper;
         this.assertionsHelper = assertionsHelper;
+        this.tokenCreationTotal = new Counter('token_creation_total', true)
     }
 
     getParamsWithAuthorization() {
@@ -29,6 +32,8 @@ export class BapiHelper {
         );
 
         this.assertionsHelper.assertResponseStatus(response, 200, 'Auth Token');
+        
+        this.tokenCreationTotal.add(response.timings.duration)
 
         const responseJson = JSON.parse(response.body);
         

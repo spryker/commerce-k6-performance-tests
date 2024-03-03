@@ -1,19 +1,14 @@
-import { loadDefaultOptions } from "../../../../../../lib/utils.js";
+import { Profiler } from "../../../../../../helpers/profiler.js";
+import { getExecutionConfiguration, loadDefaultOptions } from "../../../../../../lib/utils.js";
 import { ApiPatchPayloadScenario } from "../scenarios/api-patch-payload-scenario.js";
 
 export const options = loadDefaultOptions();
 
-const chunkSize = __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE ? __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE : 1000
-const threads = __ENV.DATA_EXCHANGE_THREADS ? __ENV.DATA_EXCHANGE_THREADS : 1
-
-let targetCatalogSize = __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE ? __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE : 10000
-
-const amountOfIteration = Math.ceil(targetCatalogSize / chunkSize)
-
-console.info('amountOfIteration', amountOfIteration, 'targetCatalogSize', targetCatalogSize, 'chunkSize', chunkSize, 'target product amount', chunkSize * amountOfIteration)
-
 let productTemplate = open("../template/product.json")
 let productLabelTemplate = open("../template/productLabel.json")
+let profiler = new Profiler()
+
+let executionConfig = getExecutionConfiguration(__ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, __ENV.DATA_EXCHANGE_PAYLOAD_UPDATE_CHUNK_SIZE, __ENV.DATA_EXCHANGE_THREADS)
 
 options.scenarios = {
     ProductCreatePatchVUS: {
@@ -23,13 +18,14 @@ options.scenarios = {
             testId: 'DX-PATCH',
             testGroup: 'DataExchange',
         },
-        iterations: amountOfIteration,
-        vus: threads,
+        iterations: executionConfig.amountOfIteration,
+        vus: executionConfig.threads,
         maxDuration: "1200m"
     },
 };
 
-const productPatchCreateScenario = new ApiPatchPayloadScenario('DEX', chunkSize);
+const productPatchCreateScenario = new ApiPatchPayloadScenario('DEX', executionConfig.chunkSize);
+
 export function productPatchScenario() {
-    productPatchCreateScenario.execute(productTemplate, productLabelTemplate);
+    productPatchCreateScenario.execute(productTemplate, productLabelTemplate, profiler);
 }

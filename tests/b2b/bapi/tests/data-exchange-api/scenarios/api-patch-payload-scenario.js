@@ -3,6 +3,7 @@ import { group } from 'k6';
 import { DataExchangePayloadGenerator } from '../../../../../../helpers/data-exchange-payload-generator.js';
 import { uuid } from '../../../../../../lib/utils.js';
 import { sleep } from 'k6';
+import { Trend, Counter } from 'k6/metrics';
 import { ApiPostPayloadScenario } from './api-post-payload-scenario.js';
 
 export class ApiPatchPayloadScenario extends ApiPostPayloadScenario {
@@ -14,67 +15,42 @@ export class ApiPatchPayloadScenario extends ApiPostPayloadScenario {
         this.payloadGenerator = new DataExchangePayloadGenerator(uuid, this.chunkSize)
         this.group = 'API PATCH'
         this.type = 'patch'
+        this.productPatchTrend = new Trend('product_patch', true)
+        this.productPatchTotal = new Counter('product_patch_total', true)
     }
 
     execute(productTemplate, productLabelTemplate) {
         let self = this;
         group(self.group, function () {
-            const requestParams = self.bapiHelper.getParamsWithAuthorization();
-            requestParams.thresholds = {}
-            requestParams.timeout = '180s'
+            const requestParams = self.getRequestParams()
+            let responseProducts = self.createProductsWithLabels(requestParams, productTemplate, productLabelTemplate)
             let count = 0
-
-            let productLabelId = self.getLabels(productLabelTemplate, requestParams)
-            if (!productLabelId) {
-                console.warn("Sleeping because of request for labels creation failed")
-                sleep(self.sleepInterval)
-                productLabelId = self.getLabels(productLabelTemplate, requestParams)
-            }
-            let responseProducts
-            do {
-                responseProducts = self.createProducts(productTemplate, productLabelId, requestParams)
-                count++
-                if (responseProducts.status !== 201) {
-                    let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
-                    console.warn(`Start sleeping because of request for products ${self.type} failed. Retry: ${count}, timeout: ${sleepingInterval} sec`)
-                    sleep(sleepingInterval)
-                    console.warn(`Sleeping done. Iteration: ${count}`)
-                }
-                if (count > self.retryLimit) {
-                    console.error(`Request for products ${self.type}: was not able to process request within ${count} iterations`)
-                    break;
-                }
-            } while (responseProducts.status !== 201 && count < self.retryLimit)
-            
-            count = 0
             let updateResult
             do {
                 updateResult = self.updateProducts(responseProducts, requestParams)
                 count++
-                if (updateResult.status !== 201) {
+                if (updateResult.status !== 200) {
                     let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
-                    console.warn(`Start sleeping because of request for products ${self.type} failed. Retry: ${count}, timeout: ${sleepingInterval} sec`)
+                    console.warn(`Start sleeping because of request for products ${self.type} failed. Retry: ${count}, timeout: ${sleepingInterval} sec. thread:${ __VU}, iteration: ${__ITER}`)
                     sleep(sleepingInterval)
-                    console.warn(`Sleeping done. Iteration: ${count}`)
+                    console.warn(`Sleeping done. Iteration: ${count}. thread:${ __VU}, iteration: ${__ITER}`)
                 }
                 if (count > self.retryLimit) {
-                    console.error(`Request for products ${self.type}: was not able to process request within ${count} iterations`)
+                    console.error(`Request for products ${self.type}: was not able to process request within ${count} iterations. thread:${ __VU}, iteration: ${__ITER}`)
                     break;
                 }
-            } while (updateResult.status !== 201 && count < self.retryLimit)
-            
+            } while (updateResult.status !== 200 && count < self.retryLimit)
         });
     }
 
     updateProducts(responseProducts, requestParams) {
         let recentlyCreatedProducts =  JSON.parse(responseProducts.body).data
-        console.log('thread:', __VU, 'iteration:', __ITER, new Date().toLocaleString())
         let payloadProducts = this.payloadGenerator.prepareProductsForUpdate(recentlyCreatedProducts)
-        // console.log('payloadProducts', payloadProducts)
         let updateResult = this.http.sendPatchRequest(this.http.url`${this.getBackendApiUrl()}/dynamic-entity/product-abstracts`, payloadProducts, requestParams, false);
-        // console.log('patchResult', updateResult)
-        console.log('thread:', __VU, 'iteration:', __ITER, 'updateResult', updateResult.status, new Date().toLocaleString())
-
+        if (updateResult.status === 200) {
+            this.productPatchTotal.add(updateResult.timings.duration)
+            this.productPatchTrend.add(updateResult.timings.duration)
+        }
         return updateResult
     }
 }

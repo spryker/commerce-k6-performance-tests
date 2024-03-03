@@ -7,7 +7,24 @@ For local execution in most cases is enough to have only one k6 service and simp
 
 By default the internal networks of the products Docker containers are not available in the K6 container. Therefore, when trying to test products running on the same machine, the endpoints are not reachable for the K6 container.
 
-To solve this problem it is necessary to add spryker app network to the list of supported network inside the `docker-compose.local.yml`
+To solve this problem it is necessary to add Spryker app network to the list of supported network inside the `docker-compose.local.yml`
+
+## Setting up configuration file
+
+With docker-compose.local.yml you do not need to create any env file. In case parameters for data exchange execution require adjustments following options are available: 
+
+### Create .env file with the following content:
+
+    #Data exchange configuration
+    DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE=500
+    DATA_EXCHANGE_PAYLOAD_UPDATE_CHUNK_SIZE=100
+    DATA_EXCHANGE_TARGET_CATALOG_SIZE=10000
+    DATA_EXCHANGE_THREADS=2
+    DATA_EXCHANGE_DEBUG=0
+    # K6 threshhold activation/deactivation variable
+    K6_NO_THRESHOLDS=true
+
+### Create .env based on `.env-default`
 
 ## Setting up docker-compose.local.yml
 
