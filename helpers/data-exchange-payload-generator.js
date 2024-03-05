@@ -46,7 +46,6 @@ export class DataExchangePayloadGenerator {
                         for (const thirdLevelKey of Object.keys(secondLevel[secondLevelKey])) {
                             product[firstLevelKey].map((el) => {
                                 return el[secondLevelKey].map((key) => {
-                                    // console.log('key[thirdLevelKey]', key[thirdLevelKey], key, thirdLevelKey,  'Array.isArray(key[thirdLevelKey])', Array.isArray(key[thirdLevelKey]))
                                     if (Array.isArray(key[thirdLevelKey])) {
                                         key[thirdLevelKey] = key[thirdLevelKey].map((tr) => {
                                             for (const forthLevelKey of Object.keys(tr)) {
