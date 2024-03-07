@@ -1,7 +1,6 @@
 
 
 export class DataExchangePayloadGenerator {
-    itemsAmount
 
     constructor(uuid, itemsAmount = 1000) {
         this.itemsAmount = itemsAmount

@@ -5,8 +5,3 @@ settings.json
 /results/
 !/results/.gitkeep
 .lh
-test_resp.json
-test-results.md
-test.json
-test.php
-*.ndjson

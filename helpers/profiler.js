@@ -1,5 +1,4 @@
 export class Profiler {
-    storage
     constructor() {
         this.storage = {}
     }
