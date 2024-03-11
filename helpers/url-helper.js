@@ -15,6 +15,10 @@ export class UrlHelper {
         return this._replaceUrlStore(this.environmentConfig.backofficeUrl);
     }
 
+    getBackendApiBaseUrl() {
+        return this._replaceUrlStore(this.environmentConfig.backendApiUrl);
+    }
+
     getBackofficeApiBaseUrl() {
         return this._replaceUrlStore(this.environmentConfig.backofficeApiUrl);
     }

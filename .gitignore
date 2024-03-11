@@ -4,3 +4,4 @@ settings.json
 /.env
 /results/
 !/results/.gitkeep
+.lh
