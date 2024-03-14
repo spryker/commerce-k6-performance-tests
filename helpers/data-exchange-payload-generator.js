@@ -7,7 +7,8 @@ const replacement = {
     fkPriceType: 1,
     fkCurrency: 93,
     fkLocaleEn: 66,
-    fkLocaleDe: 46
+    fkLocaleDe: 46,
+    fkLocaleAt: 43
 }
 
 export class DataExchangePayloadGenerator {
@@ -107,6 +108,7 @@ export class DataExchangePayloadGenerator {
                     .replaceAll('"{fkCurrency}"', replacement.fkCurrency)
                     .replaceAll('"{fkLocaleEn}"', replacement.fkLocaleEn)
                     .replaceAll('"{fkLocaleDe}"', replacement.fkLocaleDe)
+                    .replaceAll('"{fkLocaleAt}"', replacement.fkLocaleAt)
             )
         }
 
@@ -130,6 +132,7 @@ export class DataExchangePayloadGenerator {
                         .replaceAll('"{fkCurrency}"', replacement.fkCurrency)
                         .replaceAll('"{fkLocaleEn}"', replacement.fkLocaleEn)
                         .replaceAll('"{fkLocaleDe}"', replacement.fkLocaleDe)
+                        .replaceAll('"{fkLocaleAt}"', replacement.fkLocaleAt)
                         .replaceAll('"{fkProductLabel}"', productLabelId)
                         .replaceAll('"{CONCRETES}"', this.getConcrete(productConcreteTemplate, random))
                 )
