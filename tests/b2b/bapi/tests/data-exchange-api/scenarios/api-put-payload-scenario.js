@@ -8,8 +8,8 @@ import { ApiPostPayloadScenario } from './api-post-payload-scenario.js';
 
 
 export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
-    constructor(environment, chunkSize, options = {}) {
-        super(environment, options, options)
+    constructor(environment, chunkSize, concreteMaxAmount, options = {}) {
+        super(environment, options, concreteMaxAmount, options)
         this.chunkSize = chunkSize
         this.sleepInterval = 30
         this.retryLimit = 2
@@ -20,11 +20,11 @@ export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
         this.productPutTotal = new Counter('product_put_total', true)
     }
 
-    execute(productTemplate, productLabelTemplate) {
+    execute(productTemplate, productConcreteTemplate, productLabelTemplate) {
         let self = this;
         group(self.group, function () {
             const requestParams = self.getRequestParams()
-            let responseProducts = self.createProductsWithLabels(requestParams, productTemplate, productLabelTemplate)
+            let responseProducts = self.createProductsWithLabels(requestParams, productTemplate, productConcreteTemplate, productLabelTemplate)
             let count = 0
             self.profiler.start('productPut')
             let updateResult
@@ -33,7 +33,7 @@ export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
                 count++
                 if (updateResult.status !== 200) {
                     let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
-                    console.warn(`Start sleeping because of request for products ${self.type} failed. Retry: ${count}, timeout: ${sleepingInterval} sec. thread:${ __VU}, iteration: ${__ITER}`)
+                    console.warn(`Start sleeping because of request for products ${self.type} failed. Response status: ${updateResult.status}. Amount Of Retries: ${count}, timeout: ${sleepingInterval} sec. thread:${ __VU}, iteration: ${__ITER}`)
                     sleep(sleepingInterval)
                     console.warn(`Sleeping done. Iteration: ${count}. thread:${ __VU}, iteration: ${__ITER}`)
                 }

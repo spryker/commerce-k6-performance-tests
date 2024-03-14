@@ -105,7 +105,7 @@
             "name": "{random}"
         },
         {
-            "fk_locale": "{fkLocaleEn}",
+            "fk_locale": "{fkLocaleAt}",
             "fk_product": null,
             "name": "{random}"
         }

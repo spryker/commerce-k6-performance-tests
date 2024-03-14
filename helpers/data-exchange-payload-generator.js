@@ -1,9 +1,20 @@
-
+const replacement = {
+    fkStoreDe: 1,
+    fkStoreAt: 2,
+    fkCategory: 5,
+    fkStock: 1,
+    fkProductRelationType: 1,
+    fkPriceType: 1,
+    fkCurrency: 93,
+    fkLocaleEn: 66,
+    fkLocaleDe: 46
+}
 
 export class DataExchangePayloadGenerator {
 
-    constructor(uuid, itemsAmount = 1000) {
+    constructor(uuid, itemsAmount = 1000, concreteMaxAmount = 5) {
         this.itemsAmount = itemsAmount
+        this.concreteMaxAmount = concreteMaxAmount
         this.uuid = uuid
     }
 
@@ -82,21 +93,45 @@ export class DataExchangePayloadGenerator {
         })
     }
 
-    generateProducts(productTemplate, productLabelId = 3) {
+    getConcrete(productConcreteTemplate, random) {
+        let concretes = []
+        for (let index = 1; index <= this.concreteMaxAmount; index++) {
+            concretes.push(
+                productConcreteTemplate.replaceAll('{random}', `${random}-${index}`)
+                    .replaceAll('"{fkStoreDe}"', replacement.fkStoreDe)
+                    .replaceAll('"{fkStoreAt}"', replacement.fkStoreAt)
+                    .replaceAll('"{fkCategory}"', replacement.fkCategory)
+                    .replaceAll('"{fkStock}"', replacement.fkStock)
+                    .replaceAll('"{fkProductRelationType}"', replacement.fkProductRelationType)
+                    .replaceAll('"{fkPriceType}"', replacement.fkPriceType)
+                    .replaceAll('"{fkCurrency}"', replacement.fkCurrency)
+                    .replaceAll('"{fkLocaleEn}"', replacement.fkLocaleEn)
+                    .replaceAll('"{fkLocaleDe}"', replacement.fkLocaleDe)
+            )
+        }
+
+        return concretes.join(',\n')
+    }
+
+    generateProducts(productTemplate, productConcreteTemplate, productLabelId = 3) {
         let result = []
         for (let index = 0; index < this.itemsAmount; index++) {
+            let random = this.uuid()
             result.push(
                 JSON.parse(
                     productTemplate
-                        .replaceAll('{random}', this.uuid())
-                        .replaceAll('"{fkStore}"', 1)
-                        .replaceAll('"{fkCategory}"', 1)
-                        .replaceAll('"{fkStock}"', 1)
-                        .replaceAll('"{fkProductRelationType}"', 1)
-                        .replaceAll('"{fkPriceType}"', 1)
-                        .replaceAll('"{fkCurrency}"', 1)
-                        .replaceAll('"{fkLocale}"', 1)
+                        .replaceAll('{random}', random)
+                        .replaceAll('"{fkStoreDe}"', replacement.fkStoreDe)
+                        .replaceAll('"{fkStoreAt}"', replacement.fkStoreAt)
+                        .replaceAll('"{fkCategory}"', replacement.fkCategory)
+                        .replaceAll('"{fkStock}"', replacement.fkStock)
+                        .replaceAll('"{fkProductRelationType}"', replacement.fkProductRelationType)
+                        .replaceAll('"{fkPriceType}"', replacement.fkPriceType)
+                        .replaceAll('"{fkCurrency}"', replacement.fkCurrency)
+                        .replaceAll('"{fkLocaleEn}"', replacement.fkLocaleEn)
+                        .replaceAll('"{fkLocaleDe}"', replacement.fkLocaleDe)
                         .replaceAll('"{fkProductLabel}"', productLabelId)
+                        .replaceAll('"{CONCRETES}"', this.getConcrete(productConcreteTemplate, random))
                 )
             )
         }
@@ -125,7 +160,7 @@ export class DataExchangePayloadGenerator {
 
     generateLabel(productLabelTemplate) {
         let result = []
-        result.push(JSON.parse(productLabelTemplate.replaceAll('{random}', this.uuid()).replaceAll('"{fkStore}"', 1)))
+        result.push(JSON.parse(productLabelTemplate.replaceAll('{random}', this.uuid()).replaceAll('"{fkStoreDe}"', replacement.fkStoreDe).replaceAll('"{fkStoreAt}"', replacement.fkStoreAt)))
 
         return JSON.stringify({
             data: result

@@ -11,9 +11,6 @@
     "productLabelStores": [
         {
             "fk_store": "{fkStoreDe}"
-        },
-        {
-            "fk_store": "{fkStoreAt}"
         }
     ]
 }

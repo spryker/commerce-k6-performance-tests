@@ -1,13 +1,14 @@
 import { ApiPostPayloadScenario } from "../scenarios/api-post-payload-scenario.js";
-import { getExecutionConfiguration, loadDefaultOptions } from "../../../../../../lib/utils.js";
+import { getExecutionConfiguration, getTemplateFolder, loadDefaultOptions } from "../../../../../../lib/utils.js";
 
 export const options = loadDefaultOptions();
 
-let productTemplate = open("../template/product.json")
-let productImageTemplate = open("../template/productImage.json")
-let productLabelTemplate = open("../template/productLabel.json")
+let productTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/product.json`)
+let productConcreteTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/concrete.json`)
+let productLabelTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/productLabel.json`)
+let productImageTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/productImage.json`)
 
-let executionConfig = getExecutionConfiguration(__ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE, __ENV.DATA_EXCHANGE_THREADS)
+let executionConfig = getExecutionConfiguration(__ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE, __ENV.DATA_EXCHANGE_THREADS, __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT)
 
 options.scenarios = {
     ProductCreatePostVUS: {
@@ -23,7 +24,7 @@ options.scenarios = {
     },
 };
 
-const productCreateScenario = new ApiPostPayloadScenario('DEX', executionConfig.chunkSize);
+const productCreateScenario = new ApiPostPayloadScenario('DEX', executionConfig.chunkSize, executionConfig.concreteMaxAmount);
 export function productPostScenario() {
-    productCreateScenario.execute(productTemplate, productImageTemplate, productLabelTemplate);
+    productCreateScenario.execute(productTemplate, productConcreteTemplate, productImageTemplate, productLabelTemplate);
 }
