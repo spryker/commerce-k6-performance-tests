@@ -2,7 +2,7 @@
 import { group } from 'k6';
 import { AbstractScenario } from '../../../../../abstract-scenario.js';
 import { DataExchangePayloadGenerator } from '../../../../../../helpers/data-exchange-payload-generator.js';
-import { debug, uuid } from '../../../../../../lib/utils.js';
+import { debug, getIteration, getThread, uuid } from '../../../../../../lib/utils.js';
 import { sleep } from 'k6';
 import { Profiler } from '../../../../../../helpers/profiler.js';
 import { Trend, Counter } from 'k6/metrics';
@@ -23,7 +23,9 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         this.productCreateTrend = new Trend('product_creation', true)
         this.productImageCreationTrend = new Trend('product_image_creation', true)
         this.productCreationTotal = new Counter('product_creation_total', true)
+        this.sleepingTimeTotal = new Counter('sleeping_time_total', true)
         this.productImageCreationTotal = new Counter('product_image_creation_total', true)
+        this.productLabelId = null
     }
 
     execute(productTemplate, productConcreteTemplate, productImageTemplate, productLabelTemplate) {
@@ -38,6 +40,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
                 count++
                 if (productImageResponse.status !== 201) {
                     let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
+                    self.sleepingTimeTotal.add(sleepingInterval)
                     console.warn(`Start sleeping because of request for images creation failed. Response status: ${productImageResponse.status}. Amount Of Retries: ${count}, timeout: ${sleepingInterval} sec`)
                     sleep(sleepingInterval)
                     console.warn(`Sleeping done. Iteration: ${count}`)
@@ -69,12 +72,13 @@ export class ApiPostPayloadScenario extends AbstractScenario {
             count++
             if (responseProducts.status !== 201) {
                 let sleepingInterval = this.sleepInterval * count + Math.floor(Math.random() * 10) + 1
-                console.warn(`Start sleeping because of request for products ${this.type} failed. Response status: ${responseProducts.status}. Amount Of Retries: ${count}, timeout: ${sleepingInterval} sec. thread:${ __VU}, iteration: ${__ITER}`)
+                this.sleepingTimeTotal.add(sleepingInterval)
+                console.warn(`Start sleeping because of request for products ${this.type} failed. Response status: ${responseProducts.status}. Amount Of Retries: ${count}, timeout: ${sleepingInterval} sec. thread:${getThread()}, iteration: ${getIteration()}`)
                 sleep(sleepingInterval)
-                console.warn(`Sleeping done. Iteration: ${count}. thread:${ __VU}, iteration: ${__ITER}`)
+                console.warn(`Sleeping done. Iteration: ${count}. thread:${getThread()}, iteration: ${getIteration()}`)
             }
             if (count > this.retryLimit) {
-                console.error(`Request for products ${this.type}: was not able to process request within ${count} iterations. thread:${ __VU}, iteration: ${__ITER}`)
+                console.error(`Request for products ${this.type}: was not able to process request within ${count} iterations. thread:${getThread()}, iteration: ${getIteration()}`)
                 break;
             }
         } while (responseProducts.status !== 201 && count < this.retryLimit)
@@ -88,38 +92,41 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         this.tokenTrend.add(this.profiler.stop('authorization'))
         requestParams.thresholds = {}
         requestParams.timeout = '180s'
-        debug('Authorisation params:', requestParams)
+        debug('Authorization params:', requestParams)
+        this.authParams = requestParams
 
-        return requestParams
+        return this.authParams
     }
 
     getLabels(productLabelTemplate, requestParams) {
-        debug('thread:', __VU, 'iteration:', __ITER, new Date().toLocaleString())
-        let payloadLabels = this.payloadGenerator.generateLabel(productLabelTemplate)
-        
-        let productLabelIds = this.http.sendPostRequest(this.http.url`${this.getBackendApiUrl()}/dynamic-entity/product-labels`, payloadLabels, requestParams, false);
-        if (productLabelIds.status === 201) {
-            this.productLabelCreationTrend.add(productLabelIds.timings.duration)
+        if (this.productLabelId === null) {
+            debug('thread:', getThread(), 'iteration:', getIteration(), new Date().toLocaleString())
+            let payloadLabels = this.payloadGenerator.generateLabel(productLabelTemplate)
+            let productLabelIds = this.http.sendPostRequest(this.http.url`${this.getBackendApiUrl()}/dynamic-entity/product-labels`, payloadLabels, requestParams, false);
+            if (productLabelIds.status === 201) {
+                this.productLabelCreationTrend.add(productLabelIds.timings.duration)
+            }
+            
+            let labels = JSON.parse(productLabelIds.body).data
+            let productLabelId = null
+            if (Array.isArray(labels)) {
+                productLabelId = JSON.parse(productLabelIds.body).data[0].id_product_label
+            }
+            debug('thread:', getThread(), 'iteration:', getIteration(), 'productLabelIds', productLabelIds, 'productLabelIds.status', productLabelIds.status, new Date().toLocaleString(), 'productLabelId', productLabelId)
+            this.productLabelId = productLabelId
         }
         
-        let labels = JSON.parse(productLabelIds.body).data
-        let productLabelId = null
-        if (Array.isArray(labels)) {
-            productLabelId = JSON.parse(productLabelIds.body).data[0].id_product_label
-        }
-        debug('thread:', __VU, 'iteration:', __ITER, 'productLabelIds', productLabelIds, 'productLabelIds.status', productLabelIds.status, new Date().toLocaleString(), 'productLabelId', productLabelId)
-
-        return productLabelId
+        return this.productLabelId
     }
 
     createProducts(productTemplate, productConcreteTemplate, productLabelId, requestParams) {
-        debug('thread:', __VU, 'iteration:', __ITER, new Date().toLocaleString())
+        debug('thread:', getThread(), 'iteration:', getIteration(), new Date().toLocaleString())
 
         let payloadProducts = this.payloadGenerator.generateProducts(productTemplate, productConcreteTemplate, productLabelId)
         let responseProducts = this.http.sendPostRequest(this.http.url`${this.getBackendApiUrl()}/dynamic-entity/product-abstracts`, payloadProducts, requestParams, false);
         
         debug('responseProducts', responseProducts)
-        debug('thread:', __VU, 'iteration:', __ITER, 'responseProducts', responseProducts.status, new Date().toLocaleString())
+        debug('thread:', getThread(), 'iteration:', getIteration(), 'responseProducts', responseProducts.status, new Date().toLocaleString())
         
         if (responseProducts.status === 201) {
             this.productCreationTotal.add(responseProducts.timings.duration)
@@ -130,7 +137,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
     }
 
     createProductsImages(productImageTemplate, responseProducts, requestParams) {
-        debug('thread:', __VU, 'iteration:', __ITER, new Date().toLocaleString())
+        debug('thread:', getThread(), 'iteration:', getIteration(), new Date().toLocaleString())
         let productImageSetIdsMap = new Map()
         let response = JSON.parse(responseProducts.body).data
         response = Array.isArray(response) ? response : []
@@ -142,7 +149,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
 
         let payloadImageSet = this.payloadGenerator.generateImageSet(productImageTemplate, productImageSetIdsMap)
         let responseImageSet = this.http.sendPostRequest(this.http.url`${this.getBackendApiUrl()}/dynamic-entity/product-images`, payloadImageSet, requestParams, false);
-        debug('thread:', __VU, 'iteration:', __ITER, 'responseImageSet', responseImageSet.status, responseImageSet, new Date().toLocaleString())
+        debug('thread:', getThread(), 'iteration:', getIteration(), 'responseImageSet', responseImageSet.status, responseImageSet, new Date().toLocaleString())
         
         if (responseImageSet.status === 201) {
             this.productImageCreationTotal.add(responseImageSet.timings.duration)

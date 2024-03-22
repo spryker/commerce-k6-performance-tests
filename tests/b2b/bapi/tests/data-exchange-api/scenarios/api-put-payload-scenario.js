@@ -1,7 +1,7 @@
 
 import { group } from 'k6';
 import { DataExchangePayloadGenerator } from '../../../../../../helpers/data-exchange-payload-generator.js';
-import { uuid } from '../../../../../../lib/utils.js';
+import { getIteration, getThread, uuid } from '../../../../../../lib/utils.js';
 import { sleep } from 'k6';
 import { Trend, Counter } from 'k6/metrics';
 import { ApiPostPayloadScenario } from './api-post-payload-scenario.js';
@@ -14,31 +14,38 @@ export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
         this.sleepInterval = 30
         this.retryLimit = 2
         this.payloadGenerator = new DataExchangePayloadGenerator(uuid, this.chunkSize)
-        this.group = 'API PATCH'
+        this.group = 'API PUT'
         this.type = 'put'
         this.productPutTrend = new Trend('product_put', true)
         this.productPutTotal = new Counter('product_put_total', true)
+        this.productInitTotal = new Counter('product_initialization', false)
+        this.responseProducts = null
     }
 
     execute(productTemplate, productConcreteTemplate, productLabelTemplate) {
         let self = this;
         group(self.group, function () {
             const requestParams = self.getRequestParams()
-            let responseProducts = self.createProductsWithLabels(requestParams, productTemplate, productConcreteTemplate, productLabelTemplate)
+            if (self.responseProducts === null) {
+                self.productInitTotal.add(1)
+                self.responseProducts = self.createProductsWithLabels(requestParams, productTemplate, productConcreteTemplate, productLabelTemplate)
+            }
+            
             let count = 0
             self.profiler.start('productPut')
             let updateResult
             do {
-                updateResult = self.updateProducts(responseProducts, requestParams)
+                updateResult = self.updateProducts(self.responseProducts, requestParams)
                 count++
                 if (updateResult.status !== 200) {
                     let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
-                    console.warn(`Start sleeping because of request for products ${self.type} failed. Response status: ${updateResult.status}. Amount Of Retries: ${count}, timeout: ${sleepingInterval} sec. thread:${ __VU}, iteration: ${__ITER}`)
+                    self.sleepingTimeTotal.add(sleepingInterval)
+                    console.warn(`Start sleeping because of request for products ${self.type} failed. Response status: ${updateResult.status}. Amount Of Tries: ${count}, timeout: ${sleepingInterval} sec. thread:${getThread()}, iteration: ${getIteration()}`)
                     sleep(sleepingInterval)
-                    console.warn(`Sleeping done. Iteration: ${count}. thread:${ __VU}, iteration: ${__ITER}`)
+                    console.warn(`Sleeping done. thread:${getThread()}, iteration: ${getIteration()}`)
                 }
                 if (count > self.retryLimit) {
-                    console.error(`Request for products ${self.type}: was not able to process request within ${count} iterations, thread:${ __VU}, iteration: ${__ITER}`)
+                    console.error(`Request for products ${self.type}: was not able to process request within ${count} tries, thread:${getThread()}, iteration: ${getIteration()}`)
                     break;
                 }
             } while (updateResult.status !== 200 && count < self.retryLimit)

@@ -7,10 +7,21 @@ export class BapiHelper {
         this.adminHelper = adminHelper;
         this.assertionsHelper = assertionsHelper;
         this.tokenCreationTotal = new Counter('token_creation_total', true)
+        this.tokenCreationRequestsTotal = new Counter('token_generation_requests', false)
+        this.defaultParams = null
+        this.refreshAt = new Date()
+    }
+
+    requireRefresh() {
+        return this.defaultParams === null || this.refreshAt.getDate() <= new Date().getDate()
     }
 
     getParamsWithAuthorization() {
-        const defaultParams = {
+        if (!this.requireRefresh()) {
+            return this.defaultParams
+        }
+
+        this.defaultParams = {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': '*/*',
@@ -27,7 +38,7 @@ export class BapiHelper {
                 username: this.adminHelper.getDefaultAdminEmail(),
                 password: this.adminHelper.getDefaultAdminPassword()
             }),
-            defaultParams,
+            this.defaultParams,
             false
         );
 
@@ -37,9 +48,12 @@ export class BapiHelper {
 
         const responseJson = JSON.parse(response.body);
         
-        defaultParams.headers.Authorization = `${responseJson.token_type} ${responseJson.access_token}`;
+        this.refreshAt.setDate(this.refreshAt.getDate + responseJson.expires_in)
+        
+        this.defaultParams.headers.Authorization = `${responseJson.token_type} ${responseJson.access_token}`;
+        
+        this.tokenCreationRequestsTotal.add(1)
 
-        return defaultParams;
+        return this.defaultParams;
     }
-
 }

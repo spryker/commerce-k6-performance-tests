@@ -1,3 +1,5 @@
+import { getIteration, getThread } from "../lib/utils.js";
+
 export class Profiler {
     constructor() {
         this.storage = {}
@@ -37,7 +39,7 @@ export class Profiler {
     }
 
     getKey(key) {
-        return `${key}::${__VU}-${__ITER}`
+        return `${key}::${getThread()}-${getIteration()}`
     }
 
     getTime(key) {
