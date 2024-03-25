@@ -10,7 +10,7 @@ let productLabelTemplate = open(`../template/${getTemplateFolder(Boolean(Number(
 
 let profiler = new Profiler()
 
-let executionConfig = getExecutionConfiguration(__ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, __ENV.DATA_EXCHANGE_PAYLOAD_UPDATE_CHUNK_SIZE, __ENV.DATA_EXCHANGE_THREADS, __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT)
+let executionConfig = getExecutionConfiguration(__ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, __ENV.DATA_EXCHANGE_PAYLOAD_PATCH_CHUNK_SIZE, __ENV.DATA_EXCHANGE_THREADS, __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT)
 
 options.scenarios = {
     ProductCreatePatchVUS: {

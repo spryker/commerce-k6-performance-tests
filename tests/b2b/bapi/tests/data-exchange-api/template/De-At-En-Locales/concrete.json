@@ -13,10 +13,6 @@
         {
             "fk_locale": "{fkLocaleAt}",
             "is_searchable": true
-        },
-        {
-            "fk_locale": "{fkLocaleEn}",
-            "is_searchable": true
         }
     ],
     "productStocks": [

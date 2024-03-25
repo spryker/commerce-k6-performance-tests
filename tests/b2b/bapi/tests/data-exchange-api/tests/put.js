@@ -3,7 +3,7 @@ import { ApiPutPayloadScenario } from "../scenarios/api-put-payload-scenario.js"
 
 export const options = loadDefaultOptions();
 
-let executionConfig = getExecutionConfiguration(__ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, __ENV.DATA_EXCHANGE_PAYLOAD_UPDATE_CHUNK_SIZE, __ENV.DATA_EXCHANGE_THREADS, __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT)
+let executionConfig = getExecutionConfiguration(__ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, __ENV.DATA_EXCHANGE_PAYLOAD_PUT_CHUNK_SIZE, __ENV.DATA_EXCHANGE_THREADS, __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT)
 
 let productTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/product.json`)
 let productConcreteTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/concrete.json`)
