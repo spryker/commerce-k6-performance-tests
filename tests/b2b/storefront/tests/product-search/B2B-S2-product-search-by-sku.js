@@ -1,22 +1,22 @@
-import { SharedProductSearchBySkuScenario } from "../../../../cross-product/storefront/scenarios/product-search/shared-product-search-by-sku-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { SharedProductSearchBySkuScenario } from '../../../../cross-product/storefront/scenarios/product-search/shared-product-search-by-sku-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 
 options.scenarios = {
-    S2_Product_Search: {
-        exec: 'executeProductSearchPageScenario',
-        executor: 'shared-iterations',
-        tags: {
-            testId: 'S2',
-            testGroup: 'ProductSearch',
-        },
-        iterations: 10
+  S2_Product_Search: {
+    exec: 'executeProductSearchPageScenario',
+    executor: 'shared-iterations',
+    tags: {
+      testId: 'S2',
+      testGroup: 'ProductSearch',
     },
+    iterations: 10
+  },
 };
 
 const productSearchPageScenario = new SharedProductSearchBySkuScenario('B2B');
 
 export function executeProductSearchPageScenario() {
-    productSearchPageScenario.execute();
+  productSearchPageScenario.execute();
 }
