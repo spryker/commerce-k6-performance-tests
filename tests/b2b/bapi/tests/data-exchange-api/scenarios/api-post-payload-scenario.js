@@ -40,7 +40,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         count++
         if (productImageResponse.status !== 201) {
           let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
-          self.sleepingTimeTotal.add(sleepingInterval)
+          self.sleepingTimeTotal.add(sleepingInterval * 1000)
           console.warn(`Start sleeping because of request for images creation failed. Response status: ${productImageResponse.status}. Amount Of Retries: ${count}, timeout: ${sleepingInterval} sec`)
           sleep(sleepingInterval)
           console.warn(`Sleeping done. Iteration: ${count}`)
@@ -72,7 +72,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
       count++
       if (responseProducts.status !== 201) {
         let sleepingInterval = this.sleepInterval * count + Math.floor(Math.random() * 10) + 1
-        this.sleepingTimeTotal.add(sleepingInterval)
+        this.sleepingTimeTotal.add(sleepingInterval * 1000)
         console.warn(`Start sleeping because of request for products ${this.type} failed. Response status: ${responseProducts.status}. Amount Of Retries: ${count}, timeout: ${sleepingInterval} sec. thread:${getThread()}, iteration: ${getIteration()}`)
         sleep(sleepingInterval)
         console.warn(`Sleeping done. Iteration: ${count}. thread:${getThread()}, iteration: ${getIteration()}`)
