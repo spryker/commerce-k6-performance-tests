@@ -1,59 +1,59 @@
 import { Counter } from 'k6/metrics';
 
 export class BapiHelper {
-  constructor(urlHelper, http, adminHelper, assertionsHelper) {
-    this.urlHelper = urlHelper;
-    this.http = http;
-    this.adminHelper = adminHelper;
-    this.assertionsHelper = assertionsHelper;
-    this.tokenCreationTotal = new Counter('token_creation_total', true)
-    this.tokenCreationRequestsTotal = new Counter('token_generation_requests', false)
-    this.defaultParams = null
-    this.refreshAt = new Date()
-  }
-
-  requireRefresh() {
-    return this.defaultParams === null || this.refreshAt.getDate() <= new Date().getDate()
-  }
-
-  getParamsWithAuthorization() {
-    if (!this.requireRefresh()) {
-      return this.defaultParams
+    constructor(urlHelper, http, adminHelper, assertionsHelper) {
+        this.urlHelper = urlHelper;
+        this.http = http;
+        this.adminHelper = adminHelper;
+        this.assertionsHelper = assertionsHelper;
+        this.tokenCreationTotal = new Counter('token_creation_total', true)
+        this.tokenCreationRequestsTotal = new Counter('token_generation_requests', false)
+        this.defaultParams = null
+        this.refreshAt = new Date()
     }
 
-    this.defaultParams = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': '*/*',
-        'Store': 'DE'
-      },
-    };
+    requireRefresh() {
+        return this.defaultParams === null || this.refreshAt.getDate() <= new Date().getDate()
+    }
 
-    const urlAccessTokens = `${this.urlHelper.getBackendApiBaseUrl()}/token`;
+    getParamsWithAuthorization() {
+        if (!this.requireRefresh()) {
+            return this.defaultParams
+        }
 
-    const response = this.http.sendPostRequest(
-      this.http.url`${urlAccessTokens}`,
-      JSON.stringify({
-        grantType: 'password',
-        username: this.adminHelper.getDefaultAdminEmail(),
-        password: this.adminHelper.getDefaultAdminPassword()
-      }),
-      this.defaultParams,
-      false
-    );
+        this.defaultParams = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': '*/*',
+                'Store': 'DE'
+            },
+        };
 
-    this.assertionsHelper.assertResponseStatus(response, 200, 'Auth Token');
+        const urlAccessTokens = `${this.urlHelper.getBackendApiBaseUrl()}/token`;
+
+        const response = this.http.sendPostRequest(
+            this.http.url`${urlAccessTokens}`,
+            JSON.stringify({
+                grantType: 'password',
+                username: this.adminHelper.getDefaultAdminEmail(),
+                password: this.adminHelper.getDefaultAdminPassword()
+            }),
+            this.defaultParams,
+            false
+        );
+
+        this.assertionsHelper.assertResponseStatus(response, 200, 'Auth Token');
         
-    this.tokenCreationTotal.add(response.timings.duration)
+        this.tokenCreationTotal.add(response.timings.duration)
 
-    const responseJson = JSON.parse(response.body);
+        const responseJson = JSON.parse(response.body);
         
-    this.refreshAt.setDate(this.refreshAt.getDate + responseJson.expires_in)
+        this.refreshAt.setDate(this.refreshAt.getDate + responseJson.expires_in)
         
-    this.defaultParams.headers.Authorization = `${responseJson.token_type} ${responseJson.access_token}`;
+        this.defaultParams.headers.Authorization = `${responseJson.token_type} ${responseJson.access_token}`;
         
-    this.tokenCreationRequestsTotal.add(1)
+        this.tokenCreationRequestsTotal.add(1)
 
-    return this.defaultParams;
-  }
+        return this.defaultParams;
+    }
 }
