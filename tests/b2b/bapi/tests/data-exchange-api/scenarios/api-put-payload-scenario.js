@@ -38,7 +38,7 @@ export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
                 count++
                 if (updateResult.status !== 200) {
                     let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
-                    self.sleepingTimeTotal.add(sleepingInterval)
+                    self.sleepingTimeTotal.add(sleepingInterval * 1000)
                     console.warn(`Start sleeping because of request for products ${self.type} failed. Response status: ${updateResult.status}. Amount Of Tries: ${count}, timeout: ${sleepingInterval} sec. thread:${getThread()}, iteration: ${getIteration()}`)
                     sleep(sleepingInterval)
                     console.warn(`Sleeping done. thread:${getThread()}, iteration: ${getIteration()}`)
