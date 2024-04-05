@@ -1,5 +1,5 @@
-import { QuickOrderScenario } from "../../scenarios/quick-order/quick-order-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { QuickOrderScenario } from '../../scenarios/quick-order/quick-order-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 options.scenarios = {

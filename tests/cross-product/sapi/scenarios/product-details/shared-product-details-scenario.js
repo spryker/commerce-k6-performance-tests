@@ -8,9 +8,7 @@ export class SharedProductDetailsScenario extends AbstractScenario {
         group('Product Details', function () {
             const requestParams = self.cartHelper.getParamsWithAuthorization();
 
-            const productDetailsResponse = self.http.sendGetRequest(
-                self.http.url`${self.getStorefrontApiBaseUrl()}/concrete-products/${'657712'}`, requestParams, false
-            );
+            const productDetailsResponse = self.http.sendGetRequest(self.http.url`${self.getStorefrontApiBaseUrl()}/concrete-products/${'657712'}`, requestParams, false);
             self.assertionsHelper.assertResponseStatus(productDetailsResponse, 200);
         });
     }

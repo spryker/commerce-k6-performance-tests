@@ -5,19 +5,20 @@ import { StorefrontHelper } from '../helpers/storefront-helper.js';
 import { BrowserHelper } from '../helpers/browser-helper.js';
 import { UrlHelper } from '../helpers/url-helper.js';
 import { Trend } from 'k6/metrics';
-import CustomerHelper from "../helpers/customer-helper.js";
-import { AssertionsHelper } from "../helpers/assertions-helper.js";
+import CustomerHelper from '../helpers/customer-helper.js';
+import { AssertionsHelper } from '../helpers/assertions-helper.js';
 import { BapiHelper } from '../helpers/bapi-helper.js';
 import AdminHelper from '../helpers/admin-helper.js';
 
 export class AbstractScenario {
+    // eslint-disable-next-line no-unused-vars
     constructor(environment, options = {}) {
         if (this.constructor === AbstractScenario) {
-            throw new Error("Abstract classes can't be instantiated.");
+            throw new Error('Abstract classes can\'t be instantiated.');
         }
 
         if (!environment) {
-            throw new Error("Environment must be specified.");
+            throw new Error('Environment must be specified.');
         }
 
         this.environment = environment;
@@ -39,7 +40,8 @@ export class AbstractScenario {
     }
 
     addResponseDurationToTrend(trend, response) {
-        trend.add(response.timings.duration,
+        trend.add(
+            response.timings.duration,
             {
                 endpointUrl: response.url.toString(),
                 gitHash: this._getRequiredEnvVariable('GIT_HASH'),

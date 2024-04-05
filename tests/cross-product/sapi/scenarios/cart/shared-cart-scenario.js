@@ -8,15 +8,13 @@ export class SharedCartScenario extends AbstractScenario {
         let self = this;
 
         group('Cart', function () {
-            const cartResponse = self.http.sendGetRequest(
-                self.http.url`${self.cartHelper.getCartsUrl()}/${cartId}/?include=items`, requestParams, false
-            );
+            const cartResponse = self.http.sendGetRequest(self.http.url`${self.cartHelper.getCartsUrl()}/${cartId}/?include=items`, requestParams, false);
 
             self.assertionsHelper.assertResponseStatus(cartResponse, 200);
         });
     }
 
-    _setUp(requestParams) {
+    _setUp() {
         return this.cartHelper.haveCartWithProducts(__ENV.numberOfItems);
     }
 }

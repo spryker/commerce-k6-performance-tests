@@ -8,9 +8,7 @@ export class SharedHomepageScenario extends AbstractScenario {
         group('Homepage', function () {
             const requestParams = self.cartHelper.getParamsWithAuthorization();
 
-            const homepageResponse = self.http.sendGetRequest(
-                self.http.url`${self.getStorefrontApiBaseUrl()}/cms-pages/${'10014bd9-4bba-5a54-b84f-31b4b7efd064'}`, requestParams, false
-            );
+            const homepageResponse = self.http.sendGetRequest(self.http.url`${self.getStorefrontApiBaseUrl()}/cms-pages/${'10014bd9-4bba-5a54-b84f-31b4b7efd064'}`, requestParams, false);
             self.assertionsHelper.assertResponseStatus(homepageResponse, 200);
         });
     }

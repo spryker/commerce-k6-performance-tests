@@ -3,38 +3,15 @@
     "approval_status": "approved",
     "attributes": "{}",
     "new_from": null,
-    "new_to": "2020-01-01 00:00:00.000000",
+    "new_to": "2028-01-01 00:00:00.000000",
     "sku": "{random}",
     "color_code": "#DC2E09",
     "productAbstractProducts": [
+        "{CONCRETES}"
+    ],
+    "productAbstractStores": [
         {
-            "attributes": "{\"color\":\"Red\",\"upcs\":\"013803252910\"}",
-            "discount": null,
-            "is_active": true,
-            "is_quantity_splittable": true,
-            "sku": "{random}",
-            "warehouses": null,
-            "productSearch": [
-                {
-                    "fk_locale": "{fkLocale}",
-                    "is_searchable": true
-                }
-            ],
-            "productStocks": [
-                {
-                    "fk_stock": "{fkStock}",
-                    "is_never_out_of_stock": false,
-                    "quantity": 10
-                }
-            ],
-            "productLocalizedAttributes": [
-                {
-                    "fk_locale": "{fkLocale}",
-                    "attributes": "{\"color\":\"Weinrot\"}",
-                    "description": "Beeindruckende Aufnahmen, ganz einfach Smart Auto ermöglicht die mühelose Aufnahme von fantastischen Fotos und Movies – die Kamera wählt in diesem Modus automatisch die idealen Einstellungen für die jeweilige Aufnahmesituation. Sie müssen nur noch das Motiv anvisieren und auslösen. Ein Druck auf die Hilfe-Taste führt zu leicht verständlichen Erklärungen der Kamerafunktionen. Zahlreiche Kreativfilter laden zum Experimentieren ein und bieten echten Fotospaß. So lässt sich neben vielen anderen Optionen der Verzeichnungseffekt eines Fisheye-Objektivs nachempfinden oder in Fotos und Movies werden die Dinge wie Miniaturmodelle dargestellt.",
-                    "name": "Canon IXUS 160"
-                }
-            ]
+            "fk_store": "{fkStoreDe}"
         }
     ],
     "productRelations": [
@@ -46,7 +23,7 @@
             "query_set_data": "{\"condition\":\"AND\",\"id\":null,\"field\":null,\"type\":null,\"input\":null,\"operator\":null,\"value\":null,\"rules\":[{\"condition\":null,\"id\":\"product_sku\",\"field\":\"product_sku\",\"type\":\"string\",\"input\":\"text\",\"operator\":\"in\",\"value\":\"004,005,006,007,008,009,010,011,012,013,014,015\",\"rules\":[]}]}",
             "productRelationStores": [
                 {
-                    "fk_store": "{fkStore}"
+                    "fk_store": "{fkStoreDe}"
                 }
             ]
         }
@@ -59,7 +36,7 @@
             "priceProductStores": [
                 {
                     "fk_currency": "{fkCurrency}",
-                    "fk_store": "{fkStore}",
+                    "fk_store": "{fkStoreDe}",
                     "gross_price": 9999,
                     "net_price": 8999,
                     "priceProductStoreDefaults": [
@@ -77,19 +54,19 @@
     ],
     "productAbstractUrls": [
         {
-            "fk_locale": "{fkLocale}",
-            "url": "/de/sony-cyber-shot-dsc-wx350-{random}"
+            "fk_locale": "{fkLocaleDe}",
+            "url": "/de/test-product-{random}"
         }
     ],
     "productAbstractLocalizedAttributes": [
         {
-            "fk_locale": "{fkLocale}",
+            "fk_locale": "{fkLocaleDe}",
             "attributes": "{\"color\":\"Weinrot\"}",
             "description": "Beeindruckende Aufnahmen, ganz einfach Smart Auto ermöglicht die mühelose Aufnahme von fantastischen Fotos und Movies – die Kamera wählt in diesem Modus automatisch die idealen Einstellungen für die jeweilige Aufnahmesituation. Sie müssen nur noch das Motiv anvisieren und auslösen. Ein Druck auf die Hilfe-Taste führt zu leicht verständlichen Erklärungen der Kamerafunktionen. Zahlreiche Kreativfilter laden zum Experimentieren ein und bieten echten Fotospaß. So lässt sich neben vielen anderen Optionen der Verzeichnungseffekt eines Fisheye-Objektivs nachempfinden oder in Fotos und Movies werden die Dinge wie Miniaturmodelle dargestellt.",
             "meta_description": "Beeindruckende Aufnahmen, ganz einfach Smart Auto ermöglicht die mühelose Aufnahme von fantastischen Fotos und Movies – die Kamera wählt in diesem Modus au",
-            "meta_keywords": "Canon,Entertainment Electronics",
-            "meta_title": "Canon IXUS 160",
-            "name": "Canon IXUS 160"
+            "meta_keywords": "Entertainment Electronics",
+            "meta_title": "test product {random}",
+            "name": "test product {random}"
         }
     ],
     "productLabelProductAbstracts": [
@@ -99,7 +76,7 @@
     ],
     "productImageSets": [
         {
-            "fk_locale": "{fkLocale}",
+            "fk_locale": "{fkLocaleDe}",
             "fk_product": null,
             "name": "{random}"
         }

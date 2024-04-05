@@ -1,5 +1,5 @@
-import { SharedProductSearchScenario } from "../../../../cross-product/sapi/scenarios/product-search/shared-product-search-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { SharedProductSearchScenario } from '../../../../cross-product/sapi/scenarios/product-search/shared-product-search-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 options.scenarios = {

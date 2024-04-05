@@ -1,5 +1,5 @@
-import { SharedHomepageScenario } from "../../../../cross-product/sapi/scenarios/homepage/shared-homepage-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { SharedHomepageScenario } from '../../../../cross-product/sapi/scenarios/homepage/shared-homepage-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 options.scenarios = {

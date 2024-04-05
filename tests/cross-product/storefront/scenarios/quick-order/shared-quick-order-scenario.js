@@ -49,7 +49,7 @@ export class SharedQuickOrderScenario extends AbstractScenario {
 
         this.assertionsHelper.assertPageState(
             page,
-            `Product quantity field is editable`,
+            'Product quantity field is editable',
             (page) => page.locator(this._getQuantityInputSelector()).isEditable(),
         );
     }

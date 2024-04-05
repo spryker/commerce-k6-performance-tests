@@ -1,5 +1,5 @@
-import { SharedAddToCartScenario } from "../../../../cross-product/sapi/scenarios/checkout/shared-add-to-cart-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { SharedAddToCartScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-add-to-cart-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 

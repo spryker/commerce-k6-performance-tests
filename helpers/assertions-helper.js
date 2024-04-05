@@ -1,4 +1,4 @@
-import {check} from "k6";
+import {check} from 'k6';
 
 export class AssertionsHelper {
     assertResponseStatus(response, expectedStatus, requestName = null) {
@@ -22,10 +22,10 @@ export class AssertionsHelper {
     assertSingleResourceResponseBodyStructure(responseJson, requestName = null) {
         const dataAssertionName = requestName
             ? `Verify ${requestName} response body has 'data' defined.`
-            : `Verify response body has 'data' defined.`;
+            : 'Verify response body has \'data\' defined.';
         const dataAttributesAssertionMessage = requestName
             ? `Verify ${requestName} response body has 'data.attributes' defined.`
-            : `Verify response body has 'data.attributes' defined.`;
+            : 'Verify response body has \'data.attributes\' defined.';
 
         return check(responseJson, {
             [dataAssertionName]: (responseJson) => responseJson.data !== undefined,
@@ -36,7 +36,7 @@ export class AssertionsHelper {
     assertResourceCollectionResponseBodyStructure(responseJson, requestName = null) {
         const assertionName = requestName
             ? `Verify ${requestName} response body has 'data' defined.`
-            : `Verify response body has 'data' defined.`;
+            : 'Verify response body has \'data\' defined.';
 
         return !check(responseJson, {
             [assertionName]: (responseJson) => responseJson.data !== undefined,

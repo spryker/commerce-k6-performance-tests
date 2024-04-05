@@ -1,5 +1,5 @@
-import { SharedProductSearchBySkuScenario } from "../../../../cross-product/storefront/scenarios/product-search/shared-product-search-by-sku-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { SharedProductSearchBySkuScenario } from '../../../../cross-product/storefront/scenarios/product-search/shared-product-search-by-sku-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 

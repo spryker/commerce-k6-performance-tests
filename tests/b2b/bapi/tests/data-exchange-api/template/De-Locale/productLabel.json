@@ -1,0 +1,16 @@
+{
+    "front_end_reference": "{random}",
+    "is_active": true,
+    "is_dynamic": true,
+    "is_exclusive": false,
+    "is_published": true,
+    "name": "{random}",
+    "position": 5,
+    "valid_from": null,
+    "valid_to": null,
+    "productLabelStores": [
+        {
+            "fk_store": "{fkStoreDe}"
+        }
+    ]
+}

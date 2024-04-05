@@ -1,5 +1,5 @@
-import { SharedQuickOrderScenario } from "../../../../cross-product/storefront/scenarios/quick-order/shared-quick-order-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { SharedQuickOrderScenario } from '../../../../cross-product/storefront/scenarios/quick-order/shared-quick-order-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 options.scenarios = {

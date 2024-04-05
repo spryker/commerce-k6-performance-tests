@@ -1,5 +1,5 @@
-import { SharedCartScenario } from "../../../../cross-product/sapi/scenarios/cart/shared-cart-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { SharedCartScenario } from '../../../../cross-product/sapi/scenarios/cart/shared-cart-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -22,4 +22,3 @@ const sharedCartScenario = new SharedCartScenario('B2B_MP');
 export function executeSharedCartScenario() {
     sharedCartScenario.execute();
 }
-

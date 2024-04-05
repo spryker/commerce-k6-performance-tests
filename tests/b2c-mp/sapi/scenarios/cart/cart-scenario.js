@@ -1,13 +1,11 @@
-import { SharedCartScenario } from "../../../../cross-product/sapi/scenarios/cart/shared-cart-scenario.js";
+import { SharedCartScenario } from '../../../../cross-product/sapi/scenarios/cart/shared-cart-scenario.js';
 
 export class CartScenario extends SharedCartScenario {
     _setUp(requestParams) {
         let self = this;
 
         const cart = this.cartHelper.getCarts(requestParams).data[0];
-        const cartResponse = this.http.sendGetRequest(
-            this.http.url`${this.cartHelper.getCartsUrl()}/${cart.id}/?include=items`, requestParams, false
-        );
+        const cartResponse = this.http.sendGetRequest(this.http.url`${this.cartHelper.getCartsUrl()}/${cart.id}/?include=items`, requestParams, false);
         this.assertionsHelper.assertResponseStatus(cartResponse, 200);
 
         const cartResponseJson = JSON.parse(cartResponse.body);

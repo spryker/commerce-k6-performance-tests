@@ -1,5 +1,5 @@
-import { SharedProductDetailsScenario } from "../../../../cross-product/sapi/scenarios/product-details/shared-product-details-scenario.js";
-import { loadDefaultOptions } from "../../../../../lib/utils.js";
+import { SharedProductDetailsScenario } from '../../../../cross-product/sapi/scenarios/product-details/shared-product-details-scenario.js';
+import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 options.scenarios = {

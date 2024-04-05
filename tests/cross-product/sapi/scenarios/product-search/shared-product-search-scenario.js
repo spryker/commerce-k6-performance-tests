@@ -8,9 +8,7 @@ export class SharedProductSearchScenario extends AbstractScenario {
         group('Product Search', function () {
             const requestParams = self.cartHelper.getParamsWithAuthorization();
 
-            const productSearchResponse = self.http.sendGetRequest(
-                self.http.url`${self.getStorefrontApiBaseUrl()}/catalog-search?q=${657712}`, requestParams, false
-            );
+            const productSearchResponse = self.http.sendGetRequest(self.http.url`${self.getStorefrontApiBaseUrl()}/catalog-search?q=${657712}`, requestParams, false);
             self.assertionsHelper.assertResponseStatus(productSearchResponse, 200);
         });
     }
