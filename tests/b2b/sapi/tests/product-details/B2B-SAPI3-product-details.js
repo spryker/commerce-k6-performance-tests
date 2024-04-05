@@ -3,19 +3,19 @@ import { loadDefaultOptions } from '../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-  SAPI3_Product_Details: {
-    exec: 'executeProductDetailsScenario',
-    executor: 'shared-iterations',
-    tags: {
-      testId: 'SAPI3',
-      testGroup: 'Product Details',
+    SAPI3_Product_Details: {
+        exec: 'executeProductDetailsScenario',
+        executor: 'shared-iterations',
+        tags: {
+            testId: 'SAPI3',
+            testGroup: 'Product Details',
+        },
+        iterations: 10
     },
-    iterations: 10
-  },
 };
 
 const productDetailsScenario = new SharedProductDetailsScenario('B2B');
 
 export function executeProductDetailsScenario() {
-  productDetailsScenario.execute();
+    productDetailsScenario.execute();
 }

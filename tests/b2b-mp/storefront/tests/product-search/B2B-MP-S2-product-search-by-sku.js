@@ -4,19 +4,19 @@ import { loadDefaultOptions } from '../../../../../lib/utils.js';
 export const options = loadDefaultOptions();
 
 options.scenarios = {
-  S2_Product_Search: {
-    exec: 'executeProductSearchPageScenario',
-    executor: 'shared-iterations',
-    tags: {
-      testId: 'S2',
-      testGroup: 'ProductSearch',
+    S2_Product_Search: {
+        exec: 'executeProductSearchPageScenario',
+        executor: 'shared-iterations',
+        tags: {
+            testId: 'S2',
+            testGroup: 'ProductSearch',
+        },
+        iterations: 10
     },
-    iterations: 10
-  },
 };
 
 const productSearchPageScenario = new SharedProductSearchBySkuScenario('B2B_MP');
 
 export function executeProductSearchPageScenario() {
-  productSearchPageScenario.execute();
+    productSearchPageScenario.execute();
 }

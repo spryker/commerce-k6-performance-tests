@@ -9,18 +9,18 @@ let ResponseTime = new Trend('Response Time');
 let AvgResponseTimePerRPS = new Trend('Avg Response Time per RPS');
 
 export class StripePaymentPageScenario extends StripeSharedCheckoutScenario {
-  execute(targetUrl) {
-    const url = targetUrl;
-    let rps = getIteration() + 1;
-    let startTime = new Date().getTime();
+    execute(targetUrl) {
+        const url = targetUrl;
+        let rps = getIteration() + 1;
+        let startTime = new Date().getTime();
         
-    const response = http.get(url);
-    ResponseTime.add(response.timings.duration);
+        const response = http.get(url);
+        ResponseTime.add(response.timings.duration);
     
-    let endTime = new Date().getTime();
-    let elapsedTime = endTime - startTime;
-    AvgResponseTimePerRPS.add(elapsedTime / rps);
+        let endTime = new Date().getTime();
+        let elapsedTime = endTime - startTime;
+        AvgResponseTimePerRPS.add(elapsedTime / rps);
         
-    sleep(1);
-  }
+        sleep(1);
+    }
 }
