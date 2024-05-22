@@ -126,7 +126,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         let responseProducts = this.http.sendPostRequest(this.http.url`${this.getBackendApiUrl()}/dynamic-entity/product-abstracts`, payloadProducts, requestParams, false);
         
         debug('responseProducts', responseProducts)
-        debug('thread:', getThread(), 'iteration:', getIteration(), 'responseProducts', responseProducts.status, new Date().toLocaleString())
+        debug('thread:', getThread(), 'iteration:', getIteration(), 'responseProducts.status', responseProducts.status, new Date().toLocaleString())
         
         if (responseProducts.status === 201) {
             this.productCreationTotal.add(responseProducts.timings.duration)
@@ -142,7 +142,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         let response = JSON.parse(responseProducts.body).data
         response = Array.isArray(response) ? response : []
         response.map((el) => {
-            el.productImageSets.map((imgSet) => {
+            el.productAbstractImageSets.map((imgSet) => {
                 productImageSetIdsMap.set(imgSet.name, imgSet.id_product_image_set)
             })
         })

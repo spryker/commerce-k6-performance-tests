@@ -19,6 +19,14 @@ export class AssertionsHelper {
         })
     }
 
+    assertEqual(actualValue, expectedValue) {
+        const assertionName = `Verify that values ${actualValue} and ${expectedValue} are equal.`;
+
+        return check(actualValue, {
+            [assertionName]: (r) => r === expectedValue,
+        })
+    }
+
     assertSingleResourceResponseBodyStructure(responseJson, requestName = null) {
         const dataAssertionName = requestName
             ? `Verify ${requestName} response body has 'data' defined.`

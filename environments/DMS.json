@@ -8,11 +8,11 @@
         "stores": ["de", "us", "at"]
       },
     "testing": {
-        "storefrontUrl": "https://www.%store%.frw.cloud.spryker.toys",
-        "storefrontApiUrl": "http://glue.%store%.frw.cloud.spryker.toys",
-        "backendApiUrl": "https://glue-backend.%store%.frw.cloud.spryker.toys",
-        "backofficeUrl": "http://backoffice.%store%.frw.cloud.spryker.toys",
-        "backofficeApiUrl": "http://backend-api.%store%.frw.cloud.spryker.toys",
+        "storefrontUrl": "https://yves.eu.dstore.frw.cloud.spryker.toys/?_store=%STORE%",
+        "storefrontApiUrl": "https://glue.eu.dstore.frw.cloud.spryker.toys",
+        "backendApiUrl": "https://glue-backend.eu.dstore.frw.cloud.spryker.toys",
+        "backofficeUrl": "https://backoffice.eu.dstore.frw.cloud.spryker.toys",
+        "backofficeApiUrl": "https://backend-api.eu.dstore.frw.cloud.spryker.toys",
         "stores": ["de", "us", "at"]
     }
 }

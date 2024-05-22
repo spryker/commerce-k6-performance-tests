@@ -9,9 +9,9 @@ let productLabelTemplate = open(`../template/${getTemplateFolder(Boolean(Number(
 let productImageTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/productImage.json`)
 
 let executionConfig = getExecutionConfiguration(
-    __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, 
+    __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE_POST, 
     __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE, 
-    __ENV.DATA_EXCHANGE_THREADS, 
+    __ENV.DATA_EXCHANGE_THREADS_POST, 
     __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT
 )
 
@@ -29,7 +29,7 @@ options.scenarios = {
     },
 };
 
-const productCreateScenario = new ApiPostPayloadScenario('DEX', executionConfig.chunkSize, executionConfig.concreteMaxAmount);
+const productCreateScenario = new ApiPostPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount);
 export function productPostScenario() {
     productCreateScenario.execute(productTemplate, productConcreteTemplate, productImageTemplate, productLabelTemplate);
 }

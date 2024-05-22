@@ -4,9 +4,9 @@ import { ApiPutPayloadScenario } from '../scenarios/api-put-payload-scenario.js'
 export const options = loadDefaultOptions();
 
 let executionConfig = getExecutionConfiguration(
-    __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE, 
+    __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE_PUT_PATCH, 
     __ENV.DATA_EXCHANGE_PAYLOAD_PUT_CHUNK_SIZE,
-    __ENV.DATA_EXCHANGE_THREADS, 
+    __ENV.DATA_EXCHANGE_THREADS_PUT, 
     __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT
 )
 
@@ -28,7 +28,7 @@ options.scenarios = {
     },
 };
 
-const productPutCreateScenario = new ApiPutPayloadScenario('DEX', executionConfig.chunkSize, executionConfig.concreteMaxAmount);
+const productPutCreateScenario = new ApiPutPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount);
 
 export function productPutScenario() {
     productPutCreateScenario.execute(productTemplate, productConcreteTemplate, productLabelTemplate);

@@ -11,9 +11,9 @@ let productLabelTemplate = open(`../template/${getTemplateFolder(Boolean(Number(
 let profiler = new Profiler()
 
 let executionConfig = getExecutionConfiguration(
-    __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE,
+    __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE_PUT_PATCH,
     __ENV.DATA_EXCHANGE_PAYLOAD_PATCH_CHUNK_SIZE, 
-    __ENV.DATA_EXCHANGE_THREADS, 
+    __ENV.DATA_EXCHANGE_THREADS_PATCH, 
     __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT
 )
 
@@ -31,7 +31,7 @@ options.scenarios = {
     },
 };
 
-const productPatchCreateScenario = new ApiPatchPayloadScenario('DEX', executionConfig.chunkSize, executionConfig.concreteMaxAmount);
+const productPatchCreateScenario = new ApiPatchPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount);
 
 export function productPatchScenario() {
     productPatchCreateScenario.execute(productTemplate, productConcreteTemplate, productLabelTemplate, profiler);

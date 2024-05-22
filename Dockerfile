@@ -1,5 +1,3 @@
-# FROM grafana/k6:0.50.0-with-browser
-
 FROM golang:1.20 AS builder
 
 RUN go install go.k6.io/xk6/cmd/xk6@latest
@@ -11,7 +9,6 @@ COPY --from=builder /go/k6 /usr/bin/k6
 
 ENV TERM=xterm-256color
 ENV PROJECT_DIR=/home/k6
-# USER k6
 
 ENV CHROME_BIN=/usr/bin/chromium-browser
 ENV CHROME_PATH=/usr/lib/chromium/

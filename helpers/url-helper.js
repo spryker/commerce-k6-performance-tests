@@ -36,6 +36,6 @@ export class UrlHelper {
             throw new Error('Store not found');
         }
 
-        return url.replace('%store%', store);
+        return url.replace('%store%', store).replace('%STORE%', store.toUpperCase());
     }
 }

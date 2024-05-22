@@ -52,12 +52,6 @@
             "product_order": 16
         }
     ],
-    "productAbstractUrls": [
-        {
-            "fk_locale": "{fkLocaleDe}",
-            "url": "/de/test-product-{random}"
-        }
-    ],
     "productAbstractLocalizedAttributes": [
         {
             "fk_locale": "{fkLocaleDe}",
@@ -69,12 +63,12 @@
             "name": "test product {random}"
         }
     ],
-    "productLabelProductAbstracts": [
+    "productAbstractsProductLabel": [
         {
             "fk_product_label": "{fkProductLabel}"
         }
     ],
-    "productImageSets": [
+    "productAbstractImageSets": [
         {
             "fk_locale": "{fkLocaleDe}",
             "fk_product": null,

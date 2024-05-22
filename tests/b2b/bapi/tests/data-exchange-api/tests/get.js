@@ -16,7 +16,7 @@ options.scenarios = {
     },
 };
 
-const productGetCreateScenario = new ApiGetScenario('DEX');
+const productGetCreateScenario = new ApiGetScenario(__ENV.DATA_EXCHANGE_ENV);
 
 export function productGetScenario() {
     productGetCreateScenario.execute();

@@ -36,7 +36,7 @@ export class ApiGetScenario extends AbstractScenario {
         let self = this;
         group(self.group, function () {
             const requestParams = self.getRequestParams()
-            let responseProducts = self.http.sendGetRequest(self.http.url`${self.getBackendApiUrl()}/dynamic-entity/product-abstracts?include=productAbstractStores,productAbstractProducts,productRelations,productAbstractPriceProducts,productAbstractCategories,productAbstractLocalizedAttributes,productLabelProductAbstracts,productImageSets&page[offset]=0&page[limit]=100`, requestParams, false);
+            let responseProducts = self.http.sendGetRequest(self.http.url`${self.getBackendApiUrl()}/dynamic-entity/product-abstracts?include=productAbstractStores,productAbstractProducts,productRelations,productAbstractPriceProducts,productAbstractCategories,productAbstractLocalizedAttributes,productAbstractsProductLabel,productAbstractImageSets&page[offset]=0&page[limit]=100`, requestParams, false);
             if (responseProducts.status === 200) {
                 self.productGetTrend.add(responseProducts.timings.duration)
             }
