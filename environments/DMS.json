@@ -9,7 +9,7 @@
       },
     "testing": {
         "storefrontUrl": "https://yves.eu.dstore.frw.cloud.spryker.toys/?_store=%STORE%",
-        "storefrontApiUrl": "https://glue.eu.dstore.frw.cloud.spryker.toys",
+        "storefrontApiUrl": "https://glue-storefront.eu.dstore.frw.cloud.spryker.toys",
         "backendApiUrl": "https://glue-backend.eu.dstore.frw.cloud.spryker.toys",
         "backofficeUrl": "https://backoffice.eu.dstore.frw.cloud.spryker.toys",
         "backofficeApiUrl": "https://backend-api.eu.dstore.frw.cloud.spryker.toys",

@@ -5,3 +5,6 @@ settings.json
 /results/
 !/results/.gitkeep
 .lh
+/.pki
+/.cache
+/screenshot

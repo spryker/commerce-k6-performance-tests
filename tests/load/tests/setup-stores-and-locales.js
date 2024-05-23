@@ -76,7 +76,7 @@ const targetEnv = __ENV.DATA_EXCHANGE_ENV
 const checkoutScenario = new SharedCheckoutScenario(targetEnv);
 const basicAuth = getBasicAuthCredentials(targetEnv);
 
-const STORE_CONFIGURATION_FILE = 'tests/load/tests/data/stores.json'
+const STORE_CONFIGURATION_FILE = __ENV.DMS_STORES_CONFIGURATION_FILE
 
 export function generateConfiguration() {
     let stores = new ConfigGenerator().generate(targetAmountOfStores)

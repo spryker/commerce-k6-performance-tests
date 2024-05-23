@@ -1,19 +1,14 @@
 const replacement = {
-    fkStoreDe: 1,
-    fkStoreAt: 2,
-    fkCategory: 5,
+    fkCategory: 4,
     fkStock: 1,
     fkProductRelationType: 1,
     fkPriceType: 1,
-    fkCurrency: 93,
-    fkLocaleEn: 66,
-    fkLocaleDe: 46,
-    fkLocaleAt: 43
 }
 
 export class DataExchangePayloadGenerator {
 
-    constructor(uuid, itemsAmount = 1000, concreteMaxAmount = 5) {
+    constructor(uuid, storeConfigHandler, itemsAmount = 1000, concreteMaxAmount = 5) {
+        this.storeConfigHandler = storeConfigHandler;
         this.itemsAmount = itemsAmount
         this.concreteMaxAmount = concreteMaxAmount
         this.uuid = uuid
@@ -95,44 +90,93 @@ export class DataExchangePayloadGenerator {
     }
 
     getConcrete(productConcreteTemplate, random) {
+        let stores = this.storeConfigHandler.get()
         let concretes = []
         for (let index = 1; index <= this.concreteMaxAmount; index++) {
             concretes.push(productConcreteTemplate.replaceAll('{random}', `${random}-${index}`)
-                .replaceAll('"{fkStoreDe}"', replacement.fkStoreDe)
-                .replaceAll('"{fkStoreAt}"', replacement.fkStoreAt)
-                .replaceAll('"{fkCategory}"', replacement.fkCategory)
-                .replaceAll('"{fkStock}"', replacement.fkStock)
-                .replaceAll('"{fkProductRelationType}"', replacement.fkProductRelationType)
-                .replaceAll('"{fkPriceType}"', replacement.fkPriceType)
-                .replaceAll('"{fkCurrency}"', replacement.fkCurrency)
-                .replaceAll('"{fkLocaleEn}"', replacement.fkLocaleEn)
-                .replaceAll('"{fkLocaleDe}"', replacement.fkLocaleDe)
-                .replaceAll('"{fkLocaleAt}"', replacement.fkLocaleAt))
+                .replaceAll('"SEARCH_CONFIG"', this.storeConfigHandler.getUniqueLocaleIds().map((localeId) => {
+                    return JSON.stringify({
+                            "fk_locale": localeId,
+                            "is_searchable": true
+                        },
+                    )
+                }).join(','))
+                .replaceAll('"PRODUCT_LOCALAZID_ATTRIBUTES"', this.storeConfigHandler.getUniqueLocaleIds().map((localeId) => {
+                    return JSON.stringify({
+                        "fk_locale": localeId,
+                        "attributes": "{\"color\":\"Weinrot\"}",
+                        "description": `description for locale id: ${localeId}`,
+                        "name": `test product ${random} Locale ${localeId}`
+                        },
+                    )
+                }).join(','))
+                .replaceAll('"{fkStock}"', replacement.fkStock))
         }
 
         return concretes.join(',\n')
     }
 
     generateProducts(productTemplate, productConcreteTemplate, productLabelId = 3) {
+        let stores = this.storeConfigHandler.get()
+
         let result = []
         for (let index = 0; index < this.itemsAmount; index++) {
             let random = this.uuid()
             result.push(JSON.parse(productTemplate
+                .replaceAll('"PRODUCT_ABSTRACT_STORES"', stores.map((store) => {
+                    return JSON.stringify({"fk_store": store.id_store})
+                }).join(','))
+                .replaceAll('"PRODUCT_RELATION_STORES"', stores.map((store) => {
+                    return JSON.stringify({"fk_store": store.id_store})
+                }).join(','))
+                .replaceAll('"PRODUCT_PRICE_STORES"', () => {
+                    let replacement = stores.map((store) => {
+                        return store.currencies.map((currencyId) => JSON.stringify({
+                                "fk_currency": currencyId,
+                                "fk_store": store.id_store,
+                                "gross_price": 1000 * store.id_store,
+                                "net_price": 999 * store.id_store,
+                                "priceProductStoreDefaults": [
+                                    {}
+                                ]
+                            }
+                        ))
+                    }).filter((el) => el.length)
+                    if (replacement.length) {
+                        return replacement.join(',')
+                    }
+
+                    return ''
+                })
+                .replaceAll('"PRODUCT_ABSTRACT_IMAGES_STORES"', this.storeConfigHandler.getUniqueLocaleIds().map((localeId) => {
+                    return JSON.stringify(         {
+                            "fk_locale": localeId,
+                            "fk_product": null,
+                            "name": "${random}"
+                        },
+                    )
+                }).join(','))
+                .replaceAll('"PRODUCT_LOCALISED_ATTRIBUTES"', this.storeConfigHandler.getUniqueLocaleIds().map((localeId) => {
+                    return JSON.stringify({
+                           "fk_locale": localeId,
+                           "attributes": "{\"color\":\"Weinrot\"}",
+                           "description": `description for locale id: ${localeId}`,
+                           "meta_description": `meta description for locale id: ${localeId}`,
+                           "meta_keywords": `meta keywords for locale id: ${localeId}`,
+                           "meta_title": `meta product title test product  for locale id: ${localeId}`,
+                           "name": `test product ${random} Locale ${localeId}`
+                       },
+                    )
+                }).join(','))
                 .replaceAll('{random}', random)
-                .replaceAll('"{fkStoreDe}"', replacement.fkStoreDe)
-                .replaceAll('"{fkStoreAt}"', replacement.fkStoreAt)
                 .replaceAll('"{fkCategory}"', replacement.fkCategory)
                 .replaceAll('"{fkStock}"', replacement.fkStock)
                 .replaceAll('"{fkProductRelationType}"', replacement.fkProductRelationType)
                 .replaceAll('"{fkPriceType}"', replacement.fkPriceType)
-                .replaceAll('"{fkCurrency}"', replacement.fkCurrency)
-                .replaceAll('"{fkLocaleEn}"', replacement.fkLocaleEn)
-                .replaceAll('"{fkLocaleDe}"', replacement.fkLocaleDe)
-                .replaceAll('"{fkLocaleAt}"', replacement.fkLocaleAt)
-                .replaceAll('"{fkProductLabel}"', productLabelId)
+                .replaceAll('"{fkProductLabel}"', String(productLabelId))
                 .replaceAll('"{CONCRETES}"', this.getConcrete(productConcreteTemplate, random))))
         }
-        
+
         return JSON.stringify({
             data: result
         })
@@ -153,7 +197,13 @@ export class DataExchangePayloadGenerator {
 
     generateLabel(productLabelTemplate) {
         let result = []
-        result.push(JSON.parse(productLabelTemplate.replaceAll('{random}', this.uuid()).replaceAll('"{fkStoreDe}"', replacement.fkStoreDe).replaceAll('"{fkStoreAt}"', replacement.fkStoreAt)))
+        let stores = this.storeConfigHandler.get()
+        result.push(JSON.parse(productLabelTemplate
+            .replaceAll('{random}', this.uuid())
+            .replaceAll('"PRODUCT_LABELS_STORES_CONFIG"', stores.map((store) => {
+                return JSON.stringify({"fk_store": store.id_store})
+            }).join(','))
+        ))
 
         return JSON.stringify({
             data: result

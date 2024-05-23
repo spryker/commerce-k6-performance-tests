@@ -5,14 +5,15 @@ import { debug, getIteration, getThread, uuid } from '../../../../../../lib/util
 import { sleep } from 'k6';
 import { Trend, Counter } from 'k6/metrics';
 import { ApiPostPayloadScenario } from './api-post-payload-scenario.js';
+import ConfigHandler from "../../../../../../helpers/store/configHandler.js";
 
 export class ApiPatchPayloadScenario extends ApiPostPayloadScenario {
-    constructor(environment, chunkSize, concreteMaxAmount, options = {}) {
+    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = []) {
         super(environment, options, concreteMaxAmount, options)
         this.chunkSize =chunkSize
         this.sleepInterval = 30
         this.retryLimit = 2
-        this.payloadGenerator = new DataExchangePayloadGenerator(uuid, this.chunkSize)
+        this.payloadGenerator = new DataExchangePayloadGenerator(uuid, new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist), this.chunkSize, this.concreteMaxAmount)
         this.group = 'API PATCH'
         this.type = 'patch'
         this.productPatchTrend = new Trend('product_patch', true)

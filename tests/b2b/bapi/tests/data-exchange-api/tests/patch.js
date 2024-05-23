@@ -1,12 +1,12 @@
 import { Profiler } from '../../../../../../helpers/profiler.js';
-import { getExecutionConfiguration, getTemplateFolder, loadDefaultOptions } from '../../../../../../lib/utils.js';
+import { getExecutionConfiguration, getStoreWhiteList, loadDefaultOptions } from '../../../../../../lib/utils.js';
 import { ApiPatchPayloadScenario } from '../scenarios/api-patch-payload-scenario.js';
 
 export const options = loadDefaultOptions();
 
-let productTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/product.json`)
-let productConcreteTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/concrete.json`)
-let productLabelTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/productLabel.json`)
+let productTemplate = open(`../template/product.json`)
+let productConcreteTemplate = open(`../template/concrete.json`)
+let productLabelTemplate = open(`../template/productLabel.json`)
 
 let profiler = new Profiler()
 
@@ -31,7 +31,7 @@ options.scenarios = {
     },
 };
 
-const productPatchCreateScenario = new ApiPatchPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount);
+const productPatchCreateScenario = new ApiPatchPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount, {}, getStoreWhiteList());
 
 export function productPatchScenario() {
     productPatchCreateScenario.execute(productTemplate, productConcreteTemplate, productLabelTemplate, profiler);

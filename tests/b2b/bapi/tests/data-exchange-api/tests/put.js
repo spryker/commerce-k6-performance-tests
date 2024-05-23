@@ -1,4 +1,4 @@
-import { getExecutionConfiguration, getTemplateFolder, loadDefaultOptions } from '../../../../../../lib/utils.js';
+import { getExecutionConfiguration, getStoreWhiteList, loadDefaultOptions } from '../../../../../../lib/utils.js';
 import { ApiPutPayloadScenario } from '../scenarios/api-put-payload-scenario.js';
 
 export const options = loadDefaultOptions();
@@ -10,9 +10,9 @@ let executionConfig = getExecutionConfiguration(
     __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT
 )
 
-let productTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/product.json`)
-let productConcreteTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/concrete.json`)
-let productLabelTemplate = open(`../template/${getTemplateFolder(Boolean(Number(__ENV.DATA_EXCHANGE_TWO_LOCALES)))}/productLabel.json`)
+let productTemplate = open(`../template/product.json`)
+let productConcreteTemplate = open(`../template/concrete.json`)
+let productLabelTemplate = open(`../template/productLabel.json`)
 
 options.scenarios = {
     ProductPutVUS: {
@@ -28,7 +28,7 @@ options.scenarios = {
     },
 };
 
-const productPutCreateScenario = new ApiPutPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount);
+const productPutCreateScenario = new ApiPutPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount,{}, getStoreWhiteList());
 
 export function productPutScenario() {
     productPutCreateScenario.execute(productTemplate, productConcreteTemplate, productLabelTemplate);

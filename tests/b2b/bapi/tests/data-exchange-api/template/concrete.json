@@ -1,0 +1,21 @@
+{
+    "attributes": "{\"color\":\"Red\",\"upcs\":\"013803252910\"}",
+    "discount": null,
+    "is_active": true,
+    "is_quantity_splittable": true,
+    "sku": "{random}",
+    "warehouses": null,
+    "productSearch": [
+        "SEARCH_CONFIG"
+    ],
+    "productStocks": [
+        {
+            "fk_stock": "{fkStock}",
+            "is_never_out_of_stock": false,
+            "quantity": 10
+        }
+    ],
+    "productLocalizedAttributes": [
+        "PRODUCT_LOCALAZID_ATTRIBUTES"
+    ]
+}

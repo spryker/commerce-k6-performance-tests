@@ -1,0 +1,54 @@
+{
+    "fk_tax_set": 1,
+    "approval_status": "approved",
+    "attributes": "{}",
+    "new_from": null,
+    "new_to": "2028-01-01 00:00:00.000000",
+    "sku": "{random}",
+    "color_code": "#DC2E09",
+    "productAbstractProducts": [
+        "{CONCRETES}"
+    ],
+    "productAbstractStores": [
+        "PRODUCT_ABSTRACT_STORES"
+    ],
+    "productRelations": [
+        {
+            "fk_product_relation_type": "{fkProductRelationType}",
+            "is_active": true,
+            "is_rebuild_scheduled": true,
+            "product_relation_key": "Prk-{random}",
+            "query_set_data": "{\"condition\":\"AND\",\"id\":null,\"field\":null,\"type\":null,\"input\":null,\"operator\":null,\"value\":null,\"rules\":[{\"condition\":null,\"id\":\"product_sku\",\"field\":\"product_sku\",\"type\":\"string\",\"input\":\"text\",\"operator\":\"in\",\"value\":\"004,005,006,007,008,009,010,011,012,013,014,015\",\"rules\":[]}]}",
+            "productRelationStores": [
+                "PRODUCT_RELATION_STORES"
+            ]
+        }
+    ],
+    "productAbstractPriceProducts": [
+        {
+            "fk_price_type": "{fkPriceType}",
+            "fk_product": null,
+            "price": 1000,
+            "priceProductStores": [
+                "PRODUCT_PRICE_STORES"
+            ]
+        }
+    ],
+    "productAbstractCategories": [
+        {
+            "fk_category": "{fkCategory}",
+            "product_order": 16
+        }
+    ],
+    "productAbstractLocalizedAttributes": [
+        "PRODUCT_LOCALISED_ATTRIBUTES"
+    ],
+    "productAbstractsProductLabel": [
+        {
+            "fk_product_label": "{fkProductLabel}"
+        }
+    ],
+    "productAbstractImageSets": [
+        "PRODUCT_ABSTRACT_IMAGES_STORES"
+    ]
+}

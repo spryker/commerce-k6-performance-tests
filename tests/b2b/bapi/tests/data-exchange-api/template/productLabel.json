@@ -9,11 +9,6 @@
     "valid_from": null,
     "valid_to": null,
     "productLabelStores": [
-        {
-            "fk_store": "{fkStoreDe}"
-        },
-        {
-            "fk_store": "{fkStoreAt}"
-        }
+        "PRODUCT_LABELS_STORES_CONFIG"
     ]
 }
