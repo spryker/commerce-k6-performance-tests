@@ -14,9 +14,9 @@ export default class StockHandler extends Handler {
     }
 
     setup(storeConfig) {
-        let targetStockId = this.get()
-        if (targetStockId) {
-            this.assignStoresToStock(targetStockId, storeConfig)
+        let targetWarehouseId = this.get()
+        if (targetWarehouseId) {
+            this.assignStoresToStock(targetWarehouseId, storeConfig)
             return
         }
 
@@ -27,8 +27,10 @@ export default class StockHandler extends Handler {
             }]
         }))
 
+        this.assertionHelper.assertResponseStatus(creationResult, 201)
+
         let response = JSON.parse(creationResult.body)
-        let targetWarehouseId = (response.data.shift()).id_stock
+        targetWarehouseId = (response.data.shift()).id_stock
         this.assignStoresToStock(targetWarehouseId, storeConfig)
     }
 
@@ -48,9 +50,10 @@ export default class StockHandler extends Handler {
         })
 
         if (payload.length) {
-            return this.createEntities('stock-stores', JSON.stringify({
+            let result =  this.createEntities('stock-stores', JSON.stringify({
                 data: payload
             }))
+            this.validateResponses([result])
         }
     }
 }

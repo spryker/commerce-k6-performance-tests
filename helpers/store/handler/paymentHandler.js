@@ -7,28 +7,20 @@ export default class PaymentHandler extends Handler {
     }
 
     setup(storeConfig) {
-        let data = this.getDataFromTable(this.getTableAlias())
-        let activePayment = data.filter((payment) => payment.is_active)
-        let paymentStores =  this.getDataFromTable('payment-method-stores')
+        let entityConfigs = [
+            {
+                entity: {
+                    table: 'payment-methods',
+                    fk: 'id_payment_method'
+                },
+                entity_store: {
+                    table: 'payment-method-stores',
+                    fk: 'fk_payment_method'
+                },
+            }
+        ]
+        let results = this.assignExistingEntitiesToStores(entityConfigs, storeConfig)
 
-        let payload = []
-        storeConfig.map((store) => {
-            activePayment.map((payment) => {
-                if (paymentStores.filter((el) => el.fk_payment_method === payment.id_payment_method && el.fk_store === store.id_store).length) {
-                    return
-                }
-
-                payload.push({
-                    fk_payment_method: payment.id_payment_method,
-                    fk_store: store.id_store
-                })
-            })
-        })
-
-        if (payload.length) {
-            let res = this.createEntities('payment-method-stores', JSON.stringify({
-                data: payload
-            }))
-        }
+        this.validateResponses(results)
     }
 }

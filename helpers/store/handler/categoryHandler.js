@@ -7,7 +7,7 @@ export default class CategoryHandler extends Handler {
     }
 
     setup(storeConfig) {
-        let config = [
+        let entityConfigs = [
             {
                 entity: {
                     table: 'categories',
@@ -19,30 +19,7 @@ export default class CategoryHandler extends Handler {
                 },
             }
         ]
-        for (const sourceConfig of config) {
-            let data = this.getDataFromTable(sourceConfig.entity.table)
-            let activeEntities = data.filter((el) => el.is_active)
-            let entityStores =  this.getDataFromTable(sourceConfig.entity_store.table)
-
-            let payload = []
-            storeConfig.map((store) => {
-                activeEntities.map((entity) => {
-                    if (entityStores.filter((el) => el[sourceConfig.entity_store.fk] === entity[sourceConfig.entity.fk] && el.fk_store === store.id_store).length) {
-                        return
-                    }
-
-                    payload.push({
-                        fk_category: entity[sourceConfig.entity.fk],
-                        fk_store: store.id_store
-                    })
-                })
-            })
-
-            if (payload.length) {
-                return this.createEntities(sourceConfig.entity_store.table, JSON.stringify({
-                    data: payload
-                }))
-            }
-        }
+        let results = this.assignExistingEntitiesToStores(entityConfigs, storeConfig)
+        this.validateResponses(results)
     }
 }

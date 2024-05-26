@@ -7,28 +7,20 @@ export default class ShipmentHandler extends Handler {
     }
 
     setup(storeConfig) {
-        let data = this.getDataFromTable(this.getTableAlias())
-        let activeShipments = data.filter((shipment) => shipment.is_active)
-        let shipmentStores =  this.getDataFromTable('shipment-method-stores')
+        let entityConfigs = [
+            {
+                entity: {
+                    table: 'shipment-methods',
+                    fk: 'id_shipment_method'
+                },
+                entity_store: {
+                    table: 'shipment-method-stores',
+                    fk: 'fk_shipment_method'
+                },
+            }
+        ]
+        let results = this.assignExistingEntitiesToStores(entityConfigs, storeConfig)
 
-        let payload = []
-        storeConfig.map((store) => {
-            activeShipments.map((shipment) => {
-                if (shipmentStores.filter((el) => el.fk_shipment_method === shipment.id_shipment_method && el.fk_store === store.id_store).length) {
-                    return
-                }
-
-                payload.push({
-                    fk_shipment_method: shipment.id_shipment_method,
-                    fk_store: store.id_store
-                })
-            })
-        })
-
-        if (payload.length) {
-            return this.createEntities('shipment-method-stores', JSON.stringify({
-                data: payload
-            }))
-        }
+        this.validateResponses(results)
     }
 }
