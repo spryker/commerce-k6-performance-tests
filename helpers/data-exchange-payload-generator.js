@@ -1,14 +1,15 @@
 const replacement = {
     fkCategory: 4,
-    fkStock: 1,
+    fkStock: 11,
     fkProductRelationType: 1,
     fkPriceType: 1,
 }
 
 export class DataExchangePayloadGenerator {
 
-    constructor(uuid, storeConfigHandler, itemsAmount = 1000, concreteMaxAmount = 5) {
+    constructor(uuid, storeConfigHandler, stockHandler,  itemsAmount = 1000, concreteMaxAmount = 5) {
         this.storeConfigHandler = storeConfigHandler;
+        this.stockHandler = stockHandler;
         this.itemsAmount = itemsAmount
         this.concreteMaxAmount = concreteMaxAmount
         this.uuid = uuid
@@ -110,7 +111,7 @@ export class DataExchangePayloadGenerator {
                         },
                     )
                 }).join(','))
-                .replaceAll('"{fkStock}"', replacement.fkStock))
+                .replaceAll('"{fkStock}"', this.stockHandler.get()))
         }
 
         return concretes.join(',\n')
@@ -170,7 +171,7 @@ export class DataExchangePayloadGenerator {
                 }).join(','))
                 .replaceAll('{random}', random)
                 .replaceAll('"{fkCategory}"', replacement.fkCategory)
-                .replaceAll('"{fkStock}"', replacement.fkStock)
+                .replaceAll('"{fkStock}"', this.stockHandler.get())
                 .replaceAll('"{fkProductRelationType}"', replacement.fkProductRelationType)
                 .replaceAll('"{fkPriceType}"', replacement.fkPriceType)
                 .replaceAll('"{fkProductLabel}"', String(productLabelId))

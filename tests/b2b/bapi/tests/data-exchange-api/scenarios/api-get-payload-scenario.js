@@ -11,7 +11,6 @@ export class ApiGetScenario extends AbstractScenario {
         super(environment, options)
         this.sleepInterval = 30
         this.retryLimit = 2
-        this.payloadGenerator = new DataExchangePayloadGenerator(uuid, this.chunkSize)
         this.group = 'API GET'
         this.profiler = new Profiler()
         this.type = 'get'

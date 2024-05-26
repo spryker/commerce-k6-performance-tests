@@ -6,7 +6,8 @@ import { debug, getIteration, getThread, uuid } from '../../../../../../lib/util
 import { sleep } from 'k6';
 import { Profiler } from '../../../../../../helpers/profiler.js';
 import { Trend, Counter } from 'k6/metrics';
-import ConfigHandler from "../../../../../../helpers/store/configHandler.js";
+import ConfigHandler from "../../../../../../helpers/store/handler/configHandler.js";
+import StockHandler from "../../../../../../helpers/store/handler/stockHandler.js";
 
 export class ApiPostPayloadScenario extends AbstractScenario {
     constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = []) {
@@ -17,7 +18,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         this.retryLimit = 10
         this.group = 'API POST'
         this.type = 'post'
-        this.payloadGenerator = new DataExchangePayloadGenerator(uuid, new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist), this.chunkSize, this.concreteMaxAmount)
+        this.payloadGenerator = new DataExchangePayloadGenerator(uuid, new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist), new StockHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist), this.chunkSize, this.concreteMaxAmount)
         this.profiler = new Profiler()
         this.tokenTrend = new Trend('token_generation', true)
         this.productLabelCreationTrend = new Trend('product_label_creation', true)

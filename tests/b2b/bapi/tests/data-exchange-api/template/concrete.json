@@ -11,7 +11,7 @@
     "productStocks": [
         {
             "fk_stock": "{fkStock}",
-            "is_never_out_of_stock": false,
+            "is_never_out_of_stock": true,
             "quantity": 10
         }
     ],
