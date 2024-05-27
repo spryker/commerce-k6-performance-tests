@@ -6,6 +6,8 @@ export class SharedQuickOrderScenario extends AbstractScenario {
         const page = context.newPage();
 
         try {
+            await this.openProductConcreteSearchPage(page);
+            await this.openProductAdditionalDataPage(page);
             await this.openQuickOrderPage(page);
             await this.searchForProduct(page);
             await this.selectProduct(page);
@@ -14,6 +16,24 @@ export class SharedQuickOrderScenario extends AbstractScenario {
         } finally {
             page.close();
         }
+    }
+
+    async openProductConcreteSearchPage(page) {
+        await page.goto(`${this.getStorefrontBaseUrl()}/en/product-search/product-concrete-search?searchString=${__ENV.productSku}`);
+        this.assertionsHelper.assertPageState(
+            page,
+            'Product search page is opened',
+            (page) => page.locator(`li[data-value="${__ENV.productSku}"]`).isVisible(),
+        );
+    }
+
+    async openProductAdditionalDataPage(page) {
+        await page.goto(`${this.getStorefrontBaseUrl()}/en/quick-order/product-additional-data?sku=${__ENV.productSku}`);
+        this.assertionsHelper.assertPageState(
+            page,
+            'Product additional data page is opened',
+            (page) => page.locator(`[data-qa="component formatted-number-input"]`).isVisible(),
+        );
     }
 
     async openQuickOrderPage(page) {

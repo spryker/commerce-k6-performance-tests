@@ -4,6 +4,7 @@ import { group } from 'k6';
 export class SharedCartScenario extends AbstractScenario {
     execute() {
         const requestParams = this.cartHelper.getParamsWithAuthorization();
+        requestParams.tags = { request_name: 'SAPI5_cart_view_single_cart' };
         const cartId = this._setUp(requestParams);
         let self = this;
 

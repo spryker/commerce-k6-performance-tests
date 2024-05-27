@@ -16,6 +16,9 @@ options.scenarios = {
         iterations: 10,
     },
 };
+options.thresholds = {
+    "http_req_duration{url:http://yves.de.spryker.local/en/cart/add/657712, method:POST}": ["avg<1000"],
+};
 
 const checkoutScenario = new CheckoutScenario('B2B_MP');
 

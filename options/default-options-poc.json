@@ -1,0 +1,15 @@
+{
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+  "thresholds": {
+    "http_req_failed": ["rate == 0.00"],
+    "checks": ["rate == 1.0"],
+    "http_req_duration{testId:S2}": ["avg<1000"],
+    "http_req_duration{request_name:SAPI5_cart_view_single_cart}": ["avg<1000"],
+    "http_req_duration{url:http://yves.de.spryker.local, environment: B2B_MP}": ["avg<1000"],
+    "http_req_duration{url:http://yves.de.spryker.local/en/cart/add/657712, method:POST}": ["avg<1000"],
+    "browser_http_req_duration{url:http://yves.de.spryker.local/en/quick-order, method:GET}": ["avg<1000"],
+    "browser_http_req_duration{url:http://yves.de.spryker.local/en/product-search/product-concrete-search?searchString=657712}": ["avg<1000"],
+    "browser_http_req_duration{url:http://yves.de.spryker.local/en/quick-order/product-additional-data?sku=657712}": ["avg<1000"],
+    "browser_http_req_duration{url:http://yves.de.spryker.local/en/quick-order, method:POST}": ["avg<1000"]
+  }
+}

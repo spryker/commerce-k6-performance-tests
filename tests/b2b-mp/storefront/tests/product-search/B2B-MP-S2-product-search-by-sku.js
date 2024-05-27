@@ -14,6 +14,9 @@ options.scenarios = {
         iterations: 10
     },
 };
+options.thresholds = {
+    "http_req_duration": ["avg<1000"],
+};
 
 const productSearchPageScenario = new SharedProductSearchBySkuScenario('B2B_MP');
 

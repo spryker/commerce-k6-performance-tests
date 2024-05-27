@@ -16,6 +16,9 @@ options.scenarios = {
         iterations: 10,
     },
 };
+options.thresholds = {
+    "http_req_duration{url:http://yves.de.spryker.local/en/cart/add/657712, method:POST}": ["avg<1000"],
+};
 
 //scenario objects must be created outside any function used in execute phase since some initialization actions are done on
 //K6 "init" stage (in the current implementation such init action are done in class constructor).

@@ -16,6 +16,9 @@ options.scenarios = {
         iterations: 10
     },
 };
+options.thresholds = {
+    "http_req_duration{request_name:SAPI5_cart_view_single_cart}": ["avg<1000"],
+};
 
 const sharedCartScenario = new SharedCartScenario('B2B_MP');
 
