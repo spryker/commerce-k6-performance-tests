@@ -9,11 +9,11 @@ export default class PaymentHandler extends Handler {
     setup(storeConfig) {
         let entityConfigs = [
             {
-                entity: {
+                read_entity: {
                     table: 'payment-methods',
                     fk: 'id_payment_method'
                 },
-                entity_store: {
+                write_entity: {
                     table: 'payment-method-stores',
                     fk: 'fk_payment_method'
                 },

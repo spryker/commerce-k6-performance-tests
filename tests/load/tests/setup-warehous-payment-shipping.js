@@ -49,5 +49,5 @@ export function generateConfiguration() {
     stockHandler.setup(storeConfig.get())
     paymentHandler.setup(storeConfig.get())
     shipmentHandler.setup(storeConfig.get())
-    categoryHandler.setup(storeConfig.get())
+    categoryHandler.setup(storeConfig.get(), storeConfig.getUniqueLocaleIds())
 }

@@ -24,26 +24,26 @@ export default class ConfigGenerator {
      * @param amountOfCurrencies
      * @param amountOfShippingCountries
      */
-    generate(amountOfStores = 8, amountOfLocales = 8, amountOfCurrencies = 8, amountOfShippingCountries = 8) {
-        let countries = this._shuffleArray(Object.keys(countryMap)).filter(el => this.storeCodesToExclude.filter(exclude => el.toLowerCase() === exclude.toLowerCase()).length === 0)
+    generate(amountOfStores = 8, amountOfLocales = 2, amountOfCurrencies = 2, amountOfShippingCountries = 8) {
+        let countries  = this._shuffleArray(Object.keys(countryMap)).filter(el => this.storeCodesToExclude.filter(exclude => el.toLowerCase() === exclude.toLowerCase()).length === 0)
+        let initialCountriesList = countries
         countries = countries.length >= amountOfStores ? countries.slice(0, amountOfStores) : countries
-        amountOfLocales = this._validateAmount(amountOfLocales, amountOfStores)
         amountOfCurrencies = this._validateAmount(amountOfCurrencies, amountOfStores)
         amountOfShippingCountries = this._validateAmount(amountOfShippingCountries, amountOfStores)
        
         countries = countries.map(countryCode => {
             return {
-                storeCode: countryCode,
+                storeCode: `${countryCode}`,
                 defaultLocale: countryMap[countryCode].languageLocales[0],
-                locales: this._generateLocaleList(countryCode, countries, amountOfLocales),
+                locales: this._generateLocaleList(countryCode, amountOfLocales > amountOfStores ? initialCountriesList : countries, amountOfLocales),
                 defaultCurrency: countryMap[countryCode].currencyCode,
-                currencies: this._generateCurrencyList(countryCode, countries, amountOfCurrencies),
-                shipmentCountries: this._generateShippingCountriesList(countryCode, countries, amountOfShippingCountries)
+                currencies: this._generateCurrencyList(countryCode, amountOfCurrencies > amountOfStores ? initialCountriesList : countries, amountOfCurrencies),
+                shipmentCountries: this._generateShippingCountriesList(amountOfShippingCountries > amountOfStores ? initialCountriesList: countryCode, countries, amountOfShippingCountries)
             }
         })
         
 
-        return this._extendListIfLessThanRequested(countries)
+        return this._extendListIfLessThanRequested(countries, amountOfStores)
     }
 
     _extendListIfLessThanRequested(countries, amountOfStores) {

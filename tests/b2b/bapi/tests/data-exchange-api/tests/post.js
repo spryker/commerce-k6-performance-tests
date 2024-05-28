@@ -10,10 +10,11 @@ let productLabelTemplate = open(`../template/productLabel.json`)
 let productImageTemplate = open(`../template/productImage.json`)
 
 let executionConfig = getExecutionConfiguration(
-    __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE_POST, 
-    __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE, 
-    __ENV.DATA_EXCHANGE_THREADS_POST, 
-    __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT
+    __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE_POST,
+    __ENV.DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE,
+    __ENV.DATA_EXCHANGE_THREADS_POST,
+    __ENV.DATA_EXCHANGE_ENV,
+    __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT,
 )
 
 options.scenarios = {
@@ -31,7 +32,7 @@ options.scenarios = {
 };
 
 console.log('getStoreWhiteList()', getStoreWhiteList())
-const productCreateScenario = new ApiPostPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount, {}, getStoreWhiteList());
+const productCreateScenario = new ApiPostPayloadScenario(executionConfig.targetEnv, executionConfig.chunkSize, executionConfig.concreteMaxAmount, {}, getStoreWhiteList());
 export function productPostScenario() {
     productCreateScenario.execute(productTemplate, productConcreteTemplate, productImageTemplate, productLabelTemplate);
 }

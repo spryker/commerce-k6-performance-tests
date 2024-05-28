@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   k6:
     container_name: "loadtesting_environment"
@@ -52,6 +50,7 @@ services:
         - DATA_EXCHANGE_SINGLE_PRODUCT=${DATA_EXCHANGE_SINGLE_PRODUCT:-0}
         - DATA_EXCHANGE_ENV=${DATA_EXCHANGE_ENV:-DEX}
         - DMS_AMOUNT_OF_STORES=${DMS_AMOUNT_OF_STORES:-40}
+        - DMS_AMOUNT_OF_LOCALES=${DMS_AMOUNT_OF_LOCALES:-30}
         - DMS_STORES_CONFIGURATION_FILE=${DMS_STORES_CONFIGURATION_FILE:-'tests/load/tests/data/stores.json'}
         - SCREENSHOT_ACTIVE=${SCREENSHOT_ACTIVE:-0}
         - DEX_AUTH_USERNAME=${DEX_AUTH_USERNAME}

@@ -50,21 +50,22 @@ export default class Handler {
     assignExistingEntitiesToStores(entityConfigs, storeConfig) {
         let result = []
         for (const sourceConfig of entityConfigs) {
-            let data = this.getDataFromTable(sourceConfig.entity.table)
+            console.log('sourceConfig', sourceConfig)
+            let data = this.getDataFromTable(sourceConfig.read_entity.table)
             let activeEntities = data.filter((el) => el.is_active)
-            let entityStores =  this.getDataFromTable(sourceConfig.entity_store.table)
+            let entityStores =  this.getDataFromTable(sourceConfig.write_entity.table)
 
             let payload = []
             storeConfig.map((store) => {
                 activeEntities.map((entity) => {
-                    if (entityStores.filter((el) => el[sourceConfig.entity_store.fk] === entity[sourceConfig.entity.fk] && el.fk_store === store.id_store).length) {
+                    if (entityStores.filter((el) => el[sourceConfig.write_entity.fk] === entity[sourceConfig.read_entity.fk] && el.fk_store === store.id_store).length) {
                         return
                     }
 
                     payload.push(Object.fromEntries([
                         [
-                            sourceConfig.entity_store.fk,
-                            entity[sourceConfig.entity.fk]
+                            sourceConfig.write_entity.fk,
+                            entity[sourceConfig.read_entity.fk]
                         ],
                         [
                             'fk_store',
@@ -75,7 +76,48 @@ export default class Handler {
             })
 
             if (payload.length) {
-                result.push(this.createEntities(sourceConfig.entity_store.table, JSON.stringify({
+                result.push(this.createEntities(sourceConfig.write_entity.table, JSON.stringify({
+                    data: payload
+                })))
+            }
+        }
+        return result
+    }
+
+    assignAttributesToLocales(entityConfigs, localesIds) {
+        let result = []
+        for (const sourceConfig of entityConfigs) {
+            let data = this.getDataFromTable(sourceConfig.read_entity.table)
+            let activeEntities = data.filter((el) => el.is_active)
+            let entityAttributes =  this.getDataFromTable(sourceConfig.write_entity.table)
+
+            let payload = []
+            localesIds.map((localeId) => {
+                activeEntities.map((entity) => {
+                    if (entityAttributes.filter((el) => el[sourceConfig.write_entity.fk] === entity[sourceConfig.read_entity.fk] && el.fk_locale === localeId).length) {
+                        return
+                    }
+
+
+                    payload.push(Object.fromEntries([
+                        [
+                            sourceConfig.write_entity.fk,
+                            entity[sourceConfig.read_entity.fk]
+                        ],
+                        [
+                            'fk_locale',
+                            localeId
+                        ],
+                        [
+                            'name',
+                            entity.category_key
+                        ]
+                    ]))
+                })
+            })
+
+            if (payload.length) {
+                result.push(this.createEntities(sourceConfig.write_entity.table, JSON.stringify({
                     data: payload
                 })))
             }
@@ -86,7 +128,6 @@ export default class Handler {
     validateResponses(responses) {
         for (const response of responses) {
             this.assertionHelper.assertResponseStatus(response, 201, response.url)
-            console.log('response=>>>>>>>>', response)
         }
     }
 }
