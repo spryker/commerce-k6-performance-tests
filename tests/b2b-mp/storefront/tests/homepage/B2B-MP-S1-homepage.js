@@ -14,6 +14,7 @@ options.scenarios = {
         iterations: 10
     },
 };
+options.thresholds.http_req_duration = ["avg<388"];
 
 const homepageScenario = new SharedHomepageScenario('B2B_MP');
 
