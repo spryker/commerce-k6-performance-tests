@@ -16,7 +16,7 @@ options.scenarios = {
 };
 options.thresholds.http_req_duration = ["avg<388"];
 
-const homepageScenario = new SharedHomepageScenario('B2B_MP');
+const homepageScenario= new SharedHomepageScenario('B2B_MP');
 
 export function executeHomepageScenario() {
     homepageScenario.execute();
