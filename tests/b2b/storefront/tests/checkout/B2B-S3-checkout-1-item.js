@@ -19,7 +19,7 @@ options.scenarios = {
         iterations: 10,
     },
 };
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/\$\{\}}`] = ['avg<552'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/\${}}`] = ['avg<552'];
 options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/cart/add/657712}`] = ['avg<547'];
 options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/cart}`] = ['avg<765'];
 options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout}`] = ['avg<421'];

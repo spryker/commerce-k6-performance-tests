@@ -19,7 +19,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-options.thresholds[`http_req_duration{url:${addToCartScenario.getStorefrontApiBaseUrl()}/carts/\$\{\}/items}`] = ['avg<735'];
+options.thresholds[`http_req_duration{url:${addToCartScenario.getStorefrontApiBaseUrl()}/carts/\${}/items}`] = ['avg<735'];
 
 export function executeAddToCartScenario() {
     addToCartScenario.execute(__ENV.sku, __ENV.quantity);

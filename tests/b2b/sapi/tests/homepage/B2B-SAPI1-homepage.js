@@ -15,7 +15,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-options.thresholds[`http_req_duration{url:${homepageScenario.getStorefrontApiBaseUrl()}/cms-pages/\$\{\}}`] = ['avg<59'];
+options.thresholds[`http_req_duration{url:${homepageScenario.getStorefrontApiBaseUrl()}/cms-pages/\${}}`] = ['avg<59'];
 
 export function executeHomepageScenario() {
     homepageScenario.execute();

@@ -18,7 +18,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-options.thresholds[`http_req_duration{url:${sharedCartScenario.getStorefrontApiBaseUrl()}/carts/\$\{\}/?include=items}`] = ['avg<383'];
+options.thresholds[`http_req_duration{url:${sharedCartScenario.getStorefrontApiBaseUrl()}/carts/\${}/?include=items}`] = ['avg<383'];
 
 export function executeSharedCartScenario() {
     sharedCartScenario.execute();
