@@ -21,16 +21,16 @@ options.scenarios = {
         iterations: 10,
     },
 };
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/\$\{\}}`] = ["avg<375"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/cart/add/657712}`] = ["avg<616"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/cart}`] = ["avg<805"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout}`] = ["avg<460"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/address}`] = ["avg<592"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/shipment}`] = ["avg<513"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/payment}`] = ["avg<519"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/summary}`] = ["avg<450"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/place-order}`] = ["avg<621"];
-options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/success}`] = ["avg<707"];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/\$\{\}}`] = ['avg<375'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/cart/add/657712}`] = ['avg<616'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/cart}`] = ['avg<805'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout}`] = ['avg<460'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/address}`] = ['avg<592'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/shipment}`] = ['avg<513'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/payment}`] = ['avg<519'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/summary}`] = ['avg<450'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/place-order}`] = ['avg<621'];
+options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/success}`] = ['avg<707'];
 
 export function executeCheckoutScenario() {
     checkoutScenario.execute();

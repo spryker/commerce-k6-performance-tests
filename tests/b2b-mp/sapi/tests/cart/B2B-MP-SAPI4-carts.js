@@ -15,7 +15,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-options.thresholds["http_req_duration{request_name:sapi_get_carts}"] = ["avg<293"];
+options.thresholds['http_req_duration{request_name:sapi_get_carts}'] = ['avg<293'];
 
 export function executeCartsScenario() {
     sharedCartsScenario.execute();

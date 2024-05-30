@@ -15,7 +15,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-options.thresholds[`http_req_duration{url:${productSearchScenario.getStorefrontApiBaseUrl()}/catalog-search?q=\$\{\}}`] = ["avg<461"];
+options.thresholds[`http_req_duration{url:${productSearchScenario.getStorefrontApiBaseUrl()}/catalog-search?q=\$\{\}}`] = ['avg<461'];
 
 export function executeProductSearchScenario() {
     productSearchScenario.execute();

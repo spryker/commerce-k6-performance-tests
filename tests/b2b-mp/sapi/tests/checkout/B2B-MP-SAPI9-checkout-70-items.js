@@ -18,7 +18,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-options.thresholds[`http_req_duration{url:${checkoutScenario.getStorefrontApiBaseUrl()}/checkout?include=orders}`] = ["avg<988"];
+options.thresholds[`http_req_duration{url:${checkoutScenario.getStorefrontApiBaseUrl()}/checkout?include=orders}`] = ['avg<988'];
 
 export function executeCheckoutScenario() {
     checkoutScenario.execute(__ENV.numberOfItems);
