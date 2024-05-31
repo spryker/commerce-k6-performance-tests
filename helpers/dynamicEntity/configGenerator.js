@@ -1,4 +1,4 @@
-import {countryMap} from "../../tests/load/tests/data/countryEuropeMap.js";
+import {countryMap} from "../../tests/dex/tests/data/countryEuropeMap.js";
 
 export default class ConfigGenerator {
     storeCodesToExclude 
