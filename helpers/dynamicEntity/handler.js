@@ -11,6 +11,7 @@ export default class Handler {
         this.storesConfig = []
         this.storeLocales = []
         this.storeCurrencies = []
+        this.lastResponse = null
     }
 
     getTableAlias() {
@@ -28,13 +29,17 @@ export default class Handler {
         return requestParams
     }
 
+    getLastResponse() {
+        return this.lastResponse
+    }
+
     getDataFromTable(tableAlias) {
         try {
-            let info = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
+            this.lastResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
 
-            this.assertionHelper.assertResponseStatus(info, 200, info.url)
+            this.assertionHelper.assertResponseStatus(this.lastResponse, 200, this.lastResponse.url)
 
-            return JSON.parse(info.body)
+            return JSON.parse(this.lastResponse.body)
         } catch (e) {
             return []
         }

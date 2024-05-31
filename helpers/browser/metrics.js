@@ -54,6 +54,12 @@ export class Metrics {
         }
     }
 
+    add(metricKey, response, requestSuccessful = true) {
+        this.addTrend(metricKey, response.timings.duration)
+        this.addRate(metricKey, requestSuccessful)
+        this.addCounter(metricKey, 1)
+    }
+
     addTrend(metricKey, value) {
         let key = toCamelCase(`${metricKey}_trend`);
 
