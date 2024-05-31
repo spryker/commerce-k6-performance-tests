@@ -30,7 +30,7 @@ export class UrlHelper {
             throw new Error('Stores are not defined.');
         }
 
-        const store = __ENV.STORE ? availableStores.find(store => store.toLowerCase() === __ENV.STORE.toLowerCase()) : availableStores[0];
+        const store = String(__ENV.STORE ? availableStores.find(store => store.toLowerCase() === __ENV.STORE.toLowerCase()) : availableStores[0]).toLowerCase();
 
         if (!store) {
             throw new Error(`Store not found. Target store: ${__ENV.STORE}, available stores: ${availableStores.join(',')}`);
