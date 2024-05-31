@@ -1,4 +1,4 @@
-import Handler from "../handler.js";
+import Handler from '../handler.js';
 
 export default class PaymentHandler extends Handler {
 

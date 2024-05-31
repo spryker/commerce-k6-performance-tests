@@ -1,4 +1,4 @@
-import Handler from "../handler.js";
+import Handler from '../handler.js';
 
 export default class CategoryHandler extends Handler {
 
@@ -32,8 +32,8 @@ export default class CategoryHandler extends Handler {
                     table: 'category-attributes',
                     fk: 'fk_category',
                     copy: {
-                        id_category: "fk_category",
-                        category_key: "name"
+                        id_category: 'fk_category',
+                        category_key: 'name'
                     }
                 },
             }

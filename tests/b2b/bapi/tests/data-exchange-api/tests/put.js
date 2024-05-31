@@ -10,9 +10,9 @@ let executionConfig = getExecutionConfiguration(
     __ENV.DATA_EXCHANGE_CONCRETE_MAX_AMOUNT
 )
 
-let productTemplate = open(`../template/product.json`)
-let productConcreteTemplate = open(`../template/concrete.json`)
-let productLabelTemplate = open(`../template/productLabel.json`)
+let productTemplate = open('../template/product.json')
+let productConcreteTemplate = open('../template/concrete.json')
+let productLabelTemplate = open('../template/productLabel.json')
 
 options.scenarios = {
     ProductPutVUS: {

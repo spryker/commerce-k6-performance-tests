@@ -3,11 +3,10 @@ import { getExecutionConfiguration, getStoreWhiteList, loadDefaultOptions } from
 
 export const options = loadDefaultOptions();
 
-
-let productTemplate = open(`../template/product.json`)
-let productConcreteTemplate = open(`../template/concrete.json`)
-let productLabelTemplate = open(`../template/productLabel.json`)
-let productImageTemplate = open(`../template/productImage.json`)
+let productTemplate = open('../template/product.json')
+let productConcreteTemplate = open('../template/concrete.json')
+let productLabelTemplate = open('../template/productLabel.json')
+let productImageTemplate = open('../template/productImage.json')
 
 let executionConfig = getExecutionConfiguration(
     __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE_POST,

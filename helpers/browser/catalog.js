@@ -1,5 +1,5 @@
 import { parseHTML } from 'k6/html';
-import {Profiler} from "../profiler.js";
+import {Profiler} from '../profiler.js';
 
 export default class Catalog {
     constructor(browser, metrics) {

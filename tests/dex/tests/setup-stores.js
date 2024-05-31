@@ -4,15 +4,15 @@ import {
     loadEnvironmentConfig
 } from '../../../lib/utils.js';
 import {Metrics} from '../../../helpers/browser/metrics.js';
-import ConfigGenerator from "../../../helpers/dynamicEntity/configGenerator.js";
+import ConfigGenerator from '../../../helpers/dynamicEntity/configGenerator.js';
 import file from 'k6/x/file';
 import read from 'k6/x/read';
-import {Http} from "../../../lib/http.js";
-import {UrlHelper} from "../../../helpers/url-helper.js";
-import AdminHelper from "../../../helpers/admin-helper.js";
-import {AssertionsHelper} from "../../../helpers/assertions-helper.js";
-import {BapiHelper} from "../../../helpers/bapi-helper.js";
-import StoreHandler from "../../../helpers/dynamicEntity/handler/storeHandler.js";
+import {Http} from '../../../lib/http.js';
+import {UrlHelper} from '../../../helpers/url-helper.js';
+import AdminHelper from '../../../helpers/admin-helper.js';
+import {AssertionsHelper} from '../../../helpers/assertions-helper.js';
+import {BapiHelper} from '../../../helpers/bapi-helper.js';
+import StoreHandler from '../../../helpers/dynamicEntity/handler/storeHandler.js';
 
 let metricsConfig = [
     'store-gui-create',
@@ -52,17 +52,17 @@ let configurationArray = [
         maxDuration: '5m',
         exec: 'generateConfiguration',
     }],
-    [`DMS_STORE_SETUP_JOB`, {
+    ['DMS_STORE_SETUP_JOB', {
         exec: 'executeStoresSetup',
         executor: 'per-vu-iterations',
         tags: {
-            testId: `DMS_STORE_SETUP_JOB`,
+            testId: 'DMS_STORE_SETUP_JOB',
             testGroup: 'Data Exchange',
         },
         iterations: 1,
         vus: 1,
         maxDuration: '1200m',
-        startTime: `5s`
+        startTime: '5s'
     }]
 ]
 
@@ -81,7 +81,7 @@ const STORE_CONFIGURATION_FILE = __ENV.DMS_STORES_CONFIGURATION_FILE
 
 export function generateConfiguration() {
     let stores = new ConfigGenerator().generate(targetAmountOfStores, targetAmountOfLocales)
-    console.log('Stores generated for setup: ', stores.map((store) => store.storeCode).join(","))
+    console.log('Stores generated for setup: ', stores.map((store) => store.storeCode).join(','))
     file.writeString(STORE_CONFIGURATION_FILE, JSON.stringify(stores));
 }
 

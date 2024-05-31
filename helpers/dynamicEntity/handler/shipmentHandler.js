@@ -1,5 +1,5 @@
-import Handler from "../handler.js";
-import {uuid} from "../../../lib/utils.js";
+import Handler from '../handler.js';
+import {uuid} from '../../../lib/utils.js';
 
 export default class ShipmentHandler extends Handler {
 

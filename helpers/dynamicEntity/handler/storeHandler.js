@@ -1,4 +1,4 @@
-import Handler from "../handler.js";
+import Handler from '../handler.js';
 
 export default class StoreHandler extends Handler {
 
@@ -64,13 +64,11 @@ export default class StoreHandler extends Handler {
         let currencies = this.getDataFromTable('currencies')
         let payload = []
         for (const store of storeCreationConfig) {
-            payload.push(
-                {
-                    fk_currency: (currencies.filter((currency) => currency.code === store.defaultCurrency).shift()).id_currency,
-                    fk_locale: (locales.filter((locale) => locale.locale_name === store.defaultLocale).shift()).id_locale,
-                    name: store.storeCode,
-                }
-            )
+            payload.push({
+                fk_currency: (currencies.filter((currency) => currency.code === store.defaultCurrency).shift()).id_currency,
+                fk_locale: (locales.filter((locale) => locale.locale_name === store.defaultLocale).shift()).id_locale,
+                name: store.storeCode,
+            })
         }
         if (payload.length) {
             let response = this.createEntities('stores', JSON.stringify({
@@ -89,7 +87,7 @@ export default class StoreHandler extends Handler {
         for (const sourceConfig of entityConfigs) {
             let payload = []
             let data = this.getDataFromTable(sourceConfig.read_entity.table)
-            let entityStores =  this.getDataFromTable(sourceConfig.write_entity.table)
+            let entityStores = this.getDataFromTable(sourceConfig.write_entity.table)
             let activeEntities = data.filter((el) => sourceConfig.entitiesToFilter.filter((ent) => ent === el[sourceConfig.filterKey]).length)
             activeEntities.map((entity) => {
                 if (entityStores.filter((el) => el[sourceConfig.write_entity.fk] === entity[sourceConfig.read_entity.fk] && el.fk_store === store.id_store).length) {

@@ -1,5 +1,5 @@
-import {debug, getIteration, getThread} from "../../lib/utils.js";
-import {AssertionsHelper} from "../assertions-helper.js";
+import {debug, getIteration, getThread} from '../../lib/utils.js';
+import {AssertionsHelper} from '../assertions-helper.js';
 
 export default class Handler {
     constructor(http, urlHelper, bapiHelper, storeWhitelist = []) {
@@ -29,7 +29,7 @@ export default class Handler {
     }
 
     getDataFromTable(tableAlias) {
-        try  {
+        try {
             let info = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
 
             this.assertionHelper.assertResponseStatus(info, 200, info.url)
@@ -56,7 +56,7 @@ export default class Handler {
             console.log('sourceConfig', sourceConfig)
             let data = this.getDataFromTable(sourceConfig.read_entity.table)
             let activeEntities = data.filter((el) => el.is_active)
-            let entityStores =  this.getDataFromTable(sourceConfig.write_entity.table)
+            let entityStores = this.getDataFromTable(sourceConfig.write_entity.table)
 
             let payload = []
             storeConfig.map((store) => {
@@ -92,7 +92,7 @@ export default class Handler {
         for (const sourceConfig of entityConfigs) {
             let data = this.getDataFromTable(sourceConfig.read_entity.table)
             let activeEntities = data.filter((el) => el.is_active)
-            let entityAttributes =  this.getDataFromTable(sourceConfig.write_entity.table)
+            let entityAttributes = this.getDataFromTable(sourceConfig.write_entity.table)
 
             let payload = []
             localesIds.map((localeId) => {

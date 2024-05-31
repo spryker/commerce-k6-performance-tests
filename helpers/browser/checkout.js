@@ -1,5 +1,5 @@
 import faker from 'k6/x/faker';
-import {Profiler} from "../profiler.js";
+import {Profiler} from '../profiler.js';
 
 export default class Checkout {
     constructor(browser, basicAuth, metrics, targetLocale = 'en', cartSize = 1, timeout = 1000) {
@@ -83,72 +83,70 @@ export default class Checkout {
         // await this.browser.click('[data-qa="component toggler-radio checkoutProceedAs guest"]', { waitForTimeout: true, force: true }, this.timeout)
         // await this.browser.waitUntilLoad()
 
-        let result = await this.browser.fillForm(
-            [
-                {
-                    'type': 'step',
-                    'value': `Select guest checkout`
-                },
-                {
-                    'type': 'screen',
-                    'value': `Select guest checkout`
-                },
-                {
-                    'type': 'click',
-                    'locator': '[id="guest"]',
-                    'value': ''
-                },
-                {
-                    'type': 'step',
-                    'value': `Fill customer data`
-                },
-                {
-                    'type': 'screen',
-                    'value': `Fill customer data form filled`
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="guestForm[customer][first_name]"]',
-                    'value': this.customerData.firstName,
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="guestForm[customer][last_name]"]',
-                    'value': this.customerData.lastName,
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="guestForm[customer][email]"]',
-                    'value': this.customerData.email,
-                },
-                {
-                    'type': 'click',
-                    'locator': '[data-qa="component checkbox guestForm[customer][accept_terms] guestForm_customer_accept_terms"]',
-                    'value': ''
-                },
-                {
-                    'type': 'screen',
-                    'value': `Fill customer data form filled`
-                },
-                {
-                    'type': 'wait',
-                    'value': 120000
-                },
-                {
-                    'type': 'step',
-                    'value': `Accept terms`
-                },
-                {
-                    'type': 'click',
-                    'locator': '[data-qa="component checkbox guestForm[customer][accept_terms] guestForm_customer_accept_terms"]',
-                    'value': ''
-                },
-                {
-                    'type': 'wait',
-                    'value': 120000
-                },
-            ]
-        )
+        let result = await this.browser.fillForm([
+            {
+                'type': 'step',
+                'value': 'Select guest checkout'
+            },
+            {
+                'type': 'screen',
+                'value': 'Select guest checkout'
+            },
+            {
+                'type': 'click',
+                'locator': '[id="guest"]',
+                'value': ''
+            },
+            {
+                'type': 'step',
+                'value': 'Fill customer data'
+            },
+            {
+                'type': 'screen',
+                'value': 'Fill customer data form filled'
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="guestForm[customer][first_name]"]',
+                'value': this.customerData.firstName,
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="guestForm[customer][last_name]"]',
+                'value': this.customerData.lastName,
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="guestForm[customer][email]"]',
+                'value': this.customerData.email,
+            },
+            {
+                'type': 'click',
+                'locator': '[data-qa="component checkbox guestForm[customer][accept_terms] guestForm_customer_accept_terms"]',
+                'value': ''
+            },
+            {
+                'type': 'screen',
+                'value': 'Fill customer data form filled'
+            },
+            {
+                'type': 'wait',
+                'value': 120000
+            },
+            {
+                'type': 'step',
+                'value': 'Accept terms'
+            },
+            {
+                'type': 'click',
+                'locator': '[data-qa="component checkbox guestForm[customer][accept_terms] guestForm_customer_accept_terms"]',
+                'value': ''
+            },
+            {
+                'type': 'wait',
+                'value': 120000
+            },
+        ])
         console.log(`Form fill result: ${Number(result)}`)
     }
 
@@ -157,68 +155,65 @@ export default class Checkout {
         await this.browser.click('[data-qa="guest-form-submit-button"]', {waitForNavigation: true}, this.timeout, 'shipping_address_loading_time')
         await this.browser.waitUntilLoad()
 
+        await this.browser.fillForm([
+            {
+                'type': 'step',
+                'value': 'Fill shipping address form'
+            },
+            {
+                'type': 'screen',
+                'value': 'Fill shipping address form'
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="addressesForm[shippingAddress][first_name]"]',
+                'value': this.customerData.firstName,
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="addressesForm[shippingAddress][last_name]"]',
+                'value': this.customerData.lastName,
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="addressesForm[shippingAddress][address1]"]',
+                'value': this.customerData.address1,
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="addressesForm[shippingAddress][address2]"]',
+                'value': this.customerData.address2,
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="addressesForm[shippingAddress][zip_code]"]',
+                'value': this.customerData.zip,
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="addressesForm[shippingAddress][city]"]',
+                'value': this.customerData.city,
+            },
 
-        await this.browser.fillForm(
-            [
-                {
-                    'type': 'step',
-                    'value': `Fill shipping address form`
-                },
-                {
-                    'type': 'screen',
-                    'value': `Fill shipping address form`
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="addressesForm[shippingAddress][first_name]"]',
-                    'value': this.customerData.firstName,
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="addressesForm[shippingAddress][last_name]"]',
-                    'value': this.customerData.lastName,
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="addressesForm[shippingAddress][address1]"]',
-                    'value': this.customerData.address1,
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="addressesForm[shippingAddress][address2]"]',
-                    'value': this.customerData.address2,
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="addressesForm[shippingAddress][zip_code]"]',
-                    'value': this.customerData.zip,
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="addressesForm[shippingAddress][city]"]',
-                    'value': this.customerData.city,
-                },
-
-                {
-                    'type': 'fill',
-                    'locator': '[name="addressesForm[shippingAddress][phone]"]',
-                    'value': this.customerData.phone,
-                },
-                {
-                    'type': 'screen',
-                    'value': `Fill shipping address form filled`
-                },
-                {
-                    'type': 'click',
-                    'locator': '[data-qa="submit-address-form-button"]',
-                    'value': ''
-                },
-                {
-                    'type': 'wait',
-                    'value': 120000
-                },
-            ]
-        )
+            {
+                'type': 'fill',
+                'locator': '[name="addressesForm[shippingAddress][phone]"]',
+                'value': this.customerData.phone,
+            },
+            {
+                'type': 'screen',
+                'value': 'Fill shipping address form filled'
+            },
+            {
+                'type': 'click',
+                'locator': '[data-qa="submit-address-form-button"]',
+                'value': ''
+            },
+            {
+                'type': 'wait',
+                'value': 120000
+            },
+        ])
         await this.browser.waitUntilLoad()
     }
 

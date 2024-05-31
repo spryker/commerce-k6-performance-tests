@@ -4,9 +4,9 @@ import { ApiPatchPayloadScenario } from '../scenarios/api-patch-payload-scenario
 
 export const options = loadDefaultOptions();
 
-let productTemplate = open(`../template/product.json`)
-let productConcreteTemplate = open(`../template/concrete.json`)
-let productLabelTemplate = open(`../template/productLabel.json`)
+let productTemplate = open('../template/product.json')
+let productConcreteTemplate = open('../template/concrete.json')
+let productLabelTemplate = open('../template/productLabel.json')
 
 let profiler = new Profiler()
 

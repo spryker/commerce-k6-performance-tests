@@ -1,9 +1,9 @@
-import Handler from "../handler.js";
-import {uuid} from "../../../lib/utils.js";
+import Handler from '../handler.js';
+import {uuid} from '../../../lib/utils.js';
 
 export default class StockHandler extends Handler {
     getTableAlias() {
-       return 'stocks'
+        return 'stocks'
     }
 
     get() {
@@ -23,7 +23,7 @@ export default class StockHandler extends Handler {
         let creationResult = this.createEntities(this.getTableAlias(), JSON.stringify({
             data: [{
                 is_active: true,
-                name: "DmsWarehouse",
+                name: 'DmsWarehouse',
             }]
         }))
 
@@ -35,7 +35,7 @@ export default class StockHandler extends Handler {
     }
 
     assignStoresToStock(targetWarehouseId, storeConfig) {
-        let stockStores =  this.getDataFromTable('stock-stores')
+        let stockStores = this.getDataFromTable('stock-stores')
 
         let payload = []
         storeConfig.map((store) => {
@@ -50,7 +50,7 @@ export default class StockHandler extends Handler {
         })
 
         if (payload.length) {
-            let result =  this.createEntities('stock-stores', JSON.stringify({
+            let result = this.createEntities('stock-stores', JSON.stringify({
                 data: payload
             }))
             this.validateResponses([result])

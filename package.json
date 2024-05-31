@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "devDependencies": {
     "eslint": "^8.39.0"
   }

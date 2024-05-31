@@ -11,7 +11,7 @@ export default class BackOffice {
     getStoresForUser(storesConfig, limitPerIteration, virtualUser) {
         let startIndex = limitPerIteration * (virtualUser - 1)
         let endIndex = limitPerIteration * virtualUser
-        endIndex = endIndex > storesConfig.length  ? storesConfig.length : endIndex
+        endIndex = endIndex > storesConfig.length ? storesConfig.length : endIndex
 
         console.warn(`Amount of stores: ${storesConfig.length}, Limit per user: ${limitPerIteration}, User number: ${virtualUser}, Start index: ${startIndex}, endIndex: ${endIndex}`)
 
@@ -56,7 +56,7 @@ export default class BackOffice {
 
     async getMissedStores(expectedStores = []) {
         await this.browser.visitPage('/store-gui/list/table?length=100')
-        await this.browser.waitUntilLoad("networkidle")
+        await this.browser.waitUntilLoad('networkidle')
 
         const rowsLocator = this.browser.page.content();
         const configMatch = rowsLocator.match(/(\{[^;]*\})/);
@@ -71,7 +71,7 @@ export default class BackOffice {
                     })
                 }
             } catch (error) {
-                console.error("Error parsing configs:", error);
+                console.error('Error parsing configs:', error);
             }
         }
 
@@ -206,7 +206,7 @@ export default class BackOffice {
                 },
                 {
                     'type': 'step',
-                    'value': `Select available countries`
+                    'value': 'Select available countries'
                 },
             ],
             ...storeConfig.currencies.map(currency => ([
@@ -254,7 +254,7 @@ export default class BackOffice {
                 },
                 {
                     'type': 'step',
-                    'value': `Select shipment countries`
+                    'value': 'Select shipment countries'
                 },
             ],
             ...storeConfig.shipmentCountries.map(country => ([
@@ -321,20 +321,18 @@ export default class BackOffice {
         await this.browser.visitPage('security-gui/login')
         this.browser.addStep('Fill Admin Auth Credentials')
 
-        await this.browser.fillForm(
-            [
-                {
-                    'type': 'fill',
-                    'locator': '[name="auth[username]"]',
-                    'value': 'admin@spryker.com',
-                },
-                {
-                    'type': 'fill',
-                    'locator': '[name="auth[password]"]',
-                    'value': 'change123',
-                }
-            ]
-        )
+        await this.browser.fillForm([
+            {
+                'type': 'fill',
+                'locator': '[name="auth[username]"]',
+                'value': 'admin@spryker.com',
+            },
+            {
+                'type': 'fill',
+                'locator': '[name="auth[password]"]',
+                'value': 'change123',
+            }
+        ])
 
         await this.browser.click('button[type="submit"]', {waitForNavigation: true}, this.timeout)
     }
