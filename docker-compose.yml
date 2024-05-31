@@ -58,6 +58,7 @@ services:
         - DMS_AUTH_USERNAME=${DMS_AUTH_USERNAME}
         - DMS_AUTH_PASSWORD=${DMS_AUTH_PASSWORD}
         - STORE=at
+        - STORES_FROM_ENV=${STORES_FROM_ENV:-false}
     volumes:  
       - .:/home/k6
     ports:

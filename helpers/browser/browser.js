@@ -190,6 +190,8 @@ export class Browser {
                 return locator.replaceAll("\\", "");
             };
 
+            console.log('element.type', element.type, 'element.locator', element.locator, 'element.value', element.value)
+
             switch (element.type) {
                 case "type":
                     result = result && await this.type(sanitise(element.locator), element.value);
@@ -231,7 +233,7 @@ export class Browser {
             }
             if (!result) {
                 this.addStep(`Failed to execute command: ${element.type} for locator: ${element.locator} and value: ${element.value}`);
-                console.warn(`Failed to execute command: ${element.type} for locator: ${element.locator} and value: ${element.value}`);
+                console.error(`Failed to execute command: ${element.type} for locator: ${element.locator} and value: ${element.value}`);
                 this.screen();
             }
         }

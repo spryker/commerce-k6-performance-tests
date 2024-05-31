@@ -11,12 +11,12 @@ import AdminHelper from "../../../helpers/admin-helper.js";
 import {AssertionsHelper} from "../../../helpers/assertions-helper.js";
 import {CartHelper} from "../../../helpers/cart-helper.js";
 import {BapiHelper} from "../../../helpers/bapi-helper.js";
-import ConfigHandler from "../../../helpers/store/handler/configHandler.js";
-import StockHandler from "../../../helpers/store/handler/stockHandler.js";
-import ShipmentHandler from "../../../helpers/store/handler/shipmentHandler.js";
-import PaymentHandler from "../../../helpers/store/handler/paymentHandler.js";
+import ConfigHandler from "../../../helpers/dynamicEntity/handler/configHandler.js";
+import StockHandler from "../../../helpers/dynamicEntity/handler/stockHandler.js";
+import ShipmentHandler from "../../../helpers/dynamicEntity/handler/shipmentHandler.js";
+import PaymentHandler from "../../../helpers/dynamicEntity/handler/paymentHandler.js";
 import { sleep } from 'k6'
-import CategoryHandler from "../../../helpers/store/handler/categoryHandler.js";
+import CategoryHandler from "../../../helpers/dynamicEntity/handler/categoryHandler.js";
 
 export const options = loadDefaultOptions();
 let configurationArray = [

@@ -4,7 +4,7 @@ import {
     loadEnvironmentConfig
 } from '../../../lib/utils.js';
 import {Metrics} from '../../../helpers/browser/metrics.js';
-import ConfigGenerator from "../../../helpers/store/configGenerator.js";
+import ConfigGenerator from "../../../helpers/dynamicEntity/configGenerator.js";
 import file from 'k6/x/file';
 import read from 'k6/x/read';
 import {Http} from "../../../lib/http.js";
@@ -12,7 +12,7 @@ import {UrlHelper} from "../../../helpers/url-helper.js";
 import AdminHelper from "../../../helpers/admin-helper.js";
 import {AssertionsHelper} from "../../../helpers/assertions-helper.js";
 import {BapiHelper} from "../../../helpers/bapi-helper.js";
-import StoreHandler from "../../../helpers/store/handler/storeHandler.js";
+import StoreHandler from "../../../helpers/dynamicEntity/handler/storeHandler.js";
 
 let metricsConfig = [
     'store-gui-create',

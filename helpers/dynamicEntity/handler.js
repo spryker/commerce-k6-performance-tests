@@ -32,17 +32,20 @@ export default class Handler {
         try  {
             let info = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
 
+            this.assertionHelper.assertResponseStatus(info, 200, info.url)
+
             return JSON.parse(info.body)
         } catch (e) {
             return []
         }
     }
 
-    createEntities(tableAlias, payload) {
+    createEntities(tableAlias, payload, expectedStatus = 201) {
         let response = this.http.sendPostRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, payload, this.getRequestParams(), false);
 
         debug(`${tableAlias} response`, response)
         debug('thread:', getThread(), 'iteration:', getIteration(), 'response.status', response.status, new Date().toLocaleString())
+        this.assertionHelper.assertResponseStatus(response, expectedStatus)
 
         return response
     }
@@ -97,7 +100,6 @@ export default class Handler {
                     if (entityAttributes.filter((el) => el[sourceConfig.write_entity.fk] === entity[sourceConfig.read_entity.fk] && el.fk_locale === localeId).length) {
                         return
                     }
-
 
                     payload.push(Object.fromEntries([
                         [

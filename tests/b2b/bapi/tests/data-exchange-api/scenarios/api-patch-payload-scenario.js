@@ -5,8 +5,8 @@ import { debug, getIteration, getThread, uuid } from '../../../../../../lib/util
 import { sleep } from 'k6';
 import { Trend, Counter } from 'k6/metrics';
 import { ApiPostPayloadScenario } from './api-post-payload-scenario.js';
-import ConfigHandler from "../../../../../../helpers/store/handler/configHandler.js";
-import StockHandler from "../../../../../../helpers/store/handler/stockHandler.js";
+import ConfigHandler from "../../../../../../helpers/dynamicEntity/handler/configHandler.js";
+import StockHandler from "../../../../../../helpers/dynamicEntity/handler/stockHandler.js";
 
 export class ApiPatchPayloadScenario extends ApiPostPayloadScenario {
     constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = []) {
