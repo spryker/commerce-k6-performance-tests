@@ -1,7 +1,11 @@
 import { SharedHomepageScenario } from '../../../../cross-product/sapi/scenarios/homepage/shared-homepage-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+import { SummaryHelper } from '../../../../../helpers/summary-helper.js';
 
-const homepageScenario = new SharedHomepageScenario('B2B');
+const environment = 'B2B';
+const testId = 'SAPI1';
+
+const homepageScenario = new SharedHomepageScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -9,7 +13,7 @@ options.scenarios = {
         exec: 'executeHomepageScenario',
         executor: 'shared-iterations',
         tags: {
-            testId: 'SAPI1',
+            testId: testId,
             testGroup: 'Homepage',
         },
         iterations: 10
@@ -19,4 +23,8 @@ options.thresholds[`http_req_duration{url:${homepageScenario.getStorefrontApiBas
 
 export function executeHomepageScenario() {
     homepageScenario.execute();
+}
+
+export function handleSummary(data) {
+    return SummaryHelper.handleSummary(data, environment, testId);
 }

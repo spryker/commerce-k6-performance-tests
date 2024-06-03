@@ -31,7 +31,7 @@ export TESTS_ARTIFACTS_SECRET=your-secret
 Execute this script from the root of the repository:
 
 ```bash
-shell/upload-results-to-s3.sh results/
+shell/upload-results-to-s3.sh results/reports/
 ```
 
 The script will mirror the folder structure from the `/results` folder and (re)upload **all** files from it.
