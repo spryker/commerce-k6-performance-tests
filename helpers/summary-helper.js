@@ -30,10 +30,24 @@ export class SummaryHelper {
         };
 
         if (Object.keys(failedMetrics).length > 0) {
-            failedMetrics.environment = environment;
-            failedMetrics.testId = testId;
+            let output = '';
 
-            summary[`results/failed-thresholds/${environment}_${testId}.json`] = JSON.stringify(failedMetrics);
+            for (let metricKey in failedMetrics) {
+                const metric = failedMetrics[metricKey];
+                const values = metric.values;
+                const failedThresholds = metric.failedThresholds.join(',');
+
+                const valuesStr = Object.entries(values)
+                    .map(([key, value]) => `${key}: ${value}`)
+                    .join(',');
+
+                output += `Test: ${testId}, ${environment}\n`;
+                output += `Threshold: ${metricKey}\n`;
+                output += `Failed metrics: ${failedThresholds}\n`;
+                output += `Actual values: ${valuesStr}\n\n`;
+            }
+
+            summary[`results/failed-thresholds/${environment}_${testId}.txt`] = output;
         }
 
         return summary;

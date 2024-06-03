@@ -230,36 +230,20 @@ send_failed_thresholds_notification() {
 extract_failed_thresholds() {
     local testRunId=$1
 
-  # Directory containing the JSON files with failed thresholds
+  # Directory containing the files with failed thresholds
     local DIRECTORY="results/failed-thresholds"
 
     local output=""
 
-    # Check if there are any JSON files in the directory
-    if compgen -G "$DIRECTORY/*.json" > /dev/null; then
-        # Iterate over each JSON file in the directory
-        for file in "$DIRECTORY"/*.json; do
-            # Extract the filename
-            filename=$(basename -- "$file")
+    # Check if there are any .txt files in the directory
+    if compgen -G "$DIRECTORY/*.txt" > /dev/null; then
+        # Iterate over each .txt file in the directory
+        for file in "$DIRECTORY"/*.txt; do
+            # Append the content of the file to the output
+            output+=$(cat "$file")
+            output+="\n\n"
 
-            # Extract testId and environment
-            testId=$(grep -o '"testId":"[^"]*"' "$file" | sed 's/"testId":"//;s/"//g')
-            environment=$(grep -o '"environment":"[^"]*"' "$file" | sed 's/"environment":"//;s/"//g')
-            output+="Test: ${testId}, ${environment}\n"
-
-            # Extract the threshold key (e.g., "http_req_duration")
-            thresholdKey=$(awk -F'"' '{print $2}' "$file" | head -n 1)
-            output+="Threshold: ${thresholdKey}\n"
-
-            # Extract the failed metrics
-            failedMetrics=$(grep -o '"failedThresholds":\[[^]]*\]' "$file" | sed 's/"failedThresholds":\[//;s/]//;s/"//g')
-            output+="Failed metrics: ${failedMetrics}\n"
-
-            # Extract the values
-            values=$(grep -o '"values":{[^}]*}' "$file" | sed 's/"values":{//;s/}//' | tr ',' '\n' | sed 's/"//g' | sed 's/:/: /g' | tr '\n' ',' | sed 's/,$//')
-            output+="Actual values: ${values}\n\n"
-
-            # Delete the JSON file after processing
+            # Delete the file after processing
             rm "$file"
         done
     fi
