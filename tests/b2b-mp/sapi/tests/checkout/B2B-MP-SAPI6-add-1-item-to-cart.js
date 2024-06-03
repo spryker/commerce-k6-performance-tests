@@ -1,7 +1,11 @@
 import { SharedAddToCartScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-add-to-cart-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+import { SummaryHelper } from '../../../../../helpers/summary-helper.js';
 
-const addToCartScenario = new SharedAddToCartScenario('B2B_MP');
+const environment = 'B2B_MP';
+const testId = 'SAPI6';
+
+const addToCartScenario = new SharedAddToCartScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -13,7 +17,7 @@ options.scenarios = {
             quantity: '1'
         },
         tags: {
-            testId: 'SAPI6',
+            testId: testId,
             testGroup: 'Checkout',
         },
         iterations: 10
@@ -23,4 +27,8 @@ options.thresholds[`http_req_duration{url:${addToCartScenario.getStorefrontApiBa
 
 export function executeAddToCartScenario() {
     addToCartScenario.execute(__ENV.sku, __ENV.quantity);
+}
+
+export function handleSummary(data) {
+    return SummaryHelper.handleSummary(data, environment, testId);
 }
