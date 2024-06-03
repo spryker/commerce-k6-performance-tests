@@ -40,8 +40,6 @@ metricsConfig.push({
 const metrics = new Metrics(metricsConfig);
 const targetAmountOfStores = Number(__ENV.DMS_AMOUNT_OF_STORES)
 const targetAmountOfLocales = Number(__ENV.DMS_AMOUNT_OF_LOCALES)
-const limitPerIteration = 10
-const targetAmountOfUsers = Math.ceil(targetAmountOfStores / limitPerIteration)
 export const options = loadDefaultOptions();
 
 let configurationArray = [

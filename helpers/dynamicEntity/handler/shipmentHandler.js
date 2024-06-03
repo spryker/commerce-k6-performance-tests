@@ -33,7 +33,8 @@ export default class ShipmentHandler extends Handler {
         for (const shippingMethod of existingShipments) {
             storeConfig.map((store) => {
                 store.currencies.map((currencyId) => {
-                    if (existingShipmentCosts.filter((el) => el.fk_currency === currencyId && el.fk_store === store.id_store && el.fk_shipment_method === shippingMethod.id_shipment_method).length) {
+                    if (existingShipmentCosts.filter((el) => el.fk_currency === currencyId && el.fk_store === store.id_store
+                        && el.fk_shipment_method === shippingMethod.id_shipment_method).length) {
                         return
                     }
                     payload.push(Object.fromEntries([

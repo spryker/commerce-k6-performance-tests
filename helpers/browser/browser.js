@@ -39,7 +39,7 @@ export class Browser {
         return this;
     }
 
-    screen(options = {}) {
+    screen() {
         if (this.screenShotActive) {
             this.counter++;
             this.page.screenshot({
@@ -65,7 +65,7 @@ export class Browser {
     }
 
     async waitUntilLoad(event = 'load', timeout = 60000) {
-        await this.page.waitForLoadState('load', {timeout: timeout});
+        await this.page.waitForLoadState(event, {timeout: timeout});
         // this.screen();
     }
 

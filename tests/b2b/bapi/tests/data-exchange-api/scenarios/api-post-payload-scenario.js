@@ -18,7 +18,13 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         this.retryLimit = 10
         this.group = 'API POST'
         this.type = 'post'
-        this.payloadGenerator = new DataExchangePayloadGenerator(uuid, new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist), new StockHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist), this.chunkSize, this.concreteMaxAmount)
+        this.payloadGenerator = new DataExchangePayloadGenerator(
+            uuid,
+            new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
+            new StockHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
+            this.chunkSize,
+            this.concreteMaxAmount
+        )
         this.profiler = new Profiler()
         this.tokenTrend = new Trend('token_generation', true)
         this.productLabelCreationTrend = new Trend('product_label_creation', true)
@@ -44,6 +50,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
                 if (productImageResponse.status !== 201) {
                     let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
                     self.sleepingTimeTotal.add(sleepingInterval * 1000)
+                    // eslint-disable-next-line max-len
                     console.warn(`Start sleeping because of request for images creation failed. Response status: ${productImageResponse.status}. Amount Of Retries: ${count}, timeout: ${sleepingInterval} sec`)
                     sleep(sleepingInterval)
                     console.warn(`Sleeping done. Iteration: ${count}`)

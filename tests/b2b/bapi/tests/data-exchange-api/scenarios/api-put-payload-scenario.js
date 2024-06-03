@@ -14,7 +14,13 @@ export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
         this.chunkSize = chunkSize
         this.sleepInterval = 30
         this.retryLimit = 2
-        this.payloadGenerator = new DataExchangePayloadGenerator(uuid, new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist), new StockHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist), this.chunkSize, this.concreteMaxAmount)
+        this.payloadGenerator = new DataExchangePayloadGenerator(
+            uuid,
+            new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
+            new StockHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
+            this.chunkSize,
+            this.concreteMaxAmount
+        )
         this.group = 'API PUT'
         this.type = 'put'
         this.productPutTrend = new Trend('product_put', true)
@@ -41,6 +47,7 @@ export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
                 if (updateResult.status !== 200) {
                     let sleepingInterval = self.sleepInterval * count + Math.floor(Math.random() * 10) + 1
                     self.sleepingTimeTotal.add(sleepingInterval * 1000)
+                    // eslint-disable-next-line max-len
                     console.warn(`Start sleeping because of request for products ${self.type} failed. Response status: ${updateResult.status}. Amount Of Tries: ${count}, timeout: ${sleepingInterval} sec. thread:${getThread()}, iteration: ${getIteration()}`)
                     sleep(sleepingInterval)
                     console.warn(`Sleeping done. thread:${getThread()}, iteration: ${getIteration()}`)
@@ -57,7 +64,13 @@ export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
     updateProducts(responseProducts, requestParams) {
         let recentlyCreatedProducts = JSON.parse(responseProducts.body).data
         let payloadProducts = this.payloadGenerator.prepareProductsForUpdate(recentlyCreatedProducts)
-        let updateResult = this.http.sendPutRequest(this.http.url`${this.getBackendApiUrl()}/dynamic-entity/product-abstracts`, payloadProducts, requestParams, false);
+        let updateResult = this.http.sendPutRequest(
+            this.http.url`${this.getBackendApiUrl()}/dynamic-entity/product-abstracts`,
+            payloadProducts,
+            requestParams,
+            false
+        );
+
         if (updateResult.status === 200) {
             this.productPutTotal.add(updateResult.timings.duration)
         }

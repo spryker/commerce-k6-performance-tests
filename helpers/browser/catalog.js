@@ -1,5 +1,4 @@
 import { parseHTML } from 'k6/html';
-import {Profiler} from '../profiler.js';
 
 export default class Catalog {
     constructor(browser, metrics) {
@@ -40,6 +39,7 @@ export default class Catalog {
             .toArray()
             .map((item) => item.attr('href')))].pop()
 
+        // eslint-disable-next-line
         let match = url.match(/[\?&]page=(\d+)/)
         let maxPage = 1
         if (match) {

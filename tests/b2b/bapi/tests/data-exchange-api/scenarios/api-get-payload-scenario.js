@@ -1,7 +1,6 @@
 
 import { group } from 'k6';
-import { DataExchangePayloadGenerator } from '../../../../../../helpers/data-exchange-payload-generator.js';
-import { debug, uuid } from '../../../../../../lib/utils.js';
+import { debug } from '../../../../../../lib/utils.js';
 import { Trend } from 'k6/metrics';
 import { AbstractScenario } from '../../../../../abstract-scenario.js';
 import { Profiler } from '../../../../../../helpers/profiler.js';

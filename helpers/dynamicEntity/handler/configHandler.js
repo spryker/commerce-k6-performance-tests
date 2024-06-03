@@ -5,12 +5,14 @@ export default class ConfigHandler extends Handler {
         if (!this.storesConfig.length) {
             //  [{"id_store":1,"fk_currency":93,"fk_locale":66,"name":"DE"},{"id_store":2,"fk_currency":93,"fk_locale":66,"name":"AT"}]
             let stores = this.getDataFromTable('stores')
+            // eslint-disable-next-line max-len
             // [{"id_locale_store":2,"fk_locale":46,"fk_store":1},{"id_locale_store":4,"fk_locale":46,"fk_store":2},{"id_locale_store":1,"fk_locale":66,"fk_store":1},{"id_locale_store":3,"fk_locale":66,"fk_store":2}]
             this.storeLocales = this.getDataFromTable('locale-stores')
             this.storeLocalesMapping = new Map()
             this.getDataFromTable('locales').map((locale) => {
                 this.storeLocalesMapping.set(locale.id_locale, locale.locale_name)
             })
+            // eslint-disable-next-line max-len
             // [{"id_currency_store":2,"fk_currency":61,"fk_store":1},{"id_currency_store":4,"fk_currency":61,"fk_store":2},{"id_currency_store":1,"fk_currency":93,"fk_store":1},{"id_currency_store":3,"fk_currency":93,"fk_store":2}]
             this.storeCurrencies = this.getDataFromTable('currency-stores')
 

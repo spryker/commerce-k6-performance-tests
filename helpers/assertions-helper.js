@@ -27,6 +27,22 @@ export class AssertionsHelper {
         })
     }
 
+    assertLessOrEqual(actualValue, expectedValue) {
+        const assertionName = `Verify that value ${actualValue} less or equal to ${expectedValue}.`;
+
+        return check(actualValue, {
+            [assertionName]: (r) => r <= expectedValue,
+        })
+    }
+
+    assertGreaterOrEqual(actualValue, expectedValue) {
+        const assertionName = `Verify that value ${actualValue} greater or equal to ${expectedValue}.`;
+
+        return check(actualValue, {
+            [assertionName]: (r) => r >= expectedValue,
+        })
+    }
+
     assertSingleResourceResponseBodyStructure(responseJson, requestName = null) {
         const dataAssertionName = requestName
             ? `Verify ${requestName} response body has 'data' defined.`

@@ -1,5 +1,4 @@
 import Handler from '../handler.js';
-import {uuid} from '../../../lib/utils.js';
 
 export default class StockHandler extends Handler {
     getTableAlias() {

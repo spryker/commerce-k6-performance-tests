@@ -6,7 +6,9 @@ metricsCodes = [
     {
         key: stripe_page_loading_time,
         types: ['trend', 'rate'],
-        isTime: true,
+        isTime: {
+            trend: true,
+        },
         thresholds: {
             trend: ['p(95)<60000'],
             rate: ['rate==1']
@@ -14,8 +16,11 @@ metricsCodes = [
     },
     {
         key: invoice_page_loading_time,
-        types: ['trend', 'rate'],
-        isTime: true,
+        types: ['trend', 'rate', counter],
+        isTime: {
+            trend: true,
+            counter: false
+        },
         thresholds: {
             trend: ['p(95)<60000'],
             rate: ['rate==1']
@@ -30,9 +35,13 @@ export class Metrics {
         for (const metric of metricsCodes) {
             for (const type of metric.types) {
                 let targetKey = toCamelCase(`${metric.key}_${type}`);
+                let isTime = true
                 switch (type) {
                 case 'trend':
-                    this.metrics.set(targetKey, new Trend(targetKey, metric.isTime));
+                    if ('trend' in metric.isTime) {
+                        isTime = metric.isTime.trend
+                    }
+                    this.metrics.set(targetKey, new Trend(targetKey, isTime));
                     if ('trend' in metric.thresholds) {
                         this.thresholds[targetKey] = metric.thresholds['trend'];
                     }
@@ -44,7 +53,10 @@ export class Metrics {
                     }
                     break;
                 case 'counter':
-                    this.metrics.set(targetKey, new Counter(targetKey, metric.isTime));
+                    if ('counter' in metric.isTime) {
+                        isTime = metric.isTime.counter
+                    }
+                    this.metrics.set(targetKey, new Counter(targetKey, isTime));
                     if ('counter' in metric.thresholds) {
                         this.thresholds[targetKey] = metric.thresholds['counter'];
                     }
@@ -54,9 +66,12 @@ export class Metrics {
         }
     }
 
-    add(metricKey, response, requestSuccessful = true) {
-        this.addTrend(metricKey, response.timings.duration)
-        this.addRate(metricKey, requestSuccessful)
+    add(metricKey, response, successStatusCode = 200) {
+        if (response) {
+            this.addTrend(metricKey, response.timings.duration)
+            this.addRate(metricKey, response.status === successStatusCode)
+        }
+
         this.addCounter(metricKey, 1)
     }
 

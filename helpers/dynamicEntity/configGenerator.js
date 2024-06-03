@@ -25,7 +25,8 @@ export default class ConfigGenerator {
      * @param amountOfShippingCountries
      */
     generate(amountOfStores = 8, amountOfLocales = 2, amountOfCurrencies = 2, amountOfShippingCountries = 8) {
-        let countries = this._shuffleArray(Object.keys(countryMap)).filter(el => this.storeCodesToExclude.filter(exclude => el.toLowerCase() === exclude.toLowerCase()).length === 0)
+        let countries = this._shuffleArray(Object.keys(countryMap))
+            .filter(el => this.storeCodesToExclude.filter(exclude => el.toLowerCase() === exclude.toLowerCase()).length === 0)
         let initialCountriesList = countries
         countries = countries.length >= amountOfStores ? countries.slice(0, amountOfStores) : countries
         amountOfCurrencies = this._validateAmount(amountOfCurrencies, amountOfStores)
@@ -38,7 +39,8 @@ export default class ConfigGenerator {
                 locales: this._generateLocaleList(countryCode, amountOfLocales > amountOfStores ? initialCountriesList : countries, amountOfLocales),
                 defaultCurrency: countryMap[countryCode].currencyCode,
                 currencies: this._generateCurrencyList(countryCode, amountOfCurrencies > amountOfStores ? initialCountriesList : countries, amountOfCurrencies),
-                shipmentCountries: this._generateShippingCountriesList(amountOfShippingCountries > amountOfStores ? initialCountriesList: countryCode, countries, amountOfShippingCountries)
+                shipmentCountries: this._generateShippingCountriesList(amountOfShippingCountries > amountOfStores ?
+                    initialCountriesList: countryCode, countries, amountOfShippingCountries)
             }
         })
 

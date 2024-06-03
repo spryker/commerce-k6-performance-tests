@@ -1,5 +1,5 @@
 import {sleep} from 'k6';
-import {check, fail} from 'k6';
+import {check} from 'k6';
 
 export default class BackOffice {
     constructor(browser, metrics, timeout) {

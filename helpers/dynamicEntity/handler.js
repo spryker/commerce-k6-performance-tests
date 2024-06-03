@@ -20,7 +20,7 @@ export default class Handler {
 
     getRequestParams() {
         const requestParams = this.bapiHelper.getParamsWithAuthorization();
-        requestParams.thresholds = {}
+        // requestParams.thresholds = {}
         requestParams.timeout = '180s'
         delete(requestParams.headers['Content-Type'])
         requestParams.headers['accept'] = 'application/json'

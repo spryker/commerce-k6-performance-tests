@@ -91,7 +91,6 @@ export class DataExchangePayloadGenerator {
     }
 
     getConcrete(productConcreteTemplate, random) {
-        let stores = this.storeConfigHandler.get()
         let concretes = []
         for (let index = 1; index <= this.concreteMaxAmount; index++) {
             concretes.push(productConcreteTemplate.replaceAll('{random}', `${random}-${index}`)
