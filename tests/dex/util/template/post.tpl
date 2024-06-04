@@ -1,4 +1,4 @@
-import {loadDefaultOptions, loadEnvironmentConfig} from '../../../../lib/utils.js';
+import {loadDefaultOptions, loadEnvironmentConfig, uuid} from '../../../../lib/utils.js';
 import Handler from '../../../../helpers/dynamicEntity/handler.js';
 import {Http} from '../../../../lib/http.js';
 import {UrlHelper} from '../../../../helpers/url-helper.js';
@@ -6,37 +6,35 @@ import {BapiHelper} from '../../../../helpers/bapi-helper.js';
 import AdminHelper from '../../../../helpers/admin-helper.js';
 import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
-import EntityConfig from '../../../../helpers/dynamicEntity/entityConfig.js';
+import faker from 'k6/x/faker';
 
 export const options = loadDefaultOptions()
 
-let entitiesConfiguration = new EntityConfig(JSON.parse(open('../tests/data/dex.json')))
-
-let metrics = new Metrics(entitiesConfiguration.getEntityKeys().map((alias) => {
-    return {
-        key: alias,
-        types: ['trend', 'rate', 'counter'],
+let metrics = new Metrics([
+    {
+        key: 'TABLE_ALIAS-create',
+        types: ['trend', 'rate'],
         isTime: {
             trend: true,
             counter: false
         },
         thresholds: {
-            trend: ['p(95)<=100'],
+            trend: ['p(95)<200'],
             rate: ['rate==1']
         }
-    }
-}))
+    },
+])
 
 options.scenarios = {
-    EntityGetVUS: {
-        exec: 'entityDataGet',
+    EntityCreateVUS: {
+        exec: 'createEntity',
         executor: 'shared-iterations',
         tags: {
-            testId: 'EntityDataGet',
+            testId: 'CreateEntity',
             testGroup: 'DataExchange',
         },
-        iterations: 10,
-        vus: 10
+        iterations: 1,
+        vus: 1
     }
 }
 
@@ -49,13 +47,9 @@ const urlHelper = new UrlHelper(envConfig)
 const adminHelper = new AdminHelper()
 const assertionHelper = new AssertionsHelper()
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
-const limit = 100
 
-export function entityDataGet() {
-    entitiesConfiguration.getEntityKeys().map((alias) => {
-        const requestHandler = new Handler(http, urlHelper, bapiHelper)
-        let result = requestHandler.getDataFromTable(`${alias}?page[offset]=0&page[limit]=${limit}`)
-        assertionHelper.assertLessOrEqual(result.length, limit)
-        metrics.add(alias, requestHandler.getLastResponse(), 200)
-    })
+export function createEntity() {
+    const requestHandler = new Handler(http, urlHelper, bapiHelper)
+
+    CREATE_LOGIC
 }

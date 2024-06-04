@@ -1,6 +1,6 @@
 export default class EntityConfig {
-    constructor() {
-        this.entities = JSON.parse(open('../../tests/data/dex.json'))
+    constructor(jsonConfig) {
+        this.entities = jsonConfig
         this.entityMap = new Map()
         this.initMap()
     }
@@ -35,7 +35,15 @@ export default class EntityConfig {
         })
     }
 
-    getEntities() {
+    getPostPayload(entityAlias) {
+        let payload = this.entityMap.get(entityAlias).fields.filter((field) => field.isCreatable).map((field) => {
+            return 'KEY: \'\''.replace('KEY', field.field)
+        })
+
+        return '{KEY_VALUE}'.replace('KEY_VALUE', payload.join(','))
+    }
+
+    getEntityKeys() {
         return [...this.entityMap.keys()]
     }
 

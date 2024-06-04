@@ -51,6 +51,7 @@ export default class Handler {
         debug(`${tableAlias} response`, response)
         debug('thread:', getThread(), 'iteration:', getIteration(), 'response.status', response.status, new Date().toLocaleString())
         this.assertionHelper.assertResponseStatus(response, expectedStatus)
+        this.lastResponse = response
 
         return response
     }
