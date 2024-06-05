@@ -1,11 +1,8 @@
 import { SharedCheckoutScenario } from '../../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
-import { SummaryHelper } from '../../../../../helpers/summary-helper.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const environment = 'B2B';
-const testId = 'S3';
-
-const checkoutScenario = new SharedCheckoutScenario(environment);
+const checkoutScenario = new SharedCheckoutScenario('B2B');
 const storefrontBaseUrl = checkoutScenario.getStorefrontBaseUrl();
 
 export const options = loadDefaultOptions();
@@ -17,7 +14,7 @@ options.scenarios = {
             numberOfItems: '1'
         },
         tags: {
-            testId: testId,
+            testId: 'S3',
             testGroup: 'Checkout',
         },
         iterations: 10,
@@ -36,8 +33,4 @@ options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/succe
 
 export function executeCheckoutScenario() {
     checkoutScenario.execute();
-}
-
-export function handleSummary(data) {
-    return SummaryHelper.handleSummary(data, environment, testId);
 }

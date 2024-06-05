@@ -1,11 +1,8 @@
 import { CheckoutScenario } from '../../scenarios/checkout/checkout-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
-import { SummaryHelper } from '../../../../../helpers/summary-helper.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const environment = 'B2B_MP';
-const testId = 'S4';
-
-const checkoutScenario = new CheckoutScenario(environment);
+const checkoutScenario = new CheckoutScenario('B2B_MP');
 const storefrontBaseUrl = checkoutScenario.getStorefrontBaseUrl();
 
 export const options = loadDefaultOptions();
@@ -17,7 +14,7 @@ options.scenarios = {
             numberOfItems: '70'
         },
         tags: {
-            testId: testId,
+            testId: 'S4',
             testGroup: 'Checkout',
         },
         iterations: 10,
@@ -36,8 +33,4 @@ options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/succe
 
 export function executeCheckoutScenario() {
     checkoutScenario.execute();
-}
-
-export function handleSummary(data) {
-    return SummaryHelper.handleSummary(data, environment, testId);
 }

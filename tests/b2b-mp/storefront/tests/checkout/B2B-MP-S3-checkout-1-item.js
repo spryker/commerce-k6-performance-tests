@@ -1,13 +1,10 @@
 import { CheckoutScenario } from '../../scenarios/checkout/checkout-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
-import { SummaryHelper } from '../../../../../helpers/summary-helper.js';
-
-const environment = 'B2B_MP';
-const testId = 'S3';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 //scenario objects must be created outside any function used in execute phase since some initialization actions are done on
 //K6 "init" stage (in the current implementation such init action are done in class constructor).
-const checkoutScenario = new CheckoutScenario(environment);
+const checkoutScenario = new CheckoutScenario('B2B_MP');
 const storefrontBaseUrl = checkoutScenario.getStorefrontBaseUrl();
 
 export const options = loadDefaultOptions();
@@ -19,7 +16,7 @@ options.scenarios = {
             numberOfItems: '1'
         },
         tags: {
-            testId: testId,
+            testId: 'S3',
             testGroup: 'Checkout',
         },
         iterations: 10,
@@ -38,8 +35,4 @@ options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/succe
 
 export function executeCheckoutScenario() {
     checkoutScenario.execute();
-}
-
-export function handleSummary(data) {
-    return SummaryHelper.handleSummary(data, environment, testId);
 }

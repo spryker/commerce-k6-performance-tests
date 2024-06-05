@@ -18,9 +18,15 @@ generate_uuid() {
 
 check_env_vars() {
     local required_vars=(
-        "SLACK_NOTIFICATION_TOKEN"
-        "SLACK_NOTIFICATION_CHANNEL"
+        "K6_HOSTENV"
     )
+
+    if [ "$K6_HOSTENV" = "testing" ]; then
+        required_vars+=(
+            "SLACK_NOTIFICATION_TOKEN"
+            "SLACK_NOTIFICATION_CHANNEL"
+        )
+    fi
 
     local unset_vars=()
 
@@ -37,6 +43,20 @@ check_env_vars() {
         echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
         exit 1
     fi
+
+    check_k6_host_env
+}
+
+check_k6_host_env() {
+    if [ "$K6_HOSTENV" = "testing" ] || [ "$K6_HOSTENV" = "local" ]; then
+        return
+    fi
+
+    echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
+    echo -e "\e[31m K6_HOSTENV value must be testing or local" >&2
+    printf '%s\n' "${unset_vars[@]}" >&2
+    echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
+    exit 1
 }
 
 # Builds the command to run the K6 docker container with all required arguments.
@@ -80,6 +100,7 @@ build_k6_docker_command() {
             -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
             -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
             -e 'SPRYKER_TEST_ENVIRONMENT=$testEnvironment' \
+            -e 'SPRYKER_TEST_PATH=$relativePath' \
             -e 'K6_BROWSER_ENABLED=true' \
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
@@ -220,17 +241,15 @@ send_failed_thresholds_notification() {
     local testRunId=$1
     local failedThresholds=$(extract_failed_thresholds "$testRunId")
 
-    if [ -z "$failedThresholds" ]; then
-        return
+    if [ -n "$failedThresholds" ] && [ "$K6_HOSTENV" = "testing" ]; then
+        send_slack_notification "$failedThresholds"
     fi
-
-    send_slack_notification "$failedThresholds"
 }
 
 extract_failed_thresholds() {
     local testRunId=$1
 
-  # Directory containing the files with failed thresholds
+    # Directory containing the files with failed thresholds
     local DIRECTORY="results/failed-thresholds"
 
     local output=""

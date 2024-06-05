@@ -1,11 +1,8 @@
 import { SharedProductSearchScenario } from '../../../../cross-product/sapi/scenarios/product-search/shared-product-search-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
-import { SummaryHelper } from '../../../../../helpers/summary-helper.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const environment = 'B2B';
-const testId = 'SAPI2';
-
-const productSearchScenario = new SharedProductSearchScenario(environment);
+const productSearchScenario = new SharedProductSearchScenario('B2B');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -13,7 +10,7 @@ options.scenarios = {
         exec: 'executeProductSearchScenario',
         executor: 'shared-iterations',
         tags: {
-            testId: testId,
+            testId: 'SAPI2',
             testGroup: 'Product Search',
         },
         iterations: 10
@@ -23,8 +20,4 @@ options.thresholds[`http_req_duration{url:${productSearchScenario.getStorefrontA
 
 export function executeProductSearchScenario() {
     productSearchScenario.execute();
-}
-
-export function handleSummary(data) {
-    return SummaryHelper.handleSummary(data, environment, testId);
 }
