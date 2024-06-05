@@ -1,5 +1,6 @@
 import { SharedCheckoutScenario } from '../../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const checkoutScenario = new SharedCheckoutScenario('B2B');
 const storefrontBaseUrl = checkoutScenario.getStorefrontBaseUrl();

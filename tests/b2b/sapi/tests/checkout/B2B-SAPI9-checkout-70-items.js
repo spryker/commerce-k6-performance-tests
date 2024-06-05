@@ -1,5 +1,6 @@
 import { CheckoutScenario } from '../../scenarios/checkout/checkout-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const checkoutScenario = new CheckoutScenario('B2B');
 

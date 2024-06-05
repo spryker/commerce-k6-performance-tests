@@ -1,5 +1,6 @@
 import { CheckoutScenario } from '../../scenarios/checkout/checkout-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 //scenario objects must be created outside any function used in execute phase since some initialization actions are done on
 //K6 "init" stage (in the current implementation such init action are done in class constructor).

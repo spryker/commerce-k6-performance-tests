@@ -18,9 +18,15 @@ generate_uuid() {
 
 check_env_vars() {
     local required_vars=(
-        "GIT_REPO" "GIT_BRANCH" "GIT_HASH" "GIT_TAG"
-        "SPRYKER_TEST_ENVIRONMENT"
+        "K6_HOSTENV"
     )
+
+    if [ "$K6_HOSTENV" = "testing" ]; then
+        required_vars+=(
+            "SLACK_NOTIFICATION_TOKEN"
+            "SLACK_NOTIFICATION_CHANNEL"
+        )
+    fi
 
     local unset_vars=()
 
@@ -35,8 +41,22 @@ check_env_vars() {
         echo -e "\e[31mThe following required environment variables are not set:\e[0m" >&2
         printf '%s\n' "${unset_vars[@]}" >&2
         echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
-        return 1
+        exit 1
     fi
+
+    check_k6_host_env
+}
+
+check_k6_host_env() {
+    if [ "$K6_HOSTENV" = "testing" ] || [ "$K6_HOSTENV" = "local" ]; then
+        return
+    fi
+
+    echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
+    echo -e "\e[31m K6_HOSTENV value must be testing or local" >&2
+    printf '%s\n' "${unset_vars[@]}" >&2
+    echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
+    exit 1
 }
 
 # Builds the command to run the K6 docker container with all required arguments.
@@ -80,6 +100,7 @@ build_k6_docker_command() {
             -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
             -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
             -e 'SPRYKER_TEST_ENVIRONMENT=$testEnvironment' \
+            -e 'SPRYKER_TEST_PATH=$relativePath' \
             -e 'K6_BROWSER_ENABLED=true' \
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
@@ -100,7 +121,7 @@ create_folder_if_not_existant() {
 
 # Creates the report folder
 create_report_folder() {
-    echo "results/$(date +%Y/%m/%d)"
+    echo "results/reports/$(date +%Y/%m/%d)"
 }
 
 # Creates a report file
@@ -129,6 +150,8 @@ merge_and_delte_files() {
 }
 
 run_k6_tests() {
+    check_env_vars
+
     files=$1;
 
     # Generate the output file
@@ -167,6 +190,8 @@ run_k6_tests() {
     done
 
     merge_and_delte_files "$finalReportFile" "${reportFiles[@]}"
+
+    send_failed_thresholds_notification "$testRunId"
 }
 
 check_env_var() {
@@ -210,4 +235,58 @@ delete_tmp_report_files() {
             echo "Deleted $file"
         fi
     done
+}
+
+send_failed_thresholds_notification() {
+    local testRunId=$1
+    local failedThresholds=$(extract_failed_thresholds "$testRunId")
+
+    if [ -n "$failedThresholds" ] && [ "$K6_HOSTENV" = "testing" ]; then
+        send_slack_notification "$failedThresholds"
+    fi
+}
+
+extract_failed_thresholds() {
+    local testRunId=$1
+
+    # Directory containing the files with failed thresholds
+    local DIRECTORY="results/failed-thresholds"
+
+    local output=""
+
+    # Check if there are any .txt files in the directory
+    if compgen -G "$DIRECTORY/*.txt" > /dev/null; then
+        # Iterate over each .txt file in the directory
+        for file in "$DIRECTORY"/*.txt; do
+            # Append the content of the file to the output
+            output+=$(cat "$file")
+            output+="\n\n"
+
+            # Delete the file after processing
+            rm "$file"
+        done
+    fi
+
+    if [ -n "$output" ]; then
+        output=":x: Some thresholds have been crossed (Test run ID: $testRunId):\n\n$output"
+    fi
+
+    echo "$output"
+}
+
+send_slack_notification() {
+    local token=$SLACK_NOTIFICATION_TOKEN
+    local channel=$SLACK_NOTIFICATION_CHANNEL
+    local message=$1
+    local slackApiUrl="https://slack.com/api/chat.postMessage"
+
+    # Make the API request to send the message
+    local response=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: Bearer $token" -d "{\"channel\": \"$channel\", \"text\": \"$message\"}" $slackApiUrl)
+
+    # Check if the request was successful
+    if echo "$response" | grep -q '"ok":true'; then
+        echo "Failed thresholds notification sent successfully!"
+    else
+        echo "Failed to send failed thresholds notification."
+    fi
 }

@@ -1,5 +1,6 @@
 import { SharedAddToCartScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-add-to-cart-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const addToCartScenario = new SharedAddToCartScenario('B2B_MP');
 

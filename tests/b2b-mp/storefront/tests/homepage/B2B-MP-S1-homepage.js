@@ -1,5 +1,6 @@
 import { SharedHomepageScenario } from '../../../../cross-product/storefront/scenarios/homepage/shared-homepage-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 export const options = loadDefaultOptions();
 

@@ -1,5 +1,6 @@
 import { SharedProductDetailsScenario } from '../../../../cross-product/sapi/scenarios/product-details/shared-product-details-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const productDetailsScenario = new SharedProductDetailsScenario('B2B_MP');
 

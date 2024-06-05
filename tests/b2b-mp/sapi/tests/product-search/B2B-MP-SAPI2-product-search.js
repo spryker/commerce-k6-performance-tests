@@ -1,5 +1,6 @@
 import { SharedProductSearchScenario } from '../../../../cross-product/sapi/scenarios/product-search/shared-product-search-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const productSearchScenario = new SharedProductSearchScenario('B2B_MP');
 

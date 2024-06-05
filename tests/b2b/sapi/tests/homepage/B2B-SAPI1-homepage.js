@@ -1,5 +1,6 @@
 import { SharedHomepageScenario } from '../../../../cross-product/sapi/scenarios/homepage/shared-homepage-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const homepageScenario = new SharedHomepageScenario('B2B');
 
