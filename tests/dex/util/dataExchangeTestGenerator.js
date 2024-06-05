@@ -1,5 +1,6 @@
 import EntityConfig from '../../../helpers/dynamicEntity/entityConfig.js';
 import fs from 'fs';
+import beautify_js from 'js-beautify';
 
 export default class DataExchangeTestGenerator {
     constructor() {
@@ -7,11 +8,17 @@ export default class DataExchangeTestGenerator {
         this.entitiesConfiguration = new EntityConfig(JSON.parse(fs.readFileSync(process.cwd() + '/tests/dex/tests/data/dex.json')))
     }
 
-    generate() {
-        for (const entityKey of this.entitiesConfiguration.getEntityKeys()) {
-            if (!fs.existsSync(this.getOutputFolder(entityKey))) {
-                fs.mkdirSync(this.getOutputFolder(entityKey), {recursive: true})
-            }
+    generate(entityAlias = null) {
+        if (!fs.existsSync(this.getOutputFolder())) {
+            fs.mkdirSync(this.getOutputFolder(), {recursive: true})
+        }
+
+        let entities = this.entitiesConfiguration.getEntityKeysForTestsGeneration()
+        if (this.entitiesConfiguration.getTableNameByAlias(entityAlias)) {
+            entities = [this.entitiesConfiguration.getTableNameByAlias(entityAlias)]
+        }
+
+        for (const entityKey of entities) {
             if (fs.existsSync(this.getOutputFileName(entityKey))) {
                 console.warn(`${entityKey} generation is skipped because file already exists.(${this.getOutputFileName(entityKey)})`)
                 continue
@@ -38,15 +45,30 @@ export default class DataExchangeTestGenerator {
     }
 
     getOutputFileName(entityKey) {
-        return [this.getOutputFolder(entityKey), 'post.js'].join('/')
+        return [this.getOutputFolder(), `${this.toCamelCase(entityKey)}.js`].join('/')
     }
 
-    getOutputFolder(entityKey) {
-        return [process.cwd(), 'tests/dex/tests', this.toCamelCase(entityKey)].join('/')
+    getOutputFolder() {
+        return [process.cwd(), 'tests/dex/tests/post'].join('/')
+    }
+
+    formatContent(data) {
+        return beautify_js(data, { indent_size: 4 }).replace('IMPORTS', `import {loadDefaultOptions, loadEnvironmentConfig, uuid} from '../../../../lib/utils.js';
+import Handler from '../../../../helpers/dynamicEntity/handler.js';
+import {Http} from '../../../../lib/http.js';
+import {UrlHelper} from '../../../../helpers/url-helper.js';
+import {BapiHelper} from '../../../../helpers/bapi-helper.js';
+import AdminHelper from '../../../../helpers/admin-helper.js';
+import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
+import {Metrics} from '../../../../helpers/browser/metrics.js';
+        `);
     }
 
     save(content, outputFile) {
-        fs.writeFileSync(outputFile, content)
+        if (!content) {
+            return
+        }
+        fs.writeFileSync(outputFile, this.formatContent(content))
     }
 
     readTemplate() {
@@ -54,10 +76,15 @@ export default class DataExchangeTestGenerator {
     }
 
     addMetricName(content, alias) {
-        return content.replaceAll('TABLE_ALIAS', alias)
+        return content.replaceAll('TABLE_ALIAS', this.entitiesConfiguration.getAliasByTableName(alias))
     }
 
     addCreationLogic(content, alias) {
+        let payload = JSON.stringify(this.entitiesConfiguration.reset().getPostPayload(alias))
+        if (!payload.length) {
+            return null
+        }
+
         let logic = `let payload = new Array(1).fill(undefined).map(() => {
         return PAYLOAD
     })
@@ -71,7 +98,6 @@ export default class DataExchangeTestGenerator {
     }
     metrics.add('TABLE_ALIAS-create', requestHandler.getLastResponse(), 201)
 `
-
-        return content.replaceAll('CREATE_LOGIC', logic).replace('PAYLOAD', this.entitiesConfiguration.getPostPayload(alias))
+        return content.replaceAll('CREATE_LOGIC', logic).replace('PAYLOAD', payload)
     }
 }

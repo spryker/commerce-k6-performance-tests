@@ -1,6 +1,9 @@
 {
   "type": "module",
   "devDependencies": {
-    "eslint": "^8.39.0"
+    "eslint": "^8.39.0",
+    "js-beautify": "^1.15.1",
+    "prompt-sync": "^4.2.0",
+    "yargs": "^17.7.2"
   }
 }

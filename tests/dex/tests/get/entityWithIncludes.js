@@ -54,7 +54,7 @@ const limit = 100
 export function entityDataGet() {
     entitiesConfiguration.getEntityKeys().map((entityAlias) => {
         const requestHandler = new Handler(http, urlHelper, bapiHelper)
-        let includes = entitiesConfiguration.getIncludesByEntityAlias(entityAlias)
+        let includes = entitiesConfiguration.getIncludeAliasesByEntityAlias(entityAlias)
         if (includes.length) {
             let include = `include=${includes.join(',')}&`
             let result = requestHandler.getDataFromTable(`${entityAlias}?${include}page[offset]=0&page[limit]=${limit}`)
