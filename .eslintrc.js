@@ -17,6 +17,7 @@ module.exports = {
     'ignorePatterns': [
         'node_modules/*',
         'screenshots/*',
+        'lib/external/*',
     ],
     'rules': {
         'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],

@@ -23,7 +23,7 @@ export class AbstractScenario {
 
         this.environment = environment;
 
-        this.http = new Http(this.environment);
+        this.http = new Http();
         this.environmentConfig = loadEnvironmentConfig(this.environment);
         this.urlHelper = new UrlHelper(this.environmentConfig);
         this.customerHelper = new CustomerHelper();
