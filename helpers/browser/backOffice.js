@@ -303,7 +303,7 @@ export default class BackOffice {
             let retry = 5
             let res = false;
             do {
-                res = await this.browser.fillForm(dataSet)
+                res = await this.browser.act(dataSet)
                 retry--
                 sleep(5);
                 this.browser.screen({fullPage: true})
@@ -321,7 +321,7 @@ export default class BackOffice {
         await this.browser.visitPage('security-gui/login')
         this.browser.addStep('Fill Admin Auth Credentials')
 
-        await this.browser.fillForm([
+        await this.browser.act([
             {
                 'type': 'fill',
                 'locator': '[name="auth[username]"]',

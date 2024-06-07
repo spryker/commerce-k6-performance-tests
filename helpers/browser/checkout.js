@@ -90,7 +90,7 @@ export default class Checkout {
         await this.browser.visitPage(`/${this.targetLocale}/checkout/customer`, 'checkout_page_loading_time')
         await this.browser.waitUntilLoad('networkidle', this.timeout)
 
-        let result = await this.browser.fillForm([
+        let result = await this.browser.act([
             new Step('Select guest checkout'),
             new Click('[data-qa="component toggler-radio checkoutProceedAs guest"]', {waitForTimeout: true, timeout: 5000, force: true}),
             new Wait(5000, 'networkidle'),
@@ -115,7 +115,7 @@ export default class Checkout {
         await this.browser.click('[data-qa="guest-form-submit-button"]', {waitForNavigation: true}, this.timeout, 'shipping_address_loading_time')
         await this.browser.waitUntilLoad('networkidle', this.timeout)
         
-        let result = await this.browser.fillForm([
+        let result = await this.browser.act([
             new Step('Fill shipping address form'),
             new Fill('[name="addressesForm[shippingAddress][zip_code]"]', this.customerData.zip),
             new Fill('[name="addressesForm[shippingAddress][city]"]', this.customerData.city),

@@ -22,7 +22,7 @@ import file from 'k6/x/file';
 import read from 'k6/x/read';
 import fail from 'k6';
 
-const maxCartSize = 10
+const maxCartSize= 10
 
 let metricsConfig = [
     'home_page',
@@ -49,15 +49,6 @@ let metricsConfig = [
         },
     };
 })
-
-// metricsConfig.push({
-//     key: 'orders_created_counter',
-//     types: ['counter'],
-//     isTime: {
-//         counter: false
-//     },
-//     thresholds: {}
-// })
 
 const metrics = new Metrics(metricsConfig);
 
@@ -86,10 +77,10 @@ let configurationArray = [
             testId: 'S5',
             testGroup: 'Checkout',
         },
-        iterations: 1,
-        vus: 1,
+        iterations: 10,
+        vus: 30,
         maxDuration: '1200m',
-        startTime: '10s',
+        startTime: '20s',
     }]
 ]
 
@@ -117,10 +108,9 @@ export async function generateProductList() {
     let storeInfo = storeConfig.getStoreConfig(__ENV.STORE)
     let products = []
 
-    handler.getDataFromTable(`product-abstracts?include=productAbstractStores,productAbstractUrls`)
-    // handler.getDataFromTable(`product-abstracts?include=productAbstractStores,productAbstractUrls&page[offset]=234&page[limit]=100`)
+    handler.getDataFromTableWithPagination(`products?include=productStocks,productAbstractUrls,productAbstractStores`, 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
         .map((product) => {
-            return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale)
+            return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
         })
         .map((urls) => {
             if (Array.isArray(urls)) {
@@ -139,6 +129,7 @@ export async function executeCheckoutScenario() {
     }
 
     let page = browser.newPage()
+    page.setDefaultTimeout(120000)
 
     try {
         let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)
@@ -150,12 +141,12 @@ export async function executeCheckoutScenario() {
             Math.floor(Math.random() * maxCartSize) + 1,
             60000
         );
-    
+
         let orderUrl = await checkout.placeGuestOrder('dummyPaymentInvoice', sortRandom(products));
         metrics.addCounter('orders_created_counter', orderUrl === checkout.browser.getTargetUrlWithoutQueryString(`/${locale}/checkout/success`) ? 1 : 0)
-    
-        assertion.assertEqual(orderUrl, checkout.browser.getTargetUrlWithoutQueryString(`/${locale}/checkout/success`))    
+
+        assertion.assertEqual(orderUrl, checkout.browser.getTargetUrlWithoutQueryString(`/${locale}/checkout/success`))
     } finally {
-        page.close()    
+        page.close()
     }
 }

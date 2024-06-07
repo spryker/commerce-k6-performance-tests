@@ -49,6 +49,35 @@ export default class Handler {
         }
     }
 
+    getDataFromTableWithPagination(tableAlias, limitPerPage = 500, filterCallback = null, desiredAmount = 0) {
+        let result = []
+        let res = []
+        let offset = 0
+        let filter = ''
+        let stop = false
+
+        let joinSymbol = '?'
+        if (tableAlias.includes('?')) {
+            joinSymbol = '&'
+        }
+
+        do {
+            console.warn(`Request to get data with page[offset]=${offset}&page[limit]=${limitPerPage}`)
+            filter = `page[offset]=${offset}&page[limit]=${limitPerPage}`
+            res = this.getDataFromTable([tableAlias, filter].join(joinSymbol))
+            stop = Boolean(desiredAmount > 0 ? result.length >= desiredAmount || !res.length : !res.length)
+
+            if (typeof filterCallback === 'function') {
+                res = res.filter(filterCallback)
+            }
+            result.push(...res)
+            offset += limitPerPage
+        } while (!stop)
+
+
+        return result
+    }
+
     createEntities(tableAlias, payload, expectedStatus = 201) {
         let response = this.http.sendPostRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, payload, this.getRequestParams(), false);
 

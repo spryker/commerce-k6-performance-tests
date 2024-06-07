@@ -193,9 +193,9 @@ export class Browser {
         }, locator);
     }
 
-    async fillForm(formData = []) {
+    async act(actionList = []) {
         let result = true
-        for (const element of formData) {
+        for (const element of actionList) {
             const sanitise = (locator) => {
                 return locator.replaceAll('\\', '');
             };
