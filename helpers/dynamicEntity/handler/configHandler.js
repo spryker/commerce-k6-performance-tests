@@ -45,9 +45,15 @@ export default class ConfigHandler extends Handler {
     getStoreConfig(storeCode) {
         this.get()
 
-        console.log('this.storesConfig', this.storesConfig)
-
         return this.storesConfig.filter((el) => el.name.toLowerCase() === storeCode.toLowerCase()).shift()
+    }
+
+    getStoreDefaultLocaleUrlAlias(storeCode) {
+        this.get()
+
+        let storConfig = this.storesConfig.filter((el) => el.name.toLowerCase() === storeCode.toLowerCase()).shift()
+
+        return this.storeLocalesMapping.get(storConfig.fk_locale).split('_').shift()
     }
 
     getStoreIds() {

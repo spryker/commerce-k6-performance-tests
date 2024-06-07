@@ -1,4 +1,5 @@
 import {check} from 'k6';
+import { getIteration, getThread } from '../lib/utils.js';
 
 export class AssertionsHelper {
     assertResponseStatus(response, expectedStatus, requestName = null) {
@@ -20,7 +21,7 @@ export class AssertionsHelper {
     }
 
     assertEqual(actualValue, expectedValue) {
-        const assertionName = `Verify that values ${actualValue} and ${expectedValue} are equal.`;
+        const assertionName = `${getThread()}: ${getIteration()}: Verify that values ${actualValue} and ${expectedValue} are equal.`;
 
         return check(actualValue, {
             [assertionName]: (r) => r === expectedValue,
@@ -28,7 +29,7 @@ export class AssertionsHelper {
     }
 
     assertLessOrEqual(actualValue, expectedValue) {
-        const assertionName = `Verify that value ${actualValue} less or equal to ${expectedValue}.`;
+        const assertionName = `${getThread()}: ${getIteration()}: Verify that value ${actualValue} less or equal to ${expectedValue}.`;
 
         return check(actualValue, {
             [assertionName]: (r) => r <= expectedValue,
@@ -36,7 +37,7 @@ export class AssertionsHelper {
     }
 
     assertGreaterOrEqual(actualValue, expectedValue) {
-        const assertionName = `Verify that value ${actualValue} greater or equal to ${expectedValue}.`;
+        const assertionName = `${getThread()}: ${getIteration()}: Verify that value ${actualValue} greater or equal to ${expectedValue}.`;
 
         return check(actualValue, {
             [assertionName]: (r) => r >= expectedValue,

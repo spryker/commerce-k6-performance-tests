@@ -37,6 +37,10 @@ export default class Handler {
         try {
             this.lastResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
 
+            if (this.lastResponse.status !== 200) {
+                console.error(JSON.parse(this.lastResponse.body))
+            }
+
             this.assertionHelper.assertResponseStatus(this.lastResponse, 200, this.lastResponse.url)
 
             return JSON.parse(this.lastResponse.body)

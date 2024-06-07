@@ -21,7 +21,10 @@ let metricsConfig = [
 ].map((code) => {
     return {
         key: `${code}_loading_time`,
-        isTime: true,
+        isTime: {
+            trend: true,
+            counter: false
+        },
         types: ['trend', 'rate'],
         thresholds: {
             trend: ['p(95)<1000'],
@@ -33,7 +36,10 @@ let metricsConfig = [
 metricsConfig.push({
     key: 'orders_created_counter',
     types: ['counter'],
-    isTime: false,
+    isTime: {
+        trend: false,
+        counter: false
+    },
     thresholds: {}
 })
 
@@ -60,7 +66,7 @@ let configurationArray = [
         iterations: 1,
         vus: 1,
         maxDuration: '1200m',
-        startTime: '5s'
+        startTime: '10s'
     }]
 ]
 

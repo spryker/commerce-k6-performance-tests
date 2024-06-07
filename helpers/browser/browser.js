@@ -15,6 +15,7 @@ export class Browser {
         screenShotActive = false
     ) {
         this.page = page;
+        this.page.setViewportSize({ width: 1280, height: 1680 });
         this.basicAuth = basicAuth;
         this.page.setExtraHTTPHeaders(this.basicAuth.getAuthHeader());
         this.urlHandler = new Url(baseUrl);
@@ -79,7 +80,6 @@ export class Browser {
 
         this.metrics.addTrend(metricKey, profiler.stop(targetUri));
         this.validatePage(targetUri);
-        // this.screen()
 
         return this;
     }
@@ -110,14 +110,20 @@ export class Browser {
         target.focus();
     }
 
-    async click(locator, options = {}, timeout = 1000, metricKey = '') {
+    async click(locator, options = {}, timeout = 0, metricKey = '') {
         try {
             const targetElement = this.page.locator(locator);
+            targetElement.focus()
+            
             let profiler = new Profiler();
 
             let clickOptions = {};
             if (typeof options === 'object' && 'force' in options) {
                 clickOptions.force = options.force;
+            }
+
+            if (typeof options === 'object' && 'timeout' in options) {
+                timeout = options.timeout;
             }
 
             if (typeof options === 'object' && 'waitForNavigation' in options) {
@@ -168,6 +174,10 @@ export class Browser {
         return this.urlHandler.get(uri);
     }
 
+    getTargetUrlWithoutQueryString(uri) {
+        return this.urlHandler.getWithoutQueryString(uri);
+    }
+
     scrollBottom() {
         this.page.evaluate(() => {
             window.scrollTo(0, document.body.scrollHeight);
@@ -190,26 +200,32 @@ export class Browser {
                 return locator.replaceAll('\\', '');
             };
 
-            console.log('element.type', element.type, 'element.locator', element.locator, 'element.value', element.value)
-
             switch (element.type) {
             case 'type':
-                result = result && await this.type(sanitise(element.locator), element.value);
+                result =
+                  result &&
+                  (await this.type(sanitise(element.locator), element.value));
                 break;
             case 'check':
-                result = result && await this.checkCheckbox(sanitise(element.locator));
+                result =
+                  result &&
+                  (await this.checkCheckbox(sanitise(element.locator)));
                 break;
             case 'select':
-                result = result && await this.selectOption(element.locator, element.value);
+                result =
+                  result &&
+                  (await this.selectOption(element.locator, element.value));
                 break;
             case 'click':
-                await this.click(sanitise(element.locator));
+                await this.click(sanitise(element.locator), element.options);
                 break;
             case 'step':
                 this.addStep(element.value);
                 break;
             case 'fill':
-                result = result && await this.fill(sanitise(element.locator), element.value);
+                result =
+                  result &&
+                  (await this.fill(sanitise(element.locator), element.value));
                 break;
             case 'scrollUp':
                 await this.page.evaluate(() => {
@@ -226,30 +242,35 @@ export class Browser {
                 this.screen();
                 break;
             case 'wait':
-                await this.waitUntilLoad('networkidle', element.value);
+                await this.waitUntilLoad(element.waitingState, element.value);
+                break;
+            case 'sleep':
+                sleep(element.value)
                 break;
             default:
                 break;
             }
+
             if (!result) {
-                this.addStep(`Failed to execute command: ${element.type} for locator: ${element.locator} and value: ${element.value}`);
-                console.error(`Failed to execute command: ${element.type} for locator: ${element.locator} and value: ${element.value}`);
+                this.addStep(`Failed to execute command: ${element.type} for locator: ${element.locator}`);
+                console.error(`Failed to execute command: ${element.type} for locator: ${element.locator} element: ${JSON.stringify(element)}`);
                 this.screen();
             }
+            await this.waitUntilLoad('networkidle');
         }
-        await this.waitUntilLoad('networkidle');
 
         return result;
     }
 
     async type(locator, value) {
         try {
-            // this.page.waitForSelector(locator, { state: 'visible' });
-            this.page.waitForSelector(locator, {state: 'attached'});
+            this.page.waitForSelector(locator, { state: 'visible' });
+            // this.page.waitForSelector(locator, {state: 'attached'});
             let element = this.getElement(locator)
+            element.focus();
             element.type(value);
             await this.waitUntilLoad('networkidle');
-            return element.inputValue() === value;
+            return String(element.inputValue()) === String(value);
         } catch (e) {
             console.error(`Error typing ${locator}:`, e);
         }
@@ -262,12 +283,14 @@ export class Browser {
 
     async fill(locator, value) {
         try {
-            this.page.waitForSelector(locator, {state: 'attached'});
+            this.page.waitForSelector(locator, { state: 'visible' });
+            // this.page.waitForSelector(locator, {state: 'attached'});
             let element = this.getElement(locator)
+            element.focus();
             element.fill(value);
             await this.waitUntilLoad('networkidle');
 
-            return element.inputValue() === value;
+            return String(element.inputValue()) === String(value);
         } catch (e) {
             console.error(`Error filling ${locator}:`, e);
         }
@@ -279,10 +302,11 @@ export class Browser {
         this.page.waitForSelector(locator, {state: 'attached'});
         try {
             let element = this.getElement(locator);
+            element.focus();
             element.selectOption(value);
             await this.waitUntilLoad('networkidle');
 
-            return element.inputValue() === value;
+            return String(element.inputValue()) === String(value);
         } catch (e) {
             console.error('Error selecting the option:', e);
         }
@@ -307,6 +331,7 @@ export class Browser {
         try {
             this.page.waitForSelector(locator, {state: 'attached'});
             let element = this.getElement(locator);
+            element.focus();
             if (checked) {
                 element.check();
             } else {

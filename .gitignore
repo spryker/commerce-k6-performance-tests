@@ -8,3 +8,5 @@ settings.json
 /.pki
 /.cache
 /screenshot
+tests/dex/tests/data/products.json
+tests/dex/tests/data/stores.json
