@@ -4836,5 +4836,96 @@
         }
       ]
     }
+  },
+  {
+    "tableName": "spy_company_user",
+    "tableAlias": "company-users",
+    "isActive": true,
+    "definition": {
+      "identifier": "id_company_user",
+      "isDeletable": false,
+      "fields": [
+        {
+          "fieldName": "id_company_user",
+          "fieldVisibleName": "id_company_user",
+          "isCreatable": false,
+          "isEditable": false,
+          "type": "integer",
+          "validation": {
+            "isRequired": true
+          }
+        },
+        {
+          "fieldName": "is_active",
+          "fieldVisibleName": "is_active",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "boolean",
+          "validation": {
+            "isRequired": true
+          }
+        },
+        {
+          "fieldName": "fk_company",
+          "fieldVisibleName": "fk_company",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "integer",
+          "validation": {
+            "isRequired": true
+          }
+        },
+        {
+          "fieldName": "fk_company_business_unit",
+          "fieldVisibleName": "fk_company_business_unit",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "integer",
+          "validation": {
+            "isRequired": true
+          }
+        },
+        {
+          "fieldName": "fk_customer",
+          "fieldVisibleName": "fk_customer",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "integer",
+          "validation": {
+            "isRequired": true
+          }
+        },
+        {
+          "fieldName": "is_default",
+          "fieldVisibleName": "is_default",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "boolean",
+          "validation": {
+            "isRequired": true
+          }
+        },
+        {
+          "fieldName": "key",
+          "fieldVisibleName": "key",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "string",
+          "validation": {
+            "isRequired": false
+          }
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "string",
+          "validation": {
+            "isRequired": false
+          }
+        }
+      ]
+    }
   }
 ]
