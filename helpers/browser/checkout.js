@@ -8,6 +8,7 @@ import Wait from './formActivity/wait.js';
 import { fail } from 'k6';
 import {sleep} from 'k6';
 import { sortRandom } from '../../lib/utils.js';
+import SelectRandomBulk from "./formActivity/selectRandomBulk.js";
 
 export default class Checkout {
     constructor(browser, basicAuth, metrics, targetLocale = 'en', cartSize = 1, timeout = 1000) {
@@ -26,7 +27,7 @@ export default class Checkout {
     async placeGuestOrder(paymentCode, productUris = []) {
         this.initCustomerData()
         productUris = sortRandom(productUris)
-
+        this.cartItemsAmount = 0
         try {
             for (const productUri of productUris) {
                 if (this.cartItemsAmount < this.cartSize) {
@@ -45,7 +46,6 @@ export default class Checkout {
             await this.fillPayment(paymentCode)
             await this.createOrder()
             console.log(`Target Cart Size: ${this.cartSize}, Actual amount: ${this.cartItemsAmount}, Amount of products skipped because they are not available: ${this.skippedProduct}`)
-            
             return this.browser.getCurrentUrl()
         } catch (e) {
             console.error(`Was not able to to create order: ${e}`)
@@ -69,6 +69,12 @@ export default class Checkout {
     async addProduct(productUri) {
         this.browser.addStep(`Visit product: ${productUri}`)
         await this.browser.visitPage(productUri, 'product_page_loading_time')
+        await this.browser.waitUntilLoad('networkidle', this.timeout)
+
+        await this.browser.act([
+            new SelectRandomBulk('section[data-qa="component product-configurator"] select')
+        ])
+
         this.browser.screen()
         if (this.browser.isEnabled('[data-qa="add-to-cart-button"]')) {
             this.browser.addStep('Add product to cart')

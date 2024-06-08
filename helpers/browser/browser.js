@@ -1,9 +1,10 @@
 import {Http} from '../../lib/http.js';
 import {AssertionsHelper} from '../assertions-helper.js';
-import {toCamelCase} from '../../lib/utils.js';
+import {sortRandom, toCamelCase} from '../../lib/utils.js';
 import {sleep} from 'k6';
 import {Profiler} from '../profiler.js';
 import Url from '../../lib/url.js';
+import { parseHTML } from 'k6/html';
 
 export class Browser {
     constructor(
@@ -216,6 +217,16 @@ export class Browser {
                   result &&
                   (await this.selectOption(element.locator, element.value));
                 break;
+            case 'selectRandomBulk':
+                result =
+                    result &&
+                    (await this.selectRandomBulk(element.locator));
+                break;
+            case 'selectRandomOption':
+                result =
+                    result &&
+                    (await this.selectRandomOption(element.locator));
+                break;
             case 'click':
                 await this.click(sanitise(element.locator), element.options);
                 break;
@@ -302,6 +313,56 @@ export class Browser {
         this.page.waitForSelector(locator, {state: 'attached'});
         try {
             let element = this.getElement(locator);
+            this.screen()
+            await element.selectOption(value);
+            this.screen()
+            await this.waitUntilLoad('networkidle');
+
+            return locator.includes('attribute') ? true : String(element.inputValue()) === String(value);
+        } catch (e) {
+            console.error('Error selecting the option:', e);
+        }
+
+        return false;
+    }
+
+    getRandomValueFromSelectOptions(locator, htmlDocument = null) {
+        const doc = htmlDocument ? htmlDocument : parseHTML(this.page.content());
+        let optionsValues = doc.find(`${locator} option`).toArray().map((option) => String(option.attr('value')));
+        optionsValues.shift()
+        optionsValues = sortRandom(optionsValues)
+
+        return optionsValues.shift()
+    }
+
+    async selectRandomBulk(locator) {
+        this.page.waitForSelector(locator, {state: 'attached'});
+        let result = true
+        try {
+            const doc = parseHTML(this.page.content());
+            let targetSelectElements = doc.find('section[data-qa="component product-configurator"] select').toArray().map((el) => el.attr('name'))
+
+            for (const selectName of targetSelectElements) {
+                let value = this.getRandomValueFromSelectOptions(`select[name="${selectName}"]`, doc)
+                result = result && await this.selectOption(`select[name="${selectName}"]`, value)
+                if (selectName.includes('attribute')) {
+                    this.page.waitForNavigation({timeout: 60000})
+                }
+            }
+        } catch (e) {
+            console.error('Error selecting the option:', e);
+            result = false
+        }
+
+        return result;
+    }
+
+    async selectRandomOption(locator) {
+        this.page.waitForSelector(locator, {state: 'attached'});
+        try {
+            let element = this.getElement(locator);
+            let value = this.getRandomValueFromSelectOptions(locator)
+
             element.focus();
             element.selectOption(value);
             await this.waitUntilLoad('networkidle');

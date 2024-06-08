@@ -22,7 +22,7 @@ import file from 'k6/x/file';
 import read from 'k6/x/read';
 import fail from 'k6';
 
-const maxCartSize= 10
+const maxCartSize= Number(__ENV.MAX_CART_SIZE)
 
 let metricsConfig = [
     'home_page',
@@ -108,7 +108,7 @@ export async function generateProductList() {
     let storeInfo = storeConfig.getStoreConfig(__ENV.STORE)
     let products = []
 
-    handler.getDataFromTableWithPagination(`products?include=productStocks,productAbstractUrls,productAbstractStores`, 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
+    handler.getDataFromTableWithPagination(`products?include=productStocks,productAbstractUrls`, 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
         .map((product) => {
             return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
         })
@@ -117,7 +117,7 @@ export async function generateProductList() {
                 products.push(...urls.map((url) => url.url))
             }
         })
-    
+
     file.writeString(PRODUCTS_LIST_FILE, JSON.stringify(products));
 }
 

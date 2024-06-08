@@ -64,6 +64,7 @@ services:
         - DEX_AUTH_PASSWORD=${DEX_AUTH_PASSWORD}
         - DMS_AUTH_USERNAME=${DMS_AUTH_USERNAME}
         - DMS_AUTH_PASSWORD=${DMS_AUTH_PASSWORD}
+        - MAX_CART_SIZE=${MAX_CART_SIZE:-10}
         - STORE=${STORE:-de}
         - STORES_FROM_ENV=${STORES_FROM_ENV:-false}
     volumes:  
