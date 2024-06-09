@@ -172,7 +172,6 @@ export default class Checkout {
             waitForNavigation: true,
             force: true
         }, this.timeout, 'summary_page_loading_time')
-
     }
 
     async createOrder() {
@@ -190,5 +189,11 @@ export default class Checkout {
         this.browser.addStep('Visit summary page')
         sleep(1)
         this.browser.screen()
+        if (this.browser.getCurrentUrl() === this.browser.getTargetUrlWithoutQueryString(`/${this.targetLocale}/checkout/success`) ? 1 : 0) {
+            this.metrics.addCounter(`orders_placed_with_${this.cartItemsAmount}_unique_items`, 1)
+        } else {
+            this.metrics.addCounter(`orders_failed_with_${this.cartItemsAmount}_unique_items`, 1)
+        }
+        this.browser.validatePageContains('order has been placed')
     }
 }

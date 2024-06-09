@@ -42,13 +42,13 @@ export class Metrics {
                         isTime = metric.isTime.trend
                     }
                     this.metrics.set(targetKey, new Trend(targetKey, isTime));
-                    if ('trend' in metric.thresholds) {
+                    if ('thresholds' in metric && 'trend' in metric.thresholds) {
                         this.thresholds[targetKey] = metric.thresholds['trend'];
                     }
                     break;
                 case 'rate':
                     this.metrics.set(targetKey, new Rate(targetKey));
-                    if ('rate' in metric.thresholds) {
+                    if ('thresholds' in metric && 'rate' in metric.thresholds) {
                         this.thresholds[targetKey] = metric.thresholds['rate'];
                     }
                     break;
@@ -57,7 +57,7 @@ export class Metrics {
                         isTime = metric.isTime.counter
                     }
                     this.metrics.set(targetKey, new Counter(targetKey, isTime));
-                    if ('counter' in metric.thresholds) {
+                    if ('thresholds' in metric && 'counter' in metric.thresholds) {
                         this.thresholds[targetKey] = metric.thresholds['counter'];
                     }
                     break;

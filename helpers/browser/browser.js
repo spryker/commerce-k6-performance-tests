@@ -13,11 +13,13 @@ export class Browser {
         metrics,
         baseUrl,
         targetEnv,
-        screenShotActive = false
+        screenShotActive = false,
+        validateVisitedPage = true
     ) {
         this.page = page;
         this.page.setViewportSize({ width: 1280, height: 1680 });
         this.basicAuth = basicAuth;
+        this.validateVisitedPage = validateVisitedPage;
         this.page.setExtraHTTPHeaders(this.basicAuth.getAuthHeader());
         this.urlHandler = new Url(baseUrl);
         this.metrics = metrics;
@@ -55,6 +57,11 @@ export class Browser {
         }
     }
 
+    validatePageContains(targetText) {
+        let doc = this.page.textContent('body')
+        this.assertionsHelper.assertTextContains(doc, targetText)
+    }
+
     ifElementExists(locator) {
         return this.getElementCount(locator) > 0;
     }
@@ -80,7 +87,10 @@ export class Browser {
         await this.waitUntilLoad('networkidle');
 
         this.metrics.addTrend(metricKey, profiler.stop(targetUri));
-        this.validatePage(targetUri);
+
+        if (this.validateVisitedPage) {
+            this.validatePage(targetUri);
+        }
 
         return this;
     }

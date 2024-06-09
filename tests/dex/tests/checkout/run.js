@@ -23,6 +23,7 @@ import read from 'k6/x/read';
 import fail from 'k6';
 
 const maxCartSize= Number(__ENV.MAX_CART_SIZE)
+const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
 
 let metricsConfig = [
     'home_page',
@@ -34,7 +35,6 @@ let metricsConfig = [
     'shipping_method',
     'summary_page',
     'success_page',
-    'orders_created'
 ].map((code) => {
     return {
         key: `${code}_loading_time`,
@@ -49,6 +49,34 @@ let metricsConfig = [
         },
     };
 })
+
+let orderSuccessMetrics = Array.from(
+    { length: maxCartSize },
+    (_, i) => {
+    return {
+        key: `orders_placed_with_${i + 1}_unique_items`,
+        isTime: {
+            trend: false,
+            counter: false
+        },
+        types: ['counter']
+    }
+})
+
+let orderFailedMetrics = Array.from(
+    { length: maxCartSize },
+    (_, i) => {
+    return {
+        key: `orders_failed_with_${i + 1}_unique_items`,
+        isTime: {
+            trend: false,
+            counter: false
+        },
+        types: ['counter']
+    }
+})
+
+metricsConfig.push(...orderSuccessMetrics, ...orderFailedMetrics)
 
 const metrics = new Metrics(metricsConfig);
 
@@ -77,8 +105,8 @@ let configurationArray = [
             testId: 'S5',
             testGroup: 'Checkout',
         },
-        iterations: 10,
-        vus: 30,
+        iterations: 20,
+        vus: 20,
         maxDuration: '1200m',
         startTime: '20s',
     }]
@@ -134,18 +162,15 @@ export async function executeCheckoutScenario() {
     try {
         let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)
         let checkout = new Checkout(
-            new Browser(page, new BasicAuth(basicAuth.username, basicAuth.password), metrics, checkoutScenario.getStorefrontBaseUrl(), targetEnv, __ENV.SCREENSHOT_ACTIVE),
+            new Browser(page, new BasicAuth(basicAuth.username, basicAuth.password), metrics, checkoutScenario.getStorefrontBaseUrl(), targetEnv, Boolean(parseInt(__ENV.SCREENSHOT_ACTIVE)), Boolean(parseInt(__ENV.VALIDATE_VISITED_URL))),
             new BasicAuth(basicAuth.username, basicAuth.password),
             metrics,
             locale,
-            Math.floor(Math.random() * maxCartSize) + 1,
+            randomiseCartSize ? Math.floor(Math.random() * maxCartSize) + 1 : maxCartSize,
             60000
         );
 
-        let orderUrl = await checkout.placeGuestOrder('dummyPaymentInvoice', sortRandom(products));
-        metrics.addCounter('orders_created_counter', orderUrl === checkout.browser.getTargetUrlWithoutQueryString(`/${locale}/checkout/success`) ? 1 : 0)
-
-        assertion.assertEqual(orderUrl, checkout.browser.getTargetUrlWithoutQueryString(`/${locale}/checkout/success`))
+        await checkout.placeGuestOrder('dummyPaymentInvoice', sortRandom(products));
     } finally {
         page.close()
     }

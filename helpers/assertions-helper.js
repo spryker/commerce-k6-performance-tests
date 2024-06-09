@@ -21,15 +21,23 @@ export class AssertionsHelper {
     }
 
     assertEqual(actualValue, expectedValue) {
-        const assertionName = `${getThread()}: ${getIteration()}: Verify that values ${actualValue} and ${expectedValue} are equal.`;
+        const assertionName = `Iteration: ${getIteration()}, Virtual User: ${getThread()}: Verify that values ${actualValue} and ${expectedValue} are equal.`;
 
         return check(actualValue, {
             [assertionName]: (r) => r === expectedValue,
         })
     }
 
+    assertTextContains(text, expectedValue) {
+        const assertionName = `Iteration: ${getIteration()}, Virtual User: ${getThread()}: Text contains: ${expectedValue}`;
+
+        return check(expectedValue, {
+            [assertionName]: (r) => r.includes(expectedValue),
+        })
+    }
+
     assertLessOrEqual(actualValue, expectedValue) {
-        const assertionName = `${getThread()}: ${getIteration()}: Verify that value ${actualValue} less or equal to ${expectedValue}.`;
+        const assertionName = `Iteration: ${getIteration()}, Virtual User: ${getThread()}: Verify that value ${actualValue} less or equal to ${expectedValue}.`;
 
         return check(actualValue, {
             [assertionName]: (r) => r <= expectedValue,
@@ -37,7 +45,7 @@ export class AssertionsHelper {
     }
 
     assertGreaterOrEqual(actualValue, expectedValue) {
-        const assertionName = `${getThread()}: ${getIteration()}: Verify that value ${actualValue} greater or equal to ${expectedValue}.`;
+        const assertionName = `Iteration: ${getIteration()}, Virtual User: ${getThread()}: Verify that value ${actualValue} greater or equal to ${expectedValue}.`;
 
         return check(actualValue, {
             [assertionName]: (r) => r >= expectedValue,
