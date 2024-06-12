@@ -33,10 +33,14 @@ The following env vars **MUST** be present **in the k6 container**. Pay attentio
 
 * **SPRYKER_TEST_RUN_ID** (optional): This **MUST** be a **NEW** UUID version for each test run or you will end up with duplicate identifiers and you won't be able to distinguish different test runs. If not provided a UUID will be generated when running the shell scripts.
 
-* **SPRYKER_TEST_ENVIRONMENT** - The name of the (AWS) environment used e.g. "Production 2.1". This should be an identifier that helps you to identify the environment that was used for the test.
 * **K6_HOSTENV** - (**testing** and **local** values are supported) This variable is used to specify the environment for which the test is being run. The value of this variable can be used in the test script to configure different behavior for different environments.
 * **SLACK_NOTIFICATION_TOKEN** (required for **testing** environment): Slack API token which is used to notify about failing thresholds.
 * **SLACK_NOTIFICATION_CHANNEL** (required for **testing** environment): Slack channel which a failing thresholds notification is sent to.
+* **GIT_REPO** (required for **testing** environment)- The repository we test, we use it to identify which product we test.
+* **GIT_BRANCH** (required for **testing** environment) - The branch of the repository.
+* **GIT_HASH** (required for **testing** environment) - The commit hash ID.
+* **BASIC_AUTH_USERNAME** (required for **testing** environment) - Basic authentication username.
+* **BASIC_AUTH_PASSWORD** (required for **testing** environment) - Basic authentication password.
 
 ## Running a single test
 

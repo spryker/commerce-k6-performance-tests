@@ -25,6 +25,11 @@ check_env_vars() {
         required_vars+=(
             "SLACK_NOTIFICATION_TOKEN"
             "SLACK_NOTIFICATION_CHANNEL"
+            "GIT_REPO"
+            "GIT_BRANCH"
+            "GIT_HASH"
+            "BASIC_AUTH_USERNAME"
+            "BASIC_AUTH_PASSWORD"
         )
     fi
 
@@ -69,7 +74,6 @@ build_k6_docker_command() {
     local relativePath="$1"
     local reportFile="$2"
     local testRunId="$3"
-    local testEnvironment="$4"
 
     if [ -z "$testRunId" ]; then
         testRunId=$(generate_uuid)  # Call generate_uuid to get a UUID
@@ -81,25 +85,11 @@ build_k6_docker_command() {
             return 1;
     fi
 
-    if [ -z "$testEnvironment" ]; then
-        if [ -z "$SPRYKER_TEST_ENVIRONMENT" ]; then
-            testEnvironment="UNSPECIFIED"
-            echo >&2
-            echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
-            echo -e "\e[31mYou did not set the SPRYKER_TEST_ENVIRONMENT variable!\e[0m" >&2
-            echo -e "\e[31m--------------------------------------------------------------------------------\e[0m" >&2
-            return 1;
-        else
-            testEnvironment=$SPRYKER_TEST_ENVIRONMENT
-        fi
-    fi
-
-    command="docker-compose run --rm -i \
+    command="docker-compose run --rm \
             -v $(pwd):/scripts \
             -u $(id -u):$(id -g) \
             -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
             -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
-            -e 'SPRYKER_TEST_ENVIRONMENT=$testEnvironment' \
             -e 'SPRYKER_TEST_PATH=$relativePath' \
             -e 'K6_BROWSER_ENABLED=true' \
             k6 run $relativePath \

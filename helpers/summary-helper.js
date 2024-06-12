@@ -1,4 +1,4 @@
-import { textSummary } from 'https://jslib.k6.io/k6-summary/0.0.2/index.js';
+import { textSummary } from '../lib/external/k6-summary.js';
 
 export function handleSummary(data) {
     const failedMetrics = getFailedMetrics(data);
