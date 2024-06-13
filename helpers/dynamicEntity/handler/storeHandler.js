@@ -1,11 +1,6 @@
 import Handler from '../handler.js';
 
 export default class StoreHandler extends Handler {
-
-    getTableAlias() {
-        return 'categories'
-    }
-
     setup(storeCreationConfig) {
         let results = []
         let storeConfig = this.createStores(storeCreationConfig)
@@ -114,5 +109,4 @@ export default class StoreHandler extends Handler {
         }
         return result
     }
-
 }

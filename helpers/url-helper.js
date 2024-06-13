@@ -24,16 +24,10 @@ export class UrlHelper {
     }
 
     _replaceUrlStore(url) {
-        const availableStores = this.environmentConfig.stores;
+        const store = String(__ENV.STORE ? __ENV.STORE : 'de').toLowerCase();
 
-        if (!availableStores) {
-            throw new Error('Stores are not defined.');
-        }
-
-        const store = String(__ENV.STORE ? availableStores.find(store => store.toLowerCase() === __ENV.STORE.toLowerCase()) : availableStores[0]).toLowerCase();
-
-        if (!store) {
-            throw new Error(`Store not found. Target store: ${__ENV.STORE}, available stores: ${availableStores.join(',')}`);
+        if (!__ENV.STORE) {
+            console.warn('Store is not defined so fallback to default store DE. Please use STORE environment variable to change this behaviour.');
         }
 
         return url.replace('%store%', store).replace('%STORE%', store.toUpperCase());

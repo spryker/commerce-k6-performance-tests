@@ -20,8 +20,12 @@ export default class ShipmentHandler extends Handler {
                 },
             }
         ]
+
+        this.validateEntitiesAvailability(['shipment-methods', 'shipment-method-stores', 'shipment-method-prices'])
+
         let results = this.assignExistingEntitiesToStores(entityConfigs, storeConfig)
-        results.push(this.setShippingCosts(storeConfig))
+        results.push(...this.setShippingCosts(storeConfig))
+
         this.validateResponses(results)
     }
 

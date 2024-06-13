@@ -13,6 +13,7 @@ import AdminHelper from '../../../helpers/admin-helper.js';
 import {AssertionsHelper} from '../../../helpers/assertions-helper.js';
 import {BapiHelper} from '../../../helpers/bapi-helper.js';
 import StoreHandler from '../../../helpers/dynamicEntity/handler/storeHandler.js';
+import Handler from "../../../helpers/dynamicEntity/handler.js";
 
 let metricsConfig = [
     'store-gui-create',
@@ -84,8 +85,13 @@ let bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionsHelper);
 const STORE_CONFIGURATION_FILE = __ENV.DMS_STORES_CONFIGURATION_FILE
 
 export function generateConfiguration() {
-    let stores = new ConfigGenerator().generate(targetAmountOfStores, targetAmountOfLocales)
-    console.log('Stores generated for setup: ', stores.map((store) => store.storeCode).join(','))
+    let availableStores = new Handler(http, urlHelper, bapiHelper).getDataFromTable('stores').map((store) => store.name)
+    let stores = new ConfigGenerator(availableStores).generate(targetAmountOfStores, targetAmountOfLocales)
+    if (stores.length) {
+        console.info(`Stores generated for setup(${stores.length}): `, stores.map((store) => store.storeCode))
+    } else {
+        console.warn(`All combinations supported by store generator already available in system: ${availableStores.join(',').toLowerCase()}`)
+    }
     file.writeString(STORE_CONFIGURATION_FILE, JSON.stringify(stores));
 }
 

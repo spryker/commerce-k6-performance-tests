@@ -18,6 +18,20 @@ export default class Handler {
         throw new Error('Method getTableAlias is not implemented.')
     }
 
+    validateEntitiesAvailability(entityList) {
+        let notAvailable = []
+        for (const entity of entityList) {
+            this.getDataFromTableWithPagination(entity, 1, null, 1)
+            if (this.getLastResponse().status !== 200) {
+                notAvailable.push(entity)
+            }
+        }
+
+        if (notAvailable.length) {
+            throw new Error(`Detected misconfiguration for dynamic entities: ${notAvailable.join(',')}`)
+        }
+    }
+
     getRequestParams() {
         const requestParams = this.bapiHelper.getParamsWithAuthorization();
         // requestParams.thresholds = {}
@@ -168,7 +182,9 @@ export default class Handler {
 
     validateResponses(responses) {
         for (const response of responses) {
-            this.assertionHelper.assertResponseStatus(response, 201, response.url)
+            if (!this.assertionHelper.assertResponseStatus(response, 201, response.url)) {
+                console.error(response.body)
+            }
         }
     }
 }
