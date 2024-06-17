@@ -5,4 +5,8 @@ export default class Wait extends Default {
         super('wait', '', value, {})
         this.waitingState = waitingState
     }
+
+    async act(browser) {
+        await browser.waitUntilLoad(this.waitingState, this.value)
+    }
 }

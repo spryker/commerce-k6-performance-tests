@@ -24,6 +24,9 @@ import fail from 'k6';
 
 const maxCartSize= Number(__ENV.MAX_CART_SIZE)
 const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
+let amountOfIterations = 1
+let amountOfVirtualUsers = 60
+let timeout = Math.ceil(60000 * amountOfVirtualUsers / 10)
 
 let metricsConfig = [
     'home_page',
@@ -59,7 +62,10 @@ let orderSuccessMetrics = Array.from(
                 trend: false,
                 counter: false
             },
-            types: ['counter']
+            thresholds: {
+                rate: [`rate==1`],
+            },
+            types: ['counter', 'rate']
         }
     }
 )
@@ -73,7 +79,10 @@ let orderFailedMetrics = Array.from(
                 trend: false,
                 counter: false
             },
-            types: ['counter']
+            thresholds: {
+                rate: ['rate===0'],
+            },
+            types: ['counter', 'rate']
         }
     }
 )
@@ -107,8 +116,8 @@ let configurationArray = [
             testId: 'S5',
             testGroup: 'Checkout',
         },
-        iterations: 20,
-        vus: 20,
+        iterations: amountOfIterations,
+        vus: amountOfVirtualUsers,
         maxDuration: '1200m',
         startTime: '20s',
     }]
@@ -159,7 +168,7 @@ export async function executeCheckoutScenario() {
     }
 
     let page = browser.newPage()
-    page.setDefaultTimeout(120000)
+    page.setDefaultTimeout(timeout)
 
     try {
         let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)
@@ -169,10 +178,12 @@ export async function executeCheckoutScenario() {
             metrics,
             locale,
             randomiseCartSize ? Math.floor(Math.random() * maxCartSize) + 1 : maxCartSize,
-            60000
+            timeout
         );
 
         await checkout.placeGuestOrder('dummyPaymentInvoice', sortRandom(products));
+    } catch (e) {
+        console.log(`Failed to execute executeCheckoutScenario`)
     } finally {
         page.close()
     }
