@@ -30,8 +30,9 @@ options.scenarios = {
     },
 };
 
-console.info('Product creation limited for stores (when empty - no limitation): ', getStoreWhiteList())
+console.info('Product creation limited for stores (when empty - all available stores will be used): ', getStoreWhiteList())
 const productCreateScenario = new ApiPostPayloadScenario(executionConfig.targetEnv, executionConfig.chunkSize, executionConfig.concreteMaxAmount, {}, getStoreWhiteList());
+
 export function productPostScenario() {
     productCreateScenario.execute(productTemplate, productConcreteTemplate, productImageTemplate, productLabelTemplate);
 }

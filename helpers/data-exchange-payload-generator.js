@@ -100,7 +100,7 @@ export class DataExchangePayloadGenerator {
                         'is_searchable': true
                     },)
                 }).join(','))
-                .replaceAll('"PRODUCT_LOCALAZID_ATTRIBUTES"', this.storeConfigHandler.getUniqueLocaleIds().map((localeId) => {
+                .replaceAll('"PRODUCT_CONCRETE_LOCALISED_ATTRIBUTES"', this.storeConfigHandler.getUniqueLocaleIds().map((localeId) => {
                     return JSON.stringify({
                         'fk_locale': localeId,
                         'attributes': '{"color":"Weinrot"}',

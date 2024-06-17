@@ -53,28 +53,30 @@ let metricsConfig = [
 let orderSuccessMetrics = Array.from(
     { length: maxCartSize },
     (_, i) => {
-    return {
-        key: `orders_placed_with_${i + 1}_unique_items`,
-        isTime: {
-            trend: false,
-            counter: false
-        },
-        types: ['counter']
+        return {
+            key: `orders_placed_with_${i + 1}_unique_items`,
+            isTime: {
+                trend: false,
+                counter: false
+            },
+            types: ['counter']
+        }
     }
-})
+)
 
 let orderFailedMetrics = Array.from(
     { length: maxCartSize },
     (_, i) => {
-    return {
-        key: `orders_failed_with_${i + 1}_unique_items`,
-        isTime: {
-            trend: false,
-            counter: false
-        },
-        types: ['counter']
+        return {
+            key: `orders_failed_with_${i + 1}_unique_items`,
+            isTime: {
+                trend: false,
+                counter: false
+            },
+            types: ['counter']
+        }
     }
-})
+)
 
 metricsConfig.push(...orderSuccessMetrics, ...orderFailedMetrics)
 
@@ -136,7 +138,7 @@ export async function generateProductList() {
     let storeInfo = storeConfig.getStoreConfig(__ENV.STORE)
     let products = []
 
-    handler.getDataFromTableWithPagination(`products?include=productStocks,productAbstractUrls`, 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
+    handler.getDataFromTableWithPagination('products?include=productStocks,productAbstractUrls', 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
         .map((product) => {
             return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
         })

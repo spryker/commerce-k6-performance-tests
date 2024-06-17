@@ -1,6 +1,6 @@
 import {countryMap} from '../../tests/dex/tests/data/countryEuropeMap.js';
 import faker from 'k6/x/faker';
-import {sortRandom} from "../../lib/utils.js";
+import {sortRandom} from '../../lib/utils.js';
 
 export default class ConfigGenerator {
     storeCodesToExclude
@@ -43,7 +43,7 @@ export default class ConfigGenerator {
         amountOfShippingCountries = this._validateAmount(amountOfShippingCountries, amountOfStores)
         let targetConfig = new Map()
 
-        let countryCode = "DE"
+        let countryCode = 'DE'
         let referenceStore = {
             storeCode: `${countryCode}`,
             defaultLocale: countryMap[countryCode].languageLocales[0],

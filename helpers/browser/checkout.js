@@ -8,7 +8,7 @@ import Wait from './formActivity/wait.js';
 import { fail } from 'k6';
 import {sleep} from 'k6';
 import { sortRandom } from '../../lib/utils.js';
-import SelectRandomBulk from "./formActivity/selectRandomBulk.js";
+import SelectRandomBulk from './formActivity/selectRandomBulk.js';
 
 export default class Checkout {
     constructor(browser, basicAuth, metrics, targetLocale = 'en', cartSize = 1, timeout = 1000) {

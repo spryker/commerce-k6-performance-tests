@@ -13,7 +13,7 @@ import AdminHelper from '../../../helpers/admin-helper.js';
 import {AssertionsHelper} from '../../../helpers/assertions-helper.js';
 import {BapiHelper} from '../../../helpers/bapi-helper.js';
 import StoreHandler from '../../../helpers/dynamicEntity/handler/storeHandler.js';
-import Handler from "../../../helpers/dynamicEntity/handler.js";
+import Handler from '../../../helpers/dynamicEntity/handler.js';
 
 let metricsConfig = [
     'store-gui-create',
