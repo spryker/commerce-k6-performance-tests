@@ -63,7 +63,7 @@ let orderSuccessMetrics = Array.from(
                 counter: false
             },
             thresholds: {
-                rate: [`rate==1`],
+                rate: ['rate==1'],
             },
             types: ['counter', 'rate']
         }
@@ -130,7 +130,6 @@ options.thresholds = metrics.getThresholds()
 const targetEnv = __ENV.DATA_EXCHANGE_ENV
 const checkoutScenario = new SharedCheckoutScenario(targetEnv);
 const basicAuth = getBasicAuthCredentials(targetEnv);
-const assertion = new AssertionsHelper();
 
 let http = new Http(targetEnv);
 let targetEnvConfig = loadEnvironmentConfig(targetEnv);
@@ -173,7 +172,15 @@ export async function executeCheckoutScenario() {
     try {
         let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)
         let checkout = new Checkout(
-            new Browser(page, new BasicAuth(basicAuth.username, basicAuth.password), metrics, checkoutScenario.getStorefrontBaseUrl(), targetEnv, Boolean(parseInt(__ENV.SCREENSHOT_ACTIVE)), Boolean(parseInt(__ENV.VALIDATE_VISITED_URL))),
+            new Browser(
+                page,
+                new BasicAuth(basicAuth.username, basicAuth.password),
+                metrics,
+                checkoutScenario.getStorefrontBaseUrl(),
+                targetEnv,
+                Boolean(parseInt(__ENV.SCREENSHOT_ACTIVE)),
+                Boolean(parseInt(__ENV.VALIDATE_VISITED_URL))
+            ),
             new BasicAuth(basicAuth.username, basicAuth.password),
             metrics,
             locale,
@@ -183,7 +190,7 @@ export async function executeCheckoutScenario() {
 
         await checkout.placeGuestOrder('dummyPaymentInvoice', sortRandom(products));
     } catch (e) {
-        console.log(`Failed to execute executeCheckoutScenario`)
+        console.log('Failed to execute executeCheckoutScenario')
     } finally {
         page.close()
     }

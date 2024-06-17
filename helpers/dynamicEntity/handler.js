@@ -88,7 +88,6 @@ export default class Handler {
             offset += limitPerPage
         } while (!stop)
 
-
         return result
     }
 
