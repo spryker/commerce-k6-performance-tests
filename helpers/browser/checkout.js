@@ -1,14 +1,14 @@
 import faker from 'k6/x/faker';
 import {Profiler} from '../profiler.js';
-import Step from './formActivity/step.js';
-import Click from './formActivity/click.js';
-import Screen from './formActivity/screen.js';
-import Fill from './formActivity/fill.js';
-import Wait from './formActivity/wait.js';
+import Step from './action/step.js';
+import Click from './action/click.js';
+import Screen from './action/screen.js';
+import Fill from './action/fill.js';
+import Wait from './action/wait.js';
 import { fail } from 'k6';
 import {sleep} from 'k6';
 import { sortRandom } from '../../lib/utils.js';
-import SelectRandomBulk from './formActivity/selectRandomBulk.js';
+import SelectRandomBulk from './action/selectRandomBulk.js';
 
 export default class Checkout {
     constructor(browser, basicAuth, metrics, targetLocale = 'en', cartSize = 1, timeout = 1000) {
