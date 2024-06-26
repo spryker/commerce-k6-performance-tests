@@ -35,8 +35,10 @@ export default class Handler {
 
     getDataFromTable(tableAlias) {
         try {
-            this.lastResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
-
+            const url = `${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`;
+            const response = this.http.sendGetRequest(url, this.getRequestParams(), false);
+            this.lastResponse = response;
+            
             this.assertionHelper.assertResponseStatus(this.lastResponse, 200, this.lastResponse.url)
 
             return JSON.parse(this.lastResponse.body)

@@ -4838,94 +4838,1534 @@
     }
   },
   {
-    "tableName": "spy_company_user",
-    "tableAlias": "company-users",
-    "isActive": true,
-    "definition": {
-      "identifier": "id_company_user",
-      "isDeletable": false,
-      "fields": [
-        {
-          "fieldName": "id_company_user",
-          "fieldVisibleName": "id_company_user",
-          "isCreatable": false,
-          "isEditable": false,
-          "type": "integer",
-          "validation": {
-            "isRequired": true
+      "tableName": "spy_customer",
+      "tableAlias": "customers",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_customer",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_customer",
+                  "fieldVisibleName": "id_customer",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_locale",
+                  "fieldVisibleName": "fk_locale",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_user",
+                  "fieldVisibleName": "fk_user",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "anonymized_at",
+                  "fieldVisibleName": "anonymized_at",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "company",
+                  "fieldVisibleName": "company",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "customer_reference",
+                  "fieldVisibleName": "customer_reference",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "date_of_birth",
+                  "fieldVisibleName": "date_of_birth",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "default_billing_address",
+                  "fieldVisibleName": "default_billing_address",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "default_shipping_address",
+                  "fieldVisibleName": "default_shipping_address",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "email",
+                  "fieldVisibleName": "email",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "first_name",
+                  "fieldVisibleName": "first_name",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "gender",
+                  "fieldVisibleName": "gender",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "last_name",
+                  "fieldVisibleName": "last_name",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "phone",
+                  "fieldVisibleName": "phone",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "registered",
+                  "fieldVisibleName": "registered",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "created_at",
+                  "fieldVisibleName": "createdAt",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "updated_at",
+                  "fieldVisibleName": "updatedAt",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      },
+      "childRelations": [
+          {
+              "name": "companyUsers",
+              "isEditable": true,
+              "childDynamicEntityConfiguration": {
+                  "tableAlias": "company-users"
+              },
+              "relationFieldMappings": [
+                  {
+                      "childFieldName": "fk_customer",
+                      "parentFieldName": "id_customer"
+                  }
+              ]
           }
-        },
-        {
-          "fieldName": "is_active",
-          "fieldVisibleName": "is_active",
-          "isCreatable": true,
-          "isEditable": true,
-          "type": "boolean",
-          "validation": {
-            "isRequired": true
-          }
-        },
-        {
-          "fieldName": "fk_company",
-          "fieldVisibleName": "fk_company",
-          "isCreatable": true,
-          "isEditable": true,
-          "type": "integer",
-          "validation": {
-            "isRequired": true
-          }
-        },
-        {
-          "fieldName": "fk_company_business_unit",
-          "fieldVisibleName": "fk_company_business_unit",
-          "isCreatable": true,
-          "isEditable": true,
-          "type": "integer",
-          "validation": {
-            "isRequired": true
-          }
-        },
-        {
-          "fieldName": "fk_customer",
-          "fieldVisibleName": "fk_customer",
-          "isCreatable": true,
-          "isEditable": true,
-          "type": "integer",
-          "validation": {
-            "isRequired": true
-          }
-        },
-        {
-          "fieldName": "is_default",
-          "fieldVisibleName": "is_default",
-          "isCreatable": true,
-          "isEditable": true,
-          "type": "boolean",
-          "validation": {
-            "isRequired": true
-          }
-        },
-        {
-          "fieldName": "key",
-          "fieldVisibleName": "key",
-          "isCreatable": true,
-          "isEditable": true,
-          "type": "string",
-          "validation": {
-            "isRequired": false
-          }
-        },
-        {
-          "fieldName": "uuid",
-          "fieldVisibleName": "uuid",
-          "isCreatable": true,
-          "isEditable": true,
-          "type": "string",
-          "validation": {
-            "isRequired": false
-          }
-        }
       ]
-    }
+  },
+  {
+      "tableName": "spy_customer_address",
+      "tableAlias": "customer-addresses",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_customer_address",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_customer_address",
+                  "fieldVisibleName": "id_customer_address",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_country",
+                  "fieldVisibleName": "fk_country",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "fk_customer",
+                  "fieldVisibleName": "fk_customer",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "fk_region",
+                  "fieldVisibleName": "fk_region",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "address1",
+                  "fieldVisibleName": "address1",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "address2",
+                  "fieldVisibleName": "address2",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "address3",
+                  "fieldVisibleName": "address3",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "anonymized_at",
+                  "fieldVisibleName": "anonymized_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "city",
+                  "fieldVisibleName": "city",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "comment",
+                  "fieldVisibleName": "comment",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "company",
+                  "fieldVisibleName": "company",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "deleted_at",
+                  "fieldVisibleName": "deleted_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "first_name",
+                  "fieldVisibleName": "first_name",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "last_name",
+                  "fieldVisibleName": "last_name",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "phone",
+                  "fieldVisibleName": "phone",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "salutation",
+                  "fieldVisibleName": "salutation",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "uuid",
+                  "fieldVisibleName": "uuid",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "zip_code",
+                  "fieldVisibleName": "zip_code",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "created_at",
+                  "fieldVisibleName": "created_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "updated_at",
+                  "fieldVisibleName": "updated_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_company_user",
+      "tableAlias": "company-users",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_company_user",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_company_user",
+                  "fieldVisibleName": "id_company_user",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_company",
+                  "fieldVisibleName": "fk_company",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "fk_company_business_unit",
+                  "fieldVisibleName": "fk_company_business_unit",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_customer",
+                  "fieldVisibleName": "fk_customer",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "is_active",
+                  "fieldVisibleName": "is_active",
+                  "type": "boolean",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "is_default",
+                  "fieldVisibleName": "is_default",
+                  "type": "boolean",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "key",
+                  "fieldVisibleName": "key",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "uuid",
+                  "fieldVisibleName": "uuid",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              }
+          ]
+      },
+      "childRelations": [
+      {
+          "name": "roles",
+          "isEditable": true,
+          "childDynamicEntityConfiguration": {
+              "tableAlias": "company-role-to-company-users"
+          },
+          "relationFieldMappings": [
+              {
+                  "childFieldName": "fk_company_user",
+                  "parentFieldName": "id_company_user"
+              }
+          ]
+      }
+  ]
+  },
+  {
+      "tableName": "spy_sales_return",
+      "tableAlias": "sales-returns",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_sales_return",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_sales_return",
+                  "fieldVisibleName": "id_sales_return",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "customer_reference",
+                  "fieldVisibleName": "customerReference",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "merchant_reference",
+                  "fieldVisibleName": "merchantReference",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "return_reference",
+                  "fieldVisibleName": "returnReference",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "store",
+                  "fieldVisibleName": "store",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              }
+          ]
+      },
+      "childRelations": [
+          {
+              "name": "returnItems",
+              "isEditable": true,
+              "childDynamicEntityConfiguration": {
+                  "tableAlias": "sales-return-items"
+              },
+              "relationFieldMappings": [
+                  {
+                      "childFieldName": "fk_sales_return",
+                      "parentFieldName": "id_sales_return"
+                  }
+              ]
+          }
+      ]
+  },
+  {
+      "tableName": "spy_sales_return_item",
+      "tableAlias": "sales-return-items",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_sales_return_item",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_sales_return_item",
+                  "fieldVisibleName": "id_sales_return_item",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_sales_order_item",
+                  "fieldVisibleName": "fk_sales_order_item",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "fk_sales_return",
+                  "fieldVisibleName": "fk_sales_return",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "reason",
+                  "fieldVisibleName": "reason",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "uuid",
+                  "fieldVisibleName": "uuid",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "created_at",
+                  "fieldVisibleName": "created_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "updated_at",
+                  "fieldVisibleName": "updated_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_discount",
+      "tableAlias": "discounts",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_discount",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_discount",
+                  "fieldVisibleName": "id_discount",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_discount_voucher_pool",
+                  "fieldVisibleName": "fk_discount_voucher_pool",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_store",
+                  "fieldVisibleName": "fk_store",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "amount",
+                  "fieldVisibleName": "amount",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "calculator_plugin",
+                  "fieldVisibleName": "calculator_plugin",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "collector_query_string",
+                  "fieldVisibleName": "collector_query_string",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "decision_rule_query_string",
+                  "fieldVisibleName": "decision_rule_query_string",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "description",
+                  "fieldVisibleName": "description",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "discount_key",
+                  "fieldVisibleName": "discount_key",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "discount_type",
+                  "fieldVisibleName": "discount_type",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "display_name",
+                  "fieldVisibleName": "display_name",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "is_active",
+                  "fieldVisibleName": "is_active",
+                  "type": "boolean",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "is_exclusive",
+                  "fieldVisibleName": "is_exclusive",
+                  "type": "boolean",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "minimum_item_amount",
+                  "fieldVisibleName": "minimum_item_amount",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "priority",
+                  "fieldVisibleName": "priority",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "valid_from",
+                  "fieldVisibleName": "valid_from",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "valid_to",
+                  "fieldVisibleName": "valid_to",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "created_at",
+                  "fieldVisibleName": "created_at",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "updated_at",
+                  "fieldVisibleName": "updated_at",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      },
+      "childRelations": [
+          {
+              "name": "stores",
+              "isEditable": true,
+              "childDynamicEntityConfiguration": {
+                  "tableAlias": "discount-stores"
+              },
+              "relationFieldMappings": [
+                  {
+                      "childFieldName": "fk_discount",
+                      "parentFieldName": "id_discount"
+                  }
+              ]
+          },
+          {
+              "name": "amounts",
+              "isEditable": true,
+              "childDynamicEntityConfiguration": {
+                  "tableAlias": "discount-amounts"
+              },
+              "relationFieldMappings": [
+                  {
+                      "childFieldName": "fk_discount",
+                      "parentFieldName": "id_discount"
+                  }
+              ]
+          },
+          {
+              "name": "promotions",
+              "isEditable": true,
+              "childDynamicEntityConfiguration": {
+                  "tableAlias": "discount-promotions"
+              },
+              "relationFieldMappings": [
+                  {
+                      "childFieldName": "fk_discount",
+                      "parentFieldName": "id_discount"
+                  }
+              ]
+          }
+      ]
+  },
+  {
+      "tableName": "spy_discount_store",
+      "tableAlias": "discount-stores",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_discount_store",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_discount_store",
+                  "fieldVisibleName": "id_discount_store",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_discount",
+                  "fieldVisibleName": "fk_discount",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "fk_store",
+                  "fieldVisibleName": "fk_store",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_discount_amount",
+      "tableAlias": "discount-amounts",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_discount_amount",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_discount_amount",
+                  "fieldVisibleName": "id_discount_amount",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_currency",
+                  "fieldVisibleName": "fk_currency",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "fk_discount",
+                  "fieldVisibleName": "fk_discount",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "gross_amount",
+                  "fieldVisibleName": "gross_amount",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "net_amount",
+                  "fieldVisibleName": "net_amount",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_discount_voucher_pool",
+      "tableAlias": "discount-voucher-pools",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_discount_voucher_pool",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_discount_voucher_pool",
+                  "fieldVisibleName": "id_discount_voucher_pool",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "is_active",
+                  "fieldVisibleName": "is_active",
+                  "type": "boolean",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "name",
+                  "fieldVisibleName": "name",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "created_at",
+                  "fieldVisibleName": "created_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "updated_at",
+                  "fieldVisibleName": "updated_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      },
+      "childRelations": [
+          {
+              "name": "vouchers",
+              "isEditable": true,
+              "childDynamicEntityConfiguration": {
+                  "tableAlias": "discount-vouchers"
+              },
+              "relationFieldMappings": [
+                  {
+                      "childFieldName": "fk_discount_voucher_pool",
+                      "parentFieldName": "id_discount_voucher_pool"
+                  }
+              ]
+          },
+          {
+              "name": "discount",
+              "isEditable": true,
+              "childDynamicEntityConfiguration": {
+                  "tableAlias": "discounts"
+              },
+              "relationFieldMappings": [
+                  {
+                      "childFieldName": "fk_discount",
+                      "parentFieldName": "id_discount"
+                  }
+              ]
+          }
+      ]
+  },
+  {
+      "tableName": "spy_discount_voucher",
+      "tableAlias": "discount-vouchers",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_discount_voucher",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_discount_voucher",
+                  "fieldVisibleName": "id_discount_voucher",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_discount_voucher_pool",
+                  "fieldVisibleName": "fk_discount_voucher_pool",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "code",
+                  "fieldVisibleName": "code",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "is_active",
+                  "fieldVisibleName": "is_active",
+                  "type": "boolean",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "max_number_of_uses",
+                  "fieldVisibleName": "max_number_of_uses",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "number_of_uses",
+                  "fieldVisibleName": "number_of_uses",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "voucher_batch",
+                  "fieldVisibleName": "voucher_batch",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "created_at",
+                  "fieldVisibleName": "createdAt",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "updated_at",
+                  "fieldVisibleName": "updatedAt",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_discount_promotion",
+      "tableAlias": "discount-promotions",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_discount_promotion",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_discount_promotion",
+                  "fieldVisibleName": "id_discount_promotion",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_discount",
+                  "fieldVisibleName": "fk_discount",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "abstract_sku",
+                  "fieldVisibleName": "abstract_sku",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "abstract_skus",
+                  "fieldVisibleName": "abstract_skus",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "quantity",
+                  "fieldVisibleName": "quantity",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "uuid",
+                  "fieldVisibleName": "uuid",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_company_role",
+      "tableAlias": "company-roles",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_company_role",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_company_role",
+                  "fieldVisibleName": "id_company_role",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_company",
+                  "fieldVisibleName": "fk_company",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "is_default",
+                  "fieldVisibleName": "is_default",
+                  "type": "boolean",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "key",
+                  "fieldVisibleName": "key",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "name",
+                  "fieldVisibleName": "name",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": true
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_company_business_unit",
+      "tableAlias": "company-business-units",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_company_business_unit",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_company_business_unit",
+                  "fieldVisibleName": "id_company_business_unit",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_company",
+                  "fieldVisibleName": "fk_company",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "fk_parent_company_business_unit",
+                  "fieldVisibleName": "fk_parent_company_business_unit",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "bic",
+                  "fieldVisibleName": "bic",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "default_billing_address",
+                  "fieldVisibleName": "defaultBillingAddress",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "email",
+                  "fieldVisibleName": "email",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "external_url",
+                  "fieldVisibleName": "external_url",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "iban",
+                  "fieldVisibleName": "iban",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "key",
+                  "fieldVisibleName": "key",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "name",
+                  "fieldVisibleName": "name",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "phone",
+                  "fieldVisibleName": "phone",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "uuid",
+                  "fieldVisibleName": "uuid",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_company_role_to_company_user",
+      "tableAlias": "company-role-to-company-users",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_company_role_to_company_user",
+          "isDeletable": false,
+          "fields": [
+              {
+                  "fieldName": "id_company_role_to_company_user",
+                  "fieldVisibleName": "id_company_role_to_company_user",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "fk_company_role",
+                  "fieldVisibleName": "fk_company_role",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "fk_company_user",
+                  "fieldVisibleName": "fkCompanyUser",
+                  "type": "integer",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "created_at",
+                  "fieldVisibleName": "created_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false,
+                      "min": null,
+                      "max": null,
+                      "minLength": null
+                  }
+              },
+              {
+                  "fieldName": "updated_at",
+                  "fieldVisibleName": "updated_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      }
   }
 ]
