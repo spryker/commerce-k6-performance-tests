@@ -67,7 +67,7 @@ export function creatDiscountVouchersEntity() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper); 
 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
-        const voucherName = faker.beer.beerName() + ' ' + faker.number.number(0, 1000)+ randomString(5);
+        const voucherName = faker.beer.beerName() + ' ' + randomString(5);
         return {
             'is_active': true,
             'name': voucherName,
