@@ -4523,6 +4523,2632 @@
     }
   },
   {
+    "tableName": "spy_oms_order_item_state",
+    "tableAlias": "oms-order-item-states",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_oms_order_item_state",
+          "fieldVisibleName": "id_oms_order_item_state",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "description",
+          "fieldVisibleName": "description",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "name",
+          "fieldVisibleName": "name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_oms_order_item_state"
+    }
+  },
+  {
+    "tableName": "spy_sales_order",
+    "tableAlias": "sales-orders",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order",
+          "fieldVisibleName": "id_sales_order",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_locale",
+          "fieldVisibleName": "fk_locale",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_order_source",
+          "fieldVisibleName": "fk_order_source",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_address_billing",
+          "fieldVisibleName": "fk_sales_order_address_billing",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_address_shipping",
+          "fieldVisibleName": "fk_sales_order_address_shipping",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "cart_note",
+          "fieldVisibleName": "cart_note",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "company_business_unit_uuid",
+          "fieldVisibleName": "company_business_unit_uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "company_uuid",
+          "fieldVisibleName": "company_uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "currency_iso_code",
+          "fieldVisibleName": "currency_iso_code",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "customer_reference",
+          "fieldVisibleName": "customer_reference",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "email",
+          "fieldVisibleName": "email",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "first_name",
+          "fieldVisibleName": "first_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "is_test",
+          "fieldVisibleName": "is_test",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "last_name",
+          "fieldVisibleName": "last_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "oms_processor_identifier",
+          "fieldVisibleName": "oms_processor_identifier",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "order_custom_reference",
+          "fieldVisibleName": "order_custom_reference",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "order_reference",
+          "fieldVisibleName": "order_reference",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "price_mode",
+          "fieldVisibleName": "price_mode",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "salutation",
+          "fieldVisibleName": "salutation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "store",
+          "fieldVisibleName": "store",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order"
+    },
+    "childRelations": [
+      {
+        "name": "salesOrderBillingAddresses",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "id_sales_order_address",
+            "parentFieldName": "fk_sales_order_address_billing"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-addresses"
+        }
+      },
+      {
+        "name": "salesOrderComments",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order",
+            "parentFieldName": "id_sales_order"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-comments"
+        }
+      },
+      {
+        "name": "salesOrderInvoices",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order",
+            "parentFieldName": "id_sales_order"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-invoices"
+        }
+      },
+      {
+        "name": "salesOrderItems",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order",
+            "parentFieldName": "id_sales_order"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-items"
+        }
+      },
+      {
+        "name": "salesOrderNotes",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order",
+            "parentFieldName": "id_sales_order"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-notes"
+        }
+      },
+      {
+        "name": "salesOrderTotals",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order",
+            "parentFieldName": "id_sales_order"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-totals"
+        }
+      }
+    ]
+  },
+  {
+    "tableName": "spy_sales_order_address",
+    "tableAlias": "sales-order-addresses",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_address",
+          "fieldVisibleName": "id_sales_order_address",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_country",
+          "fieldVisibleName": "fk_country",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_region",
+          "fieldVisibleName": "fk_region",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "address1",
+          "fieldVisibleName": "address1",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "address2",
+          "fieldVisibleName": "address2",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "address3",
+          "fieldVisibleName": "address3",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "cell_phone",
+          "fieldVisibleName": "cell_phone",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "city",
+          "fieldVisibleName": "city",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "comment",
+          "fieldVisibleName": "comment",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "company",
+          "fieldVisibleName": "company",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "description",
+          "fieldVisibleName": "description",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "email",
+          "fieldVisibleName": "email",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "first_name",
+          "fieldVisibleName": "first_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "last_name",
+          "fieldVisibleName": "last_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "middle_name",
+          "fieldVisibleName": "middle_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "phone",
+          "fieldVisibleName": "phone",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "po_box",
+          "fieldVisibleName": "po_box",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "salutation",
+          "fieldVisibleName": "salutation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "zip_code",
+          "fieldVisibleName": "zip_code",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_address"
+    },
+    "childRelations": [
+      {
+        "name": "salesOrderAddressHistories",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_address",
+            "parentFieldName": "id_sales_order_address"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-address-histories"
+        }
+      }
+    ]
+  },
+  {
+    "tableName": "spy_sales_order_address_history",
+    "tableAlias": "sales-order-address-histories",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_address_history",
+          "fieldVisibleName": "id_sales_order_address_history",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_country",
+          "fieldVisibleName": "fk_country",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_region",
+          "fieldVisibleName": "fk_region",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_address",
+          "fieldVisibleName": "fk_sales_order_address",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "address1",
+          "fieldVisibleName": "address1",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "address2",
+          "fieldVisibleName": "address2",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "address3",
+          "fieldVisibleName": "address3",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "cell_phone",
+          "fieldVisibleName": "cell_phone",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "city",
+          "fieldVisibleName": "city",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "comment",
+          "fieldVisibleName": "comment",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "company",
+          "fieldVisibleName": "company",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "description",
+          "fieldVisibleName": "description",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "email",
+          "fieldVisibleName": "email",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "first_name",
+          "fieldVisibleName": "first_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "is_billing",
+          "fieldVisibleName": "is_billing",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "last_name",
+          "fieldVisibleName": "last_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "middle_name",
+          "fieldVisibleName": "middle_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "phone",
+          "fieldVisibleName": "phone",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "po_box",
+          "fieldVisibleName": "po_box",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "salutation",
+          "fieldVisibleName": "salutation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "zip_code",
+          "fieldVisibleName": "zip_code",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_address_history"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_comment",
+    "tableAlias": "sales-order-comments",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_comment",
+          "fieldVisibleName": "id_sales_order_comment",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order",
+          "fieldVisibleName": "fk_sales_order",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "message",
+          "fieldVisibleName": "message",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "username",
+          "fieldVisibleName": "username",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_comment"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_configured_bundle",
+    "tableAlias": "sales-order-configured-bundles",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_configured_bundle",
+          "fieldVisibleName": "id_sales_order_configured_bundle",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "configurable_bundle_template_uuid",
+          "fieldVisibleName": "configurable_bundle_template_uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "name",
+          "fieldVisibleName": "name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "note",
+          "fieldVisibleName": "note",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "quantity",
+          "fieldVisibleName": "quantity",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_configured_bundle"
+    },
+    "childRelations": [
+      {
+        "name": "salesOrderConfiguredBundleItems",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_configured_bundle",
+            "parentFieldName": "id_sales_order_configured_bundle"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-configured-bundle-items"
+        }
+      }
+    ]
+  },
+  {
+    "tableName": "spy_sales_order_configured_bundle_item",
+    "tableAlias": "sales-order-configured-bundle-items",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_configured_bundle_item",
+          "fieldVisibleName": "id_sales_order_configured_bundle_item",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_configured_bundle",
+          "fieldVisibleName": "fk_sales_order_configured_bundle",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_item",
+          "fieldVisibleName": "fk_sales_order_item",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "configurable_bundle_template_slot_uuid",
+          "fieldVisibleName": "configurable_bundle_template_slot_uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_configured_bundle_item"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_invoice",
+    "tableAlias": "sales-order-invoices",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_invoice",
+          "fieldVisibleName": "id_sales_order_invoice",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order",
+          "fieldVisibleName": "fk_sales_order",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "reference",
+          "fieldVisibleName": "reference",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "issue_date",
+          "fieldVisibleName": "issue_date",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "template_path",
+          "fieldVisibleName": "template_path",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "email_sent",
+          "fieldVisibleName": "email_sent",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_invoice"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_item",
+    "tableAlias": "sales-order-items",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_item",
+          "fieldVisibleName": "id_sales_order_item",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_oms_order_item_state",
+          "fieldVisibleName": "fk_oms_order_item_state",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_oms_order_process",
+          "fieldVisibleName": "fk_oms_order_process",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order",
+          "fieldVisibleName": "fk_sales_order",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_item_bundle",
+          "fieldVisibleName": "fk_sales_order_item_bundle",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_shipment",
+          "fieldVisibleName": "fk_sales_shipment",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "amount",
+          "fieldVisibleName": "amount",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "amount_base_measurement_unit_name",
+          "fieldVisibleName": "amount_base_measurement_unit_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "amount_measurement_unit_code",
+          "fieldVisibleName": "amount_measurement_unit_code",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "amount_measurement_unit_conversion",
+          "fieldVisibleName": "amount_measurement_unit_conversion",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "amount_measurement_unit_name",
+          "fieldVisibleName": "amount_measurement_unit_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "amount_measurement_unit_precision",
+          "fieldVisibleName": "amount_measurement_unit_precision",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "amount_sku",
+          "fieldVisibleName": "amount_sku",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "canceled_amount",
+          "fieldVisibleName": "canceled_amount",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "cart_note",
+          "fieldVisibleName": "cart_note",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "discount_amount_aggregation",
+          "fieldVisibleName": "discount_amount_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "discount_amount_full_aggregation",
+          "fieldVisibleName": "discount_amount_full_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "expense_price_aggregation",
+          "fieldVisibleName": "expense_price_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "gross_price",
+          "fieldVisibleName": "gross_price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "group_key",
+          "fieldVisibleName": "group_key",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "is_quantity_splittable",
+          "fieldVisibleName": "is_quantity_splittable",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "last_state_change",
+          "fieldVisibleName": "last_state_change",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "merchant_reference",
+          "fieldVisibleName": "merchant_reference",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "name",
+          "fieldVisibleName": "name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "net_price",
+          "fieldVisibleName": "net_price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "order_item_reference",
+          "fieldVisibleName": "order_item_reference",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "price",
+          "fieldVisibleName": "price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "price_to_pay_aggregation",
+          "fieldVisibleName": "price_to_pay_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "product_offer_reference",
+          "fieldVisibleName": "product_offer_reference",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "product_option_price_aggregation",
+          "fieldVisibleName": "product_option_price_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "quantity",
+          "fieldVisibleName": "quantity",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "quantity_base_measurement_unit_name",
+          "fieldVisibleName": "quantity_base_measurement_unit_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "quantity_measurement_unit_code",
+          "fieldVisibleName": "quantity_measurement_unit_code",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "quantity_measurement_unit_conversion",
+          "fieldVisibleName": "quantity_measurement_unit_conversion",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "quantity_measurement_unit_name",
+          "fieldVisibleName": "quantity_measurement_unit_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "quantity_measurement_unit_precision",
+          "fieldVisibleName": "quantity_measurement_unit_precision",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "refundable_amount",
+          "fieldVisibleName": "refundable_amount",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "remuneration_amount",
+          "fieldVisibleName": "remuneration_amount",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "sku",
+          "fieldVisibleName": "sku",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "subtotal_aggregation",
+          "fieldVisibleName": "subtotal_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "tax_amount",
+          "fieldVisibleName": "tax_amount",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "tax_amount_after_cancellation",
+          "fieldVisibleName": "tax_amount_after_cancellation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "tax_amount_full_aggregation",
+          "fieldVisibleName": "tax_amount_full_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "tax_rate",
+          "fieldVisibleName": "tax_rate",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "tax_rate_average_aggregation",
+          "fieldVisibleName": "tax_rate_average_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_item"
+    },
+    "childRelations": [
+      {
+        "name": "salesOmsOrderItemStates",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "id_oms_order_item_state",
+            "parentFieldName": "fk_oms_order_item_state"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "oms-order-item-states"
+        }
+      },
+      {
+        "name": "salesOrderConfiguredBundleItems",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_item",
+            "parentFieldName": "id_sales_order_item"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-configured-bundle-items"
+        }
+      },
+      {
+        "name": "salesOrderItemConfigurations",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_item",
+            "parentFieldName": "id_sales_order_item"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-item-configurations"
+        }
+      },
+      {
+        "name": "salesOrderItemGiftCards",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_item",
+            "parentFieldName": "id_sales_order_item"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-item-gift-cards"
+        }
+      },
+      {
+        "name": "salesOrderItemMetadatas",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_item",
+            "parentFieldName": "id_sales_order_item"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-item-metadatas"
+        }
+      },
+      {
+        "name": "salesOrderItemOptions",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_item",
+            "parentFieldName": "id_sales_order_item"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-item-options"
+        }
+      },
+      {
+        "name": "salesOrderItemServicePoints",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_item",
+            "parentFieldName": "id_sales_order_item"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-item-service-points"
+        }
+      }
+    ]
+  },
+  {
+    "tableName": "spy_sales_order_item_bundle",
+    "tableAlias": "sales-order-item-bundles",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_item_bundle",
+          "fieldVisibleName": "id_sales_order_item_bundle",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "cart_note",
+          "fieldVisibleName": "cart_note",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "gross_price",
+          "fieldVisibleName": "gross_price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "image",
+          "fieldVisibleName": "image",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "name",
+          "fieldVisibleName": "name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "net_price",
+          "fieldVisibleName": "net_price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "price",
+          "fieldVisibleName": "price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "sku",
+          "fieldVisibleName": "sku",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_item_bundle"
+    },
+    "childRelations": [
+      {
+        "name": "bundleSalesOrderItems",
+        "isEditable": false,
+        "relationFieldMappings": [
+          {
+            "childFieldName": "fk_sales_order_item_bundle",
+            "parentFieldName": "id_sales_order_item_bundle"
+          }
+        ],
+        "childDynamicEntityConfiguration": {
+          "tableAlias": "sales-order-items"
+        }
+      }
+    ]
+  },
+  {
+    "tableName": "spy_sales_order_item_configuration",
+    "tableAlias": "sales-order-item-configurations",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_item_configuration",
+          "fieldVisibleName": "id_sales_order_item_configuration",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_item",
+          "fieldVisibleName": "fk_sales_order_item",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "display_data",
+          "fieldVisibleName": "display_data",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "configuration",
+          "fieldVisibleName": "configuration",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "configurator_key",
+          "fieldVisibleName": "configurator_key",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_item_configuration"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_item_gift_card",
+    "tableAlias": "sales-order-item-gift-cards",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_item_gift_card",
+          "fieldVisibleName": "id_sales_order_item_gift_card",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_item",
+          "fieldVisibleName": "fk_sales_order_item",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "attributes",
+          "fieldVisibleName": "attributes",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "code",
+          "fieldVisibleName": "code",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "pattern",
+          "fieldVisibleName": "pattern",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "value",
+          "fieldVisibleName": "value",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        }
+      ],
+      "identifier": "id_sales_order_item_gift_card"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_item_metadata",
+    "tableAlias": "sales-order-item-metadatas",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_item_metadata",
+          "fieldVisibleName": "id_sales_order_item_metadata",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_item",
+          "fieldVisibleName": "fk_sales_order_item",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "image",
+          "fieldVisibleName": "image",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "super_attributes",
+          "fieldVisibleName": "super_attributes",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_item_metadata"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_item_option",
+    "tableAlias": "sales-order-item-options",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_item_option",
+          "fieldVisibleName": "id_sales_order_item_option",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_item",
+          "fieldVisibleName": "fk_sales_order_item",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "canceled_amount",
+          "fieldVisibleName": "canceled_amount",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "discount_amount_aggregation",
+          "fieldVisibleName": "discount_amount_aggregation",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "gross_price",
+          "fieldVisibleName": "gross_price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "group_name",
+          "fieldVisibleName": "group_name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "net_price",
+          "fieldVisibleName": "net_price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "price",
+          "fieldVisibleName": "price",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "sku",
+          "fieldVisibleName": "sku",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "tax_amount",
+          "fieldVisibleName": "tax_amount",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "tax_rate",
+          "fieldVisibleName": "tax_rate",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "value",
+          "fieldVisibleName": "value",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_item_option"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_item_service_point",
+    "tableAlias": "sales-order-item-service-points",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_item_service_point",
+          "fieldVisibleName": "id_sales_order_item_service_point",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order_item",
+          "fieldVisibleName": "fk_sales_order_item",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "name",
+          "fieldVisibleName": "name",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "key",
+          "fieldVisibleName": "key",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_item_service_point"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_note",
+    "tableAlias": "sales-order-notes",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_note",
+          "fieldVisibleName": "id_sales_order_note",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order",
+          "fieldVisibleName": "fk_sales_order",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "command",
+          "fieldVisibleName": "command",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "message",
+          "fieldVisibleName": "message",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "success",
+          "fieldVisibleName": "success",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_note"
+    }
+  },
+  {
+    "tableName": "spy_sales_order_totals",
+    "tableAlias": "sales-order-totals",
+    "isActive": true,
+    "definition": {
+      "isDeletable": true,
+      "fields": [
+        {
+          "fieldName": "id_sales_order_totals",
+          "fieldVisibleName": "id_sales_order_totals",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_sales_order",
+          "fieldVisibleName": "fk_sales_order",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": true
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "canceled_total",
+          "fieldVisibleName": "canceled_total",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "discount_total",
+          "fieldVisibleName": "discount_total",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "grand_total",
+          "fieldVisibleName": "grand_total",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "order_expense_total",
+          "fieldVisibleName": "order_expense_total",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "refund_total",
+          "fieldVisibleName": "refund_total",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "subtotal",
+          "fieldVisibleName": "subtotal",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "tax_total",
+          "fieldVisibleName": "tax_total",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "created_at",
+          "fieldVisibleName": "created_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "updated_at",
+          "fieldVisibleName": "updated_at",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        },
+        {
+          "fieldName": "uuid",
+          "fieldVisibleName": "uuid",
+          "isCreatable": true,
+          "isEditable": true,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "string"
+        }
+      ],
+      "identifier": "id_sales_order_totals"
+    }
+  },
+  {
+    "tableName": "spy_locale_store",
+    "tableAlias": "locale-stores",
+    "isActive": true,
+    "definition": {
+      "identifier": "id_locale_store",
+      "isDeletable": false,
+      "fields": [
+        {
+          "fieldName": "id_locale_store",
+          "fieldVisibleName": "id_locale_store",
+          "isCreatable": false,
+          "isEditable": false,
+          "validation": {
+            "isRequired": false
+          },
+          "type": "integer"
+        },
+        {
+          "fieldName": "fk_locale",
+          "fieldVisibleName": "fk_locale",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "integer",
+          "validation": {
+            "isRequired": true
+          }
+        },
+        {
+          "fieldName": "fk_store",
+          "fieldVisibleName": "fk_store",
+          "isCreatable": true,
+          "isEditable": true,
+          "type": "integer",
+          "validation": {
+            "isRequired": true
+          }
+        }
+      ]
+    }
+  },
+  {
     "tableName": "spy_product_label_product_abstract",
     "tableAlias": "product-label-product-abstracts",
     "isActive": true,
