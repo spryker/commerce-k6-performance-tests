@@ -145,26 +145,28 @@ const PRODUCTS_LIST_FILE = 'tests/dex/tests/data/products.json'
 export async function generateProductList() {
     let storeInfo = storeConfig.getStoreConfig(__ENV.STORE)
     let products = []
-    //
-    // handler.getDataFromTableWithPagination('products?include=productStocks,productAbstractUrls', 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
-    //     .map((product) => {
-    //         return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
-    //     })
-    //     .map((urls) => {
-    //         if (Array.isArray(urls)) {
-    //             products.push(...urls.map((url) => url.url))
-    //         }
-    //     })
+    if (parseInt(__ENV.USE_PREDEFINED_PRODUCTS)) {
+        handler.getDataFromTableWithPagination('products?include=productStocks,productAbstractUrls', 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
+            .map((product) => {
+                return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
+            })
+            .map((urls) => {
+                if (Array.isArray(urls)) {
+                    products.push(...urls.map((url) => url.url))
+                }
+            })
 
-    // file.writeString(PRODUCTS_LIST_FILE, JSON.stringify(products));
-    file.writeString(PRODUCTS_LIST_FILE, JSON.stringify([
-        "/en/canon-ixus-285-8",
-        "/en/canon-ixus-285-9",
-        "/en/canon-ixus-165-12",
-        "/en/canon-ixus-165-13",
-        "/en/canon-ixus-177-14",
-        "/en/canon-ixus-177-15"
-    ]));
+        file.writeString(PRODUCTS_LIST_FILE, JSON.stringify(products));
+    } else {
+        file.writeString(PRODUCTS_LIST_FILE, JSON.stringify([
+            '/en/canon-ixus-285-8',
+            '/en/canon-ixus-285-9',
+            '/en/canon-ixus-165-12',
+            '/en/canon-ixus-165-13',
+            '/en/canon-ixus-177-14',
+            '/en/canon-ixus-177-15'
+        ]));
+    }
 }
 
 export async function executeCheckoutScenario() {

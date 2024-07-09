@@ -1,10 +1,8 @@
-import {check} from 'k6';
-import Fill from "./action/fill.js";
-import Click from "./action/click.js";
-import Step from "./action/step.js";
-import Visit from "./action/visit.js";
-import Wait from "./action/wait.js";
-import Screen from "./action/screen.js";
+import Fill from './action/fill.js';
+import Click from './action/click.js';
+import Step from './action/step.js';
+import Visit from './action/visit.js';
+import Screen from './action/screen.js';
 
 export default class BackOffice {
     constructor(browser, metrics, timeout) {
@@ -40,8 +38,7 @@ export default class BackOffice {
             new Fill('[name="auth[password]"]', 'change123'),
             new Screen('Form filled'),
             new Click('button[type="submit"]', {waitForNavigation: true, timeout: this.timeout}),
-            // new Wait(60000),
-            // new Screen('BackOffice'),
+            new Screen('BackOffice'),
         ])
     }
 }

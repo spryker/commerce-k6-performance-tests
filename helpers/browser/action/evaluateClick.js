@@ -7,7 +7,7 @@ export default class EvaluateClick extends Default {
 
     async act(browser) {
         await browser.page.evaluate((locator) => {
-             document.querySelector(locator).click()
+            document.querySelector(locator).click()
         }, this.locator);
     }
 }
