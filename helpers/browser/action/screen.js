@@ -5,8 +5,8 @@ export default class Screen extends Default {
         super('screen', '', title, {})
     }
 
-    act(browser) {
+    async act(browser) {
         browser.addStep(this.value);
-        browser.screen()
+        await browser.screen()
     }
 }

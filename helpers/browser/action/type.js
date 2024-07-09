@@ -7,12 +7,13 @@ export default class Type extends Default {
 
     async act(browser) {
         try {
-            browser.page.waitForSelector(this.locator, { state: 'visible' });
-            let element = browser.getElement(this.locator)
-            element.focus();
-            element.type(this.value);
+            await browser.page.waitForSelector(this.locator, { state: 'visible' });
+            let element = await browser.getElement(this.locator)
+            await element.focus();
+            await element.type(this.value);
             await browser.waitUntilLoad('networkidle');
-            return String(element.inputValue()) === String(this.value);
+
+            return String(await element.inputValue()) === String(this.value);
         } catch (e) {
             console.error(`Error typing ${this.locator}:`, e);
         }

@@ -13,7 +13,8 @@ import TypeIf from './action/typeIf.js';
 import EvaluateClick from './action/evaluateClick.js';
 
 export default class Checkout {
-    constructor(browser, basicAuth, metrics, targetLocale = 'en', cartSize = 1, timeout = 60000) {
+
+    constructor(browser, basicAuth, metrics, targetLocale = 'en', cartSize = 1, timeout = 60000, useExistingAccount = false) {
         this.targetLocale = targetLocale;
         this.browser = browser
         this.timeout = timeout
@@ -21,11 +22,24 @@ export default class Checkout {
         this.cartSize = cartSize
         this.cartItemsAmount = 0
         this.skippedProduct = 0
+        this.useExistingAccount = useExistingAccount
         this.browser.setExtraHTTPHeaders(basicAuth.getAuthHeader())
         this.customerData = {}
+        this.existingAccounts = [
+            'sonia@spryker.com',
+            'arnold@spryker.com',
+            'kevin@spryker.com',
+            'emma@spryker.com',
+            'donald@spryker.com',
+            'karl@spryker.com',
+            'maria.williams@spryker.com',
+            'maggie.may@spryker.com',
+            'spencor.hopkin@spryker.com',
+        ]
     }
 
     async placeGuestOrder(paymentCode, productUris = []) {
+        await this.browser.init()
         this.initCustomerData()
         this.cartItemsAmount = 0
         try {
@@ -61,11 +75,17 @@ export default class Checkout {
         }
     }
 
+    getRandomExistingEmail() {
+        sortRandom(this.existingAccounts)
+
+        return this.existingAccounts[0]
+    }
+
     initCustomerData() {
         this.customerData = {
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),
-            email: faker.person.email(),
+            email: this.useExistingAccount ? this.getRandomExistingEmail() : faker.person.email(),
             address1: faker.address.streetName(),
             address2: faker.number.intRange(1, 100),
             zip: faker.zen.zip(),
@@ -163,7 +183,7 @@ export default class Checkout {
             fail('Fail to visit shipping method page');
         }
 
-        const amountOfSections = this.browser.getElementCount('[data-qa="multi-shipment-group"]')
+        const amountOfSections = await this.browser.getElementCount('[data-qa="multi-shipment-group"]')
         let actionList = []
         for (let i = 0; i < amountOfSections; i++) {
             let targetLocator = `[data-qa="component radio shipmentCollectionForm[shipmentGroups][${i}][shipment][shipmentSelection] shipmentCollectionForm_shipmentGroups_${i}_shipment_shipmentSelection_0"]`
@@ -224,7 +244,7 @@ export default class Checkout {
             this.metrics.addCounter(`orders_placed_with_${this.cartItemsAmount}_unique_items`, 0)
             this.metrics.addRate(`orders_placed_with_${this.cartItemsAmount}_unique_items`, 0)
         }
-        this.browser.validatePageContains('order has been placed')
+        await this.browser.validatePageContains('order has been placed')
 
         if (!result) {
             fail('Fail place and order');

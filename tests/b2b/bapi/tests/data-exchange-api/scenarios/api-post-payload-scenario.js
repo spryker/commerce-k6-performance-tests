@@ -10,7 +10,7 @@ import ConfigHandler from '../../../../../../helpers/dynamicEntity/handler/confi
 import StockHandler from '../../../../../../helpers/dynamicEntity/handler/stockHandler.js';
 
 export class ApiPostPayloadScenario extends AbstractScenario {
-    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = []) {
+    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false) {
         super(environment, options)
         this.chunkSize = chunkSize
         this.concreteMaxAmount = concreteMaxAmount
@@ -20,7 +20,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         this.type = 'post'
         this.payloadGenerator = new DataExchangePayloadGenerator(
             uuid,
-            new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
+            new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist, useDefaultStoreLocale),
             new StockHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
             this.chunkSize,
             this.concreteMaxAmount
@@ -60,8 +60,6 @@ export class ApiPostPayloadScenario extends AbstractScenario {
                     break;
                 }
             } while (productImageResponse.status !== 201 && count < self.retryLimit)
-
-            count = 0
         });
     }
 

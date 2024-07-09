@@ -3,6 +3,10 @@ import {Profiler} from '../../profiler.js';
 
 export default class Visit extends Default {
     constructor(targetUrl, metricKey = '') {
+        if (!metricKey) {
+            metricKey = targetUrl
+        }
+
         super('visit', metricKey, targetUrl)
     }
 

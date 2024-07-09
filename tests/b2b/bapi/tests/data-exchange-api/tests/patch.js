@@ -1,5 +1,10 @@
 import { Profiler } from '../../../../../../helpers/profiler.js';
-import { getExecutionConfiguration, getStoreWhiteList, loadDefaultOptions } from '../../../../../../lib/utils.js';
+import {
+    getExecutionConfiguration,
+    getStoreWhiteList,
+    loadDefaultOptions,
+    useOnlyDefaultStoreLocale
+} from '../../../../../../lib/utils.js';
 import { ApiPatchPayloadScenario } from '../scenarios/api-patch-payload-scenario.js';
 
 export const options = loadDefaultOptions();
@@ -31,7 +36,14 @@ options.scenarios = {
     },
 };
 
-const productPatchCreateScenario = new ApiPatchPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount, {}, getStoreWhiteList());
+const productPatchCreateScenario = new ApiPatchPayloadScenario(
+    __ENV.DATA_EXCHANGE_ENV,
+    executionConfig.chunkSize,
+    executionConfig.concreteMaxAmount,
+    {},
+    getStoreWhiteList(),
+    useOnlyDefaultStoreLocale()
+);
 
 export function productPatchScenario() {
     productPatchCreateScenario.execute(productTemplate, productConcreteTemplate, productLabelTemplate, profiler);

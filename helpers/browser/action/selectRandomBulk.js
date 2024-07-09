@@ -18,7 +18,7 @@ export default class SelectRandomBulk extends SelectOption {
                 let value = this.getRandomValueFromSelectOptions(`select[name="${selectName}"]`, doc)
                 result = result && await (new SelectOption(`select[name="${selectName}"]`, value)).act(browser)
                 if (selectName.includes('attribute')) {
-                    browser.page.waitForNavigation({timeout: 60000})
+                    await browser.page.waitForNavigation({timeout: 60000})
                 }
             }
         } catch (e) {

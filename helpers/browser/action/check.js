@@ -8,15 +8,15 @@ export default class Check extends Default {
     async act(browser) {
         try {
             await browser.page.waitForSelector(this.locator, {state: 'attached'});
-            let element = browser.getElement(this.locator);
-            element.focus();
+            let element = await browser.getElement(this.locator);
+            await element.focus();
             element.check();
 
-            return element.isChecked()
+            return await element.isChecked()
         } catch (e) {
             browser.addStep(`Error select locator ${this.locator}`);
             console.error(e);
-            browser.screen();
+            await browser.screen();
         }
 
         return false;

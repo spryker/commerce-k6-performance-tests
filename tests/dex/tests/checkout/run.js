@@ -1,4 +1,4 @@
-import { browser } from 'k6/experimental/browser';
+import { browser } from 'k6/browser';
 import { SharedCheckoutScenario } from '../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js';
 import {
     getBasicAuthCredentials,
@@ -8,7 +8,7 @@ import {
     sortRandom
 } from '../../../../lib/utils.js';
 import Checkout from '../../../../helpers/browser/checkout.js';
-import {Browser} from '../../../../helpers/browser/browser.js';
+import Browser from '../../../../helpers/browser/browser.js';
 import BasicAuth from '../../../../helpers/basicAuth.js';
 import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
@@ -24,9 +24,9 @@ import fail from 'k6';
 
 const maxCartSize= Number(__ENV.MAX_CART_SIZE)
 const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
-let amountOfIterations = 1
-let amountOfVirtualUsers = 60
-let timeout = Math.ceil(60000 * amountOfVirtualUsers / 10)
+let amountOfIterations = 10
+let amountOfVirtualUsers = 5
+let timeout = Math.ceil(60000 * amountOfVirtualUsers)
 
 let metricsConfig = [
     'home_page',
@@ -119,7 +119,7 @@ let configurationArray = [
         iterations: amountOfIterations,
         vus: amountOfVirtualUsers,
         maxDuration: '1200m',
-        startTime: '20s',
+        startTime: '45s',
     }]
 ]
 
@@ -145,18 +145,26 @@ const PRODUCTS_LIST_FILE = 'tests/dex/tests/data/products.json'
 export async function generateProductList() {
     let storeInfo = storeConfig.getStoreConfig(__ENV.STORE)
     let products = []
+    //
+    // handler.getDataFromTableWithPagination('products?include=productStocks,productAbstractUrls', 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
+    //     .map((product) => {
+    //         return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
+    //     })
+    //     .map((urls) => {
+    //         if (Array.isArray(urls)) {
+    //             products.push(...urls.map((url) => url.url))
+    //         }
+    //     })
 
-    handler.getDataFromTableWithPagination('products?include=productStocks,productAbstractUrls', 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
-        .map((product) => {
-            return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
-        })
-        .map((urls) => {
-            if (Array.isArray(urls)) {
-                products.push(...urls.map((url) => url.url))
-            }
-        })
-
-    file.writeString(PRODUCTS_LIST_FILE, JSON.stringify(products));
+    // file.writeString(PRODUCTS_LIST_FILE, JSON.stringify(products));
+    file.writeString(PRODUCTS_LIST_FILE, JSON.stringify([
+        "/en/canon-ixus-285-8",
+        "/en/canon-ixus-285-9",
+        "/en/canon-ixus-165-12",
+        "/en/canon-ixus-165-13",
+        "/en/canon-ixus-177-14",
+        "/en/canon-ixus-177-15"
+    ]));
 }
 
 export async function executeCheckoutScenario() {
@@ -166,10 +174,10 @@ export async function executeCheckoutScenario() {
         fail('No products retrieved from instance!!!')
     }
 
-    let page = browser.newPage()
-    page.setDefaultTimeout(timeout)
+    let page = await browser.newPage()
 
     try {
+        await page.setDefaultTimeout(timeout * 10)
         let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)
         let checkout = new Checkout(
             new Browser(
@@ -185,12 +193,13 @@ export async function executeCheckoutScenario() {
             metrics,
             locale,
             randomiseCartSize ? Math.floor(Math.random() * maxCartSize) + 1 : maxCartSize,
-            timeout
+            timeout,
+            Boolean(parseInt(__ENV.USE_EXISTING_CUSTOMER_ACCOUNTS))
         );
 
-        await checkout.placeGuestOrder('dummyPaymentInvoice', sortRandom(products));
+        await checkout.placeGuestOrder('dummyMarketplacePaymentInvoice', sortRandom(products));
     } catch (e) {
-        console.log('Failed to execute executeCheckoutScenario')
+        console.log('Failed to execute executeCheckoutScenario', e.message)
     } finally {
         page.close()
     }

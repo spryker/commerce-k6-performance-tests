@@ -1,4 +1,9 @@
-import { getExecutionConfiguration, getStoreWhiteList, loadDefaultOptions } from '../../../../../../lib/utils.js';
+import {
+    getExecutionConfiguration,
+    getStoreWhiteList,
+    loadDefaultOptions,
+    useOnlyDefaultStoreLocale
+} from '../../../../../../lib/utils.js';
 import { ApiPutPayloadScenario } from '../scenarios/api-put-payload-scenario.js';
 
 export const options = loadDefaultOptions();
@@ -28,7 +33,14 @@ options.scenarios = {
     },
 };
 
-const productPutCreateScenario = new ApiPutPayloadScenario(__ENV.DATA_EXCHANGE_ENV, executionConfig.chunkSize, executionConfig.concreteMaxAmount,{}, getStoreWhiteList());
+const productPutCreateScenario = new ApiPutPayloadScenario(
+    __ENV.DATA_EXCHANGE_ENV,
+    executionConfig.chunkSize,
+    executionConfig.concreteMaxAmount,
+    {},
+    getStoreWhiteList(),
+    useOnlyDefaultStoreLocale()
+);
 
 export function productPutScenario() {
     productPutCreateScenario.execute(productTemplate, productConcreteTemplate, productLabelTemplate);

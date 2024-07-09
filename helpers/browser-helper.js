@@ -1,4 +1,4 @@
-import {browser} from 'k6/experimental/browser';
+import {browser} from 'k6/browser';
 
 export class BrowserHelper {
     constructor(urlHelper, customerHelper, assertionsHelper) {

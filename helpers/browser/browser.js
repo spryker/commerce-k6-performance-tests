@@ -4,7 +4,7 @@ import { toCamelCase} from '../../lib/utils.js';
 import {sleep} from 'k6';
 import Url from '../../lib/url.js';
 
-export class Browser {
+export default class Browser {
     constructor(
         page,
         basicAuth,
@@ -17,10 +17,8 @@ export class Browser {
     ) {
         this.page = page;
         this.screenResolution = screenResolution
-        this.page.setViewportSize(this.screenResolution);
         this.basicAuth = basicAuth;
         this.validateVisitedPage = validateVisitedPage;
-        this.page.setExtraHTTPHeaders(this.basicAuth.getAuthHeader());
         this.urlHandler = new Url(baseUrl);
         this.metrics = metrics;
         this.screenShotActive = screenShotActive;
@@ -31,8 +29,15 @@ export class Browser {
         this.assertionsHelper = new AssertionsHelper();
     }
 
-    setExtraHTTPHeaders(options) {
-        this.page.setExtraHTTPHeaders(options);
+    async init() {
+        await this.page.setViewportSize(this.screenResolution);
+        await this.page.setExtraHTTPHeaders(this.basicAuth.getAuthHeader());
+
+        return this
+    }
+
+    async setExtraHTTPHeaders(options) {
+        await this.page.setExtraHTTPHeaders(options);
 
         return this;
     }
@@ -43,10 +48,10 @@ export class Browser {
         return this;
     }
 
-    screen() {
+    async screen() {
         if (this.screenShotActive) {
             this.counter++;
-            this.page.screenshot({
+            await this.page.screenshot({
                 path: `screenshot/${__VU}/${__ITER}/${this.store}/${this.counter}_${
                     this.step
                 }/${this.counter}_${new Date().getTime()}.png`,
@@ -57,13 +62,13 @@ export class Browser {
         }
     }
 
-    validatePageContains(targetText) {
-        let doc = this.page.textContent('body')
+    async validatePageContains(targetText) {
+        let doc = await this.page.textContent('body')
         this.assertionsHelper.assertTextContains(doc, targetText)
     }
 
-    ifElementExists(locator) {
-        return this.getElementCount(locator) > 0;
+    async ifElementExists(locator) {
+        return await this.getElementCount(locator) > 0;
     }
 
     validatePage(targetUri) {
@@ -79,7 +84,7 @@ export class Browser {
     }
 
     addStep(title) {
-        if (title.length) {
+        if (title && title.length) {
             this.step = toCamelCase(title);
         }
 
@@ -96,14 +101,14 @@ export class Browser {
     }
 
     async waitForVisibleState(locator) {
-        const target = this.page.locator(locator);
+        const target = await this.page.locator(locator);
         target.waitFor({
             state: 'visible',
         });
     }
 
     async focus(locator) {
-        const target = this.page.locator(locator);
+        const target = await this.page.locator(locator);
         target.focus();
     }
 
@@ -115,8 +120,8 @@ export class Browser {
         return this.urlHandler.getWithoutQueryString(uri);
     }
 
-    getElementCount(locator) {
-        return this.page.evaluate((selector) => document.querySelectorAll(selector).length, locator);
+    async getElementCount(locator) {
+        return await this.page.evaluate((selector) => document.querySelectorAll(selector).length, locator);
     }
 
     async act(actionList = []) {
@@ -151,7 +156,7 @@ export class Browser {
             if (!result) {
                 this.addStep(`Failed to execute command: ${element.type} for locator: ${element.locator}`);
                 console.error(`Failed to execute command: ${element.type} for locator: ${element.locator} element: ${JSON.stringify(element)}`);
-                this.screen();
+                await this.screen();
             }
             await this.waitUntilLoad('networkidle');
         }
@@ -159,12 +164,12 @@ export class Browser {
         return result;
     }
 
-    getElement(locator) {
-        return this.page.locator(locator)
+    async getElement(locator) {
+        return await this.page.locator(locator)
     }
 
-    isEnabled(locator) {
-        return this.page.locator(locator).isEnabled();
+    async isEnabled(locator) {
+        return await this.page.locator(locator).isEnabled();
     }
 
     async close() {

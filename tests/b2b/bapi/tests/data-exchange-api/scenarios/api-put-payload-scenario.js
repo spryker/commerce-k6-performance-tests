@@ -9,14 +9,14 @@ import ConfigHandler from '../../../../../../helpers/dynamicEntity/handler/confi
 import StockHandler from '../../../../../../helpers/dynamicEntity/handler/stockHandler.js';
 
 export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
-    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = []) {
+    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false) {
         super(environment, options, concreteMaxAmount, options)
         this.chunkSize = chunkSize
         this.sleepInterval = 30
         this.retryLimit = 2
         this.payloadGenerator = new DataExchangePayloadGenerator(
             uuid,
-            new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
+            new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist, useDefaultStoreLocale),
             new StockHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
             this.chunkSize,
             this.concreteMaxAmount

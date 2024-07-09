@@ -6,7 +6,7 @@ export default class Focus extends Default {
     }
 
     async act(browser) {
-        const target = browser.page.locator(this.locator);
-        target.focus();
+        const target = await browser.page.locator(this.locator);
+        await target.focus();
     }
 }

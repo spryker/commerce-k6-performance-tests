@@ -12,12 +12,12 @@ export default class Click extends Default {
             let metricKey = ''
             let requireValidationBeforeClick = typeof this.options === 'object' && 'clickWhenExists' in this.options && this.options.clickWhenExists === true
 
-            if (requireValidationBeforeClick && !browser.ifElementExists(this.locator)) {
+            if (requireValidationBeforeClick && !await browser.ifElementExists(this.locator)) {
                 return true
             }
 
-            const targetElement = browser.page.locator(this.locator);
-            targetElement.focus()
+            const targetElement = await browser.page.locator(this.locator);
+            await targetElement.focus()
 
             let profiler = new Profiler();
 
@@ -36,11 +36,9 @@ export default class Click extends Default {
 
             if (typeof this.options === 'object' && 'waitForNavigation' in this.options) {
                 profiler.start(this.locator);
-                await Promise.all([
-                    targetElement.click(clickOptions),
-                    browser.page.waitForNavigation({timeout: timeout}),
-                    await browser.waitUntilLoad('networkidle'),
-                ]);
+                await targetElement.click(clickOptions)
+                await browser.page.waitForNavigation({timeout: timeout})
+                await browser.waitUntilLoad('networkidle')
 
                 browser.metrics.addTrend(metricKey, profiler.stop(this.locator));
                 return true;
@@ -48,31 +46,29 @@ export default class Click extends Default {
 
             if (typeof this.options === 'object' && 'waitForLoadState' in this.options) {
                 profiler.start(this.locator);
-                await Promise.all([
-                    targetElement.click(clickOptions),
-                    browser.page.waitForLoadState(),
-                    await browser.waitUntilLoad('networkidle'),
-                ]);
+                await targetElement.click(clickOptions)
+                await browser.page.waitForLoadState()
+                await browser.waitUntilLoad('networkidle')
+
                 browser.metrics.addTrend(metricKey, profiler.stop(this.locator));
                 return true;
             }
 
             if (typeof this.options === 'object' && 'waitForTimeout' in this.options) {
                 profiler.start(this.locator);
-                await Promise.all([
-                    targetElement.click(clickOptions),
-                    browser.page.waitForTimeout({timeout: timeout}),
-                    await browser.waitUntilLoad('networkidle'),
-                ]);
+                await targetElement.click(clickOptions)
+                await browser.page.waitForTimeout({timeout: timeout})
+                await browser.waitUntilLoad('networkidle')
+
                 browser.metrics.addTrend(metricKey, profiler.stop(this.locator));
                 return true;
             }
 
-            targetElement.click(clickOptions);
+            await targetElement.click(clickOptions);
         } catch (e) {
             browser.addStep(`Error select locator ${this.locator}`);
             console.error(e);
-            browser.screen();
+            await browser.screen();
             return false
         }
 

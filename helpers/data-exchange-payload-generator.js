@@ -116,7 +116,6 @@ export class DataExchangePayloadGenerator {
 
     generateProducts(productTemplate, productConcreteTemplate, productLabelId = 3) {
         let stores = this.storeConfigHandler.get()
-
         let result = []
         for (let index = 0; index < this.itemsAmount; index++) {
             let random = this.uuid()

@@ -2,8 +2,9 @@ import {debug, getIteration, getThread} from '../../lib/utils.js';
 import {AssertionsHelper} from '../assertions-helper.js';
 
 export default class Handler {
-    constructor(http, urlHelper, bapiHelper, storeWhitelist = []) {
+    constructor(http, urlHelper, bapiHelper, storeWhitelist = [], useDefaultStoreLocale = false) {
         this.storeWhitelist = storeWhitelist;
+        this.useDefaultStoreLocale = useDefaultStoreLocale;
         this.http = http;
         this.urlHelper = urlHelper;
         this.bapiHelper = bapiHelper;

@@ -1,5 +1,10 @@
 import { ApiPostPayloadScenario } from '../scenarios/api-post-payload-scenario.js';
-import { getExecutionConfiguration, getStoreWhiteList, loadDefaultOptions } from '../../../../../../lib/utils.js';
+import {
+    useOnlyDefaultStoreLocale,
+    getExecutionConfiguration,
+    getStoreWhiteList,
+    loadDefaultOptions
+} from '../../../../../../lib/utils.js';
 
 export const options = loadDefaultOptions();
 
@@ -30,8 +35,15 @@ options.scenarios = {
     },
 };
 
-console.info('Product creation limited for stores (when empty - all available stores will be used): ', getStoreWhiteList())
-const productCreateScenario = new ApiPostPayloadScenario(executionConfig.targetEnv, executionConfig.chunkSize, executionConfig.concreteMaxAmount, {}, getStoreWhiteList());
+console.info('Product creation limited for stores (when empty - all available stores will be used): ', getStoreWhiteList(), useOnlyDefaultStoreLocale())
+const productCreateScenario = new ApiPostPayloadScenario(
+    executionConfig.targetEnv,
+    executionConfig.chunkSize,
+    executionConfig.concreteMaxAmount,
+    {},
+    getStoreWhiteList(),
+    useOnlyDefaultStoreLocale()
+);
 
 export function productPostScenario() {
     productCreateScenario.execute(productTemplate, productConcreteTemplate, productImageTemplate, productLabelTemplate);

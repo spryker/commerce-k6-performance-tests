@@ -88,7 +88,7 @@ export function generateConfiguration() {
     let availableStores = new Handler(http, urlHelper, bapiHelper).getDataFromTable('stores').map((store) => store.name)
     let stores = new ConfigGenerator(availableStores).generate(targetAmountOfStores, targetAmountOfLocales)
     if (stores.length) {
-        console.info(`Stores generated for setup(${stores.length}): `, stores.map((store) => store.storeCode))
+        console.info(`Stores generated for setup(${stores.length}): `, stores.map((store) => store.storeCode).join(','))
     } else {
         console.warn(`All combinations supported by store generator already available in system: ${availableStores.join(',').toLowerCase()}`)
     }

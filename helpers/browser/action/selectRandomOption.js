@@ -7,16 +7,16 @@ export default class SelectRandomOption extends Default {
         super('selectRandomOption', locator, value, options)
     }
     async act(browser) {
-        browser.page.waitForSelector(this.locator, {state: 'attached'});
+        await browser.page.waitForSelector(this.locator, {state: 'attached'});
         try {
-            let element = browser.getElement(this.locator);
+            let element = await browser.getElement(this.locator);
             let value = browser.getRandomValueFromSelectOptions(this.locator)
 
-            element.focus();
-            element.selectOption(value);
+            await element.focus();
+            await element.selectOption(value);
             await this.waitUntilLoad('networkidle');
 
-            return String(element.inputValue()) === String(value);
+            return String(await element.inputValue()) === String(value);
         } catch (e) {
             console.error('Error selecting the option:', e);
         }

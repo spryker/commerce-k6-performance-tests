@@ -27,6 +27,9 @@ export default class ConfigHandler extends Handler {
                 this.storeLocales = this.storeLocales.filter((locale) => this.storesConfig.filter((store) => locale.fk_store === store.id_store).length)
                 this.storeCurrencies = this.storeCurrencies.filter((currency) => this.storesConfig.filter((store) => currency.fk_store === store.id_store).length)
             }
+            if (this.useDefaultStoreLocale) {
+                this.storeLocales = this.storesConfig.map((store) => store.fk_locale)
+            }
         }
 
         return this.storesConfig

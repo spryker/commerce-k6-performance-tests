@@ -13,14 +13,14 @@ export default class Suggest extends Default {
     }
 
     async act(browser) {
-        const searchInput = browser.page.locator(this.locator);
-        searchInput.focus();
-        searchInput.clear();
+        const searchInput = await browser.page.locator(this.locator);
+        await searchInput.focus();
+        await searchInput.clear();
         let searchTerm = this.sanitiseSearchTerm(this.value)
         browser.page.evaluate((searchTerm) => window.performance.mark(`search-suggest-${searchTerm}`), searchTerm);
-        searchInput.type(this.value);
-        const resultsContainer = browser.page.locator('.suggest-search__container:not(.is-hidden)');
-        resultsContainer.waitFor();
+        await searchInput.type(this.value);
+        const resultsContainer = await browser.page.locator('.suggest-search__container:not(.is-hidden)');
+        await resultsContainer.waitFor();
 
         browser.page.evaluate((searchTerm) => window.performance.mark(`action-completed-${searchTerm}`), searchTerm);
         browser.page.evaluate((searchTerm) => window.performance.measure(
@@ -29,7 +29,7 @@ export default class Suggest extends Default {
             `action-completed-${searchTerm}`
         ), searchTerm);
 
-        const totalActionTime = browser.page.evaluate((searchTerm) => {
+        const totalActionTime = await browser.page.evaluate((searchTerm) => {
             return JSON.parse(JSON.stringify(window.performance.getEntriesByName(`total-action-time-${searchTerm}`))).pop().duration
         }, searchTerm);
 
