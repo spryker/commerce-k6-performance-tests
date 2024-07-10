@@ -174,18 +174,6 @@ function generateSalesOrderItemOptions(optionsCount =1, sku = null) {
     })
 }
 
-function generateSalesOrderItemServicePoints(count) {
-    
-    return new Array(count).fill(undefined).map(() => {
-        let key = randomHex(64);
-
-        return {
-            'name': 'Service Point ' + key,
-            'key': key
-        }
-    });
-}
-
 function generateSalesOrderPyment() {
     return {
         'fk_sales_payment_method_type': 1,
@@ -195,7 +183,7 @@ function generateSalesOrderPyment() {
 
 function generateSalesOrderItems(countItems = 1, maxOrderItemState = 14) {
     const groupKeyGenerator = (sku) => {
-        return `sku_${randomHex(32)}`;
+        return `${sku}_${randomHex(32)}`;
     }
 
     const taxRate = 19;

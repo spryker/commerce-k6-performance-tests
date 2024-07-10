@@ -24,10 +24,10 @@ let metrics = new Metrics([{
 
 options.scenarios = {
     SalesOrderCreateVUS: {
-        exec: 'updateSalesOrderItems',
+        exec: 'creatSalesOrderItemHistory',
         executor: 'shared-iterations',
         tags: {
-            testId: 'updateSalesOrderItems',
+            testId: 'creatSalesOrder',
             testGroup: 'DataExchange',
         },
         iterations: 1,
@@ -72,23 +72,30 @@ function getRandomSalesOrderItem() {
     return orderData.salesOrderItems[Math.floor(Math.random() * orderData.salesOrderItems.length)];
 }
 
-export function updateSalesOrderItems() {
+function generateRandomPastDate() {
+    let date = new Date();
+    date.setDate(date.getDate() - Math.floor(Math.random() * 1000));
+    return date.toISOString().split('T')[0] + ' 00:00:00.000000';
+}
+
+export function creatSalesOrderItemHistory() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper); 
     let salesOrderItem = getRandomSalesOrderItem(); 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
         return {
-            id_sales_order_item: salesOrderItem.id_sales_order_item,
+            fk_sales_order_item: salesOrderItem.id_sales_order_item,
             fk_oms_order_item_state: salesOrderItem.fk_oms_order_item_state,
-        };
+            created_at: generateRandomPastDate()
+        }
     });
 
-    let response = requestHandler.updateEntities('sales-order-items', JSON.stringify({
+    let response = requestHandler.createEntities('oms-order-item-state-histories', JSON.stringify({
         data: payload
     }))
 
-    if (response.status !== 200) {
+    if (response.status !== 201) {
         console.error(response.body)
     }
 
-    metrics.add('sales-order-item-state-update', requestHandler.getLastResponse(), 200);
+    metrics.add('sales-order-item-state-create', requestHandler.getLastResponse(), 200);
 }

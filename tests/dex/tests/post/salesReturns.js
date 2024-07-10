@@ -45,7 +45,6 @@ const adminHelper = new AdminHelper();
 const assertionHelper = new AssertionsHelper();
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper);
 const defaultCustomerId = 10;
-const limit = 100;
 const storeCode = 'DE';
 const returnReason = 'Damaged';
 let salesOrdersData = null;

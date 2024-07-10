@@ -7,7 +7,6 @@ import AdminHelper from '../../../../helpers/admin-helper.js';
 import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
 import faker from 'k6/x/faker';
-import CustomerHelper from '../../../../helpers/customer-helper.js';
 
 export const options = loadDefaultOptions();
 
@@ -47,9 +46,7 @@ const urlHelper = new UrlHelper(envConfig);
 const adminHelper = new AdminHelper();
 const assertionHelper = new AssertionsHelper();
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper);
-const customerHelper = new CustomerHelper();
 let countryId = null;
-let customerId = null;
 let customersData = null;
 
 /**
@@ -67,24 +64,6 @@ function getCountryId(code = null) {
     countryId = response[0].id_country;
 
     return countryId;
-}
-
-/**
- * @param {string} email 
- * @returns number
- */
-function getCustomerId(email) {
-
-    if (customerId) {
-        return customerId;
-    }
-    
-    const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    const response = requestHandler.getDataFromTable(`customers?filter[customer.email]=${email}`);
-
-    customerId = response[0].id_customer;
-
-    return customerId;
 }
 
 function customersPreload() {
