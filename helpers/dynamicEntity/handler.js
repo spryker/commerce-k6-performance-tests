@@ -58,6 +58,17 @@ export default class Handler {
         return response
     }
 
+    updateEntities(tableAlias, payload, expectedStatus = 200) {
+        let response = this.http.sendPatchRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, payload, this.getRequestParams(), false);
+
+        debug(`${tableAlias} response`, response)
+        debug('thread:', getThread(), 'iteration:', getIteration(), 'response.status', response.status, new Date().toLocaleString())
+        this.assertionHelper.assertResponseStatus(response, expectedStatus)
+        this.lastResponse = response
+
+        return response
+    }
+
     assignExistingEntitiesToStores(entityConfigs, storeConfig) {
         let result = []
         for (const sourceConfig of entityConfigs) {

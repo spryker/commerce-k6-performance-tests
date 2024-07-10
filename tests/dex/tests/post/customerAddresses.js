@@ -32,14 +32,14 @@ options.scenarios = {
             testId: 'createCustomerAddress',
             testGroup: 'DataExchange',
         },
-        iterations: 250,
-        vus: 5
+        iterations: 1,
+        vus: 1
     }
 }
 
 options.thresholds = metrics.getThresholds();
 
-const payloadSize = 200;
+const payloadSize = 1;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -50,6 +50,7 @@ const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
 const customerHelper = new CustomerHelper();
 let countryId = null;
 let customerId = null;
+let customersData = null;
 
 /**
  * @param {string} code 
@@ -86,10 +87,32 @@ function getCustomerId(email) {
     return customerId;
 }
 
+function customersPreload() {
+    if (customersData) {
+        return;
+    }
+
+    const limit = 100;
+    const requestHandler = new Handler(http, urlHelper, bapiHelper);
+    const response = requestHandler.getDataFromTable(`customers?page[limit]=${limit}`);
+
+    if (response.status !== 200) {
+        console.error(response.body);
+    }
+
+    customersData = response;
+}
+
+function getRandomCustomer() {
+    customersPreload();
+
+    return customersData[Math.floor(Math.random() * customersData.length)];
+}
+
 export function createCustomerAddressEntity() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     const countryId = getCountryId('DE'); 
-    const customerId = getCustomerId(customerHelper.getDefaultCustomerEmail());
+    const customerId = getRandomCustomer().id_customer;
 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
         return {

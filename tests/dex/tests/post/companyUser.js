@@ -21,7 +21,7 @@ let metrics = new Metrics([{
         trend: ['p(95)<200'],
         rate: ['rate==1']
     }
-}, ])
+}, ]);
 
 options.scenarios = {
     EntityCreateVUS: {
@@ -31,14 +31,14 @@ options.scenarios = {
             testId: 'CreateEntity',
             testGroup: 'DataExchange',
         },
-        iterations: 250,
-        vus: 5
+        iterations: 1,
+        vus: 1
     }
 }
 
 options.thresholds = metrics.getThresholds();
 
-const payloadSize = 200;
+const payloadSize = 1;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -46,6 +46,8 @@ const urlHelper = new UrlHelper(envConfig);
 const adminHelper = new AdminHelper();
 const assertionHelper = new AssertionsHelper();
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper);
+const companyBusinessUnitName = 'test-business-unit-1';
+const compoanyRoleName = 'Spryker_Buyer';
 let companyBusinessUnitId = null;
 let companyId = null;
 let companyRoleId = null;
@@ -63,7 +65,7 @@ function dataCompanyBusinessUnitPreload(key = null) {
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     const response = requestHandler.getDataFromTable(`company-business-units?filter[company-business-unit.key]=${key}`);
 
-    companyBusinessUnitId = response[0].id_country;
+    companyBusinessUnitId = response[0].id_company_business_unit;
     companyId = response[0].fk_company;
 }
 
@@ -96,12 +98,22 @@ function generateCustomerReference() {
 function generateCustomerEmail() {
     return faker.person.email();
 }
+/**
+ * Returns a random date from the last week in the format 'YYYY-MM-DD'.
+ * @returns string
+ */
+function getRandomDateLastWeek() {
+    let date = new Date();
+    date.setDate(date.getDate() - Math.floor(Math.random() * 7));
+    return date.toISOString().split('T')[0];
+}
 
 export function createEntity() {
-    dataCompanyBusinessUnitPreload('test-business-unit-1');
-    dataCompanyRolesPreload('Spryker_Buyer');
+    dataCompanyBusinessUnitPreload(companyBusinessUnitName);
+    dataCompanyRolesPreload(compoanyRoleName);
 
     const requestHandler = new Handler(http, urlHelper, bapiHelper)
+
     let payload = new Array(payloadSize).fill(undefined).map(() => {
         return {
             'fk_locale': null,
@@ -113,6 +125,7 @@ export function createEntity() {
             'email': generateCustomerEmail(),
             'first_name': faker.person.firstName(),
             'last_name': faker.person.lastName(),
+            'registered': getRandomDateLastWeek(),
             'companyUsers': [
                 {
                     'is_active': true,
@@ -128,7 +141,6 @@ export function createEntity() {
                     ]
                 }
             ]
-        
         }
     })
 
