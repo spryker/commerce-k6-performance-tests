@@ -138,7 +138,6 @@ function getRandomDateLastWeek() {
     return date.toISOString().split('T')[0];
 }
 
-
 export function createEntity() {
     companyBusinessUnitPreload(companyBusinessUnitName);
     companyRolesPreload(compoanyRoleName);

@@ -14,8 +14,6 @@ const metricKeys = {
     salesOrderItemStatePreloadKey: 'sales-order-item-state-preload'
 };
 
-
-
 let metrics = new Metrics([{
     key: metricKeys.salesOrderItemStatePreloadKey,
     types: ['trend', 'rate'],
@@ -27,7 +25,7 @@ let metrics = new Metrics([{
         trend: ['p(95)<200'],
         rate: ['rate==1']
     }
-    }, {
+}, {
     key: metricKeys.salesOrderItemStateUpdateKey,
     types: ['trend', 'rate'],
     isTime: {
