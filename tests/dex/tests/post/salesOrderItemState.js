@@ -9,8 +9,13 @@ import {Metrics} from '../../../../helpers/browser/metrics.js';
 
 export const options = loadDefaultOptions();
 
+const metricKeys = {
+    salesOrderItemStateCreateKey: 'sales-order-item-state-create',
+    salesOrdersPreloadKey: 'sales-order-item-state-sales-order-preload'
+};
+
 let metrics = new Metrics([{
-    key: 'sales-order-create',
+    key: metricKeys.salesOrderItemStateCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
@@ -20,7 +25,18 @@ let metrics = new Metrics([{
         trend: ['p(95)<200'],
         rate: ['rate==1']
     }
-}, ])
+}, {
+    key: metricKeys.salesOrdersPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(95)<200'],
+        rate: ['rate==1']
+    }
+},])
 
 options.scenarios = {
     SalesOrderCreateVUS: {
@@ -58,6 +74,8 @@ function salesOrdersPreload() {
     const response = requestHandler.getDataFromTable(`sales-orders?include=salesOrderItems&page[limit]=${limit}`);
 
     salesOrdersData = response;
+
+    metrics.add(metricKeys.salesOrdersPreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 function getRandomSalesOrderWithItems() {
@@ -97,5 +115,5 @@ export function creatSalesOrderItemHistory() {
         console.error(response.body)
     }
 
-    metrics.add('sales-order-item-state-create', requestHandler.getLastResponse(), 200);
+    metrics.add(metricKeys.salesOrderItemStateCreateKey, requestHandler.getLastResponse(), 200);
 }

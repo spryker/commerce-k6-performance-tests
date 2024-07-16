@@ -9,8 +9,26 @@ import {Metrics} from '../../../../helpers/browser/metrics.js';
 
 export const options = loadDefaultOptions();
 
+const metricKeys = {
+    salesOrderItemStateUpdateKey: 'sales-order-item-state-update',
+    salesOrderItemStatePreloadKey: 'sales-order-item-state-preload'
+};
+
+
+
 let metrics = new Metrics([{
-    key: 'sales-order-create',
+    key: metricKeys.salesOrderItemStatePreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(95)<200'],
+        rate: ['rate==1']
+    }
+    }, {
+    key: metricKeys.salesOrderItemStateUpdateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
@@ -30,13 +48,13 @@ options.scenarios = {
             testId: 'updateSalesOrderItems',
             testGroup: 'DataExchange',
         },
-        iterations: 1,
-        vus: 1
+        iterations: 250,
+        vus: 5
     }
 }
 
 options.thresholds = metrics.getThresholds();
-const payloadSize = 1;
+const payloadSize = 300;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -58,8 +76,15 @@ function salesOrdersPreload() {
     const response = requestHandler.getDataFromTable(`sales-orders?include=salesOrderItems&page[limit]=${limit}`);
 
     salesOrdersData = response;
+
+    metrics.add(metricKeys.salesOrderItemStatePreloadKey, requestHandler.getLastResponse(), 200);
 }
 
+/**
+ * Returns sales orders with items
+ * 
+ * @returns object
+ */
 function getRandomSalesOrderWithItems() {
     salesOrdersPreload();
 
@@ -90,5 +115,5 @@ export function updateSalesOrderItems() {
         console.error(response.body)
     }
 
-    metrics.add('sales-order-item-state-update', requestHandler.getLastResponse(), 200);
+    metrics.add(metricKeys.salesOrderItemStateUpdateKey, requestHandler.getLastResponse(), 200);
 }

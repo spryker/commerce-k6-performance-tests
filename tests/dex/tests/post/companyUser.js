@@ -10,8 +10,14 @@ import faker from 'k6/x/faker';
 
 export const options = loadDefaultOptions()
 
+const metricKeys = {
+    companyUserCreteKey: 'company-users-create',
+    companyRolePreloadKey: 'company-roles-preload',
+    companyBusinessUnitPreloadKey: 'company-business-unit-preload'
+};
+
 let metrics = new Metrics([{
-    key: 'company-users-create',
+    key: metricKeys.companyUserCreteKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
@@ -21,7 +27,29 @@ let metrics = new Metrics([{
         trend: ['p(95)<200'],
         rate: ['rate==1']
     }
-}, ]);
+},{
+    key: metricKeys.companyRolePreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<200'],
+        rate: ['rate==1']
+    }
+}, {
+    key: metricKeys.companyBusinessUnitPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<200'],
+        rate: ['rate==1']
+    }
+},]);
 
 options.scenarios = {
     EntityCreateVUS: {
@@ -31,14 +59,14 @@ options.scenarios = {
             testId: 'CreateEntity',
             testGroup: 'DataExchange',
         },
-        iterations: 1,
-        vus: 1
+        iterations: 250,
+        vus: 5
     }
 }
 
 options.thresholds = metrics.getThresholds();
 
-const payloadSize = 1;
+const payloadSize = 200;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -56,8 +84,7 @@ let companyRoleId = null;
  * @param {string} key 
  * @returns undefined
  */
-function dataCompanyBusinessUnitPreload(key = null) {
-
+function companyBusinessUnitPreload(key = null) {
     if(companyBusinessUnitId) {
         return;
     }
@@ -67,14 +94,15 @@ function dataCompanyBusinessUnitPreload(key = null) {
 
     companyBusinessUnitId = response[0].id_company_business_unit;
     companyId = response[0].fk_company;
+
+    metrics.add(metricKeys.companyBusinessUnitPreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 /**
  * @param {string} code 
  * @returns number
  */
-function dataCompanyRolesPreload(key = null) {
-
+function companyRolesPreload(key = null) {
     if(companyRoleId) {
         return;
     }
@@ -83,6 +111,8 @@ function dataCompanyRolesPreload(key = null) {
     const response = requestHandler.getDataFromTable(`company-roles?filter[company-role.key]=${key}`);
 
     companyRoleId = response[0].id_company_role;
+
+    metrics.add(metricKeys.companyRolePreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 /**
@@ -108,9 +138,10 @@ function getRandomDateLastWeek() {
     return date.toISOString().split('T')[0];
 }
 
+
 export function createEntity() {
-    dataCompanyBusinessUnitPreload(companyBusinessUnitName);
-    dataCompanyRolesPreload(compoanyRoleName);
+    companyBusinessUnitPreload(companyBusinessUnitName);
+    companyRolesPreload(compoanyRoleName);
 
     const requestHandler = new Handler(http, urlHelper, bapiHelper)
 
@@ -142,14 +173,14 @@ export function createEntity() {
                 }
             ]
         }
-    })
+    });
 
     let response = requestHandler.createEntities('customers', JSON.stringify({
         data: payload
-    }))
+    }));
 
     if (response.status !== 201) {
         console.error(response.body)
     }
-    metrics.add('company-users-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.companyUserCreteKey, requestHandler.getLastResponse(), 201);
 }

@@ -10,8 +10,12 @@ import faker from 'k6/x/faker';
 
 export const options = loadDefaultOptions();
 
+const metricKeys = {
+    discountVouchersCreateKey: 'discount-voucher-create',
+};
+
 let metrics = new Metrics([{
-    key: 'discount-voucher-create',
+    key: metricKeys.discountVouchersCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
@@ -31,13 +35,13 @@ options.scenarios = {
             testId: 'creatDiscountVouchers',
             testGroup: 'DataExchange',
         },
-        iterations: 1,
-        vus: 1
+        iterations: 250,
+        vus: 5
     }
 }
 
 options.thresholds = metrics.getThresholds();
-const payloadSize = 1;
+const payloadSize = 200;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -72,7 +76,7 @@ export function creatDiscountVouchersEntity() {
             'is_active': true,
             'name': voucherName,
             'vouchers': generateVouchers(faker.number.number(2, 10)),
-            'discount': [
+            'discounts': [
                 {
                     'fk_discount_voucher_pool': null,
                     'fk_store': null,
@@ -123,5 +127,5 @@ export function creatDiscountVouchersEntity() {
         console.error(response.body)
     }
 
-    metrics.add('discount-voucher-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.discountVouchersCreateKey, requestHandler.getLastResponse(), 201);
 }

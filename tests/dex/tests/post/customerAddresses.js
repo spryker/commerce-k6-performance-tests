@@ -10,8 +10,14 @@ import faker from 'k6/x/faker';
 
 export const options = loadDefaultOptions();
 
+const metricKeys = {
+    customerAddressCreateKey: 'customer-address-create',
+    customersPreloadKey: 'customer-address-customers-preload',
+    countryPreloadKey: 'customer-address-country-preload'
+}
+
 let metrics = new Metrics([{
-    key: 'customer-address-create',
+    key: metricKeys.customerAddressCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
@@ -21,7 +27,29 @@ let metrics = new Metrics([{
         trend: ['p(95)<200'],
         rate: ['rate==1']
     }
-}, ])
+}, {
+    key: metricKeys.customersPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<200'],
+        rate: ['rate==1']
+    }
+}, {
+    key: metricKeys.countryPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<200'],
+        rate: ['rate==1']
+    }
+},])
 
 options.scenarios = {
     CustomerAddressCreateVUS: {
@@ -31,14 +59,14 @@ options.scenarios = {
             testId: 'createCustomerAddress',
             testGroup: 'DataExchange',
         },
-        iterations: 1,
-        vus: 1
+        iterations: 250,
+        vus: 5
     }
 }
 
 options.thresholds = metrics.getThresholds();
 
-const payloadSize = 1;
+const payloadSize = 200;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -63,6 +91,8 @@ function getCountryId(code = null) {
 
     countryId = response[0].id_country;
 
+    metrics.add(metricKeys.countryPreloadKey, requestHandler.getLastResponse(), 200);
+
     return countryId;
 }
 
@@ -71,15 +101,13 @@ function customersPreload() {
         return;
     }
 
-    const limit = 100;
+    const limit = 200;
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     const response = requestHandler.getDataFromTable(`customers?page[limit]=${limit}`);
 
-    if (response.status !== 200) {
-        console.error(response.body);
-    }
-
     customersData = response;
+
+    metrics.add(metricKeys.customersPreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 function getRandomCustomer() {
@@ -116,5 +144,5 @@ export function createCustomerAddressEntity() {
         console.error(response.body)
     }
 
-    metrics.add('customer-addresses-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.customerAddressCreateKey, requestHandler.getLastResponse(), 201);
 }

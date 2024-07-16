@@ -9,15 +9,19 @@ import {Metrics} from '../../../../helpers/browser/metrics.js';
 
 export const options = loadDefaultOptions();
 
+const metricKeys = {
+    salesOrderWithIncludesGetKey: 'sales-order-with-includes-get'
+};
+
 let metrics = new Metrics([{
-    key: 'company-users-create',
+    key: metricKeys.salesOrderWithIncludesGetKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(90)<200'],
         rate: ['rate==1']
     }
 }, ]);
@@ -30,8 +34,8 @@ options.scenarios = {
             testId: 'GetSalesOrders',
             testGroup: 'DataExchange',
         },
-        iterations: 1,
-        vus: 1,
+        iterations: 500,
+        vus: 5,
     },
 
 };
@@ -52,6 +56,7 @@ const includes = [
     'salesOrderInvoices',
     'salesOrderNotes',
     'salesOrderTotals',
+    'salesOrderPayments',
     'salesOrderItems.salesOrderConfiguredBundleItems',
     'salesOrderItems.salesOrderItemConfigurations',
     'salesOrderItems.salesOrderItemGiftCards',
@@ -73,5 +78,5 @@ export function getSalesOrders() {
     }
 
     assertionHelper.assertLessOrEqual(response.length, limit);
-    metrics.add('sales-order-get', requestHandler.getLastResponse(), 200);
+    metrics.add(metricKeys.salesOrderWithIncludesGetKey, requestHandler.getLastResponse(), 200);
 }

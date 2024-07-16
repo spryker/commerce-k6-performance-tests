@@ -8,9 +8,13 @@ import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
 
 export const options = loadDefaultOptions();
+const metricKeys = {
+    salesReturnCreateKey: 'sales-return-create',
+    salesOrderPreloadKey: 'sales-return-order-preload'
+};
 
 let metrics = new Metrics([{
-    key: 'sales-return-create',
+    key: metricKeys.salesReturnCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
@@ -20,7 +24,18 @@ let metrics = new Metrics([{
         trend: ['p(95)<200'],
         rate: ['rate==1']
     }
-}, ]);
+}, {
+    key: metricKeys.salesOrderPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<200'],
+        rate: ['rate==1']
+    }
+}]);
 
 options.scenarios = {
     SalesReturnCreateVUS: {
@@ -72,6 +87,8 @@ function salesOrdersPreload() {
     }
 
     salesOrdersData = response;
+
+    metrics.add(metricKeys.salesOrderPreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 function getRandomSalesOrderWithItems() {
@@ -110,5 +127,5 @@ export function createSalesReturnEntity() {
         console.error(response.body)
     }
 
-    metrics.add('sales-returns-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.salesReturnCreateKey, requestHandler.getLastResponse(), 201);
 }

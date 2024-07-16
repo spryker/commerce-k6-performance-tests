@@ -10,8 +10,14 @@ import faker from 'k6/x/faker';
 
 export const options = loadDefaultOptions();
 
+const metricKeys = {
+    salesOrderCreateKey: 'sales-order-create',
+    localesPreloadKey: 'sales-order-locales-preload',
+    customersPreloadKey: 'sales-order-customers-preload'
+};
+
 let metrics = new Metrics([{
-    key: 'sales-order-create',
+    key: metricKeys.salesOrderCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
@@ -19,6 +25,28 @@ let metrics = new Metrics([{
     },
     thresholds: {
         trend: ['p(95)<200'],
+        rate: ['rate==1']
+    }
+},{
+    key: metricKeys.localesPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<200'],
+        rate: ['rate==1']
+    }
+},{
+    key: metricKeys.customersPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<200'],
         rate: ['rate==1']
     }
 },])
@@ -72,6 +100,8 @@ function localesPreload() {
     const response = requestHandler.getDataFromTable('locales');
 
     localesData = response;
+
+    metrics.add(metricKeys.localesPreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 function customersPreload() {
@@ -84,6 +114,8 @@ function customersPreload() {
     const response = requestHandler.getDataFromTable(`customers?page[limit]=${limit}`);
 
     customersData = response;
+
+    metrics.add(metricKeys.customersPreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 function getLocaleId(localeCode = null) {
@@ -347,5 +379,5 @@ export function creatSalesOrderEntity() {
         console.error(response.body)
     }
 
-    metrics.add('sales-order-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.salesOrderCreateKey, requestHandler.getLastResponse(), 201);
 }
