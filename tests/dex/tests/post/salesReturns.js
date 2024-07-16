@@ -45,13 +45,13 @@ options.scenarios = {
             testId: 'createSalesReturn',
             testGroup: 'DataExchange',
         },
-        iterations: 1,
-        vus: 1
+        iterations: 250,
+        vus: 5
     }
 }
 
 options.thresholds = metrics.getThresholds(); 
-const payloadSize = 1;
+const payloadSize = 200;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
