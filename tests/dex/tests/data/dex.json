@@ -9134,7 +9134,7 @@
               },
               {
                   "fieldName": "fk_company_user",
-                  "fieldVisibleName": "fkCompanyUser",
+                  "fieldVisibleName": "fk_company_user",
                   "type": "integer",
                   "isCreatable": true,
                   "isEditable": true,
@@ -9346,6 +9346,47 @@
                   "isEditable": true,
                   "validation": {
                       "isRequired": false
+                  }
+              }
+          ]
+      }
+  },
+  {
+      "tableName": "spy_sales_payment_method_type",
+      "tableAlias": "sales-payment-method-types",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_sales_payment_method_type",
+          "isDeletable": true,
+          "fields": [
+              {
+                  "fieldName": "id_sales_payment_method_type",
+                  "fieldVisibleName": "id_sales_payment_method_type",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "payment_method",
+                  "fieldVisibleName": "payment_method",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "payment_provider",
+                  "fieldVisibleName": "payment_provider",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
                   }
               }
           ]
