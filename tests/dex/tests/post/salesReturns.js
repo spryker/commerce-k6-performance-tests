@@ -82,10 +82,6 @@ function salesOrdersPreload() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     const response = requestHandler.getDataFromTable('sales-orders?include=salesOrderItems&page[limit]=${limit}');
 
-    if (response.status !== 200) {
-        console.error(response.body);
-    }
-
     salesOrdersData = response;
 
     metrics.add(metricKeys.salesOrderPreloadKey, requestHandler.getLastResponse(), 200);

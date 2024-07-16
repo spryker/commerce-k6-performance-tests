@@ -13,8 +13,33 @@ export const options = loadDefaultOptions();
 const metricKeys = {
     salesOrderCreateKey: 'sales-order-create',
     localesPreloadKey: 'sales-order-locales-preload',
-    customersPreloadKey: 'sales-order-customers-preload'
+    customersPreloadKey: 'sales-order-customers-preload',
+    preCreateSalesOrderPaymentMethodTypesKey: 'sales-order-payment-method-types-precreate',
+    preCreateSalesOrderOmsOrderItemStatesKey: 'sales-order-oms-order-item-states-precreate'
 };
+
+const omsOrderItemStates = [
+    'new',
+    'warehouse allocated',
+    'payment pending',
+    'paid',
+    'commission calculated',
+    'tax pending',
+    'tax invoice submitted',
+    'product review requested',
+    'confirmed', 
+    'invoice generated',
+    'waiting',
+    'exported',
+    'shipped',
+    'delivered',
+    'closed',
+    'gift card shipped',
+    'gift card purchased',
+    'waiting for return',
+    'returned',
+    'return canceled'
+];
 
 let metrics = new Metrics([{
     key: metricKeys.salesOrderCreateKey,
@@ -49,7 +74,19 @@ let metrics = new Metrics([{
         trend: ['p(99)<200'],
         rate: ['rate==1']
     }
-},])
+},{
+    key: metricKeys.preCreateSalesOrderPaymentMethodTypesKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<200'],
+        rate: ['rate==1']
+    }
+},
+])
 
 options.scenarios = {
     SalesOrderCreateVUS: {
@@ -266,7 +303,7 @@ function generateSalesOrderItems(countItems = 1, maxOrderItemState = 14) {
             'tax_amount_full_aggregation': faker.number.intRange(1000, 100000),
             'tax_rate': taxRate, 
             'tax_rate_average_aggregation': taxRate, 
-            'uuid': uuid(),
+            'uuid': uuid() ,
             'salesOmsOrderItemStatesHistories': generateSalesOmsOrderItemStatesHistories(maxOrderItemState),
             'salesOrderItemMetadatas': [
                 generateSalesOrderItemMetadata()
@@ -324,7 +361,65 @@ function getRandomBuinessAddressId(addresses) {
     return addresses[Math.floor(Math.random() * addresses.length)].id_sales_order_address;
 }
 
+function preCreateSalesPaymentMethodTypesIfNotExist() {
+    const requestHandler = new Handler(http, urlHelper, bapiHelper);
+    let response = requestHandler.getDataFromTable('sales-payment-method-types');
+
+    if (response.length > 0) {
+        return response;
+    }
+
+    response = requestHandler.createEntities('sales-payment-method-types', JSON.stringify({
+        data: [
+            {
+                'payment_method': 'invoice',
+                'payment_provider': 'DummyPayment'
+            }
+        ]
+    }))
+
+    if (response.status !== 201) {
+        console.error(response.body)
+    }
+
+    metrics.add(metricKeys.preCreateSalesOrderPaymentMethodTypesKey, requestHandler.getLastResponse(), 200);
+}
+
+function preOmsOrderItemStateIfNotExist() {
+
+    const requestHandler = new Handler(http, urlHelper, bapiHelper);
+    let response = requestHandler.getDataFromTable('oms-order-item-states');
+    let missedStates = [];
+    
+    if (response.length > 0) {
+        missedStates = omsOrderItemStates.filter(state => !response.find(item => item.name === state));
+    }
+
+    if (missedStates.length === 0) {
+        return;
+    }
+
+    let payload = missedStates.map(state => {
+        return {
+            name: state
+        }
+    });
+
+    response = requestHandler.createEntities('oms-order-item-states', JSON.stringify({
+        data: payload
+    }))
+
+    if (response.status !== 201) {
+        console.error(response.body)
+    }
+
+    metrics.add(metricKeys.preCreateSalesOrderOmsOrderItemStatesKey, requestHandler.getLastResponse(), 200);
+}
+
 export function creatSalesOrderEntity() {
+    preCreateSalesPaymentMethodTypesIfNotExist();   
+    preOmsOrderItemStateIfNotExist();
+
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     let maxOrderItemState = faker.number.intRange(1, 16);
     let buisnessAddresses = preCreateSalesOrederBusinessAddress();

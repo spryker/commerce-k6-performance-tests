@@ -69,7 +69,7 @@ function salesOrdersPreload() {
     if (salesOrdersData) {
         return;
     }
-    const limit = 100;
+    const limit = 1;
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     const response = requestHandler.getDataFromTable(`sales-orders?include=salesOrderItems&page[limit]=${limit}`);
 
@@ -86,6 +86,10 @@ function getRandomSalesOrderWithItems() {
 
 function getRandomSalesOrderItem() {
     let orderData = getRandomSalesOrderWithItems();
+
+    if (!orderData.salesOrderItems.length) {
+        return null;
+    }
 
     return orderData.salesOrderItems[Math.floor(Math.random() * orderData.salesOrderItems.length)];
 }
