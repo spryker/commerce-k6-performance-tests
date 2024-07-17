@@ -69,7 +69,7 @@ function salesOrdersPreload() {
     if (salesOrdersData) {
         return;
     }
-    const limit = 1;
+    const limit = 200;
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     const response = requestHandler.getDataFromTable(`sales-orders?include=salesOrderItems&page[limit]=${limit}`);
 

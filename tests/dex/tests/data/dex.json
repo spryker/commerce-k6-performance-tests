@@ -9391,5 +9391,56 @@
               }
           ]
       }
+  },
+  {
+      "tableName": "spy_oms_order_process",
+      "tableAlias": "oms-order-processes",
+      "isActive": true,
+      "definition": {
+          "identifier": "id_oms_order_process",
+          "isDeletable": true,
+          "fields": [
+              {
+                  "fieldName": "id_oms_order_process",
+                  "fieldVisibleName": "id_oms_order_process",
+                  "type": "integer",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "name",
+                  "fieldVisibleName": "name",
+                  "type": "string",
+                  "isCreatable": true,
+                  "isEditable": true,
+                  "validation": {
+                      "isRequired": true
+                  }
+              },
+              {
+                  "fieldName": "created_at",
+                  "fieldVisibleName": "created_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              },
+              {
+                  "fieldName": "updated_at",
+                  "fieldVisibleName": "updated_at",
+                  "type": "string",
+                  "isCreatable": false,
+                  "isEditable": false,
+                  "validation": {
+                      "isRequired": false
+                  }
+              }
+          ]
+      }
   }
 ]

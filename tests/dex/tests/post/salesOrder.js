@@ -96,13 +96,13 @@ options.scenarios = {
             testId: 'creatSalesOrder',
             testGroup: 'DataExchange',
         },
-        iterations: 500,
+        iterations: 100,
         vus: 5
     }
 }
 
 options.thresholds = metrics.getThresholds();
-const payloadSize = 100;
+const payloadSize = 50;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -122,7 +122,7 @@ function generateInvoiceId() {
 }
 
 function generateOrderReference() {
-    return `LOAD1--${randomString(5)}`
+    return `LOAD${randomString(3)}--${randomString(6)}`
 }
 
 function skuGenerator() {
@@ -308,7 +308,7 @@ function generateSalesOrderItems(countItems = 1, maxOrderItemState = 14) {
             'salesOrderItemMetadatas': [
                 generateSalesOrderItemMetadata()
             ],
-            'salesOrderItemOptions': generateSalesOrderItemOptions(faker.number.intRange(1, 10), sku)
+            'salesOrderItemOptions': generateSalesOrderItemOptions(faker.number.intRange(1, 3), sku)
         };
     });
 }
@@ -385,16 +385,10 @@ function preCreateSalesPaymentMethodTypesIfNotExist() {
     metrics.add(metricKeys.preCreateSalesOrderPaymentMethodTypesKey, requestHandler.getLastResponse(), 200);
 }
 
-function preOmsOrderItemStateIfNotExist() {
-
+function preCreateOmsOrderItemStatesIfNotExist() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     let response = requestHandler.getDataFromTable('oms-order-item-states');
-    let missedStates = [];
-    
-    if (response.length > 0) {
-        missedStates = omsOrderItemStates.filter(state => !response.find(item => item.name === state));
-    }
-
+    let missedStates = omsOrderItemStates.filter(state => !response.find(item => item.name === state));
     if (missedStates.length === 0) {
         return;
     }
@@ -416,12 +410,28 @@ function preOmsOrderItemStateIfNotExist() {
     metrics.add(metricKeys.preCreateSalesOrderOmsOrderItemStatesKey, requestHandler.getLastResponse(), 200);
 }
 
+function preCreateOmsOrderProcessIfNotExist() {
+    const requestHandler = new Handler(http, urlHelper, bapiHelper);
+    let response = requestHandler.getDataFromTable('oms-order-processes');
+
+    if (response.length > 0) {
+        return;
+    }
+
+    response = requestHandler.createEntities('oms-order-processes', JSON.stringify({ data: [{'name': 'DummyPayment01'}] }));
+
+    if (response.status !== 201) {
+        console.error(response.body)
+    }
+}
+
 export function creatSalesOrderEntity() {
-    preCreateSalesPaymentMethodTypesIfNotExist();   
-    preOmsOrderItemStateIfNotExist();
+    preCreateOmsOrderProcessIfNotExist();   
+    preCreateSalesPaymentMethodTypesIfNotExist();
+    preCreateOmsOrderItemStatesIfNotExist();
 
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    let maxOrderItemState = faker.number.intRange(1, 16);
+    let maxOrderItemState = faker.number.intRange(3, 16);
     let buisnessAddresses = preCreateSalesOrederBusinessAddress();
     let customerData = getRandomCustomer();
 
@@ -450,18 +460,14 @@ export function creatSalesOrderEntity() {
             'salesOrderInvoices': [
                 generateSalesOrederInvoice()
             ],
-
-            'salesOrderComments': generateSalesOrderComments(faker.number.intRange(1, 20)),
+            'salesOrderComments': generateSalesOrderComments(faker.number.intRange(1, 10)),
             'salesOrderTotals': generateSalesOrderTotals(faker.number.intRange(1, 5)),
-            'salesOrderItems': generateSalesOrderItems(faker.number.intRange(1, 5), maxOrderItemState),
+            'salesOrderItems': generateSalesOrderItems(faker.number.intRange(1, 2), maxOrderItemState),
             'salesOrderPayments': [
                 generateSalesOrderPyment()
-            ]
+            ],
+            'salesOrderRefunds':  generateSalesOrderRefunds(),
         };
- 
-        if (maxOrderItemState === 15) {
-            orderObject['salesOrderRefunds'] = generateSalesOrderRefunds();
-        }
 
         return orderObject;
     });
