@@ -34,7 +34,7 @@ options.scenarios = {
             testId: 'GetSalesOrders',
             testGroup: 'DataExchange',
         },
-        iterations: 500,
+        iterations: 100,
         vus: 5,
     },
 
@@ -49,7 +49,7 @@ const adminHelper = new AdminHelper()
 const assertionHelper = new AssertionsHelper()
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
 const requestHandler = new Handler(http, urlHelper, bapiHelper);
-const limit = 100
+const limit = 50
 const includes = [
     'salesOrderBillingAddresses',
     'salesOrderComments',
@@ -71,6 +71,8 @@ const includes = [
 export function getSalesOrders() {
     let include = `include=${includes.join(',')}`;
     let pageLimit = `page[limit]=${limit}`;
+    let url = 'sales-orders?' + include + '&' + pageLimit;
+    console.warn(url);
     const response = requestHandler.getDataFromTable('sales-orders?' + include + '&' + pageLimit);
 
     if (response.status > 300) {

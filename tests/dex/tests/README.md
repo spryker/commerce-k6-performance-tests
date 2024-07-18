@@ -74,3 +74,11 @@ docker-compose -f docker-compose.local.yml  run --rm k6 run tests/dex/tests/post
 docker-compose -f docker-compose.local.yml  run --rm k6 run tests/dex/tests/post/salesOrderItemState.js
 
 ```
+
+4. Run tests for get sales orders `tests/dex/tests/get/salesOrderWithIncludes.js`
+
+```bash
+
+docker-compose -f docker-compose.local.yml  run --rm k6 run tests/dex/tests/get/salesOrderWithIncludes.js
+
+```
