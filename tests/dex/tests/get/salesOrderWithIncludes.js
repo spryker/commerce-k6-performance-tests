@@ -71,8 +71,6 @@ const includes = [
 export function getSalesOrders() {
     let include = `include=${includes.join(',')}`;
     let pageLimit = `page[limit]=${limit}`;
-    let url = 'sales-orders?' + include + '&' + pageLimit;
-    console.warn(url);
     const response = requestHandler.getDataFromTable('sales-orders?' + include + '&' + pageLimit);
 
     if (response.status > 300) {
