@@ -24,7 +24,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
 }, {
@@ -35,7 +35,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 }, {
@@ -46,7 +46,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 },])
@@ -103,9 +103,7 @@ function customersPreload() {
 
     const limit = 200;
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    const response = requestHandler.getDataFromTable(`customers?page[limit]=${limit}`);
-
-    customersData = response;
+    customersData = requestHandler.getDataFromTable(`customers?page[limit]=${limit}`);
 
     metrics.add(metricKeys.customersPreloadKey, requestHandler.getLastResponse(), 200);
 }

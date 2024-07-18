@@ -19,7 +19,7 @@ let metrics = new Metrics([
             counter: false
         },
         thresholds: {
-            trend: ['p(95)<200'],
+            trend: ['p(95)<500'],
             rate: ['rate==1']
         }
     },

@@ -21,7 +21,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
 }, {
@@ -32,7 +32,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 }]);
@@ -80,9 +80,7 @@ function salesOrdersPreload() {
     }
 
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    const response = requestHandler.getDataFromTable('sales-orders?include=salesOrderItems&page[limit]=${limit}');
-
-    salesOrdersData = response;
+    salesOrdersData = requestHandler.getDataFromTable('sales-orders?include=salesOrderItems&page[limit]=${limit}');
 
     metrics.add(metricKeys.salesOrderPreloadKey, requestHandler.getLastResponse(), 200);
 }

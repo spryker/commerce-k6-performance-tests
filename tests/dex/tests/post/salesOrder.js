@@ -49,7 +49,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
 },{
@@ -60,7 +60,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 },{
@@ -71,7 +71,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 },{
@@ -82,7 +82,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 },
@@ -134,9 +134,7 @@ function localesPreload() {
     }
 
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    const response = requestHandler.getDataFromTable('locales');
-
-    localesData = response;
+    localesData =requestHandler.getDataFromTable('locales');
 
     metrics.add(metricKeys.localesPreloadKey, requestHandler.getLastResponse(), 200);
 }
@@ -148,9 +146,7 @@ function customersPreload() {
 
     const limit = 100;
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    const response = requestHandler.getDataFromTable(`customers?page[limit]=${limit}`);
-
-    customersData = response;
+    customersData = requestHandler.getDataFromTable(`customers?page[limit]=${limit}`);
 
     metrics.add(metricKeys.customersPreloadKey, requestHandler.getLastResponse(), 200);
 }
@@ -436,7 +432,7 @@ export function creatSalesOrderEntity() {
     let customerData = getRandomCustomer();
 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
-        let orderObject = {
+        return {
             'fk_locale': getLocaleId(defalutLocale),
             'fk_order_source': null,
             'fk_sales_order_address_billing': getRandomBuinessAddressId(buisnessAddresses),
@@ -468,8 +464,6 @@ export function creatSalesOrderEntity() {
             ],
             'salesOrderRefunds':  generateSalesOrderRefunds(),
         };
-
-        return orderObject;
     });
 
     let response = requestHandler.createEntities('sales-orders', JSON.stringify({

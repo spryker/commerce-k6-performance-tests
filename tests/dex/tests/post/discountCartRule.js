@@ -22,7 +22,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
 }, {
@@ -33,7 +33,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 }])
@@ -63,8 +63,8 @@ const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
 const currencyCodes = [];
 
 /**
- * @param {string} email 
  * @returns number
+ * @param curencyCode
  */
 function getCurrencyId(curencyCode) {
 

@@ -4,6 +4,13 @@ For run tests please use specific suite-nonsplit branch: `feature/frw-8409/dev-e
 
 _This branch contains all necessary changes for run tests and configuration for DEX._
 
+### Run all tests from local machine
+
+```bash
+
+COMPOSER_FILE=docker-compose.local.yml SPRYKER_TEST_ENVIRONMENT=DEX ./shell/run-all-dex-erp-performance-tests.sh
+
+```
 
 ### Company users 
 

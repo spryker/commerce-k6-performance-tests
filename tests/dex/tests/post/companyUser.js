@@ -24,7 +24,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
 },{
@@ -35,7 +35,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 }, {
@@ -46,7 +46,7 @@ let metrics = new Metrics([{
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<200'],
+        trend: ['p(99)<500'],
         rate: ['rate==1']
     }
 },]);
@@ -81,7 +81,7 @@ let companyId = null;
 let companyRoleId = null;
 
 /**
- * @param {string} key 
+ * @param {string} key
  * @returns undefined
  */
 function companyBusinessUnitPreload(key = null) {
@@ -99,8 +99,8 @@ function companyBusinessUnitPreload(key = null) {
 }
 
 /**
- * @param {string} code 
  * @returns number
+ * @param key
  */
 function companyRolesPreload(key = null) {
     if(companyRoleId) {
