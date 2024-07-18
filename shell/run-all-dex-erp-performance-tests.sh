@@ -11,7 +11,7 @@ filesDirectory2=($(find "tests/dex/tests/patch" -name '*.js' -type f | sort))
 filesDirectory3=($(find "tests/dex/tests/post" -name '*.js' -type f | sort ))
 
 # Merge the arrays
-files=("${filesDirectory3[@]}" "${filesDirectory1[@]}" "${filesDirectory2[@]}")
+files=("${filesDirectory3[@]}" "${filesDirectory2[@]}" "${filesDirectory1[@]}")
 
 run_k6_tests "$files"
 

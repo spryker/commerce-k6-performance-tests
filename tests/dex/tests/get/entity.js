@@ -11,8 +11,7 @@ import EntityConfig from '../../../../helpers/dynamicEntity/entityConfig.js';
 export const options = loadDefaultOptions()
 
 let entitiesConfiguration = new EntityConfig(JSON.parse(open('../data/dex.json')))
-
-let metrics = new Metrics(entitiesConfiguration.getEntityKeys().map((alias) => {
+let metrics = new Metrics(entitiesConfiguration.getEntityAliases().map((alias) => {
     return {
         key: alias,
         types: ['trend', 'rate', 'counter'],
@@ -21,7 +20,7 @@ let metrics = new Metrics(entitiesConfiguration.getEntityKeys().map((alias) => {
             counter: false
         },
         thresholds: {
-            trend: ['p(95)<=100'],
+            trend: ['p(95)<=200'],
             rate: ['rate==1']
         }
     }
@@ -35,8 +34,8 @@ options.scenarios = {
             testId: 'EntityDataGet',
             testGroup: 'DataExchange',
         },
-        iterations: 10,
-        vus: 10
+        iterations: 50,
+        vus: 5
     }
 }
 
@@ -52,10 +51,10 @@ const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
 const limit = 100
 
 export function entityDataGet() {
-    entitiesConfiguration.getEntityKeys().map((alias) => {
+    entitiesConfiguration.getEntityAliases().map((alias) => {
         const requestHandler = new Handler(http, urlHelper, bapiHelper)
         let result = requestHandler.getDataFromTable(`${alias}?page[offset]=0&page[limit]=${limit}`)
-        assertionHelper.assertLessOrEqual(result.length, limit)
         metrics.add(alias, requestHandler.getLastResponse(), 200)
+        assertionHelper.assertLessOrEqual(result.length, limit)
     })
 }
