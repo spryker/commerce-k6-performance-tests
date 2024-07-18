@@ -10,7 +10,7 @@ import EntityConfig from '../../../../helpers/dynamicEntity/entityConfig.js';
 
 export const options = loadDefaultOptions()
 
-let entitiesConfiguration = new EntityConfig(JSON.parse(open('../tests/data/dex.json')))
+let entitiesConfiguration = new EntityConfig(JSON.parse(open('../data/dex.json')))
 
 let metrics = new Metrics(entitiesConfiguration.getEntityKeys().map((alias) => {
     return {
