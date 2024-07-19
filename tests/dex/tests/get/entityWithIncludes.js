@@ -52,7 +52,7 @@ const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
 const limit = 100
 
 export function entityDataGet() {
-    entitiesConfiguration.getEntityKeys().map((entityAlias) => {
+    entitiesConfiguration.getEntityAliases().map((entityAlias) => {
         const requestHandler = new Handler(http, urlHelper, bapiHelper)
         let includes = entitiesConfiguration.getIncludeAliasesByEntityAlias(entityAlias)
         if (includes.length) {

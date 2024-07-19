@@ -89,6 +89,16 @@ let metrics = new Metrics([{
 ])
 
 options.scenarios = {
+    Initialisation: {
+        exec: 'initialiseEnv',
+        executor: 'per-vu-iterations',
+        tags: {
+            testId: 'InitialiseEnvForSalesOrderCreation',
+            testGroup: 'DataExchange',
+        },
+        iterations: 1,
+        vus: 1
+    },
     SalesOrderCreateVUS: {
         exec: 'creatSalesOrderEntity',
         executor: 'shared-iterations',
@@ -97,7 +107,8 @@ options.scenarios = {
             testGroup: 'DataExchange',
         },
         iterations: 100,
-        vus: 5
+        vus: 2,
+        startTime: '30s'
     }
 }
 
@@ -421,10 +432,13 @@ function preCreateOmsOrderProcessIfNotExist() {
     }
 }
 
-export function creatSalesOrderEntity() {
-    preCreateOmsOrderProcessIfNotExist();   
+export function initialiseEnv() {
+    preCreateOmsOrderProcessIfNotExist();
     preCreateSalesPaymentMethodTypesIfNotExist();
     preCreateOmsOrderItemStatesIfNotExist();
+}
+
+export function creatSalesOrderEntity() {
 
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     let maxOrderItemState = faker.number.intRange(3, 16);

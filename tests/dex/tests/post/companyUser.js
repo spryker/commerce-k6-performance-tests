@@ -126,7 +126,7 @@ function generateCustomerReference() {
  * @returns string
  */
 function generateCustomerEmail() {
-    return faker.person.email();
+    return `${randomString(6)}-${faker.person.email()}`;
 }
 /**
  * Returns a random date from the last week in the format 'YYYY-MM-DD'.

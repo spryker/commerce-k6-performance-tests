@@ -117,7 +117,7 @@ export default class EntityConfig {
     }
 
     getEntitiesWithIncludes() {
-        return [...this.entityMap.values()].filter((entity) => entity.includes.length).map((entity) => entity.table)
+        return [...this.entityMap.values()].filter((entity) => entity.includes.length).map((entity) => entity.alias)
     }
 
     getIncludeAliasesByEntityAlias(entityAlias) {
