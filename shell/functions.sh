@@ -74,7 +74,13 @@ build_k6_docker_command() {
         fi
     fi
 
-    command="docker-compose run --rm -i \
+    if [ -z "$COMPOSER_FILE" ]; then
+        composeFile=''
+    else
+        composeFile="-f ${COMPOSER_FILE}"
+    fi
+
+    command="docker-compose $composeFile run --rm -i \
             -v $(pwd):/scripts \
             -u $(id -u):$(id -g) \
             -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
@@ -181,11 +187,27 @@ start_timer() {
     start_time=$(date +%s)
 }
 
+format_time() {
+    local elapsed_time=$1
+    local hours=$((elapsed_time / 3600))
+    local minutes=$(( (elapsed_time % 3600) / 60 ))
+    local seconds=$((elapsed_time % 60))
+    printf "%02d:%02d:%02d" $hours $minutes $seconds
+}
+
 # Function to stop the timer and display the elapsed time
 stop_timer() {
     end_time=$(date +%s)
     elapsed_time=$((end_time - start_time))
-    formatted_time=$(date -u -d @"$elapsed_time" +'%H:%M:%S')
+    os=$(uname)
+
+    if [[ "$os" == "Linux" || "$os" == "Darwin" ]]; then
+        formatted_time=$(format_time $elapsed_time)
+    elif [[ "$os" == "MINGW"* || "$os" == "CYGWIN"* || "$os" == "MSYS"* ]]; then
+        formatted_time=$(format_time $elapsed_time)
+    else
+        formatted_time="Can\`t format time. Unsupported OS: $os"
+    fi
 
     echo "Elapsed time: $formatted_time"
 }
