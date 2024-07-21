@@ -108,7 +108,7 @@ options.scenarios = {
         },
         iterations: 100,
         vus: 2,
-        startTime: '30s'
+        // startTime: '30s'
     }
 }
 
@@ -127,6 +127,7 @@ const defaultStore = 'DE';
 
 let localesData = null;
 let customersData = null;
+let omsOrderStatesData = null;
 
 function generateInvoiceId() {
     return `Invoice-${randomString(5)}`
@@ -178,6 +179,11 @@ function getRandomCustomer() {
     return customersData[Math.floor(Math.random() * customersData.length)];
 }
 
+function loadOmsOrderItemStates() {
+    const requestHandler = new Handler(http, urlHelper, bapiHelper);
+    omsOrderStatesData = requestHandler.getDataFromTable('oms-order-item-states');
+}
+
 function generateSalesOrederInvoice() {
     return {
         'reference': generateInvoiceId(),
@@ -216,15 +222,16 @@ function generateSalesOrderTotals(count = 3) {
     })
 }
 
-function generateSalesOmsOrderItemStatesHistories(maxState) {
-
+function generateSalesOmsOrderItemStatesHistories(maxStateId) {
     let states = [];
 
-    for (let i = 1; i <= maxState; i++) {
-        states.push({
-            'fk_oms_order_item_state': i,
-            'created_at':'2022-02-24 00:00:00.000000'
-        });
+    for (let stateId = 1; stateId <= maxStateId; stateId++) {
+        if (omsOrderStatesData.find(stateEntity => stateEntity.id_oms_order_item_state === stateId)) {
+            states.push({
+                'fk_oms_order_item_state': stateId,
+                'created_at':'2022-02-24 00:00:00.000000'
+            });
+        }
     }
 
     return states;
@@ -394,8 +401,9 @@ function preCreateSalesPaymentMethodTypesIfNotExist() {
 
 function preCreateOmsOrderItemStatesIfNotExist() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    let response = requestHandler.getDataFromTable('oms-order-item-states');
-    let missedStates = omsOrderItemStates.filter(state => !response.find(item => item.name === state));
+    let omsOrderStatesData = requestHandler.getDataFromTable('oms-order-item-states');
+    let missedStates = omsOrderItemStates.filter(state => !omsOrderStatesData.find(stateEntity => stateEntity.name === state));
+
     if (missedStates.length === 0) {
         return;
     }
@@ -406,7 +414,7 @@ function preCreateOmsOrderItemStatesIfNotExist() {
         }
     });
 
-    response = requestHandler.createEntities('oms-order-item-states', JSON.stringify({
+    let response = requestHandler.createEntities('oms-order-item-states', JSON.stringify({
         data: payload
     }))
 
@@ -432,6 +440,12 @@ function preCreateOmsOrderProcessIfNotExist() {
     }
 }
 
+function getRandomOrderItemStateId() {
+    let setateIds = omsOrderStatesData.map(state => state.id_oms_order_item_state);
+
+    return setateIds[Math.floor(Math.random() * setateIds.length)];
+}
+
 export function initialiseEnv() {
     preCreateOmsOrderProcessIfNotExist();
     preCreateSalesPaymentMethodTypesIfNotExist();
@@ -439,11 +453,12 @@ export function initialiseEnv() {
 }
 
 export function creatSalesOrderEntity() {
+    loadOmsOrderItemStates();
 
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    let maxOrderItemState = faker.number.intRange(3, 16);
     let buisnessAddresses = preCreateSalesOrederBusinessAddress();
     let customerData = getRandomCustomer();
+    let maxOrderItemState = getRandomOrderItemStateId(); 
 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
         return {
@@ -485,6 +500,10 @@ export function creatSalesOrderEntity() {
     }))
 
     if (response.status !== 201) {
+        console.error('sales-orders');
+        console.error(JSON.stringify({
+            data: payload
+        }));
         console.error(response.body)
     }
 
