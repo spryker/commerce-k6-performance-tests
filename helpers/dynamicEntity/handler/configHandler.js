@@ -42,7 +42,7 @@ export default class ConfigHandler extends Handler {
     getUniqueLocaleIds() {
         this.get()
 
-        return [...new Set(this.storeLocales.map((el) => el.fk_locale))]
+        return [...new Set(this.storeLocales.map((el) => el))]
     }
 
     getStoreConfig(storeCode) {
