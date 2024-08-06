@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. .env
+
 source shell/functions.sh
 
 # Record the start time
