@@ -23,7 +23,8 @@ export default class ConfigHandler extends Handler {
             })
 
             if (this.storeWhitelist.length) {
-                this.storesConfig = this.storesConfig.filter((store) => this.storeWhitelist.filter((storeCode) => String(storeCode).toLowerCase() === String(store.name).toLowerCase()).length)
+                this.storesConfig = this.storesConfig
+                    .filter((store) => this.storeWhitelist.filter((storeCode) => String(storeCode).toLowerCase() === String(store.name).toLowerCase()).length)
                 this.storeLocales = this.storeLocales.filter((locale) => this.storesConfig.filter((store) => locale.fk_store === store.id_store).length)
                 this.storeCurrencies = this.storeCurrencies.filter((currency) => this.storesConfig.filter((store) => currency.fk_store === store.id_store).length)
             }
