@@ -4,6 +4,7 @@ settings.json
 /.env
 /results/
 !/results/.gitkeep
+!/results/summaries/.gitkeep
 .lh
 /.pki
 /.cache

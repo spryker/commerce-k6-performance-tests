@@ -1,5 +1,8 @@
 import { SharedProductDetailsScenario } from '../../../../cross-product/sapi/scenarios/product-details/shared-product-details-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
+
+const productDetailsScenario = new SharedProductDetailsScenario('B2B');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -13,8 +16,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-
-const productDetailsScenario = new SharedProductDetailsScenario('B2B');
+options.thresholds[`http_req_duration{url:${productDetailsScenario.getStorefrontApiBaseUrl()}/concrete-products/\${}}`] = ['avg<70'];
 
 export function executeProductDetailsScenario() {
     productDetailsScenario.execute();

@@ -6,8 +6,6 @@ services:
       dockerfile: Dockerfile
     networks:
       - loadtesting
-      - spryker-cloud_private
-      - spryker-cloud_public
       # - spryker_demo_private
       # - spryker_demo_public
       # - spryker_b2b_marketplace_dev_private
@@ -56,31 +54,19 @@ services:
         - GIT_TAG=${GIT_TAG:-'-'}
         - SPRYKER_TEST_RUN_ID=${SPRYKER_TEST_RUN_ID:-'-'}
         - SPRYKER_TEST_RUNNER_HOSTNAME=${SPRYKER_TEST_RUNNER_HOSTNAME:-'-'}
+        - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
+        - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
         - SPRYKER_TEST_ENVIRONMENT=${SPRYKER_TEST_ENVIRONMENT:-'-'}
-        - B2B_MP_AUTH_USERNAME=${B2B_MP_AUTH_USERNAME}
-        - B2B_MP_AUTH_PASSWORD=${B2B_MP_AUTH_PASSWORD}
-        - B2C_MP_AUTH_USERNAME=${B2C_MP_AUTH_USERNAME}
-        - B2C_MP_AUTH_PASSWORD=${B2C_MP_AUTH_PASSWORD}
-        - B2B_AUTH_USERNAME=${B2B_AUTH_USERNAME}
-        - B2B_AUTH_PASSWORD=${B2B_AUTH_PASSWORD}
-        - B2C_AUTH_USERNAME=${B2C_AUTH_USERNAME}
-        - B2C_AUTH_PASSWORD=${B2C_AUTH_PASSWORD}
-        - DEX_AUTH_USERNAME=${DEX_AUTH_USERNAME}
-        - DEX_AUTH_PASSWORD=${DEX_AUTH_PASSWORD}
-        - DMS_AUTH_USERNAME=${DMS_AUTH_USERNAME}
-        - DMS_AUTH_PASSWORD=${DMS_AUTH_PASSWORD}
-        - PTL_AUTH_USERNAME=${PTL_AUTH_USERNAME}
-        - PTL_AUTH_PASSWORD=${PTL_AUTH_PASSWORD}
         - VALIDATE_VISITED_URL=${VALIDATE_VISITED_URL:-0}
         - MAX_CART_SIZE=${MAX_CART_SIZE:-2}
         - RANDOM_CART_SIZE_WITHIN_TARGET_MAX=${RANDOM_CART_SIZE_WITHIN_TARGET_MAX:-0}
         - STORE=${STORE:-de}
         - STORES_FROM_ENV=${STORES_FROM_ENV:-0}
-    volumes:  
+    volumes:
       - .:/home/k6
     ports:
       - "6565:6565"
- 
+
 networks:
   loadtesting:
   spryker-cloud_private:

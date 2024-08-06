@@ -1,5 +1,8 @@
 import { SharedHomepageScenario } from '../../../../cross-product/sapi/scenarios/homepage/shared-homepage-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
+
+const homepageScenario = new SharedHomepageScenario('B2B');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -13,8 +16,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-
-const homepageScenario = new SharedHomepageScenario('B2B');
+options.thresholds[`http_req_duration{url:${homepageScenario.getStorefrontApiBaseUrl()}/cms-pages/\${}}`] = ['avg<59'];
 
 export function executeHomepageScenario() {
     homepageScenario.execute();

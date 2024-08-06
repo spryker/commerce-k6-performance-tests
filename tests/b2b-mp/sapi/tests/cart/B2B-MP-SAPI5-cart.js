@@ -1,5 +1,8 @@
 import { SharedCartScenario } from '../../../../cross-product/sapi/scenarios/cart/shared-cart-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+export { handleSummary } from '../../../../../helpers/summary-helper.js';
+
+const sharedCartScenario = new SharedCartScenario('B2B_MP');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -16,8 +19,7 @@ options.scenarios = {
         iterations: 10
     },
 };
-
-const sharedCartScenario = new SharedCartScenario('B2B_MP');
+options.thresholds[`http_req_duration{url:${sharedCartScenario.getStorefrontApiBaseUrl()}/carts/\${}/?include=items}`] = ['avg<383'];
 
 export function executeSharedCartScenario() {
     sharedCartScenario.execute();
