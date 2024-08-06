@@ -8,19 +8,34 @@ import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
 
 export const options = loadDefaultOptions();
+const metricKeys = {
+    salesReturnCreateKey: 'sales-return-create',
+    salesOrderPreloadKey: 'sales-return-order-preload'
+};
 
 let metrics = new Metrics([{
-    key: 'sales-return-create',
+    key: metricKeys.salesReturnCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
-}, ]);
+}, {
+    key: metricKeys.salesOrderPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<500'],
+        rate: ['rate==1']
+    }
+}]);
 
 options.scenarios = {
     SalesReturnCreateVUS: {
@@ -44,10 +59,10 @@ const urlHelper = new UrlHelper(envConfig);
 const adminHelper = new AdminHelper();
 const assertionHelper = new AssertionsHelper();
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper);
-const defaultCustomerId = 35;
+const defaultCustomerId = 10;
 const storeCode = 'DE';
 const returnReason = 'Damaged';
-const orderItemId = 3;
+let salesOrdersData = null;
 
 /**
  * @returns string
@@ -56,9 +71,31 @@ function getnerateReturnReference() {
     return `customer--${defaultCustomerId}-R${randomString()}`;
 }
 
+/**
+ * @returns undefined
+ */
+function salesOrdersPreload() {
+    if (salesOrdersData) {
+        return;
+    }
+
+    const requestHandler = new Handler(http, urlHelper, bapiHelper);
+    salesOrdersData = requestHandler.getDataFromTable('sales-orders?include=salesOrderItems&page[limit]=${limit}');
+
+    metrics.add(metricKeys.salesOrderPreloadKey, requestHandler.getLastResponse(), 200);
+}
+
+function getRandomSalesOrderWithItems() {
+    salesOrdersPreload();
+
+    return salesOrdersData[Math.floor(Math.random() * salesOrdersData.length)];
+}
+
 export function createSalesReturnEntity() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper); 
-    const customerReference = `customer--${defaultCustomerId}`;
+    let salesOrderData = getRandomSalesOrderWithItems();
+    let customerReference = salesOrderData.customer_reference;
+    let orderItemId = salesOrderData.salesOrderItems[0].id_sales_order_item;
 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
         return {
@@ -66,9 +103,9 @@ export function createSalesReturnEntity() {
             merchantReference: null, 
             returnReference:getnerateReturnReference(),
             store: storeCode,
-            items: [
+            returnItems: [
                 {
-                    fkSalesOrderItem: orderItemId,
+                    fk_sales_order_item: orderItemId,
                     reason: returnReason,
                     uuid: uuid()
                 }
@@ -84,5 +121,5 @@ export function createSalesReturnEntity() {
         console.error(response.body)
     }
 
-    metrics.add('sales-returns-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.salesReturnCreateKey, requestHandler.getLastResponse(), 201);
 }

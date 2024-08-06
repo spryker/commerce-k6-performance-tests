@@ -10,7 +10,7 @@ import EntityConfig from '../../../../helpers/dynamicEntity/entityConfig.js';
 
 export const options = loadDefaultOptions()
 
-let entitiesConfiguration = new EntityConfig(JSON.parse(open('../tests/data/dex.json')))
+let entitiesConfiguration = new EntityConfig(JSON.parse(open('../data/dex.json')))
 
 let metrics = new Metrics(entitiesConfiguration.getEntitiesWithIncludes().map((alias) => {
     return {
@@ -52,7 +52,7 @@ const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
 const limit = 100
 
 export function entityDataGet() {
-    entitiesConfiguration.getEntityKeys().map((entityAlias) => {
+    entitiesConfiguration.getEntityAliases().map((entityAlias) => {
         const requestHandler = new Handler(http, urlHelper, bapiHelper)
         let includes = entitiesConfiguration.getIncludeAliasesByEntityAlias(entityAlias)
         if (includes.length) {
