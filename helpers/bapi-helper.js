@@ -1,5 +1,5 @@
 import { Counter } from 'k6/metrics';
-import {debug} from "../lib/utils.js";
+import {debug} from '../lib/utils.js';
 
 export class BapiHelper {
     constructor(urlHelper, http, adminHelper, assertionsHelper) {
