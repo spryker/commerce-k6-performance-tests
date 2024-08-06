@@ -104,6 +104,10 @@ export default class EntityConfig {
         return [...this.entityMap.keys()]
     }
 
+    getEntityAliases() {
+        return [...this.entityAliasMap.keys()]
+    }
+
     getEntityKeysForTestsGeneration() {
         return [...this.entityMap.values()].filter((entity) => {
             // return this.isCandidateForComplexPayload(entity.alias) || this.isCandidateForSimplePayload(entity.alias)
@@ -113,7 +117,7 @@ export default class EntityConfig {
     }
 
     getEntitiesWithIncludes() {
-        return [...this.entityMap.values()].filter((entity) => entity.includes.length).map((entity) => entity.table)
+        return [...this.entityMap.values()].filter((entity) => entity.includes.length).map((entity) => entity.alias)
     }
 
     getIncludeAliasesByEntityAlias(entityAlias) {

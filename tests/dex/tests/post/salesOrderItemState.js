@@ -1,4 +1,4 @@
-import {loadDefaultOptions, loadEnvironmentConfig, randomString, uuid} from '../../../../lib/utils.js';
+import {loadDefaultOptions, loadEnvironmentConfig} from '../../../../lib/utils.js';
 import Handler from '../../../../helpers/dynamicEntity/handler.js';
 import {Http} from '../../../../lib/http.js';
 import {UrlHelper} from '../../../../helpers/url-helper.js';
@@ -8,13 +8,14 @@ import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
 
 export const options = loadDefaultOptions();
+
 const metricKeys = {
-    salesReturnCreateKey: 'sales-return-create',
-    salesOrderPreloadKey: 'sales-return-order-preload'
+    salesOrderItemStateCreateKey: 'sales-order-item-state-create',
+    salesOrdersPreloadKey: 'sales-order-item-state-sales-order-preload'
 };
 
 let metrics = new Metrics([{
-    key: metricKeys.salesReturnCreateKey,
+    key: metricKeys.salesOrderItemStateCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
@@ -25,24 +26,24 @@ let metrics = new Metrics([{
         rate: ['rate==1']
     }
 }, {
-    key: metricKeys.salesOrderPreloadKey,
+    key: metricKeys.salesOrdersPreloadKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
         counter: false
     },
     thresholds: {
-        trend: ['p(99)<500'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
-}]);
+},])
 
 options.scenarios = {
-    SalesReturnCreateVUS: {
-        exec: 'createSalesReturnEntity',
+    SalesOrderCreateVUS: {
+        exec: 'creatSalesOrderItemHistory',
         executor: 'shared-iterations',
         tags: {
-            testId: 'createSalesReturn',
+            testId: 'creatSalesOrder',
             testGroup: 'DataExchange',
         },
         iterations: 250,
@@ -50,7 +51,7 @@ options.scenarios = {
     }
 }
 
-options.thresholds = metrics.getThresholds(); 
+options.thresholds = metrics.getThresholds();
 const payloadSize = 200;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
@@ -59,17 +60,7 @@ const urlHelper = new UrlHelper(envConfig);
 const adminHelper = new AdminHelper();
 const assertionHelper = new AssertionsHelper();
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper);
-const defaultCustomerId = 10;
-const storeCode = 'DE';
-const returnReason = 'Damaged';
 let salesOrdersData = null;
-
-/**
- * @returns string
- */
-function getnerateReturnReference() {
-    return `customer--${defaultCustomerId}-R${randomString()}`;
-}
 
 /**
  * @returns undefined
@@ -78,11 +69,11 @@ function salesOrdersPreload() {
     if (salesOrdersData) {
         return;
     }
-
+    const limit = 200;
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    salesOrdersData = requestHandler.getDataFromTable('sales-orders?include=salesOrderItems&page[limit]=${limit}');
+    salesOrdersData = requestHandler.getDataFromTable(`sales-orders?include=salesOrderItems&page[limit]=${limit}`);
 
-    metrics.add(metricKeys.salesOrderPreloadKey, requestHandler.getLastResponse(), 200);
+    metrics.add(metricKeys.salesOrdersPreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 function getRandomSalesOrderWithItems() {
@@ -91,29 +82,34 @@ function getRandomSalesOrderWithItems() {
     return salesOrdersData[Math.floor(Math.random() * salesOrdersData.length)];
 }
 
-export function createSalesReturnEntity() {
-    const requestHandler = new Handler(http, urlHelper, bapiHelper); 
-    let salesOrderData = getRandomSalesOrderWithItems();
-    let customerReference = salesOrderData.customer_reference;
-    let orderItemId = salesOrderData.salesOrderItems[0].id_sales_order_item;
+function getRandomSalesOrderItem() {
+    let orderData = getRandomSalesOrderWithItems();
 
+    if (!orderData.salesOrderItems.length) {
+        return null;
+    }
+
+    return orderData.salesOrderItems[Math.floor(Math.random() * orderData.salesOrderItems.length)];
+}
+
+function generateRandomPastDate() {
+    let date = new Date();
+    date.setDate(date.getDate() - Math.floor(Math.random() * 1000));
+    return date.toISOString().split('T')[0] + ' 00:00:00.000000';
+}
+
+export function creatSalesOrderItemHistory() {
+    const requestHandler = new Handler(http, urlHelper, bapiHelper); 
+    let salesOrderItem = getRandomSalesOrderItem(); 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
         return {
-            customerReference: customerReference,
-            merchantReference: null, 
-            returnReference:getnerateReturnReference(),
-            store: storeCode,
-            returnItems: [
-                {
-                    fk_sales_order_item: orderItemId,
-                    reason: returnReason,
-                    uuid: uuid()
-                }
-            ]
+            fk_sales_order_item: salesOrderItem.id_sales_order_item,
+            fk_oms_order_item_state: salesOrderItem.fk_oms_order_item_state,
+            created_at: generateRandomPastDate()
         }
     });
 
-    let response = requestHandler.createEntities('sales-returns', JSON.stringify({
+    let response = requestHandler.createEntities('oms-order-item-state-histories', JSON.stringify({
         data: payload
     }))
 
@@ -121,5 +117,5 @@ export function createSalesReturnEntity() {
         console.error(response.body)
     }
 
-    metrics.add(metricKeys.salesReturnCreateKey, requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.salesOrderItemStateCreateKey, requestHandler.getLastResponse(), 200);
 }

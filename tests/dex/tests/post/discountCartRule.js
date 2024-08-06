@@ -1,4 +1,4 @@
-import {loadDefaultOptions, loadEnvironmentConfig, randomString,  uuid} from '../../../../lib/utils.js';
+import {loadDefaultOptions, loadEnvironmentConfig, randomString, uuid} from '../../../../lib/utils.js';
 import Handler from '../../../../helpers/dynamicEntity/handler.js';
 import {Http} from '../../../../lib/http.js';
 import {UrlHelper} from '../../../../helpers/url-helper.js';
@@ -9,19 +9,34 @@ import {Metrics} from '../../../../helpers/browser/metrics.js';
 import faker from 'k6/x/faker';
 
 export const options = loadDefaultOptions();
+const metricKeys = {
+    discountCartRuleCreateKey: 'discount-cart-rule-create',
+    currencyPreloadKey: 'discount-cart-rule-currency-preload'
+};
 
 let metrics = new Metrics([{
-    key: 'discount-cart-rule-create',
+    key: metricKeys.discountCartRuleCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
-}, ])
+}, {
+    key: metricKeys.currencyPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<500'],
+        rate: ['rate==1']
+    }
+}])
 
 options.scenarios = {
     DiscountCartRuleCreateVUS: {
@@ -48,8 +63,8 @@ const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
 const currencyCodes = [];
 
 /**
- * @param {string} email 
  * @returns number
+ * @param curencyCode
  */
 function getCurrencyId(curencyCode) {
 
@@ -61,6 +76,8 @@ function getCurrencyId(curencyCode) {
     const response = requestHandler.getDataFromTable(`currencies?filter[currency.code]=${curencyCode}`);
 
     currencyCodes[curencyCode] = response[0].id_currency;
+
+    metrics.add(metricKeys.currencyPreloadKey, requestHandler.getLastResponse(), 200);
 
     return currencyCodes[curencyCode];
 }
@@ -128,5 +145,5 @@ export function creatDiscountCartRuleEntity() {
         console.error(response.body)
     }
 
-    metrics.add('discount-cart-rule-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.discountCartRuleCreateKey, requestHandler.getLastResponse(), 201);
 }

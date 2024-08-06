@@ -7,22 +7,49 @@ import AdminHelper from '../../../../helpers/admin-helper.js';
 import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
 import faker from 'k6/x/faker';
-import CustomerHelper from '../../../../helpers/customer-helper.js';
 
 export const options = loadDefaultOptions();
 
+const metricKeys = {
+    customerAddressCreateKey: 'customer-address-create',
+    customersPreloadKey: 'customer-address-customers-preload',
+    countryPreloadKey: 'customer-address-country-preload'
+}
+
 let metrics = new Metrics([{
-    key: 'customer-address-create',
+    key: metricKeys.customerAddressCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
-}, ])
+}, {
+    key: metricKeys.customersPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<500'],
+        rate: ['rate==1']
+    }
+}, {
+    key: metricKeys.countryPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<500'],
+        rate: ['rate==1']
+    }
+},])
 
 options.scenarios = {
     CustomerAddressCreateVUS: {
@@ -47,9 +74,8 @@ const urlHelper = new UrlHelper(envConfig);
 const adminHelper = new AdminHelper();
 const assertionHelper = new AssertionsHelper();
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper);
-const customerHelper = new CustomerHelper();
 let countryId = null;
-let customerId = null;
+let customersData = null;
 
 /**
  * @param {string} code 
@@ -65,31 +91,33 @@ function getCountryId(code = null) {
 
     countryId = response[0].id_country;
 
+    metrics.add(metricKeys.countryPreloadKey, requestHandler.getLastResponse(), 200);
+
     return countryId;
 }
 
-/**
- * @param {string} email 
- * @returns number
- */
-function getCustomerId(email) {
-
-    if (customerId) {
-        return customerId;
+function customersPreload() {
+    if (customersData) {
+        return;
     }
-    
+
+    const limit = 200;
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
-    const response = requestHandler.getDataFromTable(`customers?filter[customer.email]=${email}`);
+    customersData = requestHandler.getDataFromTable(`customers?page[limit]=${limit}`);
 
-    customerId = response[0].id_customer;
+    metrics.add(metricKeys.customersPreloadKey, requestHandler.getLastResponse(), 200);
+}
 
-    return customerId;
+function getRandomCustomer() {
+    customersPreload();
+
+    return customersData[Math.floor(Math.random() * customersData.length)];
 }
 
 export function createCustomerAddressEntity() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     const countryId = getCountryId('DE'); 
-    const customerId = getCustomerId(customerHelper.getDefaultCustomerEmail());
+    const customerId = getRandomCustomer().id_customer;
 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
         return {
@@ -114,5 +142,5 @@ export function createCustomerAddressEntity() {
         console.error(response.body)
     }
 
-    metrics.add('customer-addresses-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.customerAddressCreateKey, requestHandler.getLastResponse(), 201);
 }

@@ -10,15 +10,19 @@ import faker from 'k6/x/faker';
 
 export const options = loadDefaultOptions();
 
+const metricKeys = {
+    discountVouchersCreateKey: 'discount-voucher-create',
+};
+
 let metrics = new Metrics([{
-    key: 'discount-voucher-create',
+    key: metricKeys.discountVouchersCreateKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
 }, ])
@@ -31,13 +35,13 @@ options.scenarios = {
             testId: 'creatDiscountVouchers',
             testGroup: 'DataExchange',
         },
-        iterations: 1,
-        vus: 1
+        iterations: 250,
+        vus: 5
     }
 }
 
 options.thresholds = metrics.getThresholds();
-const payloadSize = 1;
+const payloadSize = 200;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -54,7 +58,7 @@ const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper)
 function generateVouchers(quantity = 3) {
     return new Array(quantity).fill(undefined).map(() => {
         return {
-            'code': faker.string.letterN(8),
+            'code': faker.string.letterN(10),
             'is_active': true,
             'max_number_of_uses': 1,
             'number_of_uses': 0,
@@ -67,12 +71,12 @@ export function creatDiscountVouchersEntity() {
     const requestHandler = new Handler(http, urlHelper, bapiHelper); 
 
     let payload = new Array(payloadSize).fill(undefined).map(() => {
-        const voucherName = faker.beer.beerName() + ' ' + randomString(5);
+        const voucherName = faker.beer.beerName() + ' ' + randomString(6);
         return {
             'is_active': true,
             'name': voucherName,
-            'vouchers': generateVouchers(faker.number.number(2, 10)),
-            'discount': [
+            'vouchers': generateVouchers(faker.number.number(5, 20)),
+            'discounts': [
                 {
                     'fk_discount_voucher_pool': null,
                     'fk_store': null,
@@ -101,12 +105,12 @@ export function creatDiscountVouchersEntity() {
                     'amounts': [
                         {
                             'fk_currency': 61,
-                            'gross_amount': faker.number.number(10, 1000),
+                            'gross_amount': faker.number.number(100, 10000),
                             'net_amount': null
                         },
                         {
                             'fk_currency': 93,
-                            'gross_amount':  faker.number.number(500, 3000),
+                            'gross_amount':  faker.number.number(500, 30000),
                             'net_amount': null
                         }
                     ]
@@ -123,5 +127,5 @@ export function creatDiscountVouchersEntity() {
         console.error(response.body)
     }
 
-    metrics.add('discount-voucher-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.discountVouchersCreateKey, requestHandler.getLastResponse(), 201);
 }

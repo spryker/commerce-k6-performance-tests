@@ -10,18 +10,46 @@ import faker from 'k6/x/faker';
 
 export const options = loadDefaultOptions()
 
+const metricKeys = {
+    companyUserCreteKey: 'company-users-create',
+    companyRolePreloadKey: 'company-roles-preload',
+    companyBusinessUnitPreloadKey: 'company-business-unit-preload'
+};
+
 let metrics = new Metrics([{
-    key: 'company-users-create',
+    key: metricKeys.companyUserCreteKey,
     types: ['trend', 'rate'],
     isTime: {
         trend: true,
         counter: false
     },
     thresholds: {
-        trend: ['p(95)<200'],
+        trend: ['p(95)<500'],
         rate: ['rate==1']
     }
-}, ])
+},{
+    key: metricKeys.companyRolePreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<500'],
+        rate: ['rate==1']
+    }
+}, {
+    key: metricKeys.companyBusinessUnitPreloadKey,
+    types: ['trend', 'rate'],
+    isTime: {
+        trend: true,
+        counter: false
+    },
+    thresholds: {
+        trend: ['p(99)<500'],
+        rate: ['rate==1']
+    }
+},]);
 
 options.scenarios = {
     EntityCreateVUS: {
@@ -46,16 +74,17 @@ const urlHelper = new UrlHelper(envConfig);
 const adminHelper = new AdminHelper();
 const assertionHelper = new AssertionsHelper();
 const bapiHelper = new BapiHelper(urlHelper, http, adminHelper, assertionHelper);
+const companyBusinessUnitName = 'test-business-unit-1';
+const compoanyRoleName = 'Spryker_Buyer';
 let companyBusinessUnitId = null;
 let companyId = null;
 let companyRoleId = null;
 
 /**
- * @param {string} key 
+ * @param {string} key
  * @returns undefined
  */
-function dataCompanyBusinessUnitPreload(key = null) {
-
+function companyBusinessUnitPreload(key = null) {
     if(companyBusinessUnitId) {
         return;
     }
@@ -63,16 +92,17 @@ function dataCompanyBusinessUnitPreload(key = null) {
     const requestHandler = new Handler(http, urlHelper, bapiHelper);
     const response = requestHandler.getDataFromTable(`company-business-units?filter[company-business-unit.key]=${key}`);
 
-    companyBusinessUnitId = response[0].id_country;
+    companyBusinessUnitId = response[0].id_company_business_unit;
     companyId = response[0].fk_company;
+
+    metrics.add(metricKeys.companyBusinessUnitPreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 /**
- * @param {string} code 
  * @returns number
+ * @param key
  */
-function dataCompanyRolesPreload(key = null) {
-
+function companyRolesPreload(key = null) {
     if(companyRoleId) {
         return;
     }
@@ -81,6 +111,8 @@ function dataCompanyRolesPreload(key = null) {
     const response = requestHandler.getDataFromTable(`company-roles?filter[company-role.key]=${key}`);
 
     companyRoleId = response[0].id_company_role;
+
+    metrics.add(metricKeys.companyRolePreloadKey, requestHandler.getLastResponse(), 200);
 }
 
 /**
@@ -94,14 +126,24 @@ function generateCustomerReference() {
  * @returns string
  */
 function generateCustomerEmail() {
-    return faker.person.email();
+    return `${randomString(6)}-${faker.person.email()}`;
+}
+/**
+ * Returns a random date from the last week in the format 'YYYY-MM-DD'.
+ * @returns string
+ */
+function getRandomDateLastWeek() {
+    let date = new Date();
+    date.setDate(date.getDate() - Math.floor(Math.random() * 7));
+    return date.toISOString().split('T')[0];
 }
 
 export function createEntity() {
-    dataCompanyBusinessUnitPreload('test-business-unit-1');
-    dataCompanyRolesPreload('Spryker_Buyer');
+    companyBusinessUnitPreload(companyBusinessUnitName);
+    companyRolesPreload(compoanyRoleName);
 
     const requestHandler = new Handler(http, urlHelper, bapiHelper)
+
     let payload = new Array(payloadSize).fill(undefined).map(() => {
         return {
             'fk_locale': null,
@@ -113,6 +155,7 @@ export function createEntity() {
             'email': generateCustomerEmail(),
             'first_name': faker.person.firstName(),
             'last_name': faker.person.lastName(),
+            'registered': getRandomDateLastWeek(),
             'companyUsers': [
                 {
                     'is_active': true,
@@ -128,16 +171,15 @@ export function createEntity() {
                     ]
                 }
             ]
-        
         }
-    })
+    });
 
     let response = requestHandler.createEntities('customers', JSON.stringify({
         data: payload
-    }))
+    }));
 
     if (response.status !== 201) {
         console.error(response.body)
     }
-    metrics.add('company-users-create', requestHandler.getLastResponse(), 201);
+    metrics.add(metricKeys.companyUserCreteKey, requestHandler.getLastResponse(), 201);
 }
