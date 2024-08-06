@@ -24,8 +24,8 @@ import fail from 'k6';
 
 const maxCartSize= Number(__ENV.MAX_CART_SIZE)
 const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
-let amountOfIterations = 10
-let amountOfVirtualUsers = 5
+let amountOfIterations = 100
+let amountOfVirtualUsers = 2
 let timeout = Math.ceil(60000 * amountOfVirtualUsers)
 
 let metricsConfig = [
@@ -119,7 +119,7 @@ let configurationArray = [
         iterations: amountOfIterations,
         vus: amountOfVirtualUsers,
         maxDuration: '1200m',
-        startTime: '45s',
+        startTime: '15s',
     }]
 ]
 
@@ -145,7 +145,7 @@ const PRODUCTS_LIST_FILE = 'tests/dex/tests/data/products.json'
 export async function generateProductList() {
     let storeInfo = storeConfig.getStoreConfig(__ENV.STORE)
     let products = []
-    if (parseInt(__ENV.USE_PREDEFINED_PRODUCTS)) {
+    if (!parseInt(__ENV.USE_PREDEFINED_PRODUCTS)) {
         handler.getDataFromTableWithPagination('products?include=productStocks,productAbstractUrls', 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
             .map((product) => {
                 return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
@@ -160,11 +160,8 @@ export async function generateProductList() {
     } else {
         file.writeString(PRODUCTS_LIST_FILE, JSON.stringify([
             '/en/canon-ixus-285-8',
-            '/en/canon-ixus-285-9',
-            '/en/canon-ixus-165-12',
             '/en/canon-ixus-165-13',
             '/en/canon-ixus-177-14',
-            '/en/canon-ixus-177-15'
         ]));
     }
 }
@@ -180,6 +177,7 @@ export async function executeCheckoutScenario() {
 
     try {
         await page.setDefaultTimeout(timeout * 10)
+
         let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)
         let checkout = new Checkout(
             new Browser(

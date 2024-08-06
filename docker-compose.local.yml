@@ -6,8 +6,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - loadtesting
-#      - spryker-cloud_private
-#      - spryker-cloud_public
+      - spryker-cloud_private
+      - spryker-cloud_public
       # - spryker_demo_private
       # - spryker_demo_public
       # - spryker_b2b_marketplace_dev_private
@@ -46,7 +46,7 @@ services:
         - DATA_EXCHANGE_ENV=${DATA_EXCHANGE_ENV:-DEX}
         - DMS_AMOUNT_OF_STORES=${DMS_AMOUNT_OF_STORES:-40}
         - DMS_AMOUNT_OF_LOCALES=${DMS_AMOUNT_OF_LOCALES:-30}
-        - DMS_STORES_CONFIGURATION_FILE=${DMS_STORES_CONFIGURATION_FILE:-'tests/load/tests/data/stores.json'}
+        - DMS_STORES_CONFIGURATION_FILE=${DMS_STORES_CONFIGURATION_FILE:-'tests/dex/tests/data/stores.json'}
         - SCREENSHOT_ACTIVE=${SCREENSHOT_ACTIVE:-0}
         - USE_EXISTING_CUSTOMER_ACCOUNTS=${USE_EXISTING_CUSTOMER_ACCOUNTS:-0}
         - USE_PREDEFINED_PRODUCTS=${USE_PREDEFINED_PRODUCTS:-0}

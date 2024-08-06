@@ -31,8 +31,10 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         this.productCreateTrend = new Trend('product_creation', true)
         this.productImageCreationTrend = new Trend('product_image_creation', true)
         this.productCreationTotal = new Counter('product_creation_total', true)
+        this.productCreationRequestsTotal = new Counter('product_creation_requests_total', false)
         this.sleepingTimeTotal = new Counter('sleeping_time_total', true)
         this.productImageCreationTotal = new Counter('product_image_creation_total', true)
+        this.productImageCreationRequestsTotal = new Counter('product_image_creation_requests_total', false)
         this.productLabelId = null
     }
 
@@ -41,6 +43,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         group(self.group, function () {
             const requestParams = self.getRequestParams()
             let responseProducts = self.createProductsWithLabels(requestParams, productTemplate, productConcreteTemplate, productLabelTemplate)
+            // console.log(self.payloadGenerator.storeConfigHandler.getUniqueLocaleIds())
             self.payloadGenerator.generateProducts(productTemplate, productConcreteTemplate)
             let count = 0
             let productImageResponse
@@ -137,6 +140,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         debug('thread:', getThread(), 'iteration:', getIteration(), 'responseProducts.status', responseProducts.status, new Date().toLocaleString())
         
         if (responseProducts.status === 201) {
+            this.productCreationRequestsTotal.add(1)
             this.productCreationTotal.add(responseProducts.timings.duration)
             this.productCreateTrend.add(responseProducts.timings.duration)
         }
@@ -160,6 +164,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         debug('thread:', getThread(), 'iteration:', getIteration(), 'responseImageSet', responseImageSet.status, responseImageSet, new Date().toLocaleString())
         
         if (responseImageSet.status === 201) {
+            this.productImageCreationRequestsTotal.add(1)
             this.productImageCreationTotal.add(responseImageSet.timings.duration)
             this.productImageCreationTrend.add(responseImageSet.timings.duration)
         }

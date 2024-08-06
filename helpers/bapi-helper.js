@@ -1,4 +1,5 @@
 import { Counter } from 'k6/metrics';
+import {debug} from "../lib/utils.js";
 
 export class BapiHelper {
     constructor(urlHelper, http, adminHelper, assertionsHelper) {
@@ -25,7 +26,7 @@ export class BapiHelper {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': '*/*',
-                'Store': 'DE'
+                'Store': __ENV.STORE ? __ENV.STORE : 'DE'
             },
         };
 
@@ -41,6 +42,8 @@ export class BapiHelper {
             this.defaultParams,
             false
         );
+
+        debug('response', response)
 
         this.assertionsHelper.assertResponseStatus(response, 200, 'Auth Token');
         

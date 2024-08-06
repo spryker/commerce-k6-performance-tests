@@ -84,6 +84,7 @@ build_k6_docker_command() {
             -v $(pwd):/scripts \
             -u $(id -u):$(id -g) \
             -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
+            -e 'DMS_WHITELIST_STORES_FROM_CONFIG=1' \
             -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
             -e 'SPRYKER_TEST_ENVIRONMENT=$testEnvironment' \
             -e 'K6_BROWSER_ENABLED=true' \

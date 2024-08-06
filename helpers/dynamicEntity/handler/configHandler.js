@@ -23,10 +23,11 @@ export default class ConfigHandler extends Handler {
             })
 
             if (this.storeWhitelist.length) {
-                this.storesConfig = this.storesConfig.filter((store) => this.storeWhitelist.filter((storeCode) => storeCode.toLowerCase() === store.name.toLowerCase()).length)
+                this.storesConfig = this.storesConfig.filter((store) => this.storeWhitelist.filter((storeCode) => String(storeCode).toLowerCase() === String(store.name).toLowerCase()).length)
                 this.storeLocales = this.storeLocales.filter((locale) => this.storesConfig.filter((store) => locale.fk_store === store.id_store).length)
                 this.storeCurrencies = this.storeCurrencies.filter((currency) => this.storesConfig.filter((store) => currency.fk_store === store.id_store).length)
             }
+
             if (this.useDefaultStoreLocale) {
                 this.storeLocales = this.storesConfig.map((store) => store.fk_locale)
             }
@@ -42,7 +43,7 @@ export default class ConfigHandler extends Handler {
     getUniqueLocaleIds() {
         this.get()
 
-        return [...new Set(this.storeLocales.map((el) => el))]
+        return [...new Set(this.storeLocales.map((el) => el.fk_locale))]
     }
 
     getStoreConfig(storeCode) {
@@ -54,9 +55,9 @@ export default class ConfigHandler extends Handler {
     getStoreDefaultLocaleUrlAlias(storeCode) {
         this.get()
 
-        let storConfig = this.storesConfig.filter((el) => el.name.toLowerCase() === storeCode.toLowerCase()).shift()
+        let storeConfig = this.storesConfig.filter((el) => el.name.toLowerCase() === storeCode.toLowerCase()).shift()
 
-        return this.storeLocalesMapping.get(storConfig.fk_locale).split('_').shift()
+        return this.storeLocalesMapping.get(storeConfig.fk_locale).split('_').shift()
     }
 
     getStoreIds() {
