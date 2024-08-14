@@ -1,19 +1,16 @@
-import { Profiler } from '../../../../../../helpers/profiler.js';
+import exec from 'k6/execution';
 import {
     getExecutionConfiguration,
     getStoreWhiteList,
     loadDefaultOptions,
     useOnlyDefaultStoreLocale
 } from '../../../../../../lib/utils.js';
-import { ApiPatchPayloadScenario } from '../scenarios/api-patch-payload-scenario.js';
+import {ApiPatchStockPayloadScenario} from '../scenarios/api-patch-stock-scenario.js';
+import read from 'k6/x/read';
 
 export const options = loadDefaultOptions();
 
-let productTemplate = open('../template/product.json')
-let productConcreteTemplate = open('../template/concrete.json')
-let productLabelTemplate = open('../template/productLabel.json')
-
-let profiler = new Profiler()
+let products = JSON.parse(read.readFile('tests/dex/tests/data/products_for_update.json').content)
 
 let executionConfig = getExecutionConfiguration(
     __ENV.DATA_EXCHANGE_TARGET_CATALOG_SIZE_PUT_PATCH,
@@ -27,7 +24,7 @@ options.scenarios = {
         exec: 'productPatchScenario',
         executor: 'shared-iterations',
         tags: {
-            testId: 'DX-PATCH',
+            testId: 'DX-PATCH-STOCK',
             testGroup: 'DataExchange',
         },
         iterations: executionConfig.amountOfIteration,
@@ -36,7 +33,7 @@ options.scenarios = {
     },
 };
 
-const productPatchCreateScenario = new ApiPatchPayloadScenario(
+const productPatchStockScenario = new ApiPatchStockPayloadScenario(
     __ENV.DATA_EXCHANGE_ENV,
     executionConfig.chunkSize,
     executionConfig.concreteMaxAmount,
@@ -46,5 +43,7 @@ const productPatchCreateScenario = new ApiPatchPayloadScenario(
 );
 
 export function productPatchScenario() {
-    productPatchCreateScenario.execute(productTemplate, productConcreteTemplate, productLabelTemplate, profiler);
+    let offset = exec.scenario.iterationInInstance * executionConfig.chunkSize
+    const batch = products.slice(offset, offset + executionConfig.chunkSize);
+    productPatchStockScenario.execute(batch);
 }

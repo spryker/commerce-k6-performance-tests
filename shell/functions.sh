@@ -301,7 +301,13 @@ extract_failed_thresholds() {
 
     echo "$output"
 }
+load_env_file() {
+  ENV_FILE=$1
 
+  if [ -f "$ENV_FILE" ]; then
+    . "$ENV_FILE"
+  fi
+}
 send_slack_notification() {
     local token=$SLACK_NOTIFICATION_TOKEN
     local channel=$SLACK_NOTIFICATION_CHANNEL

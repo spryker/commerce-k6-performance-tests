@@ -1,8 +1,8 @@
 #!/bin/bash
 
-. .env
-
 source shell/functions.sh
+
+load_env_file ".env"
 
 # Record the start time
 start_timer

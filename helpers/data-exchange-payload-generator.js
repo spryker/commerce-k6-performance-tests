@@ -16,6 +16,40 @@ export class DataExchangePayloadGenerator {
     }
 
     prepareProductsForUpdate(recentlyCreatedProducts) {
+        return JSON.stringify({
+            data: this.getUpdatedProducts(recentlyCreatedProducts)
+        })
+    }
+
+    prepareProductPricesPatchPayload(recentlyCreatedProducts) {
+        return JSON.stringify({
+            data: this.getUpdatedProducts(recentlyCreatedProducts).map((product) => {
+                return {
+                    'id_product_abstract': product['id_product_abstract'],
+                    'productAbstractPriceProducts': product['productAbstractPriceProducts'],
+                }
+            })
+        })
+    }
+
+    prepareProductStockPatchPayload(recentlyCreatedProducts) {
+        return JSON.stringify({
+            data: this.getUpdatedProducts(recentlyCreatedProducts).map((product) => {
+                return {
+                    'id_product_abstract': product['id_product_abstract'],
+                    'productAbstractProducts': product['productAbstractProducts'].map((concrete) => {
+                        return {
+                            'sku': concrete['sku'],
+                            'id_product': concrete['id_product'],
+                            'productStocks': concrete['productStocks']
+                        }
+                    }),
+                }
+            })
+        })
+    }
+
+    getUpdatedProducts(recentlyCreatedProducts) {
         function updateFunc(product) {
             let updateConfig = {
                 productAbstractProducts: {
@@ -29,16 +63,17 @@ export class DataExchangePayloadGenerator {
                     productLocalizedAttributes: {
                         description:  `productLocalizedAttributes Updated at: ${new Date().toISOString()}`
                     },
-                    
                 },
                 productAbstractPriceProducts: {
-                    price: Math.round(Math.random() * 100),
+                    price: Math.round(Math.random() * 1000) + 1000,
                     priceProductStores:{
                         id_price_product_store: 'toInt',
+                        gross_price: Math.round(Math.random() * 1000) + 1000,
+                        net_price: Math.round(Math.random() * 1000) + 1000,
                         priceProductStoreDefaults: {
-                            id_price_product_default: 'toInt',
-                            fk_price_product_store: 'toInt'
-                        }
+                            gross_price: Math.round(Math.random() * 1000) + 1000,
+                            net_price: Math.round(Math.random() * 1000) + 1000
+                        },
                     }
                 },
                 productAbstractLocalizedAttributes: {
@@ -47,37 +82,40 @@ export class DataExchangePayloadGenerator {
             }
 
             for (const firstLevelKey of Object.keys(updateConfig)) {
-                let secondLevel = updateConfig[firstLevelKey]
-                for (const secondLevelKey of Object.keys(secondLevel)) {
-                    if (typeof secondLevel[secondLevelKey] === 'object') {
-                        for (const thirdLevelKey of Object.keys(secondLevel[secondLevelKey])) {
+                let firstLevelData = updateConfig[firstLevelKey]
+                for (const firstLevelDataKey of Object.keys(firstLevelData)) {
+                    if (typeof firstLevelData[firstLevelDataKey] === 'object') {
+                        for (const secondLevelDataKey of Object.keys(firstLevelData[firstLevelDataKey])) {
                             product[firstLevelKey].map((el) => {
-                                return el[secondLevelKey].map((key) => {
-                                    if (Array.isArray(key[thirdLevelKey])) {
-                                        key[thirdLevelKey] = key[thirdLevelKey].map((tr) => {
+                                if (!Array.isArray(el[firstLevelDataKey])) {
+                                    return el
+                                }
+                                return el[firstLevelDataKey].map((key) => {
+                                    if (Array.isArray(key[secondLevelDataKey])) {
+                                        key[secondLevelDataKey] = key[secondLevelDataKey].map((tr) => {
                                             for (const forthLevelKey of Object.keys(tr)) {
-                                                if (forthLevelKey in secondLevel[secondLevelKey][thirdLevelKey]) {
-                                                    if (secondLevel[secondLevelKey][thirdLevelKey][forthLevelKey] === 'toInt') {
-                                                        tr[forthLevelKey] = parseInt(tr[forthLevelKey])
-                                                    } else {
-                                                        tr[forthLevelKey] = secondLevel[secondLevelKey][thirdLevelKey][forthLevelKey]
-                                                    }
+                                                if (forthLevelKey in firstLevelData[firstLevelDataKey][secondLevelDataKey]) {
+                                                    tr[forthLevelKey] = firstLevelData[firstLevelDataKey][secondLevelDataKey][forthLevelKey]
                                                 }
                                             }
                                             return tr
                                         })
                                     } else {
-                                        if (secondLevel[secondLevelKey][thirdLevelKey] === 'toInt') {
-                                            key[thirdLevelKey] = parseInt(key[thirdLevelKey])
-                                        } else {
-                                            key[thirdLevelKey] = secondLevel[secondLevelKey][thirdLevelKey]
-                                        }
+                                        key[secondLevelDataKey] = firstLevelData[firstLevelDataKey][secondLevelDataKey]
                                     }
                                 })
                             })
                         }
                     } else {
-                        product[firstLevelKey][secondLevelKey] = secondLevel[secondLevelKey]
+                        if (Array.isArray(product[firstLevelKey])) {
+                            product[firstLevelKey] = product[firstLevelKey].map(el => {
+                                el[firstLevelDataKey] = firstLevelData[firstLevelDataKey]
+
+                                return el
+                            })
+                        } else if (firstLevelKey in product) {
+                            product[firstLevelKey][firstLevelDataKey] = firstLevelData[firstLevelDataKey]
+                        }
                     }
                 }
             }
@@ -85,9 +123,7 @@ export class DataExchangePayloadGenerator {
             return product
         }
 
-        return JSON.stringify({
-            data: recentlyCreatedProducts.map((el) => updateFunc(el))
-        })
+        return recentlyCreatedProducts.map((el) => updateFunc(el))
     }
 
     getConcrete(productConcreteTemplate, random) {
