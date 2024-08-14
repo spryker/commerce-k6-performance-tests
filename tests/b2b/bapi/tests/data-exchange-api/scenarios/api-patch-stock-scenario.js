@@ -28,6 +28,8 @@ export class ApiPatchStockPayloadScenario extends ApiPatchAbstractPayloadScenari
             this.productPatchStockTotal.add(patchResult.timings.duration)
             this.productsTotal.add(productsForUpdate.length)
             this.productPatchStockTrend.add(patchResult.timings.duration)
+        } else {
+            console.error([... new Set(...[JSON.parse(patchResult.body).map(el => el.message)])])
         }
 
         return patchResult

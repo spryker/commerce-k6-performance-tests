@@ -1,6 +1,6 @@
 import {Http} from '../../lib/http.js';
 import {AssertionsHelper} from '../assertions-helper.js';
-import { toCamelCase} from '../../lib/utils.js';
+import {getIteration, getThread, toCamelCase} from '../../lib/utils.js';
 import {sleep} from 'k6';
 import Url from '../../lib/url.js';
 
@@ -52,7 +52,7 @@ export default class Browser {
         if (this.screenShotActive) {
             this.counter++;
             await this.page.screenshot({
-                path: `screenshot/${__VU}/${__ITER}/${this.store}/${this.counter}_${
+                path: `screenshot/${getThread()}/${getIteration()}/${this.store}/${this.counter}_${
                     this.step
                 }/${this.counter}_${new Date().getTime()}.png`,
                 // fullPage: true

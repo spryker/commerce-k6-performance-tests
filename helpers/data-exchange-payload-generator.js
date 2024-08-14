@@ -67,7 +67,6 @@ export class DataExchangePayloadGenerator {
                 productAbstractPriceProducts: {
                     price: Math.round(Math.random() * 1000) + 1000,
                     priceProductStores:{
-                        id_price_product_store: 'toInt',
                         gross_price: Math.round(Math.random() * 1000) + 1000,
                         net_price: Math.round(Math.random() * 1000) + 1000,
                         priceProductStoreDefaults: {
