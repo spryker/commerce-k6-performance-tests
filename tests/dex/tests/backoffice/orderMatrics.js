@@ -9,46 +9,12 @@ import BasicAuth from '../../../../helpers/basicAuth.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
 import BackOffice from '../../../../helpers/browser/backOffice.js';
 
-let amountOfIterations = 10
+let amountOfIterations = 30
 let amountOfVirtualUsers = 5
 let timeout = Math.ceil(60000)
 let visitList = [
-    'dashboard',
-    'sales/matrix',
-    'sales',
-    'merchant-sales-order-merchant-user-gui',
-    'merchant-sales-return-merchant-user-gui',
-    'sales-reclamation-gui',
-    'sales-return-gui',
-    'refund/table',
-    'gift-card-balance',
-    'customer',
-    'customer/edit?id-customer=1', //save
-    'customer-group',
-    'customer-access-gui', //save
-    'company-gui/list-company',
-    'company-gui/edit-company/index?id-company=12', //save
-    'company-gui/list-company',
-    'company-business-unit-gui/list-company-business-unit',
-    'company-business-unit-gui/edit-company-business-unit?id-company-business-unit=1', //save
-    'company-unit-address-gui/list-company-unit-address',
-    'company-unit-address-gui/edit-company-unit-address?id-company-unit-address=17', //save
-    'company-user-gui/list-company-user',
-    'company-user-gui/edit-company-user?id-company-user=1', // save
-    'company-role-gui/list-company-role',
-    'company-role-gui/edit-company-role?id-company-role=1', //save
-    'product-management',
-    'product-management/edit?id-product-abstract=224', //save
-    'product-management/edit?id-product-abstract=223', //save
-    'product-management/edit?id-product-abstract=222', //save
-    'product-management/edit?id-product-abstract=221', //save
-    'product-management/edit?id-product-abstract=220', //save
-    'category-gui/list',
-    'category-gui/edit?id-category=15', //save
-    'product-attribute-gui/attribute',
-    'product-attribute-gui/attribute/edit?id=1', //save
-    'product-attribute-gui/attribute',
-    'availability-gui',
+    // 'sales/matrix',
+    'order-matrix-gui/matrix'
 ]
 
 let metricsConfig = [
@@ -74,7 +40,7 @@ const metrics = new Metrics(metricsConfig);
 export const options = loadDefaultOptions();
 
 let configurationArray = [
-    ['BACKOFFICE_ACTIVITY', {
+    ['BACKOFFICE_ORDER_MATRIX', {
         options: {
             browser: {
                 type: 'chromium',
@@ -83,7 +49,7 @@ let configurationArray = [
         exec: 'browseBackOffice',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'BackOfficeRandomLoad',
+            testId: 'BackOfficeOrderMatrix',
             testGroup: 'BackOffice',
         },
         iterations: amountOfIterations,
@@ -103,7 +69,7 @@ const basicAuth = getBasicAuthCredentials(targetEnv);
 export async function browseBackOffice() {
     let page = await browser.newPage()
     try {
-        await page.setDefaultTimeout(timeout * 10)
+        await page.setDefaultTimeout(timeout)
 
         let backoffice = new BackOffice(
             new BrowserHandler(

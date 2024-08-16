@@ -106,14 +106,15 @@ options.scenarios = {
             testId: 'creatSalesOrder',
             testGroup: 'DataExchange',
         },
-        iterations: 100,
-        vus: 2,
-        // startTime: '30s'
+        iterations: 10000,
+        vus: 4,
+        startTime: '10s',
+        maxDuration: '1200m'
     }
 }
 
 options.thresholds = metrics.getThresholds();
-const payloadSize = 50;
+const payloadSize = 40;
 const targetEnv = __ENV.DATA_EXCHANGE_ENV;
 const http = new Http(targetEnv);
 const envConfig = loadEnvironmentConfig(targetEnv);
@@ -130,11 +131,11 @@ let customersData = null;
 let omsOrderStatesData = null;
 
 function generateInvoiceId() {
-    return `Invoice-${randomString(5)}`
+    return `Invoice-${randomString(16)}`
 }
 
 function generateOrderReference() {
-    return `LOAD${randomString(3)}--${randomString(6)}`
+    return `LOAD${randomString(3)}--${randomString(16)}`
 }
 
 function skuGenerator() {
@@ -365,13 +366,13 @@ function preCreateSalesOrederBusinessAddress() {
     }))
 
     if (response.status !== 201) {
-        console.error(response.body)
+        console.error('preCreateSalesOrederBusinessAddress', response.body)
     }
 
     return JSON.parse(response.body).data;
 }
 
-function getRandomBuinessAddressId(addresses) {
+function getRandomBusinessAddressId(addresses) {
     return addresses[Math.floor(Math.random() * addresses.length)].id_sales_order_address;
 }
 
@@ -393,7 +394,7 @@ function preCreateSalesPaymentMethodTypesIfNotExist() {
     }))
 
     if (response.status !== 201) {
-        console.error(response.body)
+        console.error('preCreateSalesPaymentMethodTypesIfNotExist', response.body)
     }
 
     metrics.add(metricKeys.preCreateSalesOrderPaymentMethodTypesKey, requestHandler.getLastResponse(), 200);
@@ -419,7 +420,7 @@ function preCreateOmsOrderItemStatesIfNotExist() {
     }))
 
     if (response.status !== 201) {
-        console.error(response.body)
+        console.error('preCreateOmsOrderItemStatesIfNotExist', response.body)
     }
 
     metrics.add(metricKeys.preCreateSalesOrderOmsOrderItemStatesKey, requestHandler.getLastResponse(), 200);
@@ -436,7 +437,7 @@ function preCreateOmsOrderProcessIfNotExist() {
     response = requestHandler.createEntities('oms-order-processes', JSON.stringify({ data: [{'name': 'DummyPayment01'}] }));
 
     if (response.status !== 201) {
-        console.error(response.body)
+        console.error('preCreateOmsOrderProcessIfNotExist', response.body)
     }
 }
 
@@ -464,8 +465,8 @@ export function creatSalesOrderEntity() {
         return {
             'fk_locale': getLocaleId(defalutLocale),
             'fk_order_source': null,
-            'fk_sales_order_address_billing': getRandomBuinessAddressId(buisnessAddresses),
-            'fk_sales_order_address_shipping': getRandomBuinessAddressId(buisnessAddresses),
+            'fk_sales_order_address_billing': getRandomBusinessAddressId(buisnessAddresses),
+            'fk_sales_order_address_shipping': getRandomBusinessAddressId(buisnessAddresses),
             'cart_note': null,
             'company_business_unit_uuid': null,
             'company_uuid': null,
@@ -500,11 +501,11 @@ export function creatSalesOrderEntity() {
     }))
 
     if (response.status !== 201) {
-        console.error('sales-orders');
-        console.error(JSON.stringify({
-            data: payload
-        }));
-        console.error(response.body)
+        console.error('sales-orders-error:', response.status);
+        // console.error(JSON.stringify({
+        //     data: payload
+        // }));
+        // console.error('creatSalesOrderEntity', response.body)
     }
 
     metrics.add(metricKeys.salesOrderCreateKey, requestHandler.getLastResponse(), 201);

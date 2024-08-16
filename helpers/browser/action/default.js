@@ -1,9 +1,12 @@
+import {Profiler} from "../../profiler.js";
+
 export default class Default {
     constructor(type, locator, value, options = {}) {
         this.locator = this.sanitise(locator)
         this.options = options
         this.value = value
         this.type = type
+        this.profiler = new Profiler()
     }
 
     sanitise(locator) {

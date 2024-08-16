@@ -1,5 +1,4 @@
 import Default from './default.js'
-import {Profiler} from '../../profiler.js';
 
 export default class Click extends Default {
     constructor(locator, options) {
@@ -19,8 +18,6 @@ export default class Click extends Default {
             const targetElement = await browser.page.locator(this.locator);
             await targetElement.focus()
 
-            let profiler = new Profiler();
-
             let clickOptions = {};
             if (typeof this.options === 'object' && 'force' in this.options) {
                 clickOptions.force = this.options.force;
@@ -35,32 +32,32 @@ export default class Click extends Default {
             }
 
             if (typeof this.options === 'object' && 'waitForNavigation' in this.options) {
-                profiler.start(this.locator);
+                this.profiler.start(this.locator);
                 await targetElement.click(clickOptions)
                 await browser.page.waitForNavigation({timeout: timeout})
                 await browser.waitUntilLoad('networkidle')
 
-                browser.metrics.addTrend(metricKey, profiler.stop(this.locator));
+                browser.metrics.addTrend(metricKey, this.profiler.stop(this.locator));
                 return true;
             }
 
             if (typeof this.options === 'object' && 'waitForLoadState' in this.options) {
-                profiler.start(this.locator);
+                this.profiler.start(this.locator);
                 await targetElement.click(clickOptions)
                 await browser.page.waitForLoadState()
                 await browser.waitUntilLoad('networkidle')
 
-                browser.metrics.addTrend(metricKey, profiler.stop(this.locator));
+                browser.metrics.addTrend(metricKey, this.profiler.stop(this.locator));
                 return true;
             }
 
             if (typeof this.options === 'object' && 'waitForTimeout' in this.options) {
-                profiler.start(this.locator);
+                this.profiler.start(this.locator);
                 await targetElement.click(clickOptions)
                 await browser.page.waitForTimeout({timeout: timeout})
                 await browser.waitUntilLoad('networkidle')
 
-                browser.metrics.addTrend(metricKey, profiler.stop(this.locator));
+                browser.metrics.addTrend(metricKey, this.profiler.stop(this.locator));
                 return true;
             }
 

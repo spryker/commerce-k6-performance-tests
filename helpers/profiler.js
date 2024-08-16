@@ -31,7 +31,7 @@ export class Profiler {
     }
 
     getMilliSeconds(key) {
-        return this.round((this.storage[this.getKey(key)].endTime - this.storage[this.getKey(key)].start));
+        return this.storage[this.getKey(key)].endTime - this.storage[this.getKey(key)].start;
     }
 
     round(value) {
