@@ -1,5 +1,4 @@
 import Default from './default.js'
-import {Profiler} from '../../profiler.js';
 
 export default class Visit extends Default {
     constructor(targetUrl, metricKey = '') {

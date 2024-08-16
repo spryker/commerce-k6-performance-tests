@@ -1,4 +1,4 @@
-import {Profiler} from "../../profiler.js";
+import {Profiler} from '../../profiler.js';
 
 export default class Default {
     constructor(type, locator, value, options = {}) {
