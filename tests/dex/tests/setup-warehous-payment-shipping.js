@@ -16,7 +16,7 @@ import CategoryHandler from '../../../helpers/dynamicEntity/handler/categoryHand
 
 export const options = loadDefaultOptions();
 let configurationArray = [
-    ['DMS_STORE_SETUP', {
+    ['DMS_STORE_SETUP_WAREHOUSE_PAYMENT_SHIPMENT', {
         executor: 'per-vu-iterations',
         vus: 1,
         iterations: 1,

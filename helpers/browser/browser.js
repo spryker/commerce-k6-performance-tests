@@ -137,6 +137,7 @@ export default class Browser {
             case 'scrollDown':
             case 'scrollUp':
             case 'evaluateClick':
+            case 'visitAndSave':
                 await element.act(this);
                 break;
             case 'type':

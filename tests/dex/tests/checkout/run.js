@@ -24,7 +24,7 @@ import fail from 'k6';
 
 const maxCartSize= Number(__ENV.MAX_CART_SIZE)
 const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
-let amountOfIterations = 100
+let amountOfIterations = 50
 let amountOfVirtualUsers = 2
 let timeout = Math.ceil(60000 * amountOfVirtualUsers)
 
@@ -177,7 +177,6 @@ export async function executeCheckoutScenario() {
 
     try {
         await page.setDefaultTimeout(timeout * 10)
-
         let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)
         let checkout = new Checkout(
             new Browser(

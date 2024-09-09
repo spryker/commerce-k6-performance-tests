@@ -75,6 +75,7 @@ build_k6_docker_command() {
     local reportFile="$2"
     local testRunId="$3"
     local testEnvironment="$4"
+    local reportCsvFile="$5"
 
     if [ -z "$testRunId" ]; then
         testRunId=$(generate_uuid)  # Call generate_uuid to get a UUID
@@ -116,7 +117,8 @@ build_k6_docker_command() {
             -e 'K6_BROWSER_ENABLED=true' \
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
-            --out json='$reportFile'"
+            --out json='$reportFile' \
+            --out csv='$reportCsvFile' "
 
     echo "$command"
 }
@@ -168,8 +170,10 @@ run_k6_tests() {
 
     # Generate the output file
     reportFile=$(create_report_file)
+    reportCsvFile="k6_report_$(date +%Y%m%d_%H%M%S).csv"
     outputFolder=$(create_report_folder)
     finalReportFile="$outputFolder/$reportFile"
+    finalReportCsvFile="$outputFolder/$reportCsvFile"
     testRunId=$(generate_uuid)
 
     $(create_folder_if_not_existant "$outputFolder")
@@ -181,15 +185,18 @@ run_k6_tests() {
     # Iterate over the merged array
     i=1;
     reportFiles=();
+    reportCsvFiles=();
     for file in "${files[@]}"
     do
         # Get the path of the current file relative to the original directory
         testFile=${file#$(pwd)/}
         reportFile="$outputFolder/tmp_report_$i"
+        reportCsvFile="$outputFolder/tmp_csv_report_$i"
         reportFiles+=($reportFile)
+        reportCsvFiles+=($reportCsvFile)
 
         # Construct the docker command
-        if ! command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId"); then
+        if ! command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId" "$K6_HOSTENV", "$reportCsvFile"); then
             return 1;
         fi
       
@@ -202,6 +209,7 @@ run_k6_tests() {
     done
 
     merge_and_delte_files "$finalReportFile" "${reportFiles[@]}"
+    merge_and_delte_files "$finalReportCsvFile" "${reportCsvFiles[@]}"
 
     send_failed_thresholds_notification "$testRunId"
 }

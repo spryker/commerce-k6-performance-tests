@@ -11,20 +11,36 @@ export default class BackOffice {
         this.timeout = timeout;
     }
 
-    async browse(visitList = []) {
+    async initialise() {
         await this.browser.init()
         await this.auth()
+    }
+
+    async browse(visitList = []) {
+        await this.initialise()
         await this.visitAndAct(visitList)
+    }
+
+    prepareAction(url) {
+        if (typeof url === 'string') {
+            return [
+                new Step(`Visit ${url}`),
+                new Visit(url),
+                new Screen(`Visit ${url}`),
+            ]
+        }
+
+        return [
+            new Step(`Visit ${url.locator}`),
+            url,
+            new Screen(`Visit ${url.locator}`),
+        ]
     }
 
     async visitAndAct(visitList) {
         let actions = []
         visitList.map(url => {
-            actions.push(
-                new Step(`Visit ${url}`),
-                new Visit(url),
-                new Screen(`Visit ${url}`),
-            )
+            actions.push(...this.prepareAction(url))
         })
         await this.browser.act(actions)
     }

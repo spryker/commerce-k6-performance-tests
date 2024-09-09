@@ -107,7 +107,7 @@ options.scenarios = {
             testGroup: 'DataExchange',
         },
         iterations: 10000,
-        vus: 4,
+        vus: 6,
         startTime: '10s',
         maxDuration: '1200m'
     }

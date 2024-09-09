@@ -8,47 +8,49 @@ import BrowserHandler from '../../../../helpers/browser/browser.js';
 import BasicAuth from '../../../../helpers/basicAuth.js';
 import {Metrics} from '../../../../helpers/browser/metrics.js';
 import BackOffice from '../../../../helpers/browser/backOffice.js';
+import VisitAndSave from '../../../../helpers/browser/action/visitAndSave.js';
+import Visit from '../../../../helpers/browser/action/visit.js';
 
 let amountOfIterations = 10
-let amountOfVirtualUsers = 5
+let amountOfVirtualUsers = 20
 let timeout = Math.ceil(60000)
 let visitList = [
-    'dashboard',
-    'sales/matrix',
-    'sales',
-    'merchant-sales-order-merchant-user-gui',
-    'merchant-sales-return-merchant-user-gui',
-    'sales-reclamation-gui',
-    'sales-return-gui',
-    'refund/table',
-    'gift-card-balance',
-    'customer',
-    'customer/edit?id-customer=1', //save
-    'customer-group',
-    'customer-access-gui', //save
-    'company-gui/list-company',
-    'company-gui/edit-company/index?id-company=12', //save
-    'company-gui/list-company',
-    'company-business-unit-gui/list-company-business-unit',
-    'company-business-unit-gui/edit-company-business-unit?id-company-business-unit=1', //save
-    'company-unit-address-gui/list-company-unit-address',
-    'company-unit-address-gui/edit-company-unit-address?id-company-unit-address=17', //save
-    'company-user-gui/list-company-user',
-    'company-user-gui/edit-company-user?id-company-user=1', // save
-    'company-role-gui/list-company-role',
-    'company-role-gui/edit-company-role?id-company-role=1', //save
-    'product-management',
-    'product-management/edit?id-product-abstract=224', //save
-    'product-management/edit?id-product-abstract=223', //save
-    'product-management/edit?id-product-abstract=222', //save
-    'product-management/edit?id-product-abstract=221', //save
-    'product-management/edit?id-product-abstract=220', //save
-    'category-gui/list',
-    'category-gui/edit?id-category=15', //save
-    'product-attribute-gui/attribute',
-    'product-attribute-gui/attribute/edit?id=1', //save
-    'product-attribute-gui/attribute',
-    'availability-gui',
+    new Visit('dashboard'),
+    new Visit('sales/matrix'),
+    new Visit('sales'),
+    new Visit('merchant-sales-order-merchant-user-gui'),
+    new Visit('merchant-sales-return-merchant-user-gui'),
+    new Visit('sales-reclamation-gui'),
+    new Visit('sales-return-gui'),
+    new Visit('refund/table'),
+    new Visit('gift-card-balance'),
+    new Visit('customer'),
+    new VisitAndSave('customer/edit?id-customer=1'),
+    new Visit('customer-group'),
+    new VisitAndSave('customer-access-gui'),
+    new Visit('company-gui/list-company'),
+    new VisitAndSave('company-gui/edit-company/index?id-company=12'),
+    new Visit('company-gui/list-company'),
+    new Visit('company-business-unit-gui/list-company-business-unit'),
+    new VisitAndSave('company-business-unit-gui/edit-company-business-unit?id-company-business-unit=1'),
+    new Visit('company-unit-address-gui/list-company-unit-address'),
+    new VisitAndSave('company-unit-address-gui/edit-company-unit-address?id-company-unit-address=17'),
+    new Visit('company-user-gui/list-company-user'),
+    new VisitAndSave('company-user-gui/edit-company-user?id-company-user=1'),
+    new Visit('company-role-gui/list-company-role'),
+    new VisitAndSave('company-role-gui/edit-company-role?id-company-role=1'),
+    new Visit('product-management'),
+    new VisitAndSave('product-management/edit?id-product-abstract=224'),
+    new VisitAndSave('product-management/edit?id-product-abstract=223'),
+    new VisitAndSave('product-management/edit?id-product-abstract=222'),
+    new VisitAndSave('product-management/edit?id-product-abstract=221'),
+    new VisitAndSave('product-management/edit?id-product-abstract=220'),
+    new Visit('category-gui/list'),
+    new VisitAndSave('category-gui/edit?id-category=15'),
+    new Visit('product-attribute-gui/attribute'),
+    new VisitAndSave('product-attribute-gui/attribute/edit?id=1'),
+    new Visit('product-attribute-gui/attribute'),
+    new Visit('availability-gui'),
 ]
 
 let metricsConfig = [
@@ -56,7 +58,7 @@ let metricsConfig = [
     ...visitList
 ].map((code) => {
     return {
-        key: `${code}`,
+        key: `${typeof code === 'string' ? code : code.locator}`,
         isTime: {
             trend: true,
             counter: false

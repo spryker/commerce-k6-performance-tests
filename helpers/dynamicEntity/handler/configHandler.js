@@ -1,4 +1,5 @@
 import Handler from '../handler.js';
+import { fail } from 'k6';
 
 export default class ConfigHandler extends Handler {
     get() {
@@ -57,7 +58,9 @@ export default class ConfigHandler extends Handler {
         this.get()
 
         let storeConfig = this.storesConfig.filter((el) => el.name.toLowerCase() === storeCode.toLowerCase()).shift()
-
+        if (!storeConfig) {
+            fail(`Desired store (${storeCode}) is not available inside stores list (${this.storeLocalesMapping}) Please recheck Whitelist configuration and STORE.`)
+        }
         return this.storeLocalesMapping.get(storeConfig.fk_locale).split('_').shift()
     }
 

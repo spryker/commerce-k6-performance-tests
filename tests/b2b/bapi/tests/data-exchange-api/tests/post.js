@@ -48,3 +48,12 @@ const productCreateScenario = new ApiPostPayloadScenario(
 export function productPostScenario() {
     productCreateScenario.execute(productTemplate, productConcreteTemplate, productImageTemplate, productLabelTemplate);
 }
+
+//
+// export function handleSummary(data) {
+//     console.log('Preparing the end-of-test summary...');
+//
+//     return {
+//         'junit.xml': jUnit(data), // Transform summary and save it as a JUnit XML...
+//     };
+// }
