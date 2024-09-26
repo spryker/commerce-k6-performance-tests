@@ -6,7 +6,7 @@ export class SharedProductDetailsScenario extends AbstractScenario {
         let self = this;
 
         group('Product Details', function () {
-            const requestParams = self.cartHelper.getParamsWithAuthorization();
+            const requestParams = self.sapiHelper.getParamsWithAuthorization();
 
             const productDetailsResponse = self.http.sendGetRequest(self.http.url`${self.getStorefrontApiBaseUrl()}/concrete-products/${'657712'}`, requestParams, false);
             self.assertionsHelper.assertResponseStatus(productDetailsResponse, 200);

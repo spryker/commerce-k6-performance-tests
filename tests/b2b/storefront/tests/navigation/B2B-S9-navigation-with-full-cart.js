@@ -1,4 +1,4 @@
-import { SharedNavigationWithFullCartScenario } from '../../../../cross-product/storefront/scenarios/navigtion/shared-navigation-with-full-cart-scenario.js';
+import { SharedNavigationWithFullCartScenario } from '../../../../cross-product/storefront/scenarios/navigation/shared-navigation-with-full-cart-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 

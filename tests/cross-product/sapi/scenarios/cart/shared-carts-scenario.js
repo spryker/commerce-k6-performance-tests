@@ -7,7 +7,7 @@ export class SharedCartsScenario extends AbstractScenario {
         this.cartHelper.haveCartWithProducts(1);
 
         group('Cart', function () {
-            const requestParams = self.cartHelper.getParamsWithAuthorization();
+            const requestParams = self.sapiHelper.getParamsWithAuthorization();
             requestParams.tags = { request_name: 'sapi_get_carts' };
 
             const cartsResponse = self.http.sendGetRequest(self.http.url`${self.getStorefrontApiBaseUrl()}/carts`, requestParams, false);

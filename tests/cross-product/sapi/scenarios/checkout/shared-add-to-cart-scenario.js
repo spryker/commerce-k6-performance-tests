@@ -5,7 +5,7 @@ export class SharedAddToCartScenario extends AbstractScenario {
     execute(sku, quantity) {
         let self = this;
         const cartId = self.cartHelper.haveCartWithProducts(0);
-        const params = self.cartHelper.getParamsWithAuthorization();
+        const params = self.sapiHelper.getParamsWithAuthorization();
 
         group('Checkout', function () {
             const addToCartResponse = self.cartHelper.addItemToCart(cartId, quantity, params, sku)

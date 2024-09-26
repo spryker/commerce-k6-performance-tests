@@ -2,7 +2,7 @@ import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
 export class SharedNavigationWithFullCartScenario extends AbstractScenario {
-    async execute() {
+    execute() {
         this.cartHelper.haveCartWithProducts(0);
         this.storefrontHelper.loginUser();
 

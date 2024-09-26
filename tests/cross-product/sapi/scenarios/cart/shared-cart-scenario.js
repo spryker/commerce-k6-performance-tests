@@ -3,7 +3,7 @@ import { group } from 'k6';
 
 export class SharedCartScenario extends AbstractScenario {
     execute() {
-        const requestParams = this.cartHelper.getParamsWithAuthorization();
+        const requestParams = this.sapiHelper.getParamsWithAuthorization();
         const cartId = this._setUp(requestParams);
         let self = this;
 

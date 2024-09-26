@@ -6,7 +6,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
         let self = this;
 
         group('Checkout', function () {
-            const requestParams = self.cartHelper.getParamsWithAuthorization();
+            const requestParams = self.sapiHelper.getParamsWithAuthorization();
             const cartId = self.cartHelper.haveCartWithProducts(numberOfItems, '100429');
 
             const checkoutResponse = self.http.sendPostRequest(

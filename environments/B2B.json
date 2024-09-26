@@ -4,6 +4,7 @@
         "storefrontApiUrl": "http://glue.%store%.spryker.local",
         "backofficeUrl": "http://backoffice.%store%.spryker.local",
         "backofficeApiUrl": "http://backend-api.%store%.spryker.local",
+        "backendApiUrl": "http://glue-backend.%store%.spryker.local",
         "stores": ["de", "us", "at"]
     },
     "testing": {
@@ -11,6 +12,7 @@
         "storefrontApiUrl": "https://glue.%store%.spryker-b2bperformance.cloud.spryker.toys",
         "backofficeUrl": "https://backoffice.%store%.spryker-b2bperformance.cloud.spryker.toys",
         "backofficeApiUrl": "https://backend-api.%store%.spryker-b2bperformance.cloud.spryker.toys",
+        "backendApiUrl": "https://glue-backend.%store%.spryker-b2bperformance.cloud.spryker.toys",
         "stores": ["de", "us", "at"]
     }
 }

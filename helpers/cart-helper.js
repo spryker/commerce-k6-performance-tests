@@ -1,14 +1,14 @@
 export class CartHelper {
-    constructor(urlHelper, http, customerHelper, assertionsHelper) {
+    constructor(urlHelper, http, sapiHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
-        this.customerHelper = customerHelper;
+        this.sapiHelper = sapiHelper;
         this.assertionsHelper = assertionsHelper;
     }
 
     haveCartWithProducts(quantity = 1, sku = '100429') {
         const defaultCartName = 'k6_testing_cart';
-        const params = this.getParamsWithAuthorization();
+        const params = this.sapiHelper.getParamsWithAuthorization();
         const carts = this.getCarts(params);
 
         const cartsResponse = this.http.sendPostRequest(
@@ -40,38 +40,6 @@ export class CartHelper {
         this.deleteCarts(carts, params);
 
         return cartsResponseJson.data.id;
-    }
-
-    getParamsWithAuthorization() {
-        const defaultParams = {
-            headers: {
-                'Accept': 'application/json'
-            },
-        };
-        const urlAccessTokens = `${this.urlHelper.getStorefrontApiBaseUrl()}/access-tokens`;
-
-        const response = this.http.sendPostRequest(
-            this.http.url`${urlAccessTokens}`,
-            JSON.stringify({
-                data: {
-                    type: 'access-tokens',
-                    attributes: {
-                        username: this.customerHelper.getDefaultCustomerEmail(),
-                        password: this.customerHelper.getDefaultCustomerPassword()
-                    }
-                }
-            }),
-            defaultParams,
-            false
-        );
-        this.assertionsHelper.assertResponseStatus(response, 201, 'Auth Token');
-
-        const responseJson = JSON.parse(response.body);
-        this.assertionsHelper.assertSingleResourceResponseBodyStructure(responseJson, 'Auth Token');
-
-        defaultParams.headers.Authorization = `${responseJson.data.attributes.tokenType} ${responseJson.data.attributes.accessToken}`;
-
-        return defaultParams;
     }
 
     getCartsUrl() {

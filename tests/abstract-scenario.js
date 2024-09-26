@@ -8,7 +8,10 @@ import { Trend } from 'k6/metrics';
 import CustomerHelper from '../helpers/customer-helper.js';
 import { AssertionsHelper } from '../helpers/assertions-helper.js';
 import { BapiHelper } from '../helpers/bapi-helper.js';
+import { SapiHelper} from "../helpers/sapi-helper.js";
 import AdminHelper from '../helpers/admin-helper.js';
+import {ShoppingListHelper} from "../helpers/shopping-list-helper.js";
+import {ProductHelper} from "../helpers/product-helper.js";
 
 export class AbstractScenario {
     // eslint-disable-next-line no-unused-vars
@@ -29,10 +32,13 @@ export class AbstractScenario {
         this.customerHelper = new CustomerHelper();
         this.adminHelper = new AdminHelper();
         this.assertionsHelper = new AssertionsHelper();
-        this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper);
         this.bapiHelper = new BapiHelper(this.urlHelper, this.http, this.adminHelper, this.assertionsHelper);
+        this.sapiHelper = new SapiHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper)
+        this.cartHelper = new CartHelper(this.urlHelper, this.http, this.sapiHelper, this.assertionsHelper);
         this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper);
         this.browserHelper = new BrowserHelper(this.urlHelper, this.customerHelper, this.assertionsHelper);
+        this.shoppingListHelper = new ShoppingListHelper(this.urlHelper, this.http, this.sapiHelper, this.assertionsHelper);
+        this.productHelper = new ProductHelper(this.urlHelper, this.http, this.bapiHelper, this.assertionsHelper);
     }
 
     createTrendMetric(name) {
