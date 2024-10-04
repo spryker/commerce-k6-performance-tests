@@ -8,10 +8,10 @@ import { Trend } from 'k6/metrics';
 import CustomerHelper from '../helpers/customer-helper.js';
 import { AssertionsHelper } from '../helpers/assertions-helper.js';
 import { BapiHelper } from '../helpers/bapi-helper.js';
-import { SapiHelper} from "../helpers/sapi-helper.js";
+import { SapiHelper} from '../helpers/sapi-helper.js';
 import AdminHelper from '../helpers/admin-helper.js';
-import {ShoppingListHelper} from "../helpers/shopping-list-helper.js";
-import {ProductHelper} from "../helpers/product-helper.js";
+import {ShoppingListHelper} from '../helpers/shopping-list-helper.js';
+import {ProductHelper} from '../helpers/product-helper.js';
 
 export class AbstractScenario {
     // eslint-disable-next-line no-unused-vars

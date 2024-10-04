@@ -1,4 +1,4 @@
-import { SharedViewShoppingListScenario } from "../../../../cross-product/storefront/scenarios/shopping-list/shared-view-shopping-list-scenario.js";
+import { SharedViewShoppingListScenario } from '../../../../cross-product/storefront/scenarios/shopping-list/shared-view-shopping-list-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
@@ -9,8 +9,8 @@ options.scenarios = {
         exec: 'executeViewShoppingListScenario',
         executor: 'shared-iterations',
         tags: {
-            testId: 'S9',
-            testGroup: 'Navigation',
+            testId: 'S10',
+            testGroup: 'ShoppingList',
         },
         iterations: 10
     },
