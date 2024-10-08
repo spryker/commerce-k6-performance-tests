@@ -12,6 +12,7 @@ import { SapiHelper} from '../helpers/sapi-helper.js';
 import AdminHelper from '../helpers/admin-helper.js';
 import {ShoppingListHelper} from '../helpers/shopping-list-helper.js';
 import {ProductHelper} from '../helpers/product-helper.js';
+import OrderHelper from '../helpers/order-helper.js';
 
 export class AbstractScenario {
     // eslint-disable-next-line no-unused-vars
@@ -39,6 +40,7 @@ export class AbstractScenario {
         this.browserHelper = new BrowserHelper(this.urlHelper, this.customerHelper, this.assertionsHelper);
         this.shoppingListHelper = new ShoppingListHelper(this.urlHelper, this.http, this.sapiHelper, this.assertionsHelper);
         this.productHelper = new ProductHelper(this.urlHelper, this.http, this.bapiHelper, this.assertionsHelper);
+        this.orderHelper = new OrderHelper(this.urlHelper, this.http, this.sapiHelper, this.cartHelper, this.assertionsHelper);
     }
 
     createTrendMetric(name) {

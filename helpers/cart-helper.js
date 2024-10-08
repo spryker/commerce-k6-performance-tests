@@ -4,11 +4,12 @@ export class CartHelper {
         this.http = http;
         this.sapiHelper = sapiHelper;
         this.assertionsHelper = assertionsHelper;
+        this.params = null;
     }
 
-    haveCartWithProducts(quantity = 1, sku = '100429') {
+    haveCart() {
         const defaultCartName = 'k6_testing_cart';
-        const params = this.sapiHelper.getParamsWithAuthorization();
+        const params = this._getParamsWithAuthorization();
         const carts = this.getCarts(params);
 
         const cartsResponse = this.http.sendPostRequest(
@@ -33,13 +34,20 @@ export class CartHelper {
         const cartsResponseJson = JSON.parse(cartsResponse.body);
         this.assertionsHelper.assertSingleResourceResponseBodyStructure(cartsResponseJson, 'Create cart');
 
-        if (quantity > 0) {
-            this.addItemToCart(cartsResponseJson.data.id, quantity, params, sku);
-        }
-
         this.deleteCarts(carts, params);
 
         return cartsResponseJson.data.id;
+    }
+
+    haveCartWithProducts(quantity = 1, sku = '100429') {
+        const idCart = this.haveCart();
+
+        if (quantity > 0) {
+            const params = this._getParamsWithAuthorization();
+            this.addItemToCart(idCart, quantity, params, sku);
+        }
+
+        return idCart;
     }
 
     getCartsUrl() {
@@ -86,5 +94,13 @@ export class CartHelper {
         this.assertionsHelper.assertResponseStatus(addItemToCartResponse, 201, 'Add Item to Cart');
 
         return addItemToCartResponse;
+    }
+
+    _getParamsWithAuthorization() {
+        if (this.params === null) {
+            this.params = this.sapiHelper.getParamsWithAuthorization();
+        }
+
+        return this.params;
     }
 }
