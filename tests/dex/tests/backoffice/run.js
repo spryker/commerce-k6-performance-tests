@@ -11,8 +11,8 @@ import BackOffice from '../../../../helpers/browser/backOffice.js';
 import VisitAndSave from '../../../../helpers/browser/action/visitAndSave.js';
 import Visit from '../../../../helpers/browser/action/visit.js';
 
-let amountOfIterations = 10
-let amountOfVirtualUsers = 20
+let amountOfIterations = 70
+let amountOfVirtualUsers = 50
 let timeout = Math.ceil(60000)
 let visitList = [
     new Visit('dashboard'),
@@ -90,7 +90,7 @@ let configurationArray = [
         },
         iterations: amountOfIterations,
         vus: amountOfVirtualUsers,
-        maxDuration: '1200m',
+        maxDuration: '120m',
     }]
 ]
 
@@ -104,9 +104,10 @@ const basicAuth = getBasicAuthCredentials(targetEnv);
 
 export async function browseBackOffice() {
     let page = await browser.newPage()
-    try {
-        await page.setDefaultTimeout(timeout * 10)
+    await page.setDefaultTimeout(timeout * 10)
+    await page.setDefaultNavigationTimeout(60000)
 
+    try {
         let backoffice = new BackOffice(
             new BrowserHandler(
                 page,
@@ -121,7 +122,6 @@ export async function browseBackOffice() {
             timeout,
         )
         await backoffice.browse(visitList)
-
     } catch (e) {
         console.error('Failed to execute browseBackOffice', e.message)
     } finally {
