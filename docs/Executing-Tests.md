@@ -11,7 +11,7 @@ This repository contains a folder `shell` that contains a lot of scripts that he
 Or run all tests for a product.
 
 ```bash
-./shell/run-all-b2b-mp-performance-tests.sh
+./shell/run-all-b2b_mp-performance-tests.sh
 ```
 
 ## Environment variables for the k6 Container
@@ -61,7 +61,7 @@ Or simply run it without an argument and the script will ask for an input.
 Execute this command **from the root of the project!**
 
 ```bash
-./shell/run-all-b2b-mp-performance-tests.sh
+./shell/run-all-b2b_mp-performance-tests.sh
 ```
 
 It is important to execute it from the root! If not the paths in the scripts will break. This bash script will find all test files in all products and then execute them one after another.
