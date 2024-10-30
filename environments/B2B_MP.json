@@ -4,13 +4,13 @@
         "storefrontApiUrl": "http://glue.%store%.spryker.local",
         "backofficeUrl": "http://backoffice.%store%.spryker.local",
         "backofficeApiUrl": "http://backend-api.%store%.spryker.local",
-        "stores": ["eu", "us"]
+        "stores": ["de", "us"]
     },
     "testing": {
-        "storefrontUrl": "https://yves.%store%.spryker-b2bmpperformance.cloud.spryker.toys",
+        "storefrontUrl": "https://www.%store%.spryker-b2bmpperformance.cloud.spryker.toys",
         "storefrontApiUrl": "https://glue.%store%.spryker-b2bmpperformance.cloud.spryker.toys",
         "backofficeUrl": "https://backoffice.%store%.spryker-b2bmpperformance.cloud.spryker.toys",
         "backofficeApiUrl": "https://backend-api.%store%.spryker-b2bmpperformance.cloud.spryker.toys",
-        "stores": ["eu", "us"]
+        "stores": ["de", "us"]
     }
 }
