@@ -7,7 +7,7 @@
         "stores": ["eu", "us"]
     },
     "testing": {
-        "storefrontUrl": "https://www.%store%.spryker-b2bperformance.cloud.spryker.toys",
+        "storefrontUrl": "https://yves.%store%.spryker-b2bperformance.cloud.spryker.toys",
         "storefrontApiUrl": "https://glue.%store%.spryker-b2bperformance.cloud.spryker.toys",
         "backofficeUrl": "https://backoffice.%store%.spryker-b2bperformance.cloud.spryker.toys",
         "backofficeApiUrl": "https://backend-api.%store%.spryker-b2bperformance.cloud.spryker.toys",
