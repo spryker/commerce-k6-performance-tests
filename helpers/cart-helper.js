@@ -42,7 +42,7 @@ export class CartHelper {
         return cartsResponseJson.data.id;
     }
 
-    getParamsWithAuthorization() {
+    getParamsWithAuthorization(email = this.customerHelper.getDefaultCustomerEmail(), password = this.customerHelper.getDefaultCustomerPassword()) {
         const defaultParams = {
             headers: {
                 'Accept': 'application/json'
@@ -56,8 +56,8 @@ export class CartHelper {
                 data: {
                     type: 'access-tokens',
                     attributes: {
-                        username: this.customerHelper.getDefaultCustomerEmail(),
-                        password: this.customerHelper.getDefaultCustomerPassword()
+                        username: email,
+                        password: password
                     }
                 }
             }),

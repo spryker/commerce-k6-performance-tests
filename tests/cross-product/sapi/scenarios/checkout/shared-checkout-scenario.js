@@ -20,8 +20,25 @@ export class SharedCheckoutScenario extends AbstractScenario {
         });
     }
 
-    _getCheckoutData(cartId) {
-        const defaultCustomerEmail = this.customerHelper.getDefaultCustomerEmail();
+    placeOrder(customerEmail, cartId) {
+        console.log(`Executing checkout for customer: ${customerEmail}, cartId: ${cartId}`);
+
+        let self = this;
+        const requestParams = self.cartHelper.getParamsWithAuthorization(customerEmail);
+
+        const checkoutResponse = self.http.sendPostRequest(
+            self.http.url`${self.getStorefrontApiBaseUrl()}/checkout?include=orders`,
+            JSON.stringify(self._getCheckoutData(cartId, customerEmail, false)),
+            requestParams,
+            false
+        );
+
+        self.assertionsHelper.assertResponseStatus(checkoutResponse, 201);
+
+        return JSON.parse(checkoutResponse.body);
+    }
+
+    _getCheckoutData(cartId, defaultCustomerEmail = this.customerHelper.getDefaultCustomerEmail(), isMpPaymentProvider = true) {
         const address = {
             salutation: 'Ms',
             email: defaultCustomerEmail,
@@ -55,7 +72,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
                     payments: [
                         {
                             paymentMethodName: 'Invoice',
-                            paymentProviderName: this._getPaymentProviderName()
+                            paymentProviderName: this._getPaymentProviderName(isMpPaymentProvider)
                         }
                     ],
                     shipment: {
@@ -66,7 +83,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
         }
     }
 
-    _getPaymentProviderName() {
-        return 'DummyMarketplacePayment';
+    _getPaymentProviderName(isMpPaymentProvider = true) {
+        return isMpPaymentProvider ? 'DummyMarketplacePayment' : 'DummyPayment';
     }
 }

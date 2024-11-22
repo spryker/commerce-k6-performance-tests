@@ -1,0 +1,10 @@
+{
+    "local": {
+        "storefrontUrl": "http://yves.%store%.spryker.local",
+        "storefrontApiUrl": "http://glue.%store%.spryker.local",
+        "backendApiUrl": "http://glue-backend.%store%.spryker.local",
+        "backofficeUrl": "http://backoffice.%store%.spryker.local",
+        "backofficeApiUrl": "http://backend-api.%store%.spryker.local",
+        "stores": ["eu", "us"]
+    }
+}

@@ -8,6 +8,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - loadtesting
+      # - spryker_private
+      # - spryker_public
       # - spryker_demo_private
       # - spryker_demo_public
       # - spryker_b2b_marketplace_dev_private
