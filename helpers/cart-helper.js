@@ -98,6 +98,15 @@ export class CartHelper {
         }
     }
 
+    deleteCart(customerEmail, cartId) {
+        this.http.sendDeleteRequest(
+            this.http.url`${this.getCartsUrl()}/${cartId}`,
+            null,
+            this.getParamsWithAuthorization(customerEmail),
+            false
+        )
+    }
+
     addItemToCart(cartId, quantity, params, sku) {
         const addItemToCartResponse = this.http.sendPostRequest(
             this.http.url`${this.getCartsUrl()}/${cartId}/items`,

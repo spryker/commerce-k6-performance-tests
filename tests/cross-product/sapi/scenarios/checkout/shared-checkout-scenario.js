@@ -20,20 +20,15 @@ export class SharedCheckoutScenario extends AbstractScenario {
         });
     }
 
-    placeOrder(customerEmail, cartId) {
-        console.log(`Executing checkout for customer: ${customerEmail}, cartId: ${cartId}`);
-
-        let self = this;
-        const requestParams = self.cartHelper.getParamsWithAuthorization(customerEmail);
-
-        const checkoutResponse = self.http.sendPostRequest(
-            self.http.url`${self.getStorefrontApiBaseUrl()}/checkout?include=orders`,
-            JSON.stringify(self._getCheckoutData(cartId, customerEmail, false)),
-            requestParams,
+    haveOrder(customerEmail, cartId, isMpPaymentProvider = true) {
+        const checkoutResponse = this.http.sendPostRequest(
+            this.http.url`${this.getStorefrontApiBaseUrl()}/checkout?include=orders`,
+            JSON.stringify(this._getCheckoutData(cartId, customerEmail, isMpPaymentProvider)),
+            this.cartHelper.getParamsWithAuthorization(customerEmail),
             false
         );
 
-        self.assertionsHelper.assertResponseStatus(checkoutResponse, 201);
+        this.assertionsHelper.assertResponseStatus(checkoutResponse, 201);
 
         return JSON.parse(checkoutResponse.body);
     }

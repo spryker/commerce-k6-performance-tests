@@ -4,7 +4,7 @@ export class DynamicFixturesHelper {
         this.http = http;
     }
 
-    haveCustomerWithQuoteAndItems(quoteCount, itemCount, defaultItemPrice = 100) {
+    haveCustomersWithQuotes(customerCount, quoteCount = 1, itemCount = 10, defaultItemPrice = 5000) {
         const defaultParams = {
             headers: {
                 'Content-Type': 'application/vnd.api+json',
@@ -13,23 +13,61 @@ export class DynamicFixturesHelper {
 
         const dynamicFixturesResponse = this.http.sendPostRequest(
             this.http.url`${this.backendApiUrl}/dynamic-fixtures`,
-            JSON.stringify(this._getCustomerWithItemsInQuoteAttributes(quoteCount, itemCount, defaultItemPrice)),
+            JSON.stringify(this._getCustomersWithQuotesAttributes(customerCount, quoteCount, itemCount, defaultItemPrice)),
             defaultParams,
             false
         );
 
         const dynamicFixturesResponseJson = JSON.parse(dynamicFixturesResponse.body);
+        const customerData = dynamicFixturesResponseJson.data.filter(item => /^customer\d+$/.test(item.attributes.key));
 
-        const customerData = dynamicFixturesResponseJson.data.find(item => item.attributes.key === 'customer');
-        const quoteData = dynamicFixturesResponseJson.data.filter(item => item.attributes.key.startsWith('quote'));
+        return customerData.map(customer => {
+            const associatedCustomerQuotes = dynamicFixturesResponseJson.data
+                .filter(item => item.attributes.key.startsWith(`${customer.attributes.key}Quote`))
+                .map(quote => quote.attributes.data.uuid);
+
+            return {
+                customerEmail: customer.attributes.data.email,
+                quoteIds: associatedCustomerQuotes
+            };
+        });
+    }
+
+    haveConsoleCommands(commands) {
+        const params = {
+            headers: {
+                'Content-Type': 'application/vnd.api+json',
+            },
+            timeout: 20000,
+        };
+
+        this.http.sendPostRequest(
+            this.http.url`${this.backendApiUrl}/dynamic-fixtures`,
+            JSON.stringify(this._getConsoleCommandsAttributes(commands)),
+            params,
+            false
+        );
+    }
+
+    _getConsoleCommandsAttributes(commands) {
+        const operations = commands.map((command) => {
+            return {
+                type: 'cli-command',
+                name: command,
+            };
+        });
 
         return {
-            customerEmail: customerData.attributes.data.email,
-            quoteIds: quoteData.map(item => item.attributes.data.uuid),
+            data: {
+                type: 'dynamic-fixtures',
+                attributes: {
+                    operations: operations,
+                },
+            },
         };
     }
 
-    _getCustomerWithItemsInQuoteAttributes(quoteCount = 1, itemCount = 10, defaultItemPrice = 100) {
+    _getCustomersWithQuotesAttributes(customerCount = 1, quoteCount = 1, itemCount = 10, defaultItemPrice = 100) {
         const baseOperations = [
             {
                 type: 'transfer',
@@ -47,18 +85,6 @@ export class DynamicFixturesHelper {
                 type: 'helper',
                 name: 'haveCountry',
                 key: 'country'
-            },
-            {
-                type: 'helper',
-                name: 'haveCustomer',
-                key: 'customer',
-                arguments: [{ locale: '#locale', password: 'change123' }]
-            },
-            {
-                type: 'helper',
-                name: 'confirmCustomer',
-                key: 'confirmedCustomer',
-                arguments: ['#customer']
             },
             {
                 type: 'transfer',
@@ -122,27 +148,46 @@ export class DynamicFixturesHelper {
             }));
         };
 
-        // Generate quotes dynamically
-        const quotes = Array.from({ length: quoteCount }, (_, i) => ({
-            type: 'helper',
-            name: 'havePersistentQuote',
-            key: `quote${i + 1}`,
-            arguments: [
+        // Generate customers dynamically
+        const customers = Array.from({ length: customerCount }, (_, customerIndex) => {
+            const customerKey = `customer${customerIndex + 1}`;
+            return [
                 {
-                    customer: '#customer',
-                    items: generateItems()
-                }
-            ]
-        }));
+                    type: 'helper',
+                    name: 'haveCustomer',
+                    key: customerKey,
+                    arguments: [{ locale: '#locale', password: 'change123' }]
+                },
+                {
+                    type: 'helper',
+                    name: 'confirmCustomer',
+                    key: `confirmed${customerKey}`,
+                    arguments: [`#${customerKey}`]
+                },
+                // Generate quotes for each customer
+                ...Array.from({ length: quoteCount }, (_, quoteIndex) => ({
+                    type: 'helper',
+                    name: 'havePersistentQuote',
+                    key: `${customerKey}Quote${quoteIndex + 1}`,
+                    arguments: [
+                        {
+                            customer: `#${customerKey}`,
+                            items: generateItems()
+                        }
+                    ]
+                }))
+            ];
+        }).flat();
 
         return {
             data: {
                 type: 'dynamic-fixtures',
                 attributes: {
                     synchronize: true,
-                    operations: [...baseOperations, ...products, ...quotes]
+                    operations: [...baseOperations, ...products, ...customers]
                 }
             }
         };
     }
+
 }
