@@ -10,7 +10,7 @@ export class SharedOrderAmendmentScenario extends AbstractScenario {
     }
 
     haveOrderAmendment(customerEmail, orderId) {
-        this._ensureOrderStateState(customerEmail, orderId, 'payment pending');
+        this._ensureOrderState(customerEmail, orderId, 'payment pending');
 
         const cartReorderResponse = this.http.sendPostRequest(
             this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
@@ -24,7 +24,7 @@ export class SharedOrderAmendmentScenario extends AbstractScenario {
         return JSON.parse(cartReorderResponse.body);
     }
 
-    _ensureOrderStateState(customerEmail, orderId, state, maxRetries = 5) {
+    _ensureOrderState(customerEmail, orderId, state, maxRetries = 5) {
         let retries = 0;
         let order;
 
