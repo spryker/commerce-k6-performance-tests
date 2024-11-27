@@ -2,18 +2,23 @@ import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
 export class SharedCartReorderScenario extends AbstractScenario {
-    execute(customerEmail, orderId) {
+    execute(customerEmail, orderId, thresholdTag = null) {
         let self = this;
         group('Cart Reorder', function () {
-            self.haveReorder(customerEmail, orderId);
+            self.haveReorder(customerEmail, orderId, thresholdTag);
         });
     }
 
-    haveReorder(customerEmail, orderId) {
+    haveReorder(customerEmail, orderId, thresholdTag = null) {
+        const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
+        if (thresholdTag) {
+            requestParams.tags = { name: thresholdTag };
+        }
+
         const cartReorderResponse = this.http.sendPostRequest(
             this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
             JSON.stringify(this._getCartReorderAttributes(orderId)),
-            this.cartHelper.getParamsWithAuthorization(customerEmail),
+            requestParams,
             false
         );
 

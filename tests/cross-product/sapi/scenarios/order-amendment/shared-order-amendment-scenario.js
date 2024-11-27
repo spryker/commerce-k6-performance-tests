@@ -2,26 +2,36 @@ import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
 export class SharedOrderAmendmentScenario extends AbstractScenario {
-    execute(customerEmail, orderId) {
+    execute(customerEmail, orderId, thresholdTag = null) {
         let self = this;
         group('Order Amendment', function () {
-            self.haveOrderAmendment(customerEmail, orderId);
+            self.haveOrderAmendment(customerEmail, orderId, thresholdTag);
         });
     }
 
-    haveOrderAmendment(customerEmail, orderId) {
+    haveOrderAmendment(customerEmail, orderId, thresholdTag = null) {
         this._ensureOrderState(customerEmail, orderId, 'payment pending');
+
+        const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
+        if (thresholdTag) {
+            requestParams.tags = { name: thresholdTag };
+        }
 
         const cartReorderResponse = this.http.sendPostRequest(
             this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
             JSON.stringify(this._getCartReorderAttributes(orderId)),
-            this.cartHelper.getParamsWithAuthorization(customerEmail),
+            requestParams,
             false
         );
 
         this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
 
-        return JSON.parse(cartReorderResponse.body);
+        try {
+            return JSON.parse(cartReorderResponse.body);
+        } catch (e) {
+            console.log(cartReorderResponse.body);
+            throw Error('Failed to parse response during SharedOrderAmendmentScenario::haveOrderAmendment()');
+        }
     }
 
     _ensureOrderState(customerEmail, orderId, state, maxRetries = 5) {
@@ -50,7 +60,12 @@ export class SharedOrderAmendmentScenario extends AbstractScenario {
         );
         self.assertionsHelper.assertResponseStatus(orderResponse, 200);
 
-        return JSON.parse(orderResponse.body);
+        try {
+            return JSON.parse(orderResponse.body);
+        } catch (e) {
+            console.log(orderResponse.body);
+            throw Error('Failed to parse response during SharedOrderAmendmentScenario::_getOrder()');
+        }
     }
 
     _getCartReorderAttributes(orderId) {

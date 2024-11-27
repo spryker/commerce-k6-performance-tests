@@ -5,35 +5,43 @@ import {
 } from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const iterations = 10;
+const vus = 10;
+const iterations = 1;
+const itemCount = 50;
+const defaultItemPrice = 1000; // 10.00 EUR
 const environment = 'SUITE';
+const thresholdTag = 'finish_order_amendment';
+
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    TEST_ID_Cancel_Order_Amendment: {
+    SAPI18_finish_order_amendment: {
         exec: 'execute',
-        executor: 'shared-iterations',
+        executor: 'per-vu-iterations',
         tags: {
-            testId: 'TEST_ID',
+            testId: 'SAPI18',
             testGroup: 'Order Amendment',
         },
-        iterations: iterations
+        vus: vus,
+        iterations: iterations,
     },
 };
-options.thresholds[`http_req_duration{method:DELETE,url:${sharedCheckoutScenario.getStorefrontApiBaseUrl()}/carts/\${}}`] = ['avg<327'];
+options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
-    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(iterations);
+    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, itemCount, defaultItemPrice);
 }
 
 export function execute(data) {
-    const customerIndex = __ITER % data.length;
+    const vus = __VU - 1;
+    const customerIndex = vus % data.length;
     const { customerEmail, quoteIds } = data[customerIndex];
+    const quoteIndex = __ITER % quoteIds.length;
 
     // Place an order
-    const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[0], false);
+    const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
 
     // Edit an order
     const cartReorderResponseJson = sharedOrderAmendmentScenario.haveOrderAmendment(
@@ -41,6 +49,6 @@ export function execute(data) {
         checkoutResponseJson.data.relationships.orders.data[0].id
     );
 
-    // Delete reordered cart
-    sharedOrderAmendmentScenario.cartHelper.deleteCart(cartReorderResponseJson.id, customerEmail);
+    // Place an updated order
+    sharedCheckoutScenario.haveOrder(customerEmail, cartReorderResponseJson.data.id, false, thresholdTag);
 }

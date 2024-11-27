@@ -20,17 +20,27 @@ export class SharedCheckoutScenario extends AbstractScenario {
         });
     }
 
-    haveOrder(customerEmail, cartId, isMpPaymentProvider = true) {
+    haveOrder(customerEmail, cartId, isMpPaymentProvider = true, thresholdTag = null) {
+        const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
+        if (thresholdTag) {
+            requestParams.tags = { name: thresholdTag };
+        }
+
         const checkoutResponse = this.http.sendPostRequest(
             this.http.url`${this.getStorefrontApiBaseUrl()}/checkout?include=orders`,
             JSON.stringify(this._getCheckoutData(cartId, customerEmail, isMpPaymentProvider)),
-            this.cartHelper.getParamsWithAuthorization(customerEmail),
+            requestParams,
             false
         );
 
         this.assertionsHelper.assertResponseStatus(checkoutResponse, 201);
 
-        return JSON.parse(checkoutResponse.body);
+        try {
+            return JSON.parse(checkoutResponse.body);
+        } catch (e) {
+            console.log(checkoutResponse.body);
+            throw Error('Failed to parse response during SharedCheckoutScenario::placeOrder()');
+        }
     }
 
     _getCheckoutData(cartId, defaultCustomerEmail = this.customerHelper.getDefaultCustomerEmail(), isMpPaymentProvider = true) {
