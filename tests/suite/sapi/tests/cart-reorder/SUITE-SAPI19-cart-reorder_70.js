@@ -1,8 +1,8 @@
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
-import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
 import {
-    SharedOrderAmendmentScenario
-} from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
+    SharedCartReorderScenario
+} from '../../../../cross-product/sapi/scenarios/cart-reorder/shared-cart-reorder-scenario.js';
+import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 10;
@@ -10,19 +10,19 @@ const iterations = 1;
 const itemCount = 70;
 const defaultItemPrice = 1000; // 10.00 EUR
 const environment = 'SUITE';
-const thresholdTag = 'start_order_amendment';
+const thresholdTag = 'cart_reorder_70';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
-const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
+const sharedCartReorderScenario = new SharedCartReorderScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI16_start_order_amendment: {
+    SAPI19_cart_reorder_70: {
         exec: 'execute',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI16',
-            testGroup: 'Order Amendment',
+            testId: 'SAPI19',
+            testGroup: 'Cart Reorder',
         },
         vus: vus,
         iterations: iterations,
@@ -43,6 +43,6 @@ export function execute(data) {
     // Place an order
     const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
 
-    // Edit an order
-    sharedOrderAmendmentScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
+    // Reorder
+    sharedCartReorderScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
 }

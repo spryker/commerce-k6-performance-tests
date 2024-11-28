@@ -7,21 +7,21 @@ export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 10;
 const iterations = 1;
-const itemCount = 50;
+const itemCount = 70;
 const defaultItemPrice = 1000; // 10.00 EUR
 const environment = 'SUITE';
-const thresholdTag = 'finish_order_amendment';
+const thresholdTag = 'cancel_order_amendment_70';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI18_finish_order_amendment: {
+    SAPI21_cancel_order_amendment_70: {
         exec: 'execute',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI18',
+            testId: 'SAPI21',
             testGroup: 'Order Amendment',
         },
         vus: vus,
@@ -49,6 +49,6 @@ export function execute(data) {
         checkoutResponseJson.data.relationships.orders.data[0].id
     );
 
-    // Place an updated order
-    sharedCheckoutScenario.haveOrder(customerEmail, cartReorderResponseJson.data.id, false, thresholdTag);
+    // Delete reordered cart
+    sharedOrderAmendmentScenario.cartHelper.deleteCart(cartReorderResponseJson.id, customerEmail, thresholdTag);
 }

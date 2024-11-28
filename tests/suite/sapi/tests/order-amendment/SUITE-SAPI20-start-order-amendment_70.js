@@ -10,18 +10,18 @@ const iterations = 1;
 const itemCount = 70;
 const defaultItemPrice = 1000; // 10.00 EUR
 const environment = 'SUITE';
-const thresholdTag = 'cancel_order_amendment';
+const thresholdTag = 'start_order_amendment_70';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI17_cancel_order_amendment: {
+    SAPI20_start_order_amendment_70: {
         exec: 'execute',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI17',
+            testId: 'SAPI20',
             testGroup: 'Order Amendment',
         },
         vus: vus,
@@ -44,11 +44,5 @@ export function execute(data) {
     const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
 
     // Edit an order
-    const cartReorderResponseJson = sharedOrderAmendmentScenario.haveOrderAmendment(
-        customerEmail,
-        checkoutResponseJson.data.relationships.orders.data[0].id
-    );
-
-    // Delete reordered cart
-    sharedOrderAmendmentScenario.cartHelper.deleteCart(cartReorderResponseJson.id, customerEmail, thresholdTag);
+    sharedOrderAmendmentScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
 }

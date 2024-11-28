@@ -38,7 +38,7 @@ export class DynamicFixturesHelper {
             headers: {
                 'Content-Type': 'application/vnd.api+json',
             },
-            timeout: 20000,
+            timeout: 600000,
         };
 
         this.http.sendPostRequest(
@@ -71,20 +71,9 @@ export class DynamicFixturesHelper {
         const baseOperations = [
             {
                 type: 'transfer',
-                name: 'StoreTransfer',
-                key: 'store',
-                arguments: { id_store: 1 }
-            },
-            {
-                type: 'transfer',
                 name: 'LocaleTransfer',
                 key: 'locale',
                 arguments: { id_locale: 66, locale_name: 'en_US' }
-            },
-            {
-                type: 'helper',
-                name: 'haveCountry',
-                key: 'country'
             },
             {
                 type: 'transfer',
@@ -132,8 +121,8 @@ export class DynamicFixturesHelper {
                 },
                 {
                     type: 'helper',
-                    name: 'haveProductInStockForStore',
-                    arguments: ['#store', { sku: `#${productKey}.sku`, isNeverOutOfStock: '1' }]
+                    name: 'haveProductInStock',
+                    arguments: [{ sku: `#${productKey}.sku`, isNeverOutOfStock: '1', fkStock: 1, stockType: 'Warehouse1' }]
                 }
             ];
         }).flat();

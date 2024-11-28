@@ -1,28 +1,28 @@
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
-import {
-    SharedCartReorderScenario
-} from '../../../../cross-product/sapi/scenarios/cart-reorder/shared-cart-reorder-scenario.js';
 import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
+import {
+    SharedOrderAmendmentScenario
+} from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 10;
 const iterations = 1;
-const itemCount = 70;
+const itemCount = 50;
 const defaultItemPrice = 1000; // 10.00 EUR
 const environment = 'SUITE';
-const thresholdTag = 'cart_reorder';
+const thresholdTag = 'finish_order_amendment_50';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
-const sharedCartReorderScenario = new SharedCartReorderScenario(environment);
+const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI15_cart_reorder: {
+    SAPI18_finish_order_amendment_50: {
         exec: 'execute',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI15',
-            testGroup: 'Cart Reorder',
+            testId: 'SAPI18',
+            testGroup: 'Order Amendment',
         },
         vus: vus,
         iterations: iterations,
@@ -43,6 +43,12 @@ export function execute(data) {
     // Place an order
     const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
 
-    // Reorder
-    sharedCartReorderScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
+    // Edit an order
+    const cartReorderResponseJson = sharedOrderAmendmentScenario.haveOrderAmendment(
+        customerEmail,
+        checkoutResponseJson.data.relationships.orders.data[0].id
+    );
+
+    // Place an updated order
+    sharedCheckoutScenario.haveOrder(customerEmail, cartReorderResponseJson.data.id, false, thresholdTag);
 }
