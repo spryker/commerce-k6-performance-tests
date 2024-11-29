@@ -34,8 +34,7 @@ export function setup() {
 }
 
 export function execute(data) {
-    const vus = __VU - 1;
-    const customerIndex = vus % data.length;
+    const customerIndex = (__VU - 1) % data.length;
     const { customerEmail, quoteIds } = data[customerIndex];
     const quoteIndex = __ITER % quoteIds.length;
 

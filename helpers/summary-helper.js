@@ -1,5 +1,5 @@
 import { textSummary } from '../lib/external/k6-summary.js';
-import { htmlReport } from '../lib/external/k6-html-report-local.js';
+import { htmlReport } from '../lib/external/k6-html-report.js';
 
 export function handleSummary(data) {
     if (__ENV.K6_HOSTENV === 'local') {
