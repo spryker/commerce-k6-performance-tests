@@ -7,8 +7,7 @@ export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 10;
 const iterations = 1;
-const itemCount = 50;
-const defaultItemPrice = 1000; // 10.00 EUR
+
 const environment = 'SUITE';
 const thresholdTag = 'cart_reorder_50';
 
@@ -31,12 +30,11 @@ options.scenarios = {
 options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
-    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, itemCount, defaultItemPrice);
+    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 50);
 }
 
 export function execute(data) {
-    const vus = __VU - 1;
-    const customerIndex = vus % data.length;
+    const customerIndex = (__VU - 1) % data.length;
     const { customerEmail, quoteIds } = data[customerIndex];
     const quoteIndex = __ITER % quoteIds.length;
 

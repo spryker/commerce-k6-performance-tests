@@ -7,8 +7,7 @@ export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 10;
 const iterations = 1;
-const itemCount = 70;
-const defaultItemPrice = 1000; // 10.00 EUR
+
 const environment = 'SUITE';
 const thresholdTag = 'cancel_order_amendment_70';
 
@@ -31,7 +30,7 @@ options.scenarios = {
 options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
-    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, itemCount, defaultItemPrice);
+    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 70);
 }
 
 export function execute(data) {

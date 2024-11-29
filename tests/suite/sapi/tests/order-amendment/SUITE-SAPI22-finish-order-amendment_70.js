@@ -7,8 +7,7 @@ export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 10;
 const iterations = 1;
-const itemCount = 70;
-const defaultItemPrice = 1000; // 10.00 EUR
+
 const environment = 'SUITE';
 const thresholdTag = 'finish_order_amendment_70';
 
@@ -32,11 +31,11 @@ options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
     if (isSequentialSetup()) {
-        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(iterations, 1, itemCount, defaultItemPrice);
+        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(iterations, 1, 70);
     }
 
     if (isConcurrentSetup()) {
-        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, itemCount, defaultItemPrice);
+        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 70);
     }
 
     throw new Error('Invalid setup configuration');

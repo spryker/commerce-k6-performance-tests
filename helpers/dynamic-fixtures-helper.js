@@ -4,7 +4,7 @@ export class DynamicFixturesHelper {
         this.http = http;
     }
 
-    haveCustomersWithQuotes(customerCount, quoteCount = 1, itemCount = 10, defaultItemPrice = 5000) {
+    haveCustomersWithQuotes(customerCount, quoteCount = 1, itemCount = 10, defaultItemPrice = 1000) {
         const defaultParams = {
             headers: {
                 'Content-Type': 'application/vnd.api+json',
