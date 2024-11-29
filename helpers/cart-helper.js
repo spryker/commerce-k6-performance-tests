@@ -62,10 +62,6 @@ export class CartHelper {
     getCarts(email) {
         const params = this.getParamsWithAuthorization(email);
         const getCartsResponse = this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false);
-
-        console.log(JSON.parse(getCartsResponse.body));
-        throw Error('test');
-
         this.assertionsHelper.assertResponseStatus(getCartsResponse, 200, 'Get Carts');
 
         const getCartsResponseJson = JSON.parse(getCartsResponse.body);

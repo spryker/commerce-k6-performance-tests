@@ -31,14 +31,20 @@ options.scenarios = {
 options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
-    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, itemCount, defaultItemPrice);
+    if (isSequentialSetup()) {
+        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(iterations, 1, itemCount, defaultItemPrice);
+    }
+
+    if (isConcurrentSetup()) {
+        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, itemCount, defaultItemPrice);
+    }
+
+    throw new Error('Invalid setup configuration');
 }
 
 export function execute(data) {
-    const vus = __VU - 1;
-    const customerIndex = vus % data.length;
-    const { customerEmail, quoteIds } = data[customerIndex];
-    const quoteIndex = __ITER % quoteIds.length;
+    const { customerEmail, quoteIds } = getCustomerData(data);
+    const quoteIndex = getQuoteIndex(quoteIds);
 
     // Place an order
     const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
@@ -51,4 +57,28 @@ export function execute(data) {
 
     // Place an updated order
     sharedCheckoutScenario.haveOrder(customerEmail, cartReorderResponseJson.data.id, false, thresholdTag);
+}
+
+function getCustomerData(data) {
+    let customerIndex;
+
+    if (isSequentialSetup()) {
+        customerIndex = __ITER % data.length;
+    } else if (isConcurrentSetup()) {
+        customerIndex = (__VU - 1) % data.length;
+    }
+
+    return data[customerIndex];
+}
+
+function getQuoteIndex(quoteIds) {
+    return isSequentialSetup() ? 0 : __ITER % quoteIds.length;
+}
+
+function isConcurrentSetup() {
+    return vus > 1 && iterations === 1;
+}
+
+function isSequentialSetup() {
+    return vus === 1 && iterations > 1;
 }
