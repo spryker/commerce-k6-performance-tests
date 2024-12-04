@@ -1,5 +1,6 @@
 .idea/
 settings.json
+result.html
 /node_modules/
 /.env
 /results/

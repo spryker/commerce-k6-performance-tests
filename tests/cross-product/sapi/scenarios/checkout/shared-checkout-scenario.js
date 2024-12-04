@@ -2,7 +2,7 @@ import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
 export class SharedCheckoutScenario extends AbstractScenario {
-    execute(numberOfItems) {
+    execute(numberOfItems, isMpPaymentProvider = true) {
         let self = this;
 
         group('Checkout', function () {
@@ -11,7 +11,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
 
             const checkoutResponse = self.http.sendPostRequest(
                 self.http.url`${self.getStorefrontApiBaseUrl()}/checkout?include=orders`,
-                JSON.stringify(self._getCheckoutData(cartId)),
+                JSON.stringify(self._getCheckoutData(cartId, isMpPaymentProvider)),
                 requestParams,
                 false
             );
@@ -20,8 +20,29 @@ export class SharedCheckoutScenario extends AbstractScenario {
         });
     }
 
-    _getCheckoutData(cartId) {
-        const defaultCustomerEmail = this.customerHelper.getDefaultCustomerEmail();
+    haveOrder(customerEmail, cartId, isMpPaymentProvider = true, thresholdTag = null) {
+        const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
+        if (thresholdTag) {
+            requestParams.tags = { name: thresholdTag };
+        }
+
+        const checkoutResponse = this.http.sendPostRequest(
+            this.http.url`${this.getStorefrontApiBaseUrl()}/checkout?include=orders`,
+            JSON.stringify(this._getCheckoutData(cartId, customerEmail, isMpPaymentProvider)),
+            requestParams,
+            false
+        );
+
+        this.assertionsHelper.assertResponseStatus(checkoutResponse, 201);
+
+        try {
+            return JSON.parse(checkoutResponse.body);
+        } catch (e) {
+            throw Error('Failed to parse response during SharedCheckoutScenario::placeOrder()');
+        }
+    }
+
+    _getCheckoutData(cartId, defaultCustomerEmail = this.customerHelper.getDefaultCustomerEmail(), isMpPaymentProvider = true) {
         const address = {
             salutation: 'Ms',
             email: defaultCustomerEmail,
@@ -55,7 +76,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
                     payments: [
                         {
                             paymentMethodName: 'Invoice',
-                            paymentProviderName: this._getPaymentProviderName()
+                            paymentProviderName: this._getPaymentProviderName(isMpPaymentProvider)
                         }
                     ],
                     shipment: {
@@ -66,7 +87,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
         }
     }
 
-    _getPaymentProviderName() {
-        return 'DummyMarketplacePayment';
+    _getPaymentProviderName(isMpPaymentProvider = true) {
+        return isMpPaymentProvider ? 'DummyMarketplacePayment' : 'DummyPayment';
     }
 }

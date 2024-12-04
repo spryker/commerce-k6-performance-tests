@@ -1,9 +1,10 @@
 export class CartHelper {
-    constructor(urlHelper, http, customerHelper, assertionsHelper) {
+    constructor(urlHelper, http, customerHelper, assertionsHelper, authTokenManager) {
         this.urlHelper = urlHelper;
         this.http = http;
         this.customerHelper = customerHelper;
         this.assertionsHelper = assertionsHelper;
+        this.authTokenManager = authTokenManager;
     }
 
     haveCartWithProducts(quantity = 1, sku = '100429') {
@@ -42,34 +43,14 @@ export class CartHelper {
         return cartsResponseJson.data.id;
     }
 
-    getParamsWithAuthorization() {
+    getParamsWithAuthorization(email = this.customerHelper.getDefaultCustomerEmail(), password = this.customerHelper.getDefaultCustomerPassword()) {
         const defaultParams = {
             headers: {
                 'Accept': 'application/json'
             },
         };
-        const urlAccessTokens = `${this.urlHelper.getStorefrontApiBaseUrl()}/access-tokens`;
 
-        const response = this.http.sendPostRequest(
-            this.http.url`${urlAccessTokens}`,
-            JSON.stringify({
-                data: {
-                    type: 'access-tokens',
-                    attributes: {
-                        username: this.customerHelper.getDefaultCustomerEmail(),
-                        password: this.customerHelper.getDefaultCustomerPassword()
-                    }
-                }
-            }),
-            defaultParams,
-            false
-        );
-        this.assertionsHelper.assertResponseStatus(response, 201, 'Auth Token');
-
-        const responseJson = JSON.parse(response.body);
-        this.assertionsHelper.assertSingleResourceResponseBodyStructure(responseJson, 'Auth Token');
-
-        defaultParams.headers.Authorization = `${responseJson.data.attributes.tokenType} ${responseJson.data.attributes.accessToken}`;
+        defaultParams.headers.Authorization = this.authTokenManager.getAuthToken(email, password);
 
         return defaultParams;
     }
@@ -78,7 +59,8 @@ export class CartHelper {
         return `${this.urlHelper.getStorefrontApiBaseUrl()}/carts`;
     }
 
-    getCarts(params) {
+    getCarts(email) {
+        const params = this.getParamsWithAuthorization(email);
         const getCartsResponse = this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false);
         this.assertionsHelper.assertResponseStatus(getCartsResponse, 200, 'Get Carts');
 
@@ -96,6 +78,15 @@ export class CartHelper {
                 self.assertionsHelper.assertResponseStatus(deleteCartResponse, 204, 'Delete cart');
             });
         }
+    }
+
+    deleteCart(customerEmail, cartId, thresholdTag = null) {
+        const requestParams = this.getParamsWithAuthorization(customerEmail);
+        if (thresholdTag) {
+            requestParams.tags = { name: thresholdTag };
+        }
+
+        this.http.sendDeleteRequest(this.http.url`${this.getCartsUrl()}/${cartId}`, null, requestParams, false);
     }
 
     addItemToCart(cartId, quantity, params, sku) {

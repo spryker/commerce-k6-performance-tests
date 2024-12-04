@@ -5,7 +5,7 @@
 This repository contains a folder `shell` that contains a lot of scripts that help with running tests. The important part is that they must be executed from the project root!
 
 ```bash
-./shell/run-a-single-test <path/to/the/test-file.js>
+./shell/run-a-single-test.sh <path/to/the/test-file.js>
 ```
 
 Or run all tests for a product.

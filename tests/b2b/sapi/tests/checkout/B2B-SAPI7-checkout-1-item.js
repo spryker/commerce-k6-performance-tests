@@ -1,8 +1,8 @@
-import { CheckoutScenario } from '../../scenarios/checkout/checkout-scenario.js';
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const checkoutScenario = new CheckoutScenario('B2B');
+const checkoutScenario = new SharedCheckoutScenario('B2B');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
@@ -22,5 +22,5 @@ options.scenarios = {
 options.thresholds[`http_req_duration{url:${checkoutScenario.getStorefrontApiBaseUrl()}/checkout?include=orders}`] = ['avg<1145'];
 
 export function executeCheckoutScenario() {
-    checkoutScenario.execute(__ENV.numberOfItems);
+    checkoutScenario.execute(__ENV.numberOfItems, false);
 }
