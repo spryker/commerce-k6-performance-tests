@@ -2,7 +2,7 @@ import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
 export class SharedCheckoutScenario extends AbstractScenario {
-    execute(numberOfItems) {
+    execute(numberOfItems, isMpPaymentProvider = true) {
         let self = this;
 
         group('Checkout', function () {
@@ -11,7 +11,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
 
             const checkoutResponse = self.http.sendPostRequest(
                 self.http.url`${self.getStorefrontApiBaseUrl()}/checkout?include=orders`,
-                JSON.stringify(self._getCheckoutData(cartId)),
+                JSON.stringify(self._getCheckoutData(cartId, isMpPaymentProvider)),
                 requestParams,
                 false
             );

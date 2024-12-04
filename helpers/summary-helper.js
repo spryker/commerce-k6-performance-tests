@@ -8,11 +8,11 @@ export function handleSummary(data) {
             stdout: textSummary(data, { indent: ' ', enableColors: true }),
         };
     } else {
-        return handleSummaryTesting(data);
+        return _handleSummaryTesting(data);
     }
 }
 
-function handleSummaryTesting(data) {
+function _handleSummaryTesting(data) {
     const failedMetrics = getFailedMetrics(data);
 
     const summary = {
