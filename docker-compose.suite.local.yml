@@ -1,0 +1,73 @@
+networks:
+  k6:
+  grafana:
+  spryker_public:
+    external: true
+  spryker_private:
+    external: true
+
+services:
+  influxdb:
+    image: influxdb:1.8
+    networks:
+      - k6
+      - grafana
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_DB=k6
+
+  grafana:
+    image: grafana/grafana:latest
+    networks:
+      - grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    volumes:
+      - ./dashboards:/var/lib/grafana/dashboards
+      - ./grafana-dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+
+  k6:
+    container_name: "loadtesting_environment"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+      - K6_SCRIPT=${K6_SCRIPT}
+      - K6_HOSTENV=${K6_HOSTENV}
+      - K6_STATSD_ENABLE_TAGS=true
+      - K6_STATSD_ADDR=${K6_STATSD_ADDR}
+      - K6_STATSD_NAMESPACE=${K6_STATSD_NAMESPACE}
+      - K6_HTTP_DEBUG=${K6_HTTP_DEBUG}
+      - K6_NO_THRESHOLDS=${K6_NO_THRESHOLDS}
+      - GIT_HASH=${GIT_HASH}
+      - GIT_BRANCH=${GIT_BRANCH}
+      - GIT_REPO=${GIT_REPO}
+      - GIT_TAG=${GIT_TAG}
+      - BASIC_AUTH_USERNAME=${BASIC_AUTH_USERNAME}
+      - BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}
+      - DATA_EXCHANGE_PAYLOAD_PUT_CHUNK_SIZE=${DATA_EXCHANGE_PAYLOAD_PUT_CHUNK_SIZE:-100}
+      - DATA_EXCHANGE_PAYLOAD_PATCH_CHUNK_SIZE=${DATA_EXCHANGE_PAYLOAD_PATCH_CHUNK_SIZE:-100}
+      - DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE=${DATA_EXCHANGE_PAYLOAD_CHUNK_SIZE:-100}
+      - DATA_EXCHANGE_TARGET_CATALOG_SIZE_POST=${DATA_EXCHANGE_TARGET_CATALOG_SIZE_POST:-3000}
+      - DATA_EXCHANGE_TARGET_CATALOG_SIZE_PUT_PATCH=${DATA_EXCHANGE_TARGET_CATALOG_SIZE_PUT_PATCH:-1000}
+      - DATA_EXCHANGE_THREADS_PATCH=${DATA_EXCHANGE_THREADS_PATCH:-1}
+      - DATA_EXCHANGE_THREADS_PUT=${DATA_EXCHANGE_THREADS_PUT:-1}
+      - DATA_EXCHANGE_THREADS_POST=${DATA_EXCHANGE_THREADS_POST:-1}
+      - DATA_EXCHANGE_TWO_LOCALES=${DATA_EXCHANGE_TWO_LOCALES:-1}
+      - DATA_EXCHANGE_CONCRETE_MAX_AMOUNT=${DATA_EXCHANGE_CONCRETE_MAX_AMOUNT:-1}
+      - DATA_EXCHANGE_DEBUG=${DATA_EXCHANGE_DEBUG:-0}
+    networks:
+      - k6
+      - spryker_private
+      - spryker_public
+    volumes:
+      - .:/home/k6
+    ports:
+      - "6565:6565"

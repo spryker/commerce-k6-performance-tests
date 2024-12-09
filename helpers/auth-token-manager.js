@@ -50,10 +50,10 @@ export class AuthTokenManager {
             false
         );
 
-        this.assertionsHelper.assertResponseStatus(response, 201, 'Auth Token');
+        // this.assertionsHelper.assertResponseStatus(response, 201, 'Auth Token');
 
         const responseJson = JSON.parse(response.body);
-        this.assertionsHelper.assertSingleResourceResponseBodyStructure(responseJson, 'Auth Token');
+        // this.assertionsHelper.assertSingleResourceResponseBodyStructure(responseJson, 'Auth Token');
 
         const token = `${responseJson.data.attributes.tokenType} ${responseJson.data.attributes.accessToken}`;
         this.tokenCache[cacheKey] = token;

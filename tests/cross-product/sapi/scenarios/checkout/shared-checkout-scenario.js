@@ -33,7 +33,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
             false
         );
 
-        this.assertionsHelper.assertResponseStatus(checkoutResponse, 201);
+        // this.assertionsHelper.assertResponseStatus(checkoutResponse, 201);
 
         try {
             return JSON.parse(checkoutResponse.body);

@@ -1,18 +1,6 @@
 import { textSummary } from '../lib/external/k6-summary.js';
-import { htmlReport } from '../lib/external/k6-html-report.js';
 
 export function handleSummary(data) {
-    if (__ENV.K6_HOSTENV === 'local') {
-        return {
-            'result.html': htmlReport(data),
-            stdout: textSummary(data, { indent: ' ', enableColors: true }),
-        };
-    } else {
-        return _handleSummaryTesting(data);
-    }
-}
-
-function _handleSummaryTesting(data) {
     const failedMetrics = getFailedMetrics(data);
 
     const summary = {
