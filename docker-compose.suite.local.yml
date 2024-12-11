@@ -33,7 +33,6 @@ services:
       - ./grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
 
   k6:
-    container_name: "loadtesting_environment"
     build:
       context: .
       dockerfile: Dockerfile
@@ -63,11 +62,12 @@ services:
       - DATA_EXCHANGE_TWO_LOCALES=${DATA_EXCHANGE_TWO_LOCALES:-1}
       - DATA_EXCHANGE_CONCRETE_MAX_AMOUNT=${DATA_EXCHANGE_CONCRETE_MAX_AMOUNT:-1}
       - DATA_EXCHANGE_DEBUG=${DATA_EXCHANGE_DEBUG:-0}
+      - ENV_REPOSITORY_ID=${ENV_REPOSITORY_ID}
     networks:
       - k6
       - spryker_private
       - spryker_public
     volumes:
-      - .:/home/k6
+      - ./dist:/dist
     ports:
       - "6565:6565"

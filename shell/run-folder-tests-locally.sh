@@ -16,5 +16,5 @@ fi
 
 files=($(find "$test_folder" -name '*.js' -type f))
 for file in "${files[@]}"; do
-    bash shell/run-a-single-test-locally.sh "$file"
+    bash shell/run-a-single-test-locally.sh "/$file"
 done

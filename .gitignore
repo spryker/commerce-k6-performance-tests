@@ -6,3 +6,4 @@ settings.json
 !/results/.gitkeep
 !/results/summaries/.gitkeep
 .lh
+dist

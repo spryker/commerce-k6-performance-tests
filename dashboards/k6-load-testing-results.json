@@ -1532,7 +1532,7 @@
                   "type": "fill"
                 }
               ],
-              "measurement": "cart_reorder_50",
+              "measurement": "SAPI7_checkout_70",
               "orderByTime": "ASC",
               "policy": "default",
               "query": "SELECT \"value\" FROM $Measurement WHERE $timeFilter and value > 0",
@@ -1610,10 +1610,10 @@
         "current": {
           "selected": true,
           "tags": [],
-          "text": "http_req_duration + cart_reorder_50",
+          "text": "http_req_duration + SAPI7_checkout_70",
           "value": [
             "http_req_duration",
-            "cart_reorder_50"
+            "SAPI7_checkout_70"
           ]
         },
         "hide": 0,
@@ -1664,11 +1664,11 @@
           },
           {
             "selected": true,
-            "text": "cart_reorder_50",
-            "value": "cart_reorder_50"
+            "text": "SAPI7_checkout_70",
+            "value": "SAPI7_checkout_70"
           }
         ],
-        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,cart_reorder_50",
+        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_checkout_70",
         "type": "custom"
       }
     ]
