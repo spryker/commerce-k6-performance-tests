@@ -99,6 +99,22 @@ build_k6_docker_command() {
     echo "$command"
 }
 
+build_k6_docker_command_local() {
+    local relativePath="$1"
+    local testRunId=$(generate_uuid)
+
+    command="docker-compose -f docker-compose.suite.local.yml run --rm \
+            -v $(pwd):/scripts \
+            -u $(id -u):$(id -g) \
+            -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
+            -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
+            -e 'SPRYKER_TEST_PATH=$relativePath' \
+            -e 'K6_BROWSER_ENABLED=true' \
+            k6 run $relativePath"
+
+    echo "$command"
+}
+
 # Helper method to create a folder if it does not exist
 create_folder_if_not_existant() {
     local folder="$1"

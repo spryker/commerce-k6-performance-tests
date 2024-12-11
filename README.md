@@ -1,5 +1,16 @@
 # Spryker Performance Testing Framework
 
+## Run locally
+
+Enable influxdb and grafana services:
+```bash
+  docker-compose -f docker-compose.suite.local.yml up -d  influxdb grafana
+```
+Run single test:
+```bash
+  ./shell/run-a-single-test-locally.sh tests/suite/sapi/tests/cart-reorder/SUITE-SAPI15-cart-reorder_50.js
+```
+
 ## Description
 
 This repository contains the test scenarios and helpers that are used to perform different kinds of tests using [K6](https://k6.io/) for Sprykers products. It also provides the infrastructure to run tests against multiple products and share tests that are the same in each product.
