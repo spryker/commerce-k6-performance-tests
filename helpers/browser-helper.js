@@ -1,10 +1,14 @@
-import {browser} from 'k6/experimental/browser';
+import { browser } from 'k6/experimental/browser';
 
 export class BrowserHelper {
     constructor(urlHelper, customerHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
         this.customerHelper = customerHelper;
         this.assertionsHelper = assertionsHelper;
+
+        this.url = '';
+        this.context = null;
+        this.page = null;
     }
 
     async getLoggedInUserContext() {
@@ -30,5 +34,31 @@ export class BrowserHelper {
         loginPage.close();
 
         return loginPage.context();
+    }
+
+    async setupBrowser() {
+        this.context = browser.newContext();
+        // console.log('Browser context created.', this.context);
+        this.page = this.context.newPage();
+    }
+
+    getPage() {
+        return this.page;
+    }
+
+    // async navigate(path) {
+    //     await this.page.goto(path);
+    //     console.log(`Navigated to ${path}`);
+    // }
+
+    async takeScreenshot(fileName = 'screenshot.png') {
+        await this.page.screenshot({ path: fileName });
+        console.log(`Screenshot saved to ${fileName}`);
+    }
+
+    async cleanup() {
+        await this.page.close();
+        await this.context.close();
+        console.log('Browser context closed.');
     }
 }
