@@ -1,5 +1,23 @@
 {
+  "name": "commerce-k6-performance-tests",
+  "version": "0.0.1",
+  "description": "TBD",
+  "main": "index.js",
+  "scripts": {
+    "pretest": ""
+  },
+  "license": "proprietary",
+  "dependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "babel-loader": "^8.2.2",
+    "casual": "^1.6.2",
+    "core-js": "^3.16.3",
+    "k6": "^0.0.0",
+    "webpack": "^5.51.1"
+  },
   "devDependencies": {
-    "eslint": "^8.39.0"
+    "eslint": "^8.39.0",
+    "webpack-cli": "^4.8.0"
   }
 }
