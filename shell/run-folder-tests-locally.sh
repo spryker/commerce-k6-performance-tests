@@ -14,7 +14,8 @@ if [ ! -d "$test_folder" ]; then
     exit 1
 fi
 
-files=($(find "$test_folder" -name '*.js' -type f))
+# Sort files in lexicographical order
+files=($(find "$test_folder" -name '*.test.js' -type f | sort))
 for file in "${files[@]}"; do
     bash shell/run-a-single-test-locally.sh "/$file"
 done

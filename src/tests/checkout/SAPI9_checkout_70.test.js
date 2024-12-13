@@ -1,22 +1,28 @@
 import { Trend } from 'k6/metrics';
 import { group } from 'k6';
-import { DynamicFixtureUtil } from '../../utils/dynamic-fixture.util.js';
 import AuthUtil from '../../utils/auth.util.js';
 import OptionsUtil from '../../utils/options.util.js';
 import CheckoutResource from '../../resources/checkout.resource.js';
+import { CheckoutFixture } from '../../fixtures/checkout.fixture.js';
 
 const vus = 1;
 const iterations = 10;
+const checkoutFixture = new CheckoutFixture({
+    customerCount: vus,
+    cartCount: iterations,
+    itemCount: 70,
+});
 
-const metricName = 'SAPI7_checkout_10';
+const metricName = 'SAPI9_checkout_70';
 let metric = new Trend(metricName);
 
 export const options = OptionsUtil.loadOptions();
+options.thresholds = {[metricName]: ['avg<300']};
 options.scenarios = {
     [metricName]: {
-        executor: 'shared-iterations',
+        executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI7',
+            testId: 'SAPI9',
             testGroup: 'Checkout',
         },
         vus: vus,
@@ -25,21 +31,19 @@ options.scenarios = {
 };
 
 export function setup() {
-    return (new DynamicFixtureUtil()).haveCustomersWithQuotes(vus, iterations, 10);
+    return checkoutFixture.getData();
 }
 
 export default function (data) {
-    const customerIndex = (__VU - 1) % data.length;
-    const { customerEmail, quoteIds } = data[customerIndex];
-    const quoteIndex = __ITER % quoteIds.length;
+    const { customerEmail, idCart } = checkoutFixture.iterateData(data, __VU, __ITER);
 
     let bearerToken;
     group('Authorization', () => {
         bearerToken = AuthUtil.getInstance().getBearerToken(customerEmail);
     });
 
-    group('Checkout', () => {
-        const checkoutResource = new CheckoutResource(quoteIds[quoteIndex], bearerToken);
+    group(metricName, () => {
+        const checkoutResource = new CheckoutResource(idCart, bearerToken);
         const response = checkoutResource.checkout();
 
         metric.add(response.timings.duration);

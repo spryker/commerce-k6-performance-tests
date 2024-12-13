@@ -48,9 +48,7 @@ export default class AuthUtil {
             }
         );
 
-        check(response, {
-            'is status 201': () => response.status === 201,
-        })
+        check(response, {'Token generated successfully.': (r) => r.status === 201});
 
         const responseJson = JSON.parse(response.body);
 

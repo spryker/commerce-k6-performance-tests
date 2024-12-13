@@ -22,9 +22,7 @@ export default class CheckoutResource {
             }
         );
 
-        check(response, {
-            'is status 201': () => response.status === 201,
-        })
+        check(response, { 'Checkout successful.': (r) => r.status === 201 });
 
         return response;
     }
