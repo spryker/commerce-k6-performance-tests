@@ -1,12 +1,12 @@
 import http from 'k6/http';
 import { check } from 'k6';
-import UrlUtil from '../utils/url.util.js';
+import EnvironmentUtil from '../utils/environment.util.js';
 
 export class AbstractFixture {
 
     sendPayload(payload) {
         const res = http.post(
-            http.url`${UrlUtil.getBackendApiUrl()}/dynamic-fixtures`,
+            http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`,
             payload,
             {
                 headers: {

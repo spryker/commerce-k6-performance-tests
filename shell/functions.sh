@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Source the .env file to load environment variables
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 # Generates a UUID either by the system command or if not programmatically
 generate_uuid() {
     if command -v uuidgen &>/dev/null; then
@@ -99,11 +104,11 @@ build_k6_docker_command() {
     echo "$command"
 }
 
-build_k6_docker_command_local() {
+k6_run() {
     local relativePath="$1"
     local testRunId=$(generate_uuid)
 
-    command="docker-compose -f docker-compose.suite.local.yml run --rm \
+    command="docker-compose -f docker-compose.$ENV_REPOSITORY_ID.$K6_HOSTENV.yml run --rm \
             -v $(pwd):/scripts \
             -u $(id -u):$(id -g) \
             -e 'SPRYKER_TEST_RUN_ID=$testRunId' \

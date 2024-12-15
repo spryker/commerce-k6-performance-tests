@@ -1,8 +1,9 @@
 import http from 'k6/http';
 import { check } from 'k6';
-import UrlUtil from './url.util.js';
+import EnvironmentUtil from './environment.util.js';
 
 export default class AuthUtil {
+    static instance;
 
     constructor() {
         if (AuthUtil.instance) {
@@ -31,7 +32,7 @@ export default class AuthUtil {
         }
 
         const response = http.post(
-            `${UrlUtil.getStorefrontApiUrl()}/access-tokens`,
+            `${EnvironmentUtil.getStorefrontApiUrl()}/access-tokens`,
             JSON.stringify({
                 data: {
                     type: 'access-tokens',

@@ -3,10 +3,11 @@ import {group} from 'k6';
 import AuthUtil from '../../utils/auth.util.js';
 import OptionsUtil from '../../utils/options.util.js';
 import CheckoutResource from '../../resources/checkout.resource.js';
-import {CheckoutFixture} from '../../fixtures/checkout.fixture.js';
+import { CheckoutFixture } from '../../fixtures/checkout.fixture.js';
+import EnvironmentUtil from '../../utils/environment.util.js';
 
-const vus = 1;
-const iterations = 10;
+const vus = EnvironmentUtil.getVus();
+const iterations = EnvironmentUtil.getIterations();
 const checkoutFixture = new CheckoutFixture({
     customerCount: vus,
     cartCount: iterations,
@@ -21,7 +22,7 @@ export const options = OptionsUtil.loadOptions();
 options.thresholds = {[metricName]: ['avg<300']};
 options.scenarios = {
     [metricName]: {
-        executor: 'per-vu-iterations',
+        executor: EnvironmentUtil.getExecutor(),
         tags: {
             testId: 'SAPI7',
             testGroup: 'Checkout',

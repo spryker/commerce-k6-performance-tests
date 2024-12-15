@@ -16,6 +16,13 @@ fi
 
 # Sort files in lexicographical order
 files=($(find "$test_folder" -name '*.test.js' -type f | sort))
+
 for file in "${files[@]}"; do
-    bash shell/run-a-single-test-locally.sh "/$file"
+    testFile=${file#$(pwd)/}
+
+    if ! command=$(k6_run "/$testFile"); then
+        exit 1;
+    fi
+
+    eval "$command"
 done

@@ -8,7 +8,7 @@
     "build": "webpack",
     "docker:suite:up": "docker-compose -f docker-compose.suite.local.yml up -d influxdb grafana",
     "docker:suite:down": "docker-compose -f docker-compose.suite.local.yml down -v --remove-orphans",
-    "docker:suite:run": "./shell/run-folder-tests-locally.sh dist"
+    "docker:suite:run": "./shell/run.sh dist"
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",

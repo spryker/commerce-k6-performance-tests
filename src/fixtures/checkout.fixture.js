@@ -9,17 +9,13 @@ const DEFAULT_STOCK_ID = 1;
 const DEFAULT_STOCK_NAME = 'Warehouse1';
 
 export class CheckoutFixture extends AbstractFixture {
-    _customerCount;
-    _cartCount;
-    _itemCount;
-    _defaultItemPrice;
 
     constructor({ customerCount, cartCount = 1, itemCount = 10, defaultItemPrice = 1000 }) {
         super();
-        this._customerCount = customerCount;
-        this._cartCount = cartCount;
-        this._itemCount = itemCount;
-        this._defaultItemPrice = defaultItemPrice;
+        this.customerCount = customerCount;
+        this.cartCount = cartCount;
+        this.itemCount = itemCount;
+        this.defaultItemPrice = defaultItemPrice;
     }
 
     getData() {
@@ -67,8 +63,8 @@ export class CheckoutFixture extends AbstractFixture {
             }
         ];
 
-        const products = Array.from({ length: this._itemCount }, (_, i) => this._createProductPayload(i)).flat();
-        const customers = Array.from({ length: this._customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
+        const products = Array.from({ length: this.itemCount }, (_, i) => this._createProductPayload(i)).flat();
+        const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
 
         return JSON.stringify({
             data: {
@@ -109,7 +105,7 @@ export class CheckoutFixture extends AbstractFixture {
                     {
                         skuProductAbstract: `#${productKey}.abstract_sku`,
                         skuProduct: `#${productKey}.sku`,
-                        moneyValue: { netAmount: this._defaultItemPrice, grossAmount: this._defaultItemPrice }
+                        moneyValue: { netAmount: this.defaultItemPrice, grossAmount: this.defaultItemPrice }
                     }
                 ]
             },
@@ -128,7 +124,7 @@ export class CheckoutFixture extends AbstractFixture {
 
     _createCustomerPayload(index) {
         const customerKey = `customer${index + 1}`;
-        const quotes = Array.from({ length: this._cartCount }, (_, quoteIndex) => ({
+        const quotes = Array.from({ length: this.cartCount }, (_, quoteIndex) => ({
             type: 'helper',
             name: 'havePersistentQuote',
             key: `${customerKey}Quote${quoteIndex + 1}`,
@@ -158,11 +154,11 @@ export class CheckoutFixture extends AbstractFixture {
     }
 
     _generateItems() {
-        return Array.from({ length: this._itemCount }, (_, i) => ({
+        return Array.from({ length: this.itemCount }, (_, i) => ({
             sku: `#product${i + 1}.sku`,
             abstractSku: `#product${i + 1}.abstract_sku`,
             quantity: 1,
-            unitPrice: this._defaultItemPrice
+            unitPrice: this.defaultItemPrice
         }));
     }
 }

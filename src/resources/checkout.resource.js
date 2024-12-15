@@ -1,30 +1,15 @@
-import { check } from 'k6';
-import http from 'k6/http';
-import UrlUtil from '../utils/url.util.js';
 import PaymentUtil from '../utils/payment.util.js';
+import AbstractResource from './abstract.resource.js';
 
-export default class CheckoutResource {
+export default class CheckoutResource extends AbstractResource {
 
     constructor(idCart, bearerToken = null) {
+        super(bearerToken);
         this.idCart = idCart;
-        this.bearerToken = bearerToken;
     }
 
     checkout() {
-        const response = http.post(
-            `${UrlUtil.getStorefrontApiUrl()}/checkout`,
-            JSON.stringify(this._getCheckoutPayload()),
-            {
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': this.bearerToken
-                },
-            }
-        );
-
-        check(response, { 'Checkout successful.': (r) => r.status === 201 });
-
-        return response;
+        return this.postRequest('checkout', this._getCheckoutPayload());
     }
 
     _getCheckoutPayload() {

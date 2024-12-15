@@ -1,4 +1,4 @@
-export default class UrlUtil {
+export default class EnvironmentUtil {
 
     static getStorefrontUrl() {
         switch (__ENV.K6_HOSTENV) {
@@ -43,5 +43,31 @@ export default class UrlUtil {
         default:
             console.error('Url or env not defined')
         }
+    }
+
+    static getVus() {
+        switch (__ENV.ENV_REPOSITORY_TYPE) {
+        case 'smoke':
+            return 1
+        case 'load':
+            return 10
+        default:
+            console.error('Vus not defined')
+        }
+    }
+
+    static getIterations() {
+        switch (__ENV.ENV_REPOSITORY_TYPE) {
+        case 'smoke':
+            return 10
+        case 'load':
+            return 1
+        default:
+            console.error('Vus not defined')
+        }
+    }
+
+    static getExecutor() {
+        return 'per-vu-iterations'
     }
 }
