@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - loadtesting
+#      - spryker_private
+#      - spryker_public
 #      - spryker_b2b_marketplace_private
 #      - spryker_b2b_marketplace_dev_private
 #      - spryker_b2c_marketplace_dev_private
@@ -87,6 +89,10 @@ services:
 
 networks:
   loadtesting:
+#  spryker_public:
+#    external: true
+#  spryker_private:
+#    external: true
 #  spryker_b2b_marketplace_private:
 #    external: true
 #  spryker_b2b_marketplace_dev_private:
