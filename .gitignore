@@ -1,9 +1,9 @@
 .idea/
 settings.json
-result.html
 /node_modules/
 /.env
 /results/
 !/results/.gitkeep
 !/results/summaries/.gitkeep
 .lh
+dist

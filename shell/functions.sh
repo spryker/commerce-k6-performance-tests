@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Source the .env file to load environment variables
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+fi
+
 # Generates a UUID either by the system command or if not programmatically
 generate_uuid() {
     if command -v uuidgen &>/dev/null; then
@@ -95,6 +100,22 @@ build_k6_docker_command() {
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
             --out json='$reportFile'"
+
+    echo "$command"
+}
+
+k6_run() {
+    local relativePath="$1"
+    local testRunId=$(generate_uuid)
+
+    command="docker-compose -f docker-compose.$ENV_REPOSITORY_ID.$K6_HOSTENV.yml run --rm \
+            -v $(pwd):/scripts \
+            -u $(id -u):$(id -g) \
+            -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
+            -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
+            -e 'SPRYKER_TEST_PATH=$relativePath' \
+            -e 'K6_BROWSER_ENABLED=true' \
+            k6 run $relativePath"
 
     echo "$command"
 }

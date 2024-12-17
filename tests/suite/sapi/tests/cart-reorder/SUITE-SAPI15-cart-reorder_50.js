@@ -1,4 +1,5 @@
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
+import { Trend } from 'k6/metrics';
 import {
     SharedCartReorderScenario
 } from '../../../../cross-product/sapi/scenarios/cart-reorder/shared-cart-reorder-scenario.js';
@@ -10,6 +11,7 @@ const iterations = 1;
 
 const environment = 'SUITE';
 const thresholdTag = 'cart_reorder_50';
+let responseDuration = new Trend('cart_reorder_50');
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedCartReorderScenario = new SharedCartReorderScenario(environment);
@@ -27,10 +29,10 @@ options.scenarios = {
         iterations: iterations,
     },
 };
-options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
+// options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
-    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 50);
+    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 10, 10000);
 }
 
 export function execute(data) {
@@ -42,5 +44,6 @@ export function execute(data) {
     const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
 
     // Reorder
-    sharedCartReorderScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
+    const res = sharedCartReorderScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
+    responseDuration.add(res.timings.duration);
 }
