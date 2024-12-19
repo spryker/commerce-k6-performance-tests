@@ -27,7 +27,6 @@ export class SharedOrderManagementPayScenario extends AbstractScenario {
         }
 
         group('Pay Order', function () {
-            self.adminHelper.initBrowser();
             self.adminHelper.loginBackoffice();
 
             self.adminHelper.goToSalesPage();

@@ -29,7 +29,7 @@ export class AbstractScenario {
         this.customerHelper = new CustomerHelper();
         this.assertionsHelper = new AssertionsHelper();
         this.browserHelper = new BrowserHelper(this.urlHelper, this.customerHelper, this.assertionsHelper);
-        this.adminHelper = new AdminHelper(this.urlHelper, this.http, this.assertionsHelper);
+        this.adminHelper = new AdminHelper(this.urlHelper, this.http, this.assertionsHelper, this.browserHelper);
         this.cartHelper = new CartHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper);
         this.bapiHelper = new BapiHelper(this.urlHelper, this.http, this.adminHelper, this.assertionsHelper);
         this.storefrontHelper = new StorefrontHelper(this.urlHelper, this.http, this.customerHelper, this.assertionsHelper);

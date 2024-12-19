@@ -1,11 +1,11 @@
-import { browser } from 'k6/experimental/browser';
-
 export class AdminHelper {
-    constructor(urlHelper, http, assertionsHelper) {
+    constructor(urlHelper, http, assertionsHelper, browserHelper) {
         this.urlHelper = urlHelper;
         this.http = http;
         this.assertionsHelper = assertionsHelper;
+        this.browserHelper = browserHelper;
 
+        this.session = null;
         this.page = null;
 
         let baseUri = this.urlHelper.getBackofficeBaseUrl();
@@ -13,8 +13,12 @@ export class AdminHelper {
         this.firstSalesOrderViewButtonSelector = '.dataTable tbody tr:nth-child(1) .btn-view';
 
         this.loginUrl = baseUri + '/security-gui/login';
+        this.loginCheckUrl = baseUri + '/login_check';
         this.salesUrl = baseUri + '/sales';
         this.salesTableUrl = baseUri + '/sales/index/table';
+        this.dashboardUrl = baseUri + '/dashboard';
+
+        this.backofficeSessionKey = 'backoffice-eu-spryker-local';
 
         this.formSelector = 'form[name="auth"]';
     }
@@ -27,112 +31,46 @@ export class AdminHelper {
         return __ENV.DEFAULT_ADMIN_PASSWORD ? __ENV.DEFAULT_ADMIN_PASSWORD : 'change123';
     }
 
-    async setBrowserPage(page) {
-        this.page = page;
-    }
-
     async loginBackoffice() {
-        try {
-            await this.page.goto(this.loginUrl);
-            await this.page.waitForSelector(this.formSelector, {timeout: 5000});
+        let loginContext = await this.browserHelper.createNewContext();
+        let loginPage = await loginContext.newPage();
 
-            await Promise.all([
-                this.page.locator('input[name="auth[username]"').type(this.getDefaultAdminEmail()),
-                this.page.locator('input[name="auth[password]"').type(this.getDefaultAdminPassword()),
-            ]);
+        await loginPage.goto(this.loginUrl);
+        await loginPage.waitForSelector(this.formSelector, {timeout: 5000});
 
-            await Promise.all([
-                this.page.waitForSelector('.sidebar-collapse', {timeout: 5000}),
-                this.page.locator('form[name=auth] button[type=submit]').click(),
-            ]);
+        const tokenInput = loginPage.locator(`${this.formSelector} input[name="auth[_token]`);
+        const token = tokenInput.getAttribute('value');
 
-            // await this.page.locator('form[name=auth] button[type=submit]').click();
+        let response = this.http.sendPostRequest(this.loginCheckUrl, {
+            'auth[username]': this.getDefaultAdminEmail(),
+            'auth[password]': this.getDefaultAdminPassword(),
+            'auth[_token]': token
+        });
 
-            // await this.page.goto('http://backoffice.eu.spryker.local/sales');
-            // await newPage.waitForLoadState('domcontentloaded');
-            // await this.page.screenshot({path: 'salesPage.png'});
-            // // await this.page.waitForLoadState('domcontentloaded');
-            // console.log(newPage.url());
+        this.session = response.cookies[this.backofficeSessionKey][0];
 
-            // await this.page.goto('http://backoffice.eu.spryker.local/sales');
-            // await this.page.waitForLoadState('domcontentloaded');
-            //
-            // await this.page.screenshot({path: 'salesPage.png'});
-            // await Promise.all([
-            //
-            //     ,
-            // ]);
+        await loginPage.close();
+        await loginContext.close();
 
-            // await loginPage.waitForSelector('.sidebar-collapse', {timeout: 10000});
-            // await this.page.goto(this.loginUrl);
-            //
-            // await this.page.waitForSelector(this.formSelector);
-            //
-            // await Promise.all([
-            //     this.page.locator(this.formSelector + ' ' + 'input[name="auth[username]"]').type(this.getDefaultAdminEmail()),
-            //     this.page.locator(this.formSelector + ' ' + 'input[name="auth[password]"]').type(this.getDefaultAdminPassword())
-            // ]);
-            //
-            // await this.page.screenshot({path: 'login_before.png'});
-            // console.log('Form filled.');
-            // console.log(this.page.url());
-            // const submitButton = this.page.locator(this.formSelector + ' ' + 'button[type="submit"]');
-            //
-            // await Promise.all([
-            //     this.page.locator(submitButton).click(),
-            //     this.page.waitForNavigation(),
-            // ]);
-            //
-            // await this.page.waitForNavigation({ timeout: 5000 });
-            // await this.page.waitForSelector('.sidebar-collapse', { timeout: 5000 });
-            // console.log('Form submitted.');
-            // await this.page.screenshot({path: 'login_after.png'});
-            //
-            // const currentUrl = this.page.url();
-            // console.log('Current URL after form submission:', currentUrl);
-            // //
-            //
-            // await this.page.screenshot({path: 'login_after.png'});
-        } catch (error) {
-            console.error('Error:', error);
-        }
-        // const loginResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackofficeBaseUrl()}/security-gui/login`);
-        // if (loginResponse.status !== 200) {
-        //     return;
-        // }
-        //
-        // this.assertionsHelper.assertResponseContainsText(loginResponse, 'Login');
-        //
-        // this.http.submitForm(loginResponse, {
-        //     formSelector: 'form[name="auth"]',
-        //     fields: { 'auth[username]': this.getDefaultAdminEmail(), 'auth[password]': this.getDefaultAdminPassword() }
-        // });
-        //
-        // const dashboardResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackofficeBaseUrl()}/dashboard`);
-        // this.assertionsHelper.assertResponseContainsText(dashboardResponse, 'Dashboard');
-    }
+        let backofficeContext = await this.browserHelper.createNewContext();
+        await backofficeContext.addCookies([
+            this.session,
+        ]);
 
-    async fillAndSubmitForm(selector, data) {
-
-        console.log('Form submitted.');
+        this.page = await backofficeContext.newPage();
     }
 
     async goToSalesPage() {
-        await this.page.goto(this.salesUrl, { timeout: 5000 });
-        // await page.waitForSelector('.dataTable');
-        // await this.page.evaluate(() => {
-        //     fetch(this.salesTableUrl, { method: 'GET', headers: { 'Content-Type': 'application/json' } })
-        //         .then(response => response.json())
-        //         .then(data => console.log(data));
-        // }, { tags: { name: 'salesTable' } });
-    }
+        this.page.on('metric', (metric) => {
+            metric.tag({
+                name: this.urlHelper.getBackofficeBaseUrl() + '/sales/index/table',
+                matches: [
+                    {url: /^http:\/\/backoffice\.eu\.spryker\.local\/sales\/index\/table.*/, method: 'GET'},
+                ],
+            });
+        });
 
-    // openFirstSalesOrder() {
-    //     this.page.waitForSelector(this.firstSalesOrderViewButtonSelector);
-    //     this.page.click(this.firstSalesOrderViewButtonSelector);
-    // }
-    //
-    // getCurrentUrl() {
-    //     return this.page.url();
-    // }
+        await this.page.goto(this.salesUrl, { timeout: 5000 });
+        await this.page.waitForLoadState('networkidle', { timeout: 2000 });
+    }
 }

@@ -1,4 +1,4 @@
-import { browser } from 'k6/experimental/browser';
+import { browser } from 'k6/browser';
 
 export class BrowserHelper {
     constructor(urlHelper, customerHelper, assertionsHelper) {
@@ -36,23 +36,12 @@ export class BrowserHelper {
         return loginPage.context();
     }
 
-    async setupBrowser() {
-        this.context = browser.newContext();
-        // console.log('Browser context created.', this.context);
-        this.page = this.context.newPage();
+    async createNewContext() {
+        return browser.newContext();
     }
 
-    getPage() {
-        return this.page;
-    }
-
-    // async navigate(path) {
-    //     await this.page.goto(path);
-    //     console.log(`Navigated to ${path}`);
-    // }
-
-    async takeScreenshot(fileName = 'screenshot.png') {
-        await this.page.screenshot({ path: fileName });
+    async takeScreenshot(page, fileName = new Date().toString() + 'screenshot.png') {
+        await page.screenshot({ path: 'results/' + fileName });
         console.log(`Screenshot saved to ${fileName}`);
     }
 

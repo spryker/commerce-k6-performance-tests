@@ -87,7 +87,6 @@ build_k6_docker_command() {
 
     command="docker-compose run --rm \
             -v $(pwd):/scripts \
-            -u $(id -u):$(id -g) \
             -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
             -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
             -e 'SPRYKER_TEST_PATH=$relativePath' \

@@ -29,10 +29,14 @@ export class SharedOrderManagementListScenario extends AbstractScenario {
             await this.createOrders();
         }
 
-        await self.browserHelper.setupBrowser();
-        await self.adminHelper.setBrowserPage(self.browserHelper.getPage());
-        await self.adminHelper.loginBackoffice();
-        // await self.adminHelper.goToSalesPage();
-        // await self.browserHelper.cleanup();
+        try {
+            await self.adminHelper.loginBackoffice();
+            await self.adminHelper.goToSalesPage();
+        } finally {
+            let context = self.adminHelper.page.context();
+            await self.adminHelper.page.close();
+            await context.close();
+        }
+
     }
 }
