@@ -36,7 +36,7 @@ export class SharedOrderManagementPayScenario extends AbstractScenario {
             await self.adminHelper.takeScreenshot();
             sleep(1);
             console.log('before waitForOrderHasOmsTriggerButton');
-            // await self.adminHelper.waitForOrderHasOmsTriggerButton();
+            await self.adminHelper.waitForOrderHasOmsTriggerButton();
             console.log('after waitForOrderHasOmsTriggerButton');
             sleep(1);
             console.log('before payForTheOrder');
