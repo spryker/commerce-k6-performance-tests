@@ -1,7 +1,7 @@
 import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
-const numberOfOrders = 1;
+const numberOfOrders = 10;
 
 export class SharedOrderManagementListScenario extends AbstractScenario {
     constructor(environment, checkoutScenario) {
@@ -19,7 +19,7 @@ export class SharedOrderManagementListScenario extends AbstractScenario {
             }
         });
 
-        this.ordersCreated = true;
+        this.ordersCreated = false;
     }
 
     async execute() {

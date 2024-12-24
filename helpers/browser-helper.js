@@ -35,19 +35,4 @@ export class BrowserHelper {
 
         return loginPage.context();
     }
-
-    async createNewContext() {
-        return browser.newContext();
-    }
-
-    async takeScreenshot(page, fileName = new Date().toString() + 'screenshot.png') {
-        await page.screenshot({ path: 'results/' + fileName });
-        console.log(`Screenshot saved to ${fileName}`);
-    }
-
-    async cleanup() {
-        await this.page.close();
-        await this.context.close();
-        console.log('Browser context closed.');
-    }
 }
