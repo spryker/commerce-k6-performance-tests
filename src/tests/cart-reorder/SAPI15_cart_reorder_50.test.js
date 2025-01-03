@@ -5,15 +5,16 @@ import CheckoutResource from '../../resources/checkout.resource.js';
 import { CheckoutFixture } from '../../fixtures/checkout.fixture.js';
 import EnvironmentUtil from '../../utils/environment.util.js';
 import {createMetrics} from '../../utils/metric.util.js';
+import CartReorderResource from '../../resources/cart-reorder.resource.js';
 
 const testConfiguration = {
-    id: 'SAPI7',
-    group: 'Checkout',
+    id: 'SAPI15',
+    group: 'Cart Reorder',
     metrics: [
-        'SAPI7_checkout_1',
+        'SAPI15_cart_reorder_50',
     ],
     thresholds: {
-        SAPI7_checkout_1: {
+        SAPI15_cart_reorder_50: {
             smoke: ['avg<300'],
             load: ['avg<500'],
         }
@@ -26,8 +27,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 const dynamicFixture = new CheckoutFixture({
     customerCount: EnvironmentUtil.getVus(),
     cartCount: EnvironmentUtil.getIterations(),
-    itemCount: 1,
-    defaultItemPrice: 10000, // Skipping global thresholds during checkout
+    itemCount: 50,
 });
 
 export function setup() {
@@ -42,9 +42,15 @@ export default function (data) {
         bearerToken = AuthUtil.getInstance().getBearerToken(customerEmail);
     });
 
-    group(testConfiguration.group, () => {
+    let orderReference;
+    group('Checkout', () => {
         const checkoutResource = new CheckoutResource(idCart, customerEmail, bearerToken);
-        const response = checkoutResource.checkout();
+        orderReference = JSON.parse(checkoutResource.checkout().body).data.attributes.orderReference;
+    });
+
+    group(testConfiguration.group, () => {
+        const cartReorderResource = new CartReorderResource(orderReference, bearerToken);
+        const response = cartReorderResource.reorder();
         metrics[testConfiguration.metrics[0]].add(response.timings.duration);
     });
 }

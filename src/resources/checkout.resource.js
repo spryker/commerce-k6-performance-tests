@@ -3,9 +3,10 @@ import AbstractResource from './abstract.resource.js';
 
 export default class CheckoutResource extends AbstractResource {
 
-    constructor(idCart, bearerToken = null) {
+    constructor(idCart, email, bearerToken = null) {
         super(bearerToken);
         this.idCart = idCart;
+        this.email = email;
     }
 
     checkout() {
@@ -15,7 +16,7 @@ export default class CheckoutResource extends AbstractResource {
     _getCheckoutPayload() {
         const address = {
             salutation: 'Ms',
-            email: 'soniaK6@spryker.com',
+            email: this.email,
             firstName: 'SoniaK6',
             lastName: 'WagnerK6',
             address1: 'West road',
@@ -36,7 +37,7 @@ export default class CheckoutResource extends AbstractResource {
                 attributes: {
                     customer: {
                         salutation: 'Ms',
-                        email: 'soniaK6@spryker.com',
+                        email: this.email,
                         firstName: 'SoniaK6',
                         lastName: 'WagnerK6'
                     },

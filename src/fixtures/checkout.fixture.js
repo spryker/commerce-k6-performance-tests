@@ -18,8 +18,11 @@ export class CheckoutFixture extends AbstractFixture {
         this.defaultItemPrice = defaultItemPrice;
     }
 
-    getData() {
-        const response = this.sendPayload(this._getCustomersWithQuotesPayload());
+    getData(customerCount = this.customerCount, cartCount = this.cartCount) {
+        this.customerCount = customerCount;
+        this.cartCount = cartCount;
+
+        const response = this.runDynamicFixture(this._getCustomersWithQuotesPayload());
 
         const responseData = JSON.parse(response.body).data;
         const customers = responseData.filter(item => /^customer\d+$/.test(item.attributes.key));
@@ -36,7 +39,7 @@ export class CheckoutFixture extends AbstractFixture {
         });
     }
 
-    iterateData(data, vus, iterations) {
+    iterateData(data, vus = __VU, iterations = __ITER) {
         const customerIndex = (vus - 1) % data.length;
         const { customerEmail, quoteIds } = data[customerIndex];
         const quoteIndex = iterations % quoteIds.length;

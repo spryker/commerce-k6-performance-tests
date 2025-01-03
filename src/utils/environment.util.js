@@ -46,7 +46,7 @@ export default class EnvironmentUtil {
     }
 
     static getVus() {
-        switch (__ENV.ENV_REPOSITORY_TYPE) {
+        switch (this.getRepositoryType()) {
         case 'smoke':
             return 1
         case 'load':
@@ -57,7 +57,7 @@ export default class EnvironmentUtil {
     }
 
     static getIterations() {
-        switch (__ENV.ENV_REPOSITORY_TYPE) {
+        switch (this.getRepositoryType()) {
         case 'smoke':
             return 10
         case 'load':
@@ -65,6 +65,10 @@ export default class EnvironmentUtil {
         default:
             console.error('Vus not defined')
         }
+    }
+
+    static getRepositoryType() {
+        return __ENV.ENV_REPOSITORY_TYPE
     }
 
     static getExecutor() {

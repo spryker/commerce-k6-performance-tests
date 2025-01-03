@@ -16,6 +16,9 @@ export default class AuthUtil {
         AuthUtil.instance = this;
     }
 
+    /**
+     * @returns {AuthUtil}
+     */
     static getInstance() {
         if (!AuthUtil.instance) {
             AuthUtil.instance = new AuthUtil();
@@ -24,10 +27,10 @@ export default class AuthUtil {
         return AuthUtil.instance;
     }
 
-    getBearerToken(email, password = 'change123') {
+    getBearerToken(email, password = 'change123', force = false) {
         const cacheKey = `${email}:${password}`;
 
-        if (this.tokenCache[cacheKey]) {
+        if (!force && this.tokenCache[cacheKey]) {
             return this.tokenCache[cacheKey];
         }
 

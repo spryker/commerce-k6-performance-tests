@@ -4,7 +4,7 @@ import EnvironmentUtil from '../utils/environment.util.js';
 
 export class AbstractFixture {
 
-    sendPayload(payload) {
+    runDynamicFixture(payload) {
         const res = http.post(
             http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`,
             payload,
