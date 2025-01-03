@@ -8,7 +8,9 @@
     "build": "webpack",
     "docker:suite:up": "docker-compose -f docker-compose.suite.local.yml up -d influxdb grafana",
     "docker:suite:down": "docker-compose -f docker-compose.suite.local.yml down -v --remove-orphans",
-    "docker:suite:run": "./shell/run.sh dist"
+    "docker:suite:run": "./shell/run.sh dist",
+    "prettier:check": "prettier . --check",
+    "prettier:write": "prettier . --write"
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",
@@ -18,6 +20,7 @@
     "eslint": "^8.39.0",
     "k6": "^0.0.0",
     "mkdirp": "^3.0.1",
+    "prettier": "^3.4.2",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4"
   }

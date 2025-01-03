@@ -1,24 +1,23 @@
 import AbstractResource from './abstract.resource.js';
 
 export default class CartReorderResource extends AbstractResource {
+  constructor(orderReference, bearerToken = null) {
+    super(bearerToken);
+    this.orderReference = orderReference;
+  }
 
-    constructor(orderReference, bearerToken = null) {
-        super(bearerToken);
-        this.orderReference = orderReference;
-    }
+  reorder() {
+    return this.postRequest('cart-reorder', this._getCartReorderPayload());
+  }
 
-    reorder() {
-        return this.postRequest('cart-reorder', this._getCartReorderPayload());
-    }
-
-    _getCartReorderPayload() {
-        return {
-            data: {
-                type: 'cart-reorder',
-                attributes: {
-                    orderReference: this.orderReference
-                }
-            }
-        }
-    }
+  _getCartReorderPayload() {
+    return {
+      data: {
+        type: 'cart-reorder',
+        attributes: {
+          orderReference: this.orderReference,
+        },
+      },
+    };
+  }
 }

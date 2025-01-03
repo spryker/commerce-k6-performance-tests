@@ -6,18 +6,20 @@ const productDetailsScenario = new SharedProductDetailsScenario('B2B');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI3_Product_Details: {
-        exec: 'executeProductDetailsScenario',
-        executor: 'shared-iterations',
-        tags: {
-            testId: 'SAPI3',
-            testGroup: 'Product Details',
-        },
-        iterations: 10
+  SAPI3_Product_Details: {
+    exec: 'executeProductDetailsScenario',
+    executor: 'shared-iterations',
+    tags: {
+      testId: 'SAPI3',
+      testGroup: 'Product Details',
     },
+    iterations: 10,
+  },
 };
-options.thresholds[`http_req_duration{url:${productDetailsScenario.getStorefrontApiBaseUrl()}/concrete-products/\${}}`] = ['avg<70'];
+options.thresholds[
+  `http_req_duration{url:${productDetailsScenario.getStorefrontApiBaseUrl()}/concrete-products/\${}}`
+] = ['avg<70'];
 
 export function executeProductDetailsScenario() {
-    productDetailsScenario.execute();
+  productDetailsScenario.execute();
 }

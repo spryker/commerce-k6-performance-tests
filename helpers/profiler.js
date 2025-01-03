@@ -1,72 +1,72 @@
 import { getIteration, getThread } from '../lib/utils.js';
 
 export class Profiler {
-    constructor() {
-        this.storage = {}
-    }
-    
-    start(key) {
-        this.init(key)
-        this.storage[this.getKey(key)].start = new Date()
-        return this;
-    }
-    
-    stop(key) {
-        this.init(key)
-        this.storage[this.getKey(key)].endTime = new Date()
-        this.storage[this.getKey(key)].time = this.getMilliSeconds(key)
+  constructor() {
+    this.storage = {};
+  }
 
-        return this.getMilliSeconds(key);
-    }
+  start(key) {
+    this.init(key);
+    this.storage[this.getKey(key)].start = new Date();
+    return this;
+  }
 
-    init(key) {
-        if (this.getKey(key) in this.storage) {
-            return 
-        }
-        this.storage[this.getKey(key)] = {}
-    }
+  stop(key) {
+    this.init(key);
+    this.storage[this.getKey(key)].endTime = new Date();
+    this.storage[this.getKey(key)].time = this.getMilliSeconds(key);
 
-    getSeconds(key) {
-        return this.round((this.storage[this.getKey(key)].endTime - this.storage[this.getKey(key)].start) / 1000);
-    }
+    return this.getMilliSeconds(key);
+  }
 
-    getMilliSeconds(key) {
-        return this.round((this.storage[this.getKey(key)].endTime - this.storage[this.getKey(key)].start));
+  init(key) {
+    if (this.getKey(key) in this.storage) {
+      return;
     }
+    this.storage[this.getKey(key)] = {};
+  }
 
-    round(value) {
-        return parseInt(`${Math.round(value * 100)}`.substring(0, 'value'.length > 4 ? 5 : 'value'.length)) / 100
-    }
+  getSeconds(key) {
+    return this.round((this.storage[this.getKey(key)].endTime - this.storage[this.getKey(key)].start) / 1000);
+  }
 
-    getKey(key) {
-        return `${key}::${getThread()}-${getIteration()}`
-    }
+  getMilliSeconds(key) {
+    return this.round(this.storage[this.getKey(key)].endTime - this.storage[this.getKey(key)].start);
+  }
 
-    getTime(key) {
-        if (!(this.getKey(key) in this.storage)) {
-            return 0
-        }
-        
-        return this.storage[this.getKey(key)].time
+  round(value) {
+    return parseInt(`${Math.round(value * 100)}`.substring(0, 'value'.length > 4 ? 5 : 'value'.length)) / 100;
+  }
+
+  getKey(key) {
+    return `${key}::${getThread()}-${getIteration()}`;
+  }
+
+  getTime(key) {
+    if (!(this.getKey(key) in this.storage)) {
+      return 0;
     }
 
-    summary() {
-        let result = []
-        let summary = {}
-        for (const key of Object.keys(this.storage)) {
-            result.push({key: key, time: this.storage[key].time})
-            let operation = key.split('::').shift()
-            summary[operation] += this.round(this.storage[key].time)
-        }
+    return this.storage[this.getKey(key)].time;
+  }
 
-        return summary
+  summary() {
+    let result = [];
+    let summary = {};
+    for (const key of Object.keys(this.storage)) {
+      result.push({ key: key, time: this.storage[key].time });
+      let operation = key.split('::').shift();
+      summary[operation] += this.round(this.storage[key].time);
     }
 
-    fullInfo() {
-        let result = []
-        for (const key of Object.keys(this.storage)) {
-            result.push({key: key, time: this.storage[key].time})
-        }
-        return result
+    return summary;
+  }
+
+  fullInfo() {
+    let result = [];
+    for (const key of Object.keys(this.storage)) {
+      result.push({ key: key, time: this.storage[key].time });
     }
+    return result;
+  }
 }

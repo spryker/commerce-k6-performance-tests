@@ -6,21 +6,22 @@ const sharedCartScenario = new SharedCartScenario('B2B_MP');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI5_Cart: {
-        exec: 'executeSharedCartScenario',
-        executor: 'shared-iterations',
-        env: {
-            numberOfItems: '1'
-        },
-        tags: {
-            testId: 'SAPI5',
-            testGroup: 'Cart',
-        },
-        iterations: 10
+  SAPI5_Cart: {
+    exec: 'executeSharedCartScenario',
+    executor: 'shared-iterations',
+    env: {
+      numberOfItems: '1',
     },
+    tags: {
+      testId: 'SAPI5',
+      testGroup: 'Cart',
+    },
+    iterations: 10,
+  },
 };
-options.thresholds[`http_req_duration{url:${sharedCartScenario.getStorefrontApiBaseUrl()}/carts/\${}/?include=items}`] = ['avg<383'];
+options.thresholds[`http_req_duration{url:${sharedCartScenario.getStorefrontApiBaseUrl()}/carts/\${}/?include=items}`] =
+  ['avg<383'];
 
 export function executeSharedCartScenario() {
-    sharedCartScenario.execute();
+  sharedCartScenario.execute();
 }

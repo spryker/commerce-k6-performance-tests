@@ -1,48 +1,48 @@
 import { AbstractScenario } from '../../../../abstract-scenario.js';
 
 export class SharedCartReorderScenario extends AbstractScenario {
-    execute(customerEmail, orderId, thresholdTag = null) {
-        const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
-        if (thresholdTag) {
-            requestParams.tags = { name: thresholdTag };
-        }
-
-        return this.http.sendPostRequest(
-            this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
-            JSON.stringify(this._getCartReorderAttributes(orderId)),
-            requestParams,
-            false
-        );
-
-        // this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
+  execute(customerEmail, orderId, thresholdTag = null) {
+    const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
+    if (thresholdTag) {
+      requestParams.tags = { name: thresholdTag };
     }
 
-    haveReorder(customerEmail, orderId, thresholdTag = null) {
-        const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
-        if (thresholdTag) {
-            requestParams.tags = { name: thresholdTag };
-        }
+    return this.http.sendPostRequest(
+      this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
+      JSON.stringify(this._getCartReorderAttributes(orderId)),
+      requestParams,
+      false
+    );
 
-        const cartReorderResponse = this.http.sendPostRequest(
-            this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
-            JSON.stringify(this._getCartReorderAttributes(orderId)),
-            requestParams,
-            false
-        );
+    // this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
+  }
 
-        // this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
-
-        return JSON.parse(cartReorderResponse.body);
+  haveReorder(customerEmail, orderId, thresholdTag = null) {
+    const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
+    if (thresholdTag) {
+      requestParams.tags = { name: thresholdTag };
     }
 
-    _getCartReorderAttributes(orderId) {
-        return {
-            data: {
-                type: 'cart-reorder',
-                attributes: {
-                    orderReference: orderId
-                }
-            }
-        }
-    }
+    const cartReorderResponse = this.http.sendPostRequest(
+      this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
+      JSON.stringify(this._getCartReorderAttributes(orderId)),
+      requestParams,
+      false
+    );
+
+    // this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
+
+    return JSON.parse(cartReorderResponse.body);
+  }
+
+  _getCartReorderAttributes(orderId) {
+    return {
+      data: {
+        type: 'cart-reorder',
+        attributes: {
+          orderReference: orderId,
+        },
+      },
+    };
+  }
 }

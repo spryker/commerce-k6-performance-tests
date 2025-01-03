@@ -29,7 +29,7 @@ Options:
   -v, --volume=[]    Bind mount a volume (default [])
   -T          Disable pseudo-tty allocation. By default `docker-compose run`
              allocates a TTY.
-  -w, --workdir=“” 
+  -w, --workdir=“”
 ```
 
 ### Solution

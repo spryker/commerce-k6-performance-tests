@@ -1,10 +1,10 @@
 {
-    "external_url_large": "https://images.icecat.biz/img/norm/high/25904006-8438.jpg",
-    "external_url_small": "https://images.icecat.biz/img/norm/medium/25904006-8438.jpg",
-    "productImageSetToProductImages": [
-        {
-            "fk_product_image_set": "{fkProductImageSet}",
-            "sort_order": 0
-        }
-    ]
+  "external_url_large": "https://images.icecat.biz/img/norm/high/25904006-8438.jpg",
+  "external_url_small": "https://images.icecat.biz/img/norm/medium/25904006-8438.jpg",
+  "productImageSetToProductImages": [
+    {
+      "fk_product_image_set": "{fkProductImageSet}",
+      "sort_order": 0
+    }
+  ]
 }

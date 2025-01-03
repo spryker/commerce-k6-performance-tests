@@ -10,30 +10,30 @@ Example:
 
 ```json
 {
-    "local": {
-        "storefrontUrl": "http://yves.%store%.spryker.local",
-        "storefrontApiUrl": "http://glue.%store%.spryker.local",
-        "backofficeUrl": "http://backoffice.%store%.spryker.local",
-        "backofficeApiUrl": "http://backend-api.%store%.spryker.local",
-        "stores": ["de", "us", "at"]
-    },
-    "testing": {
-        "storefrontUrl": "https://www.%store%.b2b-marketplace.demo-spryker.com",
-        "storefrontApiUrl": "https://glue.%store%.b2b-marketplace.demo-spryker.com",
-        "backofficeUrl": "https://backoffice.%store%.b2b-marketplace.demo-spryker.com",
-        "backofficeApiUrl": "https://backend-api.%store%.b2b-marketplace.demo-spryker.com",
-        "stores": ["de", "us", "at"]
-    }
+  "local": {
+    "storefrontUrl": "http://yves.%store%.spryker.local",
+    "storefrontApiUrl": "http://glue.%store%.spryker.local",
+    "backofficeUrl": "http://backoffice.%store%.spryker.local",
+    "backofficeApiUrl": "http://backend-api.%store%.spryker.local",
+    "stores": ["de", "us", "at"]
+  },
+  "testing": {
+    "storefrontUrl": "https://www.%store%.b2b-marketplace.demo-spryker.com",
+    "storefrontApiUrl": "https://glue.%store%.b2b-marketplace.demo-spryker.com",
+    "backofficeUrl": "https://backoffice.%store%.b2b-marketplace.demo-spryker.com",
+    "backofficeApiUrl": "https://backend-api.%store%.b2b-marketplace.demo-spryker.com",
+    "stores": ["de", "us", "at"]
+  }
 }
 ```
 
 The named property of the first level object is the actual environment configuration name. If no evironment is specified the "local" environment is used by default. The object that is the value of it must contain:
 
-* **storefrontUrl** - String, Storefront host.
-* **storefrontApiUrl** - String, Storefront API host.
-* **backofficeUrl** -  String, Backoffice host.
-* **backofficeApiUrl** - String, Backoffice API host.
-* **stores** - Array of stores e.g. `["de", "us", "at"]`. The first one in the array will be used by default.
+- **storefrontUrl** - String, Storefront host.
+- **storefrontApiUrl** - String, Storefront API host.
+- **backofficeUrl** - String, Backoffice host.
+- **backofficeApiUrl** - String, Backoffice API host.
+- **stores** - Array of stores e.g. `["de", "us", "at"]`. The first one in the array will be used by default.
 
 ## Executing tests for an environment
 

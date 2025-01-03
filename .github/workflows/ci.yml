@@ -1,23 +1,27 @@
 name: CI
 
-on:
-  pull_request:
-  push:
-    branches:
-      - main
+# This workflow is triggered on pushes and pull requests to the repository.
+on: [pull_request]
 
 jobs:
-  build:
-      runs-on: ubuntu-latest
-      strategy:
-        matrix:
-          node-version: [ 20.x ]
-      steps:
-        - uses: actions/checkout@v3
-        - name: Use Node.js ${{ matrix.node-version }}
-          uses: actions/setup-node@v3
-          with:
-            node-version: ${{ matrix.node-version }}
-        - name: Install dependencies
-          run: npm install
-        - run: npx eslint ./
+  code-quality-check:
+    name: Check Code Quality (Prettier & ESLint)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check Prettier Formatting
+        run: npm run prettier:check
+
+      - name: Run ESLint
+        run: npx eslint ./

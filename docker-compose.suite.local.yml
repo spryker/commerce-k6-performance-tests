@@ -13,7 +13,7 @@ services:
       - k6
       - grafana
     ports:
-      - "8086:8086"
+      - '8086:8086'
     environment:
       - INFLUXDB_DB=k6
 
@@ -22,7 +22,7 @@ services:
     networks:
       - grafana
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -71,4 +71,4 @@ services:
     volumes:
       - ./dist:/dist
     ports:
-      - "6565:6565"
+      - '6565:6565'

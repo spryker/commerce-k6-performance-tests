@@ -1,8 +1,6 @@
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
 import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
-import {
-    SharedOrderAmendmentScenario
-} from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
+import { SharedOrderAmendmentScenario } from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 10;
@@ -16,68 +14,68 @@ const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environmen
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI18_finish_order_amendment_50: {
-        exec: 'execute',
-        executor: 'per-vu-iterations',
-        tags: {
-            testId: 'SAPI18',
-            testGroup: 'Order Amendment',
-        },
-        vus: vus,
-        iterations: iterations,
+  SAPI18_finish_order_amendment_50: {
+    exec: 'execute',
+    executor: 'per-vu-iterations',
+    tags: {
+      testId: 'SAPI18',
+      testGroup: 'Order Amendment',
     },
+    vus: vus,
+    iterations: iterations,
+  },
 };
 options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
-    if (isSequentialSetup()) {
-        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(iterations, 1, 50);
-    }
+  if (isSequentialSetup()) {
+    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(iterations, 1, 50);
+  }
 
-    if (isConcurrentSetup()) {
-        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 50);
-    }
+  if (isConcurrentSetup()) {
+    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 50);
+  }
 
-    throw new Error('Invalid setup configuration');
+  throw new Error('Invalid setup configuration');
 }
 
 export function execute(data) {
-    const { customerEmail, quoteIds } = getCustomerData(data);
-    const quoteIndex = getQuoteIndex(quoteIds);
+  const { customerEmail, quoteIds } = getCustomerData(data);
+  const quoteIndex = getQuoteIndex(quoteIds);
 
-    // Place an order
-    const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
+  // Place an order
+  const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
 
-    // Edit an order
-    const cartReorderResponseJson = sharedOrderAmendmentScenario.haveOrderAmendment(
-        customerEmail,
-        checkoutResponseJson.data.relationships.orders.data[0].id
-    );
+  // Edit an order
+  const cartReorderResponseJson = sharedOrderAmendmentScenario.haveOrderAmendment(
+    customerEmail,
+    checkoutResponseJson.data.relationships.orders.data[0].id
+  );
 
-    // Place an updated order
-    sharedCheckoutScenario.haveOrder(customerEmail, cartReorderResponseJson.data.id, false, thresholdTag);
+  // Place an updated order
+  sharedCheckoutScenario.haveOrder(customerEmail, cartReorderResponseJson.data.id, false, thresholdTag);
 }
 
 function getCustomerData(data) {
-    let customerIndex;
+  let customerIndex;
 
-    if (isSequentialSetup()) {
-        customerIndex = __ITER % data.length;
-    } else if (isConcurrentSetup()) {
-        customerIndex = (__VU - 1) % data.length;
-    }
+  if (isSequentialSetup()) {
+    customerIndex = __ITER % data.length;
+  } else if (isConcurrentSetup()) {
+    customerIndex = (__VU - 1) % data.length;
+  }
 
-    return data[customerIndex];
+  return data[customerIndex];
 }
 
 function getQuoteIndex(quoteIds) {
-    return isSequentialSetup() ? 0 : __ITER % quoteIds.length;
+  return isSequentialSetup() ? 0 : __ITER % quoteIds.length;
 }
 
 function isConcurrentSetup() {
-    return vus > 1 && iterations === 1;
+  return vus > 1 && iterations === 1;
 }
 
 function isSequentialSetup() {
-    return vus === 1 && iterations > 1;
+  return vus === 1 && iterations > 1;
 }
