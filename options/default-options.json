@@ -1,4 +1,5 @@
 {
+  "setupTimeout": "240s",
   "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
   "thresholds": {
     "http_req_failed": ["rate == 0.00"],
