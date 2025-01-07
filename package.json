@@ -5,7 +5,11 @@
   "license": "proprietary",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "build:one": "webpack --env entryPattern=./src/tests/product-search/S1_product_search_1.test.js",
+    "build:all": "webpack --env entryPattern=./src/tests/**/*.test.js",
+    "build:checkout": "webpack --env entryPattern=./src/tests/checkout/*.test.js",
+    "build:cart-reorder": "webpack --env entryPattern=./src/tests/cart-reorder/*.test.js",
+    "build:order-amendment": "webpack --env entryPattern=./src/tests/order-amendment/*.test.js",
     "docker:suite:up": "docker-compose -f docker-compose.suite.local.yml up -d influxdb grafana",
     "docker:suite:down": "docker-compose -f docker-compose.suite.local.yml down -v --remove-orphans",
     "docker:suite:run": "./shell/run.sh dist",
