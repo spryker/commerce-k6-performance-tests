@@ -8,6 +8,7 @@ export class DynamicFixturesHelper {
         const defaultParams = {
             headers: {
                 'Content-Type': 'application/vnd.api+json',
+                'timeout': '300s',
             },
         };
 
