@@ -8,8 +8,9 @@ export class DynamicFixturesHelper {
         const defaultParams = {
             headers: {
                 'Content-Type': 'application/vnd.api+json',
-                'timeout': '300s',
+                'Connection': 'keep-alive',
             },
+            timeout: 600000,
         };
 
         const dynamicFixturesResponse = this.http.sendPostRequest(
@@ -38,6 +39,7 @@ export class DynamicFixturesHelper {
         const params = {
             headers: {
                 'Content-Type': 'application/vnd.api+json',
+                'Connection': 'keep-alive',
             },
             timeout: 600000,
         };
