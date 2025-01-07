@@ -5,8 +5,8 @@ import {
 import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const vus = 10;
-const iterations = 1;
+const vus = 1;
+const iterations = 10;
 
 const environment = 'SUITE';
 const thresholdTag = 'cart_reorder_50';
