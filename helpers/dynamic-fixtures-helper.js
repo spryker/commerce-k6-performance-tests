@@ -22,22 +22,22 @@ export class DynamicFixturesHelper {
 
         try {
             const dynamicFixturesResponseJson = JSON.parse(dynamicFixturesResponse.body);
+            const customerData = dynamicFixturesResponseJson.data.filter(item => /^customer\d+$/.test(item.attributes.key));
+
+            return customerData.map(customer => {
+                const associatedCustomerQuotes = dynamicFixturesResponseJson.data
+                    .filter(item => item.attributes.key.startsWith(`${customer.attributes.key}Quote`))
+                    .map(quote => quote.attributes.data.uuid);
+
+                return {
+                    customerEmail: customer.attributes.data.email,
+                    quoteIds: associatedCustomerQuotes
+                };
+            });
         } catch (e) {
             console.log(dynamicFixturesResponse.body);
             throw new Error('Failed to parse response during DynamicFixturesHelper::haveCustomersWithQuotes()');
         }
-        const customerData = dynamicFixturesResponseJson.data.filter(item => /^customer\d+$/.test(item.attributes.key));
-
-        return customerData.map(customer => {
-            const associatedCustomerQuotes = dynamicFixturesResponseJson.data
-                .filter(item => item.attributes.key.startsWith(`${customer.attributes.key}Quote`))
-                .map(quote => quote.attributes.data.uuid);
-
-            return {
-                customerEmail: customer.attributes.data.email,
-                quoteIds: associatedCustomerQuotes
-            };
-        });
     }
 
     haveConsoleCommands(commands) {
