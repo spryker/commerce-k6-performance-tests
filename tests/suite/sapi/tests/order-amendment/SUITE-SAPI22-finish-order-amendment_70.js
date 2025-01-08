@@ -6,7 +6,7 @@ import {
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 1;
-const iterations = 5;
+const iterations = 10;
 
 const environment = 'SUITE';
 const thresholdTag = 'finish_order_amendment_70';
@@ -39,6 +39,10 @@ export function setup() {
     }
 
     throw new Error('Invalid setup configuration');
+}
+
+export function teardown() {
+    sharedCheckoutScenario.dynamicFixturesHelper.haveConsoleCommands(['console queue:worker:start --stop-when-empty']);
 }
 
 export function execute(data) {
