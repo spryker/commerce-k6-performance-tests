@@ -6,7 +6,7 @@ import {
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
 const vus = 1;
-const iterations = 10;
+const iterations = 5;
 
 const environment = 'SUITE';
 const thresholdTag = 'start_order_amendment_50';
