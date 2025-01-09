@@ -5,11 +5,11 @@ import {
 } from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const vus = 1;
-const iterations = 10;
+const vus = 10;
+const iterations = 1;
 
 const environment = 'SUITE';
-const thresholdTag = 'cancel_order_amendment_70';
+const thresholdTag = 'SAPI21_cancel_order_amendment_70';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
@@ -30,13 +30,24 @@ options.scenarios = {
 options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
-    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 70);
+    if (isSequentialSetup()) {
+        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(iterations, 1, 70);
+    }
+
+    if (isConcurrentSetup()) {
+        return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 70);
+    }
+
+    throw new Error('Invalid setup configuration');
+}
+
+export function teardown() {
+    sharedCheckoutScenario.dynamicFixturesHelper.haveConsoleCommands(['console queue:worker:start --stop-when-empty']);
 }
 
 export function execute(data) {
-    const customerIndex = (__VU - 1) % data.length;
-    const { customerEmail, quoteIds } = data[customerIndex];
-    const quoteIndex = __ITER % quoteIds.length;
+    const { customerEmail, quoteIds } = getCustomerData(data);
+    const quoteIndex = getQuoteIndex(quoteIds);
 
     // Place an order
     const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
@@ -44,9 +55,36 @@ export function execute(data) {
     // Edit an order
     const cartReorderResponseJson = sharedOrderAmendmentScenario.haveOrderAmendment(
         customerEmail,
-        checkoutResponseJson.data.relationships.orders.data[0].id
+        checkoutResponseJson.data.attributes.orderReference
     );
 
+    // Create empty default cart
+    sharedOrderAmendmentScenario.cartHelper.create(customerEmail, 'default', true);
+
     // Delete reordered cart
-    sharedOrderAmendmentScenario.cartHelper.deleteCart(cartReorderResponseJson.id, customerEmail, thresholdTag);
+    sharedOrderAmendmentScenario.cartHelper.deleteCart(customerEmail, cartReorderResponseJson.data.id, thresholdTag);
+}
+
+function getCustomerData(data) {
+    let customerIndex;
+
+    if (isSequentialSetup()) {
+        customerIndex = __ITER % data.length;
+    } else if (isConcurrentSetup()) {
+        customerIndex = (__VU - 1) % data.length;
+    }
+
+    return data[customerIndex];
+}
+
+function getQuoteIndex(quoteIds) {
+    return isSequentialSetup() ? 0 : __ITER % quoteIds.length;
+}
+
+function isConcurrentSetup() {
+    return vus > 1 && iterations === 1;
+}
+
+function isSequentialSetup() {
+    return vus === 1 && iterations > 1;
 }

@@ -1,3 +1,5 @@
+import {check} from 'k6';
+
 export class CartHelper {
     constructor(urlHelper, http, customerHelper, assertionsHelper, authTokenManager) {
         this.urlHelper = urlHelper;
@@ -5,6 +7,28 @@ export class CartHelper {
         this.customerHelper = customerHelper;
         this.assertionsHelper = assertionsHelper;
         this.authTokenManager = authTokenManager;
+    }
+
+    create(customerEmail, cartName, isDefault = false) {
+        const requestParams = this.getParamsWithAuthorization(customerEmail);
+
+        return this.http.sendPostRequest(
+            this.http.url`${this.urlHelper.getStorefrontApiBaseUrl()}/carts`,
+            JSON.stringify({
+                data: {
+                    type: 'carts',
+                    attributes: {
+                        name: cartName,
+                        priceMode: 'GROSS_MODE',
+                        currency: 'EUR',
+                        store: 'DE',
+                        isDefault: isDefault,
+                    },
+                },
+            }),
+            requestParams,
+            false
+        );
     }
 
     haveCartWithProducts(quantity = 1, sku = '100429') {
@@ -86,7 +110,11 @@ export class CartHelper {
             requestParams.tags = { name: thresholdTag };
         }
 
-        this.http.sendDeleteRequest(this.http.url`${this.getCartsUrl()}/${cartId}`, null, requestParams, false);
+        const response = this.http.sendDeleteRequest(this.http.url`${this.getCartsUrl()}/${cartId}`, null, requestParams, false);
+
+        check(response, {
+            'Cart deleted successfully': (response) => response.status === 204
+        });
     }
 
     addItemToCart(cartId, quantity, params, sku) {

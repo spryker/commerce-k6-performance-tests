@@ -5,11 +5,11 @@ import {
 import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const vus = 1;
-const iterations = 10;
+const vus = 10;
+const iterations = 1;
 
 const environment = 'SUITE';
-const thresholdTag = 'cart_reorder_50';
+const thresholdTag = 'SAPI15_cart_reorder_50';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedCartReorderScenario = new SharedCartReorderScenario(environment);
@@ -31,6 +31,10 @@ options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
     return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 50);
+}
+
+export function teardown() {
+    sharedCheckoutScenario.dynamicFixturesHelper.haveConsoleCommands(['console queue:worker:start --stop-when-empty']);
 }
 
 export function execute(data) {
