@@ -18,7 +18,7 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const dynamicFixture = new ProductFixture({productCount: 2});
+const dynamicFixture = new ProductFixture({ productCount: 2 });
 
 export function setup() {
   const data = dynamicFixture.getData();
@@ -27,7 +27,6 @@ export function setup() {
 }
 
 export default function (data) {
-
   // const { customerEmail, idCart } = dynamicFixture.iterateData(data);
   //
   // let bearerToken;

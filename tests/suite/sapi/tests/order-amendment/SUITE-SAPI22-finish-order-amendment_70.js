@@ -40,7 +40,7 @@ export function setup() {
 }
 
 export function teardown() {
-    sharedCheckoutScenario.dynamicFixturesHelper.haveConsoleCommands(['console queue:worker:start --stop-when-empty']);
+  sharedCheckoutScenario.dynamicFixturesHelper.haveConsoleCommands(['console queue:worker:start --stop-when-empty']);
 }
 
 export function execute(data) {

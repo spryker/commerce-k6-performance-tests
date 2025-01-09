@@ -23,8 +23,7 @@ export class ProductFixture extends AbstractFixture {
     return products;
   }
 
-  iterateData(data, vus = __VU, iterations = __ITER) {
-  }
+  iterateData(data, vus = __VU, iterations = __ITER) {}
 
   _getProductsPayload() {
     const baseOperations = [
