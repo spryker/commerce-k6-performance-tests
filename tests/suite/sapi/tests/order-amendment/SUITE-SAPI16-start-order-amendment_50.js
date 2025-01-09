@@ -5,8 +5,8 @@ import {
 } from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const vus = 1;
-const iterations = 10;
+const vus = 10;
+const iterations = 1;
 
 const environment = 'SUITE';
 const thresholdTag = 'start_order_amendment_50';
