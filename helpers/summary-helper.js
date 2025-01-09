@@ -13,12 +13,14 @@ export function handleSummary(data) {
 }
 
 function _handleSummaryTesting(data) {
-    const failedMetrics = getFailedMetrics(data);
-
     const summary = {
         'stdout': textSummary(data),
     };
 
+    // TODO: Temp solution for running OA tests on suite repository
+    return summary;
+
+    const failedMetrics = getFailedMetrics(data);
     const filePath = __ENV.SPRYKER_TEST_PATH;
 
     if (!filePath) {
