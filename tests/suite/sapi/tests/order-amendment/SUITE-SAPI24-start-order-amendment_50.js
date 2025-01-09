@@ -1,27 +1,27 @@
 import { loadDefaultOptions } from '../../../../../lib/utils.js';
-import {
-    SharedCartReorderScenario
-} from '../../../../cross-product/sapi/scenarios/cart-reorder/shared-cart-reorder-scenario.js';
 import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
+import {
+    SharedOrderAmendmentScenario
+} from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const vus = 10;
-const iterations = 1;
+const vus = 1;
+const iterations = 10;
 
 const environment = 'SUITE';
-const thresholdTag = 'SAPI15_cart_reorder_50';
+const thresholdTag = 'SAPI24_start_order_amendment_50';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
-const sharedCartReorderScenario = new SharedCartReorderScenario(environment);
+const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI15_cart_reorder_50: {
+    SAPI24_start_order_amendment_50: {
         exec: 'execute',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI15',
-            testGroup: 'Cart Reorder',
+            testId: 'SAPI24',
+            testGroup: 'Order Amendment',
         },
         vus: vus,
         iterations: iterations,
@@ -45,6 +45,6 @@ export function execute(data) {
     // Place an order
     const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
 
-    // Reorder
-    sharedCartReorderScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
+    // Edit an order
+    sharedOrderAmendmentScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
 }

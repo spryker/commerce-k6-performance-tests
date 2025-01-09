@@ -5,22 +5,22 @@ import {
 import { SharedCheckoutScenario } from '../../../../cross-product/sapi/scenarios/checkout/shared-checkout-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const vus = 10;
-const iterations = 1;
+const vus = 1;
+const iterations = 10;
 
 const environment = 'SUITE';
-const thresholdTag = 'SAPI15_cart_reorder_50';
+const thresholdTag = 'SAPI23_cart_reorder_50';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedCartReorderScenario = new SharedCartReorderScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI15_cart_reorder_50: {
+    SAPI23_cart_reorder_50: {
         exec: 'execute',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI15',
+            testId: 'SAPI23',
             testGroup: 'Cart Reorder',
         },
         vus: vus,

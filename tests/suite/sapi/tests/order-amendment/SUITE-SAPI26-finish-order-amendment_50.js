@@ -5,22 +5,22 @@ import {
 } from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const vus = 10;
-const iterations = 1;
+const vus = 1;
+const iterations = 10;
 
 const environment = 'SUITE';
-const thresholdTag = 'SAPI17_cancel_order_amendment_50';
+const thresholdTag = 'SAPI26_finish_order_amendment_50';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI17_cancel_order_amendment_50: {
+    SAPI26_finish_order_amendment_50: {
         exec: 'execute',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI17',
+            testId: 'SAPI26',
             testGroup: 'Order Amendment',
         },
         vus: vus,
@@ -55,14 +55,11 @@ export function execute(data) {
     // Edit an order
     const cartReorderResponseJson = sharedOrderAmendmentScenario.haveOrderAmendment(
         customerEmail,
-        checkoutResponseJson.data.attributes.orderReference
+        checkoutResponseJson.data.relationships.orders.data[0].id
     );
 
-    // Create empty default cart
-    sharedOrderAmendmentScenario.cartHelper.create(customerEmail, 'default', true);
-
-    // Delete reordered cart
-    sharedOrderAmendmentScenario.cartHelper.deleteCart(customerEmail, cartReorderResponseJson.data.id, thresholdTag);
+    // Place an updated order
+    sharedCheckoutScenario.haveOrder(customerEmail, cartReorderResponseJson.data.id, false, thresholdTag);
 }
 
 function getCustomerData(data) {
