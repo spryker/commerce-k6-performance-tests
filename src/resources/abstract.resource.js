@@ -1,6 +1,6 @@
 import { check } from 'k6';
 import http from 'k6/http';
-import EnvironmentUtil from '../utils/environment.util.js';
+import EnvironmentUtil from '../utils/environment.util';
 
 export default class AbstractResource {
   constructor(bearerToken = null) {

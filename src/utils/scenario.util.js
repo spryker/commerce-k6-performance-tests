@@ -1,4 +1,4 @@
-import EnvironmentUtil from './environment.util.js';
+import EnvironmentUtil from './environment.util';
 
 export function createScenario(
   tags = {},

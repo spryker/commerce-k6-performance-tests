@@ -1,5 +1,5 @@
-import PaymentUtil from '../utils/payment.util.js';
-import AbstractResource from './abstract.resource.js';
+import PaymentUtil from '../utils/payment.util';
+import AbstractResource from './abstract.resource';
 
 export default class CheckoutResource extends AbstractResource {
   constructor(idCart, email, bearerToken = null) {

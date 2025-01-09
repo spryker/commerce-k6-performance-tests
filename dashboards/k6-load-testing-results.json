@@ -1649,9 +1649,14 @@
             "selected": false,
             "text": "SAPI20_finish_order_amendment_70",
             "value": "SAPI20_finish_order_amendment_70"
+          },
+          {
+            "selected": false,
+            "text": "S2_product_search_1",
+            "value": "S2_product_search_1"
           }
         ],
-        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_checkout_1,SAPI9_checkout_70,SAPI15_cart_reorder_50,SAPI19_cart_reorder_70,SAPI16_start_order_amendment_50,SAPI16_cancel_order_amendment_50,SAPI16_finish_order_amendment_50,SAPI20_start_order_amendment_70,SAPI20_cancel_order_amendment_70,SAPI20_finish_order_amendment_70",
+        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_checkout_1,SAPI9_checkout_70,SAPI15_cart_reorder_50,SAPI19_cart_reorder_70,SAPI16_start_order_amendment_50,SAPI16_cancel_order_amendment_50,SAPI16_finish_order_amendment_50,SAPI20_start_order_amendment_70,SAPI20_cancel_order_amendment_70,SAPI20_finish_order_amendment_70,S2_product_search_1",
         "type": "custom"
       }
     ]

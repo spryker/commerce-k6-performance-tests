@@ -1,4 +1,4 @@
-import { createScenario } from './scenario.util.js';
+import { createScenario } from './scenario.util';
 
 export default class OptionsUtil {
   static loadOptions(testConfiguration, testThresholds) {

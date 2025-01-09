@@ -1,4 +1,4 @@
-import { AbstractFixture } from './abstract.fixture.js';
+import { AbstractFixture } from './abstract.fixture';
 
 const LOCALE_ID = 66;
 const LOCALE_NAME = 'en_US';

@@ -1,4 +1,4 @@
-import { AbstractFixture } from './abstract.fixture.js';
+import { AbstractFixture } from './abstract.fixture';
 
 const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
 const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
@@ -15,15 +15,32 @@ export class ProductFixture extends AbstractFixture {
     const response = this.runDynamicFixture(this._getProductsPayload());
 
     const responseData = JSON.parse(response.body).data;
-    const products = responseData.filter((item) => /^product\d+$/.test(item.attributes.key));
+    return responseData
+      .filter((item) => /^product\d+$/.test(item.attributes.key))
+      .map((item) => {
+        const { id_product_concrete, sku, fk_product_abstract, is_active, abstract_sku, localized_attributes } =
+          item.attributes.data;
+        const localized = localized_attributes[0] || {};
 
-    console.log(products);
-
-    // Return list
-    return products;
+        return {
+          id: id_product_concrete,
+          sku,
+          abstractSku: abstract_sku,
+          abstractId: fk_product_abstract,
+          isActive: is_active === 'true',
+          name: localized.name || null,
+          description: localized.description || null,
+          locale: localized.locale?.locale_name || null,
+          searchable: localized.is_searchable === '1',
+        };
+      });
   }
 
-  iterateData(data, vus = __VU, iterations = __ITER) {}
+  iterateData(data, vus = __VU) {
+    const productIndex = (vus - 1) % data.length;
+
+    return data[productIndex];
+  }
 
   _getProductsPayload() {
     const baseOperations = [
@@ -78,7 +95,6 @@ export class ProductFixture extends AbstractFixture {
         arguments: [
           {
             skuProductAbstract: `#${productKey}.abstract_sku`,
-            skuProduct: `#${productKey}.sku`,
             moneyValue: { netAmount: this.defaultItemPrice, grossAmount: this.defaultItemPrice },
           },
         ],

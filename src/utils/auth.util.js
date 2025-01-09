@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check } from 'k6';
-import EnvironmentUtil from './environment.util.js';
+import EnvironmentUtil from './environment.util';
 
 export default class AuthUtil {
   static instance;

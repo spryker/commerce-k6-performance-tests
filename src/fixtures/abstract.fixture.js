@@ -1,6 +1,6 @@
 import http from 'k6/http';
 import { check } from 'k6';
-import EnvironmentUtil from '../utils/environment.util.js';
+import EnvironmentUtil from '../utils/environment.util';
 
 export class AbstractFixture {
   runDynamicFixture(payload) {

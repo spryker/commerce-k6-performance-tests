@@ -1,12 +1,12 @@
 import { group } from 'k6';
-import AuthUtil from '../../utils/auth.util.js';
-import OptionsUtil from '../../utils/options.util.js';
-import CheckoutResource from '../../resources/checkout.resource.js';
-import { CheckoutFixture } from '../../fixtures/checkout.fixture.js';
-import EnvironmentUtil from '../../utils/environment.util.js';
-import { createMetrics } from '../../utils/metric.util.js';
-import OrderAmendmentResource from '../../resources/order-amendment.resource.js';
-import CartsResource from '../../resources/carts.resource.js';
+import AuthUtil from '../../utils/auth.util';
+import OptionsUtil from '../../utils/options.util';
+import CheckoutResource from '../../resources/checkout.resource';
+import { CheckoutFixture } from '../../fixtures/checkout.fixture';
+import EnvironmentUtil from '../../utils/environment.util';
+import { createMetrics } from '../../utils/metric.util';
+import OrderAmendmentResource from '../../resources/order-amendment.resource';
+import CartsResource from '../../resources/carts.resource';
 
 const testConfiguration = {
   id: 'SAPI16',

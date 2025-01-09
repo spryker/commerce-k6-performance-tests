@@ -1,5 +1,5 @@
 import { Trend } from 'k6/metrics';
-import EnvironmentUtil from './environment.util.js';
+import EnvironmentUtil from './environment.util';
 
 export function createMetrics(testConfiguration) {
   const metrics = {};

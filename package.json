@@ -5,7 +5,7 @@
   "license": "proprietary",
   "main": "index.js",
   "scripts": {
-    "build:one": "webpack --env entryPattern=./src/tests/product-search/S1_product_search_1.test.js",
+    "build:one": "webpack --env entryPattern=./src/tests/product-search/S2_product_search_1.test.js",
     "build:all": "webpack --env entryPattern=./src/tests/**/*.test.js",
     "build:checkout": "webpack --env entryPattern=./src/tests/checkout/*.test.js",
     "build:cart-reorder": "webpack --env entryPattern=./src/tests/cart-reorder/*.test.js",
