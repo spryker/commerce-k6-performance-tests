@@ -9,7 +9,7 @@ const vus = 10;
 const iterations = 1;
 
 const environment = 'SUITE';
-const thresholdTag = 'cart_reorder_50';
+const thresholdTag = 'SAPI15_cart_reorder_50';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedCartReorderScenario = new SharedCartReorderScenario(environment);

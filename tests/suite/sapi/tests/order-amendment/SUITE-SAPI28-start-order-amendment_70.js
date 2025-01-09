@@ -5,22 +5,22 @@ import {
 } from '../../../../cross-product/sapi/scenarios/order-amendment/shared-order-amendment-scenario.js';
 export { handleSummary } from '../../../../../helpers/summary-helper.js';
 
-const vus = 10;
-const iterations = 1;
+const vus = 1;
+const iterations = 10;
 
 const environment = 'SUITE';
-const thresholdTag = 'SAPI16_start_order_amendment_50';
+const thresholdTag = 'SAPI28_start_order_amendment_70';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI16_start_order_amendment_50: {
+    SAPI28_start_order_amendment_70: {
         exec: 'execute',
         executor: 'per-vu-iterations',
         tags: {
-            testId: 'SAPI16',
+            testId: 'SAPI28',
             testGroup: 'Order Amendment',
         },
         vus: vus,
@@ -30,7 +30,7 @@ options.scenarios = {
 options.thresholds[`http_req_duration{name:${thresholdTag}}`] = ['avg<300'];
 
 export function setup() {
-    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 50);
+    return sharedCheckoutScenario.dynamicFixturesHelper.haveCustomersWithQuotes(vus, iterations, 70);
 }
 
 export function teardown() {

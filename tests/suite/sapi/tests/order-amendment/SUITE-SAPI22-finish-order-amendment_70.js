@@ -9,7 +9,7 @@ const vus = 10;
 const iterations = 1;
 
 const environment = 'SUITE';
-const thresholdTag = 'finish_order_amendment_70';
+const thresholdTag = 'SAPI22_finish_order_amendment_70';
 
 const sharedCheckoutScenario = new SharedCheckoutScenario(environment);
 const sharedOrderAmendmentScenario = new SharedOrderAmendmentScenario(environment);
