@@ -9,9 +9,9 @@ import EnvironmentUtil from '../../utils/environment.util';
 const testConfiguration = {
   id: 'S2',
   group: 'Product Search',
-  metrics: ['S2_product_search_1'],
+  metrics: ['S2_get_search'],
   thresholds: {
-    S2_product_search_1: {
+    'S2_get_search': {
       smoke: ['avg<200'],
       load: ['avg<200'],
     },

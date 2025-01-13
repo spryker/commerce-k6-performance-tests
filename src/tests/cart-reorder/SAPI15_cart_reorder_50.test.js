@@ -10,9 +10,9 @@ import CartReorderResource from '../../resources/cart-reorder.resource';
 const testConfiguration = {
   id: 'SAPI15',
   group: 'Cart Reorder',
-  metrics: ['SAPI15_cart_reorder_50'],
+  metrics: ['SAPI15_post_cart_reorder'],
   thresholds: {
-    SAPI15_cart_reorder_50: {
+    'SAPI15_post_cart_reorder': {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },

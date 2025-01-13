@@ -1602,61 +1602,61 @@
           },
           {
             "selected": false,
-            "text": "SAPI7_checkout_1",
-            "value": "SAPI7_checkout_1"
+            "text": "SAPI7_post_checkout",
+            "value": "SAPI7_post_checkout"
           },
           {
             "selected": false,
-            "text": "SAPI9_checkout_70",
-            "value": "SAPI9_checkout_70"
+            "text": "SAPI9_post_checkout",
+            "value": "SAPI9_post_checkout"
           },
           {
             "selected": false,
-            "text": "SAPI15_cart_reorder_50",
-            "value": "SAPI15_cart_reorder_50"
+            "text": "SAPI15_post_cart_reorder",
+            "value": "SAPI15_post_cart_reorder"
           },
           {
             "selected": false,
-            "text": "SAPI19_cart_reorder_70",
-            "value": "SAPI19_cart_reorder700"
+            "text": "SAPI19_post_cart_reorder",
+            "value": "SAPI19_post_cart_reorder"
           },
           {
             "selected": false,
-            "text": "SAPI16_start_order_amendment_50",
-            "value": "SAPI16_start_order_amendment_50"
+            "text": "SAPI16_post_cart_reorder",
+            "value": "SAPI16_post_cart_reorder"
           },
           {
             "selected": false,
-            "text": "SAPI16_cancel_order_amendment_50",
-            "value": "SAPI16_cancel_order_amendment_50"
+            "text": "SAPI17_delete_carts",
+            "value": "SAPI17_delete_carts"
           },
           {
             "selected": false,
-            "text": "SAPI16_finish_order_amendment_50",
-            "value": "SAPI16_finish_order_amendment_50"
+            "text": "SAPI18_post_checkout",
+            "value": "SAPI18_post_checkout"
           },
           {
             "selected": false,
-            "text": "SAPI20_start_order_amendment_70",
-            "value": "SAPI20_start_order_amendment_70"
+            "text": "SAPI20_post_cart_reorder",
+            "value": "SAPI20_post_cart_reorder"
           },
           {
             "selected": false,
-            "text": "SAPI20_cancel_order_amendment_70",
-            "value": "SAPI20_cancel_order_amendment_70"
+            "text": "SAPI21_delete_carts",
+            "value": "SAPI21_delete_carts"
           },
           {
             "selected": false,
-            "text": "SAPI20_finish_order_amendment_70",
-            "value": "SAPI20_finish_order_amendment_70"
+            "text": "SAPI22_post_checkout",
+            "value": "SAPI22_post_checkout"
           },
           {
             "selected": false,
-            "text": "S2_product_search_1",
-            "value": "S2_product_search_1"
+            "text": "S2_get_search",
+            "value": "S2_get_search"
           }
         ],
-        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_checkout_1,SAPI9_checkout_70,SAPI15_cart_reorder_50,SAPI19_cart_reorder_70,SAPI16_start_order_amendment_50,SAPI16_cancel_order_amendment_50,SAPI16_finish_order_amendment_50,SAPI20_start_order_amendment_70,SAPI20_cancel_order_amendment_70,SAPI20_finish_order_amendment_70,S2_product_search_1",
+        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,S2_get_search",
         "type": "custom"
       }
     ]

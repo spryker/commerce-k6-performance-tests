@@ -11,17 +11,21 @@ import CartsResource from '../../resources/carts.resource';
 const testConfiguration = {
   id: 'SAPI20',
   group: 'Order Amendment',
-  metrics: ['SAPI20_start_order_amendment_70', 'SAPI20_cancel_order_amendment_70', 'SAPI20_finish_order_amendment_70'],
+  metrics: [
+    'SAPI20_post_cart_reorder',
+    'SAPI21_delete_carts',
+    'SAPI22_post_checkout',
+  ],
   thresholds: {
-    SAPI20_start_order_amendment_70: {
+    'SAPI20_post_cart_reorder': {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },
-    SAPI20_cancel_order_amendment_70: {
+    'SAPI21_delete_carts': {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },
-    SAPI20_finish_order_amendment_70: {
+    'SAPI22_post_checkout': {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },
@@ -71,7 +75,7 @@ export default function (data) {
   group('Start Order Amendment', () => {
     const response = orderAmendmentResource.amendOrder();
     const responseJson = JSON.parse(response.body);
-    metrics['SAPI20_start_order_amendment_70'].add(response.timings.duration);
+    metrics['SAPI20_post_cart_reorder'].add(response.timings.duration);
     reorderedIdCart = responseJson.data.id;
   });
 
@@ -79,7 +83,7 @@ export default function (data) {
   group('Cancel Order Amendment', () => {
     cartsResource.create('default', true);
     const response = cartsResource.delete(reorderedIdCart);
-    metrics['SAPI20_cancel_order_amendment_70'].add(response.timings.duration);
+    metrics['SAPI21_delete_carts'].add(response.timings.duration);
   });
 
   group('Start Order Amendment', () => {
@@ -91,7 +95,7 @@ export default function (data) {
   group('Finish Order Amendment', () => {
     const checkoutResource = new CheckoutResource(reorderedIdCart, customerEmail, bearerToken);
     const response = checkoutResource.checkout();
-    metrics['SAPI20_finish_order_amendment_70'].add(response.timings.duration);
+    metrics['SAPI22_post_checkout'].add(response.timings.duration);
   });
 }
 

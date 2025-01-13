@@ -9,9 +9,9 @@ import { createMetrics } from '../../utils/metric.util';
 const testConfiguration = {
   id: 'SAPI9',
   group: 'Checkout',
-  metrics: ['SAPI9_checkout_70'],
+  metrics: ['SAPI9_post_checkout'],
   thresholds: {
-    SAPI9_checkout_70: {
+    'SAPI9_post_checkout': {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },
