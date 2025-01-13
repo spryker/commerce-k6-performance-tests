@@ -1,13 +1,13 @@
 import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
-const numberOfOrders = 10;
+const numberOfOrders = 1;
 
 export class SharedOrderManagementListScenario extends AbstractScenario {
     constructor(environment, checkoutScenario) {
         super(environment);
         this.checkoutScenario = checkoutScenario;
-        this.ordersCreated = true;
+        this.ordersCreated = false;
     }
 
     async createOrders() {
@@ -19,7 +19,7 @@ export class SharedOrderManagementListScenario extends AbstractScenario {
             }
         });
 
-        this.ordersCreated = false;
+        this.ordersCreated = true;
     }
 
     async execute() {
@@ -33,8 +33,8 @@ export class SharedOrderManagementListScenario extends AbstractScenario {
             await self.adminHelper.loginBackoffice();
             await self.adminHelper.goToSalesPage();
         } finally {
-            let context = self.adminHelper.page.context();
-            await self.adminHelper.page.close();
+            let context = self.adminHelper.contextStorage.getContext();
+            await self.adminHelper.contextStorage.getPage().close();
             await context.close();
         }
 

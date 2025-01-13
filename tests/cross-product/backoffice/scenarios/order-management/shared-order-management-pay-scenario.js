@@ -18,30 +18,20 @@ export class SharedOrderManagementPayScenario extends AbstractScenario {
     async execute() {
         let self = this;
 
-        // this.createOrders();
+        this.createOrders();
+
         try {
-            console.log('before loginBackoffice');
             await self.adminHelper.loginBackoffice();
-            console.log('after loginBackoffice');
-            self.adminHelper.takeScreenshot();
             sleep(1);
-            console.log('before goToSalesPage');
             await self.adminHelper.goToSalesPage();
-            console.log('after goToSalesPage');
-            await self.adminHelper.takeScreenshot();
             sleep(1);
-            console.log('before openFirstSalesOrder');
             await self.adminHelper.openFirstSalesOrder();
-            console.log('after openFirstSalesOrder');
-            await self.adminHelper.takeScreenshot();
             sleep(1);
-            console.log('before waitForOrderHasOmsTriggerButton');
             await self.adminHelper.waitForOrderHasOmsTriggerButton();
-            console.log('after waitForOrderHasOmsTriggerButton');
             sleep(1);
-            console.log('before payForTheOrder');
             await self.adminHelper.payForTheOrder();
-            console.log('after payForTheOrder');
+            sleep(1);
+
         } catch (error) {
             console.log(error);
             self.adminHelper.takeScreenshot('error.png');

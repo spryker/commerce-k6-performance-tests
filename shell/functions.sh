@@ -91,9 +91,48 @@ build_k6_docker_command() {
             -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
             -e 'SPRYKER_TEST_PATH=$relativePath' \
             -e 'K6_BROWSER_ENABLED=true' \
+            -e 'K6_BROWSER_HEADLESS=true' \
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
             --out json='$reportFile'"
+
+    echo "$command"
+}
+
+build_k6_local_command() {
+    local relativePath="$1"
+    local reportFile="$2"
+    local testRunId="$3"
+
+    # Check if 'k6' executable is available
+    if ! command -v k6 &>/dev/null; then
+        echo >&2
+        echo -e "\e[33mError: 'k6' is not installed or not in PATH. Please install 'k6' and try again.\e[0m" >&2
+        return 1
+    fi
+
+    if [ -z "$testRunId" ]; then
+        testRunId=$(generate_uuid)  # Call generate_uuid to get a UUID
+            echo >&2
+            echo -e "\e[33m--------------------------------------------------------------------------------\e[0m" >&2
+            echo -e "\e[33mYou did not specify the test run id.\e[0m" >&2
+            echo -e "\e[33mA UUId will be generated and used.\e[0m" >&2
+            echo -e "\e[33m--------------------------------------------------------------------------------\e[0m" >&2
+            return 1;
+    fi
+
+    command="K6_HOSTENV=local \
+    K6_BROWSER_HEADLESS=false \
+    KK6_BROWSER_ARGS=\"--enable-automation\" \
+    PROJECT_DIR=$(pwd) \
+    GIT_REPO=B2B \
+    GIT_BRANCH=B2B \
+    GIT_HASH=B2B \
+    SPRYKER_TEST_RUN_ID=$testRunId \
+    SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname) \
+    k6 run $relativePath \
+    --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
+    --out json='$reportFile'"
 
     echo "$command"
 }

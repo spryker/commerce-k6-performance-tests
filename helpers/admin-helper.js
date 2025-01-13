@@ -1,6 +1,14 @@
 import { sleep } from 'k6';
 import { browser } from 'k6/browser';
 
+const formSelector = 'form[name="auth"]';
+const usernameInputSelector = `${formSelector} input[name="auth[username]"]`;
+const passwordInputSelector = `${formSelector} input[name="auth[password]"]`;
+const authSubmitSelector = `${formSelector} button[type="submit"]`;
+
+const firstSalesOrderViewButtonSelector = '.dataTable tbody tr:nth-child(1) .btn-view';
+const omsFormSubmitSelector = 'button#oms_trigger_form_submit';
+
 class ContextStorage {
     #context;
     #page;
@@ -37,21 +45,23 @@ export class AdminHelper {
         this.session = null;
         this.contextStorage = new ContextStorage(null, null);
 
-        let baseUri = this.urlHelper.getBackofficeBaseUrl();
-
-        this.firstSalesOrderViewButtonSelector = '.dataTable tbody tr:nth-child(1) .btn-view';
-        this.omsFormSubmitSelector = 'button#oms_trigger_form_submit';
-
-        this.loginUrl = baseUri + '/security-gui/login';
-        this.loginCheckUrl = baseUri + '/login_check';
-        this.salesUrl = baseUri + '/sales';
-        this.salesTableUrl = baseUri + '/sales/index/table';
-        this.salesDetailUrl = baseUri + '/sales/detail';
-        this.omsTriggerUrl = baseUri + '/oms/trigger/submit-trigger-event-for-order';
-
         this.backofficeSessionKey = 'backoffice-eu-spryker-local';
 
-        this.formSelector = 'form[name="auth"]';
+        const backofficeBaseUrl = this.urlHelper.getBackofficeBaseUrl();
+
+        const loginUrl = backofficeBaseUrl + '/security-gui/login';
+        const loginCheckUrl = backofficeBaseUrl + '/login_check';
+        const salesUrl = backofficeBaseUrl + '/sales';
+        const salesTableUrl = backofficeBaseUrl + '/sales/index/table';
+        const salesDetailUrl = backofficeBaseUrl + '/sales/detail';
+        const omsTriggerUrl = backofficeBaseUrl + '/oms/trigger/submit-trigger-event-for-order';
+
+        this.loginUrl = loginUrl;
+        this.loginCheckUrl = loginCheckUrl;
+        this.salesUrl = salesUrl;
+        this.salesTableUrl = salesTableUrl;
+        this.salesDetailUrl = salesDetailUrl;
+        this.omsTriggerUrl = omsTriggerUrl;
     }
 
     getDefaultAdminEmail() {
@@ -69,11 +79,12 @@ export class AdminHelper {
         this.contextStorage.setPage(page);
 
         await page.goto(this.loginUrl);
-        await page.waitForSelector(this.formSelector, {timeout: 5000});
+        await page.waitForSelector(formSelector, {timeout: 5000});
 
-        await page.fill(`${this.formSelector} input[name="auth[username]"]`, this.getDefaultAdminEmail());
-        await page.fill(`${this.formSelector} input[name="auth[password]"]`, this.getDefaultAdminPassword());
-        await page.click(`${this.formSelector} button[type="submit"]`);
+        await page.locator(usernameInputSelector).type(this.getDefaultAdminEmail());
+        await page.locator(passwordInputSelector).type(this.getDefaultAdminPassword());
+        await page.locator(authSubmitSelector).click();
+
         await page.waitForLoadState('networkidle', {timeout: 5000});
     }
 
@@ -84,7 +95,10 @@ export class AdminHelper {
             metric.tag({
                 name: this.salesTableUrl,
                 matches: [
-                    {url: new RegExp(this.salesTableUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), method: 'GET'},
+                    {
+                        url: new RegExp(this.salesTableUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+                        method: 'GET',
+                    },
                 ],
             });
         });
@@ -97,27 +111,32 @@ export class AdminHelper {
         let self = this;
 
         const page = this.contextStorage.getPage();
+        const buttonLocator = await page.locator(firstSalesOrderViewButtonSelector);
 
         page.on('metric', (metric) => {
             metric.tag({
                 name: self.salesDetailUrl,
                 matches: [
-                    {url: new RegExp(self.salesDetailUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), method: 'GET'},
+                    {
+                        url: new RegExp(self.salesDetailUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
+                        method: 'GET',
+                    },
                 ],
             });
         });
 
-        await page.waitForSelector(this.firstSalesOrderViewButtonSelector, {state: 'visible'});
-        await page.click(this.firstSalesOrderViewButtonSelector);
+        await buttonLocator.waitFor({state: 'visible'});
+        await buttonLocator.click(firstSalesOrderViewButtonSelector);
+
         await page.waitForLoadState('networkidle', { timeout: 2000 });
     }
 
     async waitForOrderHasOmsTriggerButton() {
         const page = this.contextStorage.getPage();
 
-        await page.waitForSelector(this.omsFormSubmitSelector, {state: 'visible'});
+        await page.locator(omsFormSubmitSelector).waitFor({state: 'visible'});
 
-        await this.recursiveWaitForSelectorWithText(this.omsFormSubmitSelector, 'Pay', 60 );
+        await this.recursiveWaitForSelectorWithText(omsFormSubmitSelector, 'Pay', 60 );
     }
 
     async payForTheOrder() {
@@ -134,21 +153,22 @@ export class AdminHelper {
             });
         });
 
-        // const submitButtons = await page.$$(this.omsFormSubmitSelector);
+        // const submitButtons = await page.$$(omsFormSubmitSelector);
         // const submitButton = await this.findButtonByText(submitButtons, 'Pay');
 
         const payButton = await page.locator('#order-overview > .row .ibox-content > .row > .col-md-12 .ibox-content form:nth-child(2) button');
-        console.log('visible', await payButton.isVisible());
-        console.log('enabled', await payButton.isEnabled());
+
         await payButton.click({
             force: true,
             noWaitAfter: true,
         });
+
         await page.waitForLoadState('networkidle', { timeout: 5000 });
     }
 
     async recursiveWaitForSelectorWithText(selector, text, maxRetries = 10) {
         const page = this.contextStorage.getPage();
+
         for (let attempt = 0; attempt < maxRetries; attempt++) {
             const submitButtons = await page.$$(selector);
             for (let i = 0; i < submitButtons.length; i++) {

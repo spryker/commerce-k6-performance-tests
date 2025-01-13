@@ -2,12 +2,25 @@
 
 source shell/functions.sh
 
-# Check if an argument was provided to the script
-if [ $# -eq 1 ]; then
-    # Use the argument as the "file" variable
-    file="$1"
-else
-    # Prompt the user for input and store it in the "file" variable
+# Initialize default values
+local_mode=false
+
+# Parse command-line arguments
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        --local)
+            local_mode=true
+            shift
+            ;;
+        *)
+            file="$1"
+            shift
+            ;;
+    esac
+done
+
+# Prompt the user for input if no file argument was provided
+if [ -z "$file" ]; then
     echo -n "Enter the path to the test file (e.g., /tests/b2b/sapi/tests/cart/B2B-SAPI4-carts.js): "
     read file
 fi
@@ -23,12 +36,21 @@ $(create_folder_if_not_existant "$outputFolder")
 # Get the path of the current file relative to the original directory
 testFile=${file#$(pwd)/}
 
-# Construct the docker command
-if ! command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId"); then
-    exit 1;
-fi
+# Check if --local flag is set
+if $local_mode; then
+    if ! command=$(build_k6_local_command "$testFile" "$reportFile" "$testRunId"); then
+        exit 1
+    fi
 
-echo "Running command: '$command'"
+    echo "Running command in local mode: '$command'"
+else
+    # Construct the docker command
+    if ! command=$(build_k6_docker_command "$testFile" "$reportFile" "$testRunId"); then
+        exit 1;
+    fi
+
+    echo "Running command: '$command'"
+fi
 
 # Record the start time
 start_timer
