@@ -1,15 +1,11 @@
-import EnvironmentUtil from './environment.util';
-
-export function createScenario(
-  tags = {},
-  executor = EnvironmentUtil.getExecutor(),
-  vus = EnvironmentUtil.getVus(),
-  iterations = EnvironmentUtil.getIterations()
-) {
+export function createDefaultScenario(testConfiguration) {
   return {
-    tags: tags,
-    executor: executor,
-    vus: vus,
-    iterations: iterations,
+    tags: {
+      testId: testConfiguration.id,
+      testGroup: testConfiguration.group,
+    },
+    executor: testConfiguration.executor,
+    vus: testConfiguration.vus,
+    iterations: testConfiguration.iterations,
   };
 }

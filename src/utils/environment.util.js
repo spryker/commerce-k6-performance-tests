@@ -83,4 +83,12 @@ export default class EnvironmentUtil {
   static getExecutor() {
     return 'per-vu-iterations';
   }
+
+  static getDefaultTestConfiguration() {
+    return {
+      vus: EnvironmentUtil.getVus(),
+      iterations: EnvironmentUtil.getIterations(),
+      exec: EnvironmentUtil.getExecutor(),
+    };
+  }
 }

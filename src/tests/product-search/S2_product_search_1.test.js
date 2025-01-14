@@ -4,9 +4,10 @@ import { createMetrics } from '../../utils/metric.util';
 import { ProductFixture } from '../../fixtures/product.fixture';
 import CatalogPage from '../../pages/catalog.page';
 import { check } from 'k6';
-import EnvironmentUtil from '../../utils/environment.util';
+import EnvironmentUtil from "../../utils/environment.util";
 
 const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'S2',
   group: 'Product Search',
   metrics: ['S2_get_search'],
@@ -20,14 +21,17 @@ const testConfiguration = {
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
-const dynamicFixture = new ProductFixture({ productCount: EnvironmentUtil.getVus() });
 
 export function setup() {
+  const dynamicFixture = new ProductFixture({
+    productCount: testConfiguration.vus
+  });
+
   return dynamicFixture.getData();
 }
 
 export default function (data) {
-  const product = dynamicFixture.iterateData(data);
+  const product = ProductFixture.iterateData(data);
 
   group(testConfiguration.group, () => {
     const catalogPage = new CatalogPage();

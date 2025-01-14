@@ -3,12 +3,13 @@ import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';
 import CheckoutResource from '../../resources/checkout.resource';
 import { CheckoutFixture } from '../../fixtures/checkout.fixture';
-import EnvironmentUtil from '../../utils/environment.util';
 import { createMetrics } from '../../utils/metric.util';
 import OrderAmendmentResource from '../../resources/order-amendment.resource';
 import CartsResource from '../../resources/carts.resource';
+import EnvironmentUtil from "../../utils/environment.util";
 
 const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI20',
   group: 'Order Amendment',
   metrics: [
@@ -35,15 +36,15 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const dynamicFixture = new CheckoutFixture({
-  customerCount: EnvironmentUtil.getVus(),
-  cartCount: EnvironmentUtil.getIterations(),
-  itemCount: 70,
-});
-
 export function setup() {
+  const dynamicFixture = new CheckoutFixture({
+    customerCount: testConfiguration.vus,
+    cartCount: testConfiguration.iterations,
+    itemCount: 70,
+  });
+
   if (isSequentialSetup()) {
-    return dynamicFixture.getData(EnvironmentUtil.getIterations(), 1);
+    return dynamicFixture.getData(testConfiguration.iterations, 1);
   }
 
   if (isConcurrentSetup()) {
@@ -116,9 +117,9 @@ function getQuoteIndex(quoteIds) {
 }
 
 function isConcurrentSetup() {
-  return EnvironmentUtil.getVus() > 1 && EnvironmentUtil.getIterations() === 1;
+  return testConfiguration.vus > 1 && testConfiguration.iterations === 1;
 }
 
 function isSequentialSetup() {
-  return EnvironmentUtil.getVus() === 1 && EnvironmentUtil.getIterations() > 1;
+  return testConfiguration.vus === 1 && testConfiguration.iterations > 1;
 }

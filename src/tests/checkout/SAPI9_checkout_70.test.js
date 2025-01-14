@@ -3,10 +3,11 @@ import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';
 import CheckoutResource from '../../resources/checkout.resource';
 import { CheckoutFixture } from '../../fixtures/checkout.fixture';
-import EnvironmentUtil from '../../utils/environment.util';
 import { createMetrics } from '../../utils/metric.util';
+import EnvironmentUtil from "../../utils/environment.util";
 
 const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI9',
   group: 'Checkout',
   metrics: ['SAPI9_post_checkout'],
@@ -21,18 +22,18 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const dynamicFixture = new CheckoutFixture({
-  customerCount: EnvironmentUtil.getVus(),
-  cartCount: EnvironmentUtil.getIterations(),
-  itemCount: 70,
-});
-
 export function setup() {
+  const dynamicFixture = new CheckoutFixture({
+    customerCount: testConfiguration.vus,
+    cartCount: testConfiguration.iterations,
+    itemCount: 70,
+  });
+
   return dynamicFixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail, idCart } = dynamicFixture.iterateData(data);
+  const { customerEmail, idCart } = CheckoutFixture.iterateData(data);
 
   let bearerToken;
   group('Authorization', () => {

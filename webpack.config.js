@@ -22,7 +22,7 @@ module.exports = (env) => {
     entry,
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: '[name].test.js',
+      filename: '[name].js',
       libraryTarget: 'commonjs',
     },
     module: {
