@@ -6,18 +6,19 @@ const productSearchScenario = new SharedProductSearchScenario('B2B_MP');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI2_Product_Search: {
-        exec: 'executeProductSearchScenario',
-        executor: 'shared-iterations',
-        tags: {
-            testId: 'SAPI2',
-            testGroup: 'Product Search',
-        },
-        iterations: 10
+  SAPI2_Product_Search: {
+    exec: 'executeProductSearchScenario',
+    executor: 'shared-iterations',
+    tags: {
+      testId: 'SAPI2',
+      testGroup: 'Product Search',
     },
+    iterations: 10,
+  },
 };
-options.thresholds[`http_req_duration{url:${productSearchScenario.getStorefrontApiBaseUrl()}/catalog-search?q=\${}}`] = ['avg<176'];
+options.thresholds[`http_req_duration{url:${productSearchScenario.getStorefrontApiBaseUrl()}/catalog-search?q=\${}}`] =
+  ['avg<176'];
 
 export function executeProductSearchScenario() {
-    productSearchScenario.execute();
+  productSearchScenario.execute();
 }

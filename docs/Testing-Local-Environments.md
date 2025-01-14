@@ -26,7 +26,7 @@ In your K6 service section, add the network as well:
 ```yaml
 services:
   k6:
-    container_name: "loadtesting_environment"
+    container_name: 'loadtesting_environment'
     build:
       context: .
       dockerfile: Dockerfile
@@ -65,4 +65,3 @@ If you get this error message
 > network spryker_b2b_marketplace_private declared as external, but could not be found
 
 when running K6 tests, your network names in K6s config and your product are not aligned.
-

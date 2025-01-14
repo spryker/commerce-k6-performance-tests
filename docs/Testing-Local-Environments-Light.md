@@ -2,7 +2,6 @@
 
 For local execution in most cases is enough to have only one k6 service and simple output to shell.
 
-
 ## Precondition
 
 By default the internal networks of the products Docker containers are not available in the K6 container. Therefore, when trying to test products running on the same machine, the endpoints are not reachable for the K6 container.
@@ -11,7 +10,7 @@ To solve this problem it is necessary to add Spryker app network to the list of 
 
 ## Setting up configuration file
 
-With docker-compose.local.yml you do not need to create any env file. In case parameters for data exchange execution require adjustments following options are available: 
+With docker-compose.local.yml you do not need to create any env file. In case parameters for data exchange execution require adjustments following options are available:
 
 ### Create .env file with the following content:
 
@@ -46,7 +45,7 @@ In your K6 service section, add the network as well:
 ```yaml
 services:
   k6:
-    container_name: "loadtesting_environment"
+    container_name: 'loadtesting_environment'
     build:
       context: .
       dockerfile: Dockerfile
@@ -92,13 +91,9 @@ when running K6 tests, your network names in K6s config and your product are not
 
     docker-compose -f docker-compose.local.yml run --rm k6 run tests/b2b/bapi/tests/data-exchange-api/tests/post.js
 
-
-
 ##### PATCH:
 
     docker-compose -f docker-compose.local.yml run --rm k6 run tests/b2b/bapi/tests/data-exchange-api/tests/patch.js
-
-
 
 ##### PUT:
 

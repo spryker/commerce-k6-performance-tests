@@ -6,22 +6,24 @@ const addToCartScenario = new SharedAddToCartScenario('B2B');
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    SAPI6_Add_1_item_to_cart: {
-        exec: 'executeAddToCartScenario',
-        executor: 'shared-iterations',
-        env: {
-            sku: '100429',
-            quantity: '1'
-        },
-        tags: {
-            testId: 'SAPI6',
-            testGroup: 'Checkout',
-        },
-        iterations: 10
+  SAPI6_Add_1_item_to_cart: {
+    exec: 'executeAddToCartScenario',
+    executor: 'shared-iterations',
+    env: {
+      sku: '100429',
+      quantity: '1',
     },
+    tags: {
+      testId: 'SAPI6',
+      testGroup: 'Checkout',
+    },
+    iterations: 10,
+  },
 };
-options.thresholds[`http_req_duration{url:${addToCartScenario.getStorefrontApiBaseUrl()}/carts/\${}/items}`] = ['avg<735'];
+options.thresholds[`http_req_duration{url:${addToCartScenario.getStorefrontApiBaseUrl()}/carts/\${}/items}`] = [
+  'avg<735',
+];
 
 export function executeAddToCartScenario() {
-    addToCartScenario.execute(__ENV.sku, __ENV.quantity);
+  addToCartScenario.execute(__ENV.sku, __ENV.quantity);
 }

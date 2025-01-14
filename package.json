@@ -1,5 +1,34 @@
 {
+  "name": "commerce-k6-performance-tests",
+  "version": "0.0.1",
+  "description": "TBD",
+  "license": "proprietary",
+  "main": "index.js",
+  "scripts": {
+    "build:one": "webpack --env entryPattern=./src/tests/checkout/SAPI9_checkout_70.test.js",
+    "build:all": "webpack --env entryPattern=./src/tests/**/*.test.js",
+    "build:S": "webpack --env entryPattern=./src/tests/**/S*.test.js",
+    "build:SAPI": "webpack --env entryPattern=./src/tests/**/SAPI*.test.js",
+    "build:checkout": "webpack --env entryPattern=./src/tests/checkout/*.test.js",
+    "build:cart-reorder": "webpack --env entryPattern=./src/tests/cart-reorder/*.test.js",
+    "build:order-amendment": "webpack --env entryPattern=./src/tests/order-amendment/*.test.js",
+    "build:product-search": "webpack --env entryPattern=./src/tests/product-search/*.test.js",
+    "docker:suite:up": "docker-compose -f docker-compose.suite.local.yml up -d influxdb grafana",
+    "docker:suite:down": "docker-compose -f docker-compose.suite.local.yml down -v --remove-orphans",
+    "docker:suite:run": "docker-compose -f docker-compose.suite.local.yml run --rm k6 run /$(find dist -name '*.test.js' -print0 | xargs -0)",
+    "prettier:check": "prettier . --check",
+    "prettier:write": "prettier . --write"
+  },
   "devDependencies": {
-    "eslint": "^8.39.0"
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "babel-loader": "^9.1.2",
+    "clean-webpack-plugin": "^4.0.0",
+    "eslint": "^8.39.0",
+    "k6": "^0.0.0",
+    "mkdirp": "^3.0.1",
+    "prettier": "^3.4.2",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
   }
 }

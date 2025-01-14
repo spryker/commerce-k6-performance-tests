@@ -7,18 +7,18 @@ const storefrontBaseUrl = checkoutScenario.getStorefrontBaseUrl();
 
 export const options = loadDefaultOptions();
 options.scenarios = {
-    S3_Checkout_1_item: {
-        exec: 'executeCheckoutScenario',
-        executor: 'shared-iterations',
-        env: {
-            numberOfItems: '1'
-        },
-        tags: {
-            testId: 'S3',
-            testGroup: 'Checkout',
-        },
-        iterations: 10,
+  S3_Checkout_1_item: {
+    exec: 'executeCheckoutScenario',
+    executor: 'shared-iterations',
+    env: {
+      numberOfItems: '1',
     },
+    tags: {
+      testId: 'S3',
+      testGroup: 'Checkout',
+    },
+    iterations: 10,
+  },
 };
 options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/\${}}`] = ['avg<552'];
 options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/cart/add/657712}`] = ['avg<547'];
@@ -32,5 +32,5 @@ options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/place
 options.thresholds[`http_req_duration{url:${storefrontBaseUrl}/en/checkout/success}`] = ['avg<1009'];
 
 export function executeCheckoutScenario() {
-    checkoutScenario.execute();
+  checkoutScenario.execute();
 }
