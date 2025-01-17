@@ -7,5 +7,10 @@ export function createDefaultScenario(testConfiguration) {
     executor: testConfiguration.executor,
     vus: testConfiguration.vus,
     iterations: testConfiguration.iterations,
+    options: {
+      browser: {
+        type: 'chromium',
+      },
+    },
   };
 }

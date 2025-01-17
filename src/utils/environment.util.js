@@ -10,6 +10,17 @@ export default class EnvironmentUtil {
     }
   }
 
+  static getMerchantPortalUrl() {
+    switch (__ENV.K6_HOSTENV) {
+      case 'local':
+        return 'http://mp.eu.spryker.local';
+      case 'staging':
+        return 'https://mp.eu.spryker-suiteperformance.cloud.spryker.toys';
+      default:
+        console.error('Url or env not defined');
+    }
+  }
+
   static getStorefrontApiUrl() {
     switch (__ENV.K6_HOSTENV) {
       case 'local':
@@ -88,7 +99,7 @@ export default class EnvironmentUtil {
     return {
       vus: EnvironmentUtil.getVus(),
       iterations: EnvironmentUtil.getIterations(),
-      exec: EnvironmentUtil.getExecutor(),
+      executor: EnvironmentUtil.getExecutor(),
     };
   }
 }
