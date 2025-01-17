@@ -4,7 +4,7 @@ import OptionsUtil from '../../utils/options.util';
 import CheckoutResource from '../../resources/checkout.resource';
 import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -12,7 +12,7 @@ const testConfiguration = {
   group: 'Checkout',
   metrics: ['SAPI7_post_checkout'],
   thresholds: {
-    'SAPI7_post_checkout': {
+    SAPI7_post_checkout: {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },

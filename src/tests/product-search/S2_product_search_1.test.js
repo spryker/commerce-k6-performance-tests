@@ -4,7 +4,7 @@ import { createMetrics } from '../../utils/metric.util';
 import { ProductFixture } from '../../fixtures/product.fixture';
 import CatalogPage from '../../pages/catalog.page';
 import { check } from 'k6';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -12,7 +12,7 @@ const testConfiguration = {
   group: 'Product Search',
   metrics: ['S2_get_search'],
   thresholds: {
-    'S2_get_search': {
+    S2_get_search: {
       smoke: ['avg<200'],
       load: ['avg<200'],
     },
@@ -24,7 +24,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 
 export function setup() {
   const dynamicFixture = new ProductFixture({
-    productCount: testConfiguration.vus
+    productCount: testConfiguration.vus,
   });
 
   return dynamicFixture.getData();

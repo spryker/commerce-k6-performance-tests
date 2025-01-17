@@ -5,7 +5,7 @@ import CheckoutResource from '../../resources/checkout.resource';
 import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import CartReorderResource from '../../resources/cart-reorder.resource';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -13,7 +13,7 @@ const testConfiguration = {
   group: 'Cart Reorder',
   metrics: ['SAPI15_post_cart_reorder'],
   thresholds: {
-    'SAPI15_post_cart_reorder': {
+    SAPI15_post_cart_reorder: {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },

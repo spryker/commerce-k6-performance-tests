@@ -6,27 +6,23 @@ import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import OrderAmendmentResource from '../../resources/order-amendment.resource';
 import CartsResource from '../../resources/carts.resource';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI20',
   group: 'Order Amendment',
-  metrics: [
-    'SAPI20_post_cart_reorder',
-    'SAPI21_delete_carts',
-    'SAPI22_post_checkout',
-  ],
+  metrics: ['SAPI20_post_cart_reorder', 'SAPI21_delete_carts', 'SAPI22_post_checkout'],
   thresholds: {
-    'SAPI20_post_cart_reorder': {
+    SAPI20_post_cart_reorder: {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },
-    'SAPI21_delete_carts': {
+    SAPI21_delete_carts: {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },
-    'SAPI22_post_checkout': {
+    SAPI22_post_checkout: {
       smoke: ['avg<300'],
       load: ['avg<500'],
     },

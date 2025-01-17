@@ -25,6 +25,8 @@
     "babel-loader": "^9.1.2",
     "clean-webpack-plugin": "^4.0.0",
     "eslint": "^8.39.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
     "k6": "^0.0.0",
     "mkdirp": "^3.0.1",
     "prettier": "^3.4.2",
