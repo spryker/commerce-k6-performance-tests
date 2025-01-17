@@ -21,7 +21,7 @@ module.exports = {
     'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 0 }],
     'no-mixed-spaces-and-tabs': 'error',
     'no-multi-spaces': 'error',
-    indent: ['error', 2, { "SwitchCase": 1 }],
+    indent: ['error', 2, { SwitchCase: 1 }],
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
     'function-paren-newline': ['error', 'multiline'],
