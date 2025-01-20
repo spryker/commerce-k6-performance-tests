@@ -14,4 +14,28 @@ export class AbstractFixture {
 
     return res;
   }
+
+  static runConsoleCommands(commands) {
+    const operations = commands.map((command) => {
+      return {
+        type: 'cli-command',
+        name: command,
+      };
+    });
+
+    const payload = {
+      data: {
+        type: 'dynamic-fixtures',
+        attributes: {
+          operations: operations,
+        },
+      },
+    };
+
+    return http.post(http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`, payload, {
+      headers: {
+        'Content-Type': 'application/vnd.api+json',
+      },
+    });
+  }
 }

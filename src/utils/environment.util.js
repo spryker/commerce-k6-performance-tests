@@ -100,6 +100,7 @@ export default class EnvironmentUtil {
       vus: EnvironmentUtil.getVus(),
       iterations: EnvironmentUtil.getIterations(),
       executor: EnvironmentUtil.getExecutor(),
+      maxDuration: '60m',
     };
   }
 }

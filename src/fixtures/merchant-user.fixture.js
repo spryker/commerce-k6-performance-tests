@@ -14,19 +14,19 @@ export class MerchantUserFixture extends AbstractFixture {
     const responseData = JSON.parse(response.body).data;
 
     return responseData
-        .filter((item) => /^merchantUser\d+$/.test(item.attributes.key))
-        .map((item) => {
-          const { id_user, username, first_name, last_name, status } = item.attributes.data;
+      .filter((item) => /^merchantUser\d+$/.test(item.attributes.key))
+      .map((item) => {
+        const { id_user, username, first_name, last_name, status } = item.attributes.data;
 
-          return {
-            id: id_user,
-            username,
-            password: DEFAULT_PASSWORD,
-            firstName: first_name,
-            lastName: last_name,
-            status,
-          };
-        });
+        return {
+          id: id_user,
+          username,
+          password: DEFAULT_PASSWORD,
+          firstName: first_name,
+          lastName: last_name,
+          status,
+        };
+      });
   }
 
   static iterateData(data, vus = __VU) {
@@ -47,7 +47,9 @@ export class MerchantUserFixture extends AbstractFixture {
       },
     ];
 
-    const merchantUsers = Array.from({ length: this.merchantUserCount }, (_, i) => this._createMerchantPayload(i)).flat();
+    const merchantUsers = Array.from({ length: this.merchantUserCount }, (_, i) =>
+      this._createMerchantPayload(i)
+    ).flat();
 
     return JSON.stringify({
       data: {
@@ -64,15 +66,15 @@ export class MerchantUserFixture extends AbstractFixture {
     const merchantUserKey = `merchantUser${index + 1}`;
     return [
       {
-        type: "helper",
-        name: "haveUser",
+        type: 'helper',
+        name: 'haveUser',
         key: merchantUserKey,
-        arguments: [{ "password": DEFAULT_PASSWORD }]
+        arguments: [{ password: DEFAULT_PASSWORD }],
       },
       {
-        type: "helper",
-        name: "haveMerchantUserWithAclEntities",
-        "arguments": ["#merchant", `#${merchantUserKey}`]
+        type: 'helper',
+        name: 'haveMerchantUserWithAclEntities',
+        arguments: ['#merchant', `#${merchantUserKey}`],
       },
     ];
   }

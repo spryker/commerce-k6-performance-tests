@@ -2,9 +2,9 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import { ProductFixture } from '../../fixtures/product.fixture';
-import CatalogPage from '../../pages/catalog.page';
 import { check } from 'k6';
 import EnvironmentUtil from '../../utils/environment.util';
+import CatalogPage from '../../pages/yves/catalog.page';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

@@ -5,19 +5,22 @@
   "license": "proprietary",
   "main": "index.js",
   "scripts": {
-    "build:one": "webpack --env entryPattern=./src/tests/dashboard/M8_view_dashboard.test.js",
+    "build:one": "webpack --env entryPattern=./src/tests/product-search/S2_product_search_1.test.js",
     "build:all": "webpack --env entryPattern=./src/tests/**/*.test.js",
     "build:S": "webpack --env entryPattern=./src/tests/**/S*.test.js",
+    "build:M": "webpack --env entryPattern=./src/tests/**/M*.test.js",
     "build:SAPI": "webpack --env entryPattern=./src/tests/**/SAPI*.test.js",
     "build:checkout": "webpack --env entryPattern=./src/tests/checkout/*.test.js",
     "build:cart-reorder": "webpack --env entryPattern=./src/tests/cart-reorder/*.test.js",
     "build:order-amendment": "webpack --env entryPattern=./src/tests/order-amendment/*.test.js",
     "build:product-search": "webpack --env entryPattern=./src/tests/product-search/*.test.js",
+    "build:dashboard": "webpack --env entryPattern=./src/tests/dashboard/*.test.js",
     "docker:suite:up": "docker-compose -f docker-compose.suite.local.yml up -d influxdb grafana",
     "docker:suite:down": "docker-compose -f docker-compose.suite.local.yml down -v --remove-orphans",
     "docker:suite:run": "docker-compose -f docker-compose.suite.local.yml run --rm k6 run /$(find dist -name '*.test.js' -print0 | xargs -0)",
     "prettier:check": "prettier . --check",
-    "prettier:write": "prettier . --write"
+    "prettier:write": "prettier . --write",
+    "lint": "npx eslint ./src"
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",

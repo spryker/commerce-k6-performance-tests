@@ -24,7 +24,7 @@ module.exports = {
     indent: ['error', 2, { SwitchCase: 1 }],
     'linebreak-style': ['error', 'unix'],
     quotes: ['error', 'single'],
-    'function-paren-newline': ['error', 'multiline'],
+    'function-paren-newline': ['off'],
     'max-len': [
       'error',
       {
