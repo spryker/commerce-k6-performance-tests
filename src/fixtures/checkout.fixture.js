@@ -1,4 +1,5 @@
 import { AbstractFixture } from './abstract.fixture';
+import EnvironmentUtil from '../utils/environment.util';
 
 const LOCALE_ID = 66;
 const LOCALE_NAME = 'en_US';
@@ -7,6 +8,7 @@ const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486
 const DEFAULT_PASSWORD = 'change123';
 const DEFAULT_STOCK_ID = 1;
 const DEFAULT_STOCK_NAME = 'Warehouse1';
+const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
 
 export class CheckoutFixture extends AbstractFixture {
   constructor({ customerCount, cartCount = 1, itemCount = 10, defaultItemPrice = 1000 }) {
@@ -15,6 +17,7 @@ export class CheckoutFixture extends AbstractFixture {
     this.cartCount = cartCount;
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
+    this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
   getData(customerCount = this.customerCount, cartCount = this.cartCount) {
@@ -56,6 +59,17 @@ export class CheckoutFixture extends AbstractFixture {
       },
       {
         type: 'transfer',
+        name: 'StoreTransfer',
+        key: 'store',
+        arguments: { id_store: 1, name: 'DE' },
+      },
+      {
+        type: 'array-object',
+        key: 'stores',
+        arguments: ['#store'],
+      },
+      {
+        type: 'transfer',
         name: 'ProductImageTransfer',
         key: 'productImage',
         arguments: {
@@ -64,6 +78,69 @@ export class CheckoutFixture extends AbstractFixture {
         },
       },
     ];
+
+    if (this.repositoryId === 'b2b-mp') {
+      const companyPermissions = [
+        {
+          type: 'helper',
+          name: 'haveCompany',
+          key: 'company',
+          arguments: [{ isActive: true, status: 'approved' }],
+        },
+        {
+          type: 'helper',
+          name: 'haveCompanyBusinessUnit',
+          key: 'businessUnit',
+          arguments: [{ fkCompany: '#company.id_company' }],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission1',
+          arguments: ['AddCartItemPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission2',
+          arguments: ['ChangeCartItemPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission3',
+          arguments: ['RemoveCartItemPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission4',
+          arguments: ['PlaceOrderWithAmountUpToPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission5',
+          arguments: ['PlaceOrderPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission6',
+          arguments: ['SeeBusinessUnitOrdersPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'haveCompanyRoleWithPermissions',
+          arguments: [
+            { isDefault: true, fkCompany: '#company.id_company' },
+            ['#permission1', '#permission2', '#permission3', '#permission4', '#permission5', '#permission6'],
+          ],
+        },
+      ];
+
+      baseOperations.push(...companyPermissions);
+    }
 
     const products = Array.from({ length: this.itemCount }, (_, i) => this._createProductPayload(i)).flat();
     const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
@@ -81,7 +158,7 @@ export class CheckoutFixture extends AbstractFixture {
 
   _createProductPayload(index) {
     const productKey = `product${index + 1}`;
-    return [
+    let product = [
       {
         type: 'helper',
         name: 'haveFullProduct',
@@ -124,6 +201,43 @@ export class CheckoutFixture extends AbstractFixture {
         ],
       },
     ];
+
+    if (this.repositoryId === 'b2b-mp') {
+      const productOfferKey = `productOffer${index + 1}`;
+      const productOffer = [
+        {
+          type: 'helper',
+          name: 'haveProductOffer',
+          key: productOfferKey,
+          arguments: [
+            {
+              isActive: true,
+              status: 'approved',
+              idProductConcrete: `#${productKey}.id_product_concrete`,
+              concreteSku: `#${productKey}.sku`,
+              merchantReference: DEFAULT_MERCHANT_REFERENCE,
+              stores: '#stores',
+            },
+          ],
+        },
+        {
+          type: 'helper',
+          name: 'haveProductOfferStock',
+          arguments: [
+            {
+              idProductOffer: `#${productOfferKey}.id_product_offer`,
+              productOfferReference: `#${productOfferKey}.product_offer_reference`,
+              isNeverOutOfStock: true,
+            },
+            [{ idStock: DEFAULT_STOCK_ID }],
+          ],
+        },
+      ];
+
+      product.push(...productOffer);
+    }
+
+    return product;
   }
 
   _createCustomerPayload(index) {
@@ -140,7 +254,7 @@ export class CheckoutFixture extends AbstractFixture {
       ],
     }));
 
-    return [
+    const customer = [
       {
         type: 'helper',
         name: 'haveCustomer',
@@ -153,8 +267,31 @@ export class CheckoutFixture extends AbstractFixture {
         key: `confirmed${customerKey}`,
         arguments: [`#${customerKey}`],
       },
-      ...quotes,
     ];
+
+    if (this.repositoryId === 'b2b-mp') {
+      const companyUser = [
+        {
+          type: 'helper',
+          name: 'haveCompanyUser',
+          key: 'companyUser',
+          arguments: [
+            {
+              customer: `#${customerKey}`,
+              fkCustomer: `#${customerKey}.id_customer`,
+              fkCompany: '#company.id_company',
+              fkCompanyBusinessUnit: '#businessUnit.id_company_business_unit',
+            },
+          ],
+        },
+      ];
+
+      customer.push(...companyUser);
+    }
+
+    customer.push(...quotes);
+
+    return customer;
   }
 
   _generateItems() {
@@ -163,6 +300,8 @@ export class CheckoutFixture extends AbstractFixture {
       abstractSku: `#product${i + 1}.abstract_sku`,
       quantity: 1,
       unitPrice: this.defaultItemPrice,
+      productOfferReference: this.repositoryId === 'b2b-mp' ? `#productOffer${i + 1}.product_offer_reference` : null,
+      merchantReference: this.repositoryId === 'b2b-mp' ? `#productOffer${i + 1}.merchant_reference` : null,
     }));
   }
 }

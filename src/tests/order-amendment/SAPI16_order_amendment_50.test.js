@@ -7,6 +7,11 @@ import { createMetrics } from '../../utils/metric.util';
 import OrderAmendmentResource from '../../resources/order-amendment.resource';
 import CartsResource from '../../resources/carts.resource';
 import EnvironmentUtil from '../../utils/environment.util';
+import exec from 'k6/execution';
+
+if (EnvironmentUtil.getRepositoryId() !== 'suite') {
+  exec.test.abort('Order Amendment is not integrated into demo shops.');
+}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

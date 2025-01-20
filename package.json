@@ -5,7 +5,7 @@
   "license": "proprietary",
   "main": "index.js",
   "scripts": {
-    "build:one": "webpack --env entryPattern=./src/tests/product-search/S2_product_search_1.test.js",
+    "build:one": "webpack --env entryPattern=./src/tests/cart-reorder/SAPI15_cart_reorder_50.test.js",
     "build:all": "webpack --env entryPattern=./src/tests/**/*.test.js",
     "build:S": "webpack --env entryPattern=./src/tests/**/S*.test.js",
     "build:M": "webpack --env entryPattern=./src/tests/**/M*.test.js",
@@ -15,9 +15,9 @@
     "build:order-amendment": "webpack --env entryPattern=./src/tests/order-amendment/*.test.js",
     "build:product-search": "webpack --env entryPattern=./src/tests/product-search/*.test.js",
     "build:dashboard": "webpack --env entryPattern=./src/tests/dashboard/*.test.js",
-    "docker:suite:up": "docker-compose -f docker-compose.suite.local.yml up -d influxdb grafana",
-    "docker:suite:down": "docker-compose -f docker-compose.suite.local.yml down -v --remove-orphans",
-    "docker:suite:run": "docker-compose -f docker-compose.suite.local.yml run --rm k6 run /$(find dist -name '*.test.js' -print0 | xargs -0)",
+    "docker:up": "docker-compose -f docker-compose.b2b-mp.yml up -d influxdb grafana",
+    "docker:down": "docker-compose -f docker-compose.b2b-mp.yml down -v --remove-orphans",
+    "docker:run": "find dist -name '*.test.js' -exec docker-compose -f docker-compose.b2b-mp.yml run --rm k6 run /{} \\;",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",
     "lint": "npx eslint ./src"

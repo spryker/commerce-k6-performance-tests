@@ -6,6 +6,11 @@ import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import CartReorderResource from '../../resources/cart-reorder.resource';
 import EnvironmentUtil from '../../utils/environment.util';
+import exec from 'k6/execution';
+
+if (EnvironmentUtil.getRepositoryId() !== 'suite') {
+  exec.test.abort('Cart Reorder is not integrated into demo shops.');
+}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

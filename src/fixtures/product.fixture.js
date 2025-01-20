@@ -1,14 +1,17 @@
 import { AbstractFixture } from './abstract.fixture';
+import EnvironmentUtil from '../utils/environment.util';
 
 const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
 const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
 const DEFAULT_STOCK_ID = 1;
 const DEFAULT_STOCK_NAME = 'Warehouse1';
+const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
 
 export class ProductFixture extends AbstractFixture {
   constructor({ productCount = 1 }) {
     super();
     this.productCount = productCount;
+    this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
   getData() {
@@ -53,6 +56,17 @@ export class ProductFixture extends AbstractFixture {
           externalUrlLarge: DEFAULT_IMAGE_LARGE,
         },
       },
+      {
+        type: 'transfer',
+        name: 'StoreTransfer',
+        key: 'store',
+        arguments: { id_store: 1, name: 'DE' },
+      },
+      {
+        type: 'array-object',
+        key: 'stores',
+        arguments: ['#store'],
+      },
     ];
 
     const products = Array.from({ length: this.productCount }, (_, i) => this._createProductPayload(i)).flat();
@@ -70,7 +84,7 @@ export class ProductFixture extends AbstractFixture {
 
   _createProductPayload(index) {
     const productKey = `product${index + 1}`;
-    return [
+    let product = [
       {
         type: 'helper',
         name: 'haveFullProduct',
@@ -112,5 +126,42 @@ export class ProductFixture extends AbstractFixture {
         ],
       },
     ];
+
+    if (this.repositoryId === 'b2b-mp') {
+      const productOfferKey = `productOffer${index + 1}`;
+      const productOffer = [
+        {
+          type: 'helper',
+          name: 'haveProductOffer',
+          key: productOfferKey,
+          arguments: [
+            {
+              isActive: true,
+              status: 'approved',
+              idProductConcrete: `#${productKey}.id_product_concrete`,
+              concreteSku: `#${productKey}.sku`,
+              merchantReference: DEFAULT_MERCHANT_REFERENCE,
+              stores: '#stores',
+            },
+          ],
+        },
+        {
+          type: 'helper',
+          name: 'haveProductOfferStock',
+          arguments: [
+            {
+              idProductOffer: `#${productOfferKey}.id_product_offer`,
+              productOfferReference: `#${productOfferKey}.product_offer_reference`,
+              isNeverOutOfStock: true,
+            },
+            [{ idStock: DEFAULT_STOCK_ID }],
+          ],
+        },
+      ];
+
+      product.push(...productOffer);
+    }
+
+    return product;
   }
 }

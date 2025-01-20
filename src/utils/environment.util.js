@@ -103,4 +103,8 @@ export default class EnvironmentUtil {
       maxDuration: '60m',
     };
   }
+
+  static getRepositoryId() {
+    return __ENV.ENV_REPOSITORY_ID;
+  }
 }
