@@ -15,9 +15,9 @@
     "build:order-amendment": "webpack --env entryPattern=./src/tests/order-amendment/*.test.js",
     "build:product-search": "webpack --env entryPattern=./src/tests/product-search/*.test.js",
     "build:dashboard": "webpack --env entryPattern=./src/tests/dashboard/*.test.js",
-    "docker:up": "docker-compose -f docker-compose.b2b.yml up -d influxdb grafana",
-    "docker:down": "docker-compose -f docker-compose.b2b.yml down -v --remove-orphans",
-    "docker:run": "find dist -name '*.test.js' -exec docker-compose -f docker-compose.b2b.yml run --rm k6 run /{} \\;",
+    "docker:up": "docker-compose -f docker-compose.suite.yml up -d influxdb grafana",
+    "docker:down": "docker-compose -f docker-compose.suite.yml down -v --remove-orphans",
+    "docker:run": "find dist -name '*.test.js' -exec docker-compose -f docker-compose.suite.yml run --rm k6 run /{} \\;",
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",
     "lint": "npx eslint ./src"
