@@ -105,16 +105,16 @@ function getCustomerData(data) {
   let customerIndex;
 
   if (isSequentialSetup()) {
-    customerIndex = __ITER % data.length;
+    customerIndex = exec.vu.iterationInScenario % data.length;
   } else if (isConcurrentSetup()) {
-    customerIndex = (__VU - 1) % data.length;
+    customerIndex = (exec.vu.idInTest - 1) % data.length;
   }
 
   return data[customerIndex];
 }
 
 function getQuoteIndex(quoteIds) {
-  return isSequentialSetup() ? 0 : __ITER % quoteIds.length;
+  return isSequentialSetup() ? 0 : exec.vu.iterationInScenario % quoteIds.length;
 }
 
 function isConcurrentSetup() {

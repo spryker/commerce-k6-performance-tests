@@ -1,4 +1,5 @@
 import { AbstractFixture } from './abstract.fixture';
+import exec from 'k6/execution';
 
 const DEFAULT_PASSWORD = 'change123';
 
@@ -29,7 +30,7 @@ export class MerchantUserFixture extends AbstractFixture {
       });
   }
 
-  static iterateData(data, vus = __VU) {
+  static iterateData(data, vus = exec.vu.idInTest) {
     const merchantUserIndex = (vus - 1) % data.length;
 
     return data[merchantUserIndex];

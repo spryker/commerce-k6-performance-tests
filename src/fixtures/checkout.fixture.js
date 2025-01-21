@@ -1,5 +1,6 @@
 import { AbstractFixture } from './abstract.fixture';
 import EnvironmentUtil from '../utils/environment.util';
+import exec from 'k6/execution';
 
 const LOCALE_ID = 66;
 const LOCALE_NAME = 'en_US';
@@ -41,7 +42,7 @@ export class CheckoutFixture extends AbstractFixture {
     });
   }
 
-  static iterateData(data, vus = __VU, iterations = __ITER) {
+  static iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
     const customerIndex = (vus - 1) % data.length;
     const { customerEmail, quoteIds } = data[customerIndex];
     const quoteIndex = iterations % quoteIds.length;
@@ -79,7 +80,7 @@ export class CheckoutFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp') {
+    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
       const companyPermissions = [
         {
           type: 'helper',
@@ -269,12 +270,12 @@ export class CheckoutFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp') {
+    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
       const companyUser = [
         {
           type: 'helper',
           name: 'haveCompanyUser',
-          key: 'companyUser',
+          key: `companyUser${customerKey}`,
           arguments: [
             {
               customer: `#${customerKey}`,

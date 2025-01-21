@@ -1,5 +1,6 @@
 import { AbstractFixture } from './abstract.fixture';
 import EnvironmentUtil from '../utils/environment.util';
+import exec from 'k6/execution';
 
 const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
 const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
@@ -39,7 +40,7 @@ export class ProductFixture extends AbstractFixture {
       });
   }
 
-  static iterateData(data, vus = __VU) {
+  static iterateData(data, vus = exec.vu.idInTest) {
     const productIndex = (vus - 1) % data.length;
 
     return data[productIndex];

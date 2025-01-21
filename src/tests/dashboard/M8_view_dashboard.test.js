@@ -5,6 +5,11 @@ import { MerchantUserFixture } from '../../fixtures/merchant-user.fixture';
 import { browser } from 'k6/browser';
 import { DashboardPage } from '../../pages/mp/dashboard.page';
 import { LoginPage } from '../../pages/mp/login.page';
+import exec from 'k6/execution';
+
+if (EnvironmentUtil.getRepositoryId() === 'b2b') {
+  exec.test.abort('Merchant Portal is not integrated into b2b demo shop.');
+}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
