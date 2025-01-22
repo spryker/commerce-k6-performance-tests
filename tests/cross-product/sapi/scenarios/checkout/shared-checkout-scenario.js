@@ -27,7 +27,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
         }
 
         const checkoutResponse = this.http.sendPostRequest(
-            this.http.url`${this.getStorefrontApiBaseUrl()}/checkout?include=orders`,
+            this.http.url`${this.getStorefrontApiBaseUrl()}/checkout`,
             JSON.stringify(this._getCheckoutData(cartId, customerEmail, isMpPaymentProvider)),
             requestParams,
             false

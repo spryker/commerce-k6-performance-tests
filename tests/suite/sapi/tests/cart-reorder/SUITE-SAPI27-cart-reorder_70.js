@@ -46,5 +46,5 @@ export function execute(data) {
     const checkoutResponseJson = sharedCheckoutScenario.haveOrder(customerEmail, quoteIds[quoteIndex], false);
 
     // Reorder
-    sharedCartReorderScenario.execute(customerEmail, checkoutResponseJson.data.relationships.orders.data[0].id, thresholdTag);
+    sharedCartReorderScenario.execute(customerEmail, checkoutResponseJson.data.attributes.orderReference, thresholdTag);
 }

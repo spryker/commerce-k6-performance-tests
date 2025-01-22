@@ -55,7 +55,7 @@ export function execute(data) {
     // Edit an order
     const cartReorderResponseJson = sharedOrderAmendmentScenario.haveOrderAmendment(
         customerEmail,
-        checkoutResponseJson.data.relationships.orders.data[0].id
+        checkoutResponseJson.data.attributes.orderReference
     );
 
     // Place an updated order
