@@ -24,7 +24,12 @@ export class SharedCartReorderScenario extends AbstractScenario {
 
         this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
 
-        return JSON.parse(cartReorderResponse.body);
+        try {
+            return JSON.parse(cartReorderResponse.body);
+        } catch (e) {
+            console.log(cartReorderResponse.body);
+            throw Error('Failed to parse response during SharedCartReorderScenario::haveReorder()');
+        }
     }
 
     _getCartReorderAttributes(orderId) {
