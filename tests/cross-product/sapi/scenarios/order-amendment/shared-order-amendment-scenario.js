@@ -29,6 +29,7 @@ export class SharedOrderAmendmentScenario extends AbstractScenario {
         try {
             return JSON.parse(cartReorderResponse.body);
         } catch (e) {
+            console.log(cartReorderResponse.body);
             throw Error('Failed to parse response during SharedOrderAmendmentScenario::haveOrderAmendment()');
         }
     }
