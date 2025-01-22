@@ -1,6 +1,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
 import EnvironmentUtil from './environment.util';
+import { addErrorToCounter } from './metric.util';
 
 export default class AuthUtil {
   static instance;
@@ -52,7 +53,7 @@ export default class AuthUtil {
       }
     );
 
-    check(response, { 'Token generated successfully.': (r) => r.status === 201 });
+    addErrorToCounter(check(response, { 'Token generated successfully.': (r) => r.status === 201 }));
 
     const responseJson = JSON.parse(response.body);
 

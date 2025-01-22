@@ -1,6 +1,7 @@
 import { check } from 'k6';
 import http from 'k6/http';
 import EnvironmentUtil from '../utils/environment.util';
+import { addErrorToCounter } from '../utils/metric.util';
 
 export default class AbstractResource {
   constructor(bearerToken = null) {
@@ -15,19 +16,27 @@ export default class AbstractResource {
     const fullUrl = `${EnvironmentUtil.getStorefrontApiUrl()}/${resourceUrl}`;
     const response = http.post(fullUrl, JSON.stringify(payload), { headers: this.headers });
 
-    check(response, { [`[POST] ${fullUrl} was successful.`]: (r) => r.status === 201 });
+    addErrorToCounter(check(response, { [`[POST] ${fullUrl} was successful.`]: (r) => r.status === 201 }));
 
     return response;
   }
 
   deleteRequest(resourceUrl) {
     const fullUrl = `${EnvironmentUtil.getStorefrontApiUrl()}/${resourceUrl}`;
-    return http.del(fullUrl, null, { headers: this.headers });
+    const response = http.del(fullUrl, null, { headers: this.headers });
+
+    addErrorToCounter(check(response, { [`[DELETE] ${fullUrl} was successful.`]: (r) => r.status === 204 }));
+
+    return response;
   }
 
   getRequest(resourceUrl) {
     const fullUrl = `${EnvironmentUtil.getStorefrontApiUrl()}/${resourceUrl}`;
-    return http.get(fullUrl, { headers: this.headers });
+    const response = http.get(fullUrl, { headers: this.headers });
+
+    addErrorToCounter(check(response, { [`[GET] ${fullUrl} was successful.`]: (r) => r.status === 200 }));
+
+    return response;
   }
 
   runConsoleCommands(commands) {

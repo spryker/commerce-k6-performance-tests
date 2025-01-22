@@ -2,7 +2,6 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import { ProductFixture } from '../../fixtures/product.fixture';
-import { check } from 'k6';
 import EnvironmentUtil from '../../utils/environment.util';
 import CatalogPage from '../../pages/yves/catalog.page';
 
@@ -35,11 +34,7 @@ export default function (data) {
 
   group(testConfiguration.group, () => {
     const catalogPage = new CatalogPage();
-    const response = catalogPage.search(product.sku);
-
-    check(response, {
-      'Catalog search was successful': (r) => r.status === 200 && r.body && r.body.includes(product.name),
-    });
+    const response = catalogPage.search(product);
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });

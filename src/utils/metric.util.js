@@ -1,5 +1,7 @@
-import { Trend } from 'k6/metrics';
+import { Trend, Counter } from 'k6/metrics';
 import EnvironmentUtil from './environment.util';
+
+const errorCounter = new Counter('errors');
 
 export function createMetrics(testConfiguration) {
   const metrics = {};
@@ -12,4 +14,10 @@ export function createMetrics(testConfiguration) {
   });
 
   return { metrics, metricThresholds };
+}
+
+export function addErrorToCounter(isPassedCheck) {
+  if (!isPassedCheck) {
+    errorCounter.add(1);
+  }
 }

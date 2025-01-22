@@ -1,6 +1,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
 import EnvironmentUtil from '../utils/environment.util';
+import { addErrorToCounter } from '../utils/metric.util';
 
 export class AbstractFixture {
   runDynamicFixture(payload) {
@@ -10,7 +11,7 @@ export class AbstractFixture {
       },
     });
 
-    check(res, { 'Fixtures generated successfully.': (r) => r.status === 201 });
+    addErrorToCounter(check(res, { 'Fixtures generated successfully.': (r) => r.status === 201 }));
 
     return res;
   }

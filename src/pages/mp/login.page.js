@@ -1,5 +1,6 @@
 import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
+import { addErrorToCounter } from '../../utils/metric.util';
 
 export class LoginPage {
   constructor(page) {
@@ -23,8 +24,6 @@ export class LoginPage {
     await this.header.waitFor();
     const headerText = await this.header.textContent();
 
-    check(headerText, {
-      'Login was successful': (text) => text === 'Dashboard',
-    });
+    addErrorToCounter(check(headerText, { 'Login was successful': (text) => text === 'Dashboard' }));
   }
 }

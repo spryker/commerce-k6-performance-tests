@@ -1,5 +1,6 @@
 import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
+import { addErrorToCounter } from '../../utils/metric.util';
 
 export class DashboardPage {
   constructor(page) {
@@ -16,9 +17,11 @@ export class DashboardPage {
     await this.header.waitFor();
     const headerText = await this.header.textContent();
 
-    check(headerText, {
-      'Dashboard page was loaded': (text) => text === 'Dashboard',
-    });
+    addErrorToCounter(
+      check(headerText, {
+        'Dashboard page was loaded': (text) => text === 'Dashboard',
+      })
+    );
   }
 
   async getDurationTime() {
