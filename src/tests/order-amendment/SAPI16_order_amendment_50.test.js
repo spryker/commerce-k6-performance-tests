@@ -122,5 +122,5 @@ function isConcurrentSetup() {
 }
 
 function isSequentialSetup() {
-  return testConfiguration.vus === 1 && testConfiguration.iterations > 1;
+  return testConfiguration.vus === 1 && testConfiguration.iterations >= 1;
 }
