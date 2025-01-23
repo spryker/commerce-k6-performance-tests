@@ -1,48 +1,45 @@
 import { AbstractScenario } from '../../../../abstract-scenario.js';
+import { group } from 'k6';
 
 export class SharedCartReorderScenario extends AbstractScenario {
-  execute(customerEmail, orderId, thresholdTag = null) {
-    const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
-    if (thresholdTag) {
-      requestParams.tags = { name: thresholdTag };
+    execute(customerEmail, orderId, thresholdTag = null) {
+        let self = this;
+        group('Cart Reorder', function () {
+            self.haveReorder(customerEmail, orderId, thresholdTag);
+        });
     }
 
-    return this.http.sendPostRequest(
-      this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
-      JSON.stringify(this._getCartReorderAttributes(orderId)),
-      requestParams,
-      false
-    );
+    haveReorder(customerEmail, orderId, thresholdTag = null) {
+        const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
+        if (thresholdTag) {
+            requestParams.tags = { name: thresholdTag };
+        }
 
-    // this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
-  }
+        const cartReorderResponse = this.http.sendPostRequest(
+            this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
+            JSON.stringify(this._getCartReorderAttributes(orderId)),
+            requestParams,
+            false
+        );
 
-  haveReorder(customerEmail, orderId, thresholdTag = null) {
-    const requestParams = this.cartHelper.getParamsWithAuthorization(customerEmail);
-    if (thresholdTag) {
-      requestParams.tags = { name: thresholdTag };
+        this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
+
+        try {
+            return JSON.parse(cartReorderResponse.body);
+        } catch (e) {
+            console.log(cartReorderResponse.body);
+            throw Error('Failed to parse response during SharedCartReorderScenario::haveReorder()');
+        }
     }
 
-    const cartReorderResponse = this.http.sendPostRequest(
-      this.http.url`${this.getStorefrontApiBaseUrl()}/cart-reorder`,
-      JSON.stringify(this._getCartReorderAttributes(orderId)),
-      requestParams,
-      false
-    );
-
-    // this.assertionsHelper.assertResponseStatus(cartReorderResponse, 201);
-
-    return JSON.parse(cartReorderResponse.body);
-  }
-
-  _getCartReorderAttributes(orderId) {
-    return {
-      data: {
-        type: 'cart-reorder',
-        attributes: {
-          orderReference: orderId,
-        },
-      },
-    };
-  }
+    _getCartReorderAttributes(orderId) {
+        return {
+            data: {
+                type: 'cart-reorder',
+                attributes: {
+                    orderReference: orderId
+                }
+            }
+        }
+    }
 }

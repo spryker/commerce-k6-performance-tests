@@ -90,7 +90,17 @@ build_k6_docker_command() {
             return 1;
     fi
 
-    command="docker-compose run --rm \
+    if docker compose version >/dev/null 2>&1; then
+        DOCKER_COMPOSE="docker compose"
+    # Check if 'docker-compose' is available
+    elif docker-compose --version >/dev/null 2>&1; then
+        DOCKER_COMPOSE="docker-compose"
+    else
+        echo "Neither 'docker compose' nor 'docker-compose' is available. Please install one of them."
+        exit 1
+    fi
+
+    command="$DOCKER_COMPOSE run --rm \
             -v $(pwd):/scripts \
             -u $(id -u):$(id -g) \
             -e 'SPRYKER_TEST_RUN_ID=$testRunId' \
