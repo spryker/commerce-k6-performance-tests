@@ -15,9 +15,9 @@ const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'M8',
   group: 'Dashboard',
-  metrics: ['M8_view_dashboard'],
+  metrics: ['M8_get_mp_dashboard'],
   thresholds: {
-    M8_view_dashboard: {
+    M8_get_mp_dashboard: {
       smoke: ['avg<475'],
       load: ['avg<475'],
     },
