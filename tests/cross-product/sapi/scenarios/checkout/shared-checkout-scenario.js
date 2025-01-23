@@ -38,6 +38,7 @@ export class SharedCheckoutScenario extends AbstractScenario {
         try {
             return JSON.parse(checkoutResponse.body);
         } catch (e) {
+            console.log(checkoutResponse.body);
             throw Error('Failed to parse response during SharedCheckoutScenario::placeOrder()');
         }
     }
