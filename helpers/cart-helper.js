@@ -1,3 +1,5 @@
+import {getThread} from "../lib/utils.js";
+
 export class CartHelper {
     constructor(urlHelper, http, customerHelper, assertionsHelper) {
         this.urlHelper = urlHelper;
@@ -31,6 +33,7 @@ export class CartHelper {
         this.assertionsHelper.assertResponseStatus(cartsResponse, 201, 'Create cart');
 
         const cartsResponseJson = JSON.parse(cartsResponse.body);
+
         this.assertionsHelper.assertSingleResourceResponseBodyStructure(cartsResponseJson, 'Create cart');
 
         if (quantity > 0) {
@@ -47,17 +50,19 @@ export class CartHelper {
             headers: {
                 'Accept': 'application/json'
             },
+            responseType: 'text'
         };
         const urlAccessTokens = `${this.urlHelper.getStorefrontApiBaseUrl()}/access-tokens`;
 
+        const customerAuth = this.customerHelper.getCustomerByVuId(getThread())
         const response = this.http.sendPostRequest(
             this.http.url`${urlAccessTokens}`,
             JSON.stringify({
                 data: {
                     type: 'access-tokens',
                     attributes: {
-                        username: this.customerHelper.getDefaultCustomerEmail(),
-                        password: this.customerHelper.getDefaultCustomerPassword()
+                        username: customerAuth.email,
+                        password: customerAuth.pass
                     }
                 }
             }),
@@ -80,6 +85,7 @@ export class CartHelper {
 
     getCarts(params) {
         const getCartsResponse = this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false);
+
         this.assertionsHelper.assertResponseStatus(getCartsResponse, 200, 'Get Carts');
 
         const getCartsResponseJson = JSON.parse(getCartsResponse.body);
@@ -93,12 +99,12 @@ export class CartHelper {
             const self = this;
             carts.data.forEach(function (cart) {
                 let deleteCartResponse = self.http.sendDeleteRequest(self.http.url`${self.getCartsUrl()}/${cart.id}`, null, params, false);
-                self.assertionsHelper.assertResponseStatus(deleteCartResponse, 204, 'Delete cart');
+                self.assertionsHelper.assertResponseStatus(deleteCartResponse, 204, `Delete cart id: ${cart.id} Status: (${deleteCartResponse.status})`);
             });
         }
     }
 
-    addItemToCart(cartId, quantity, params, sku) {
+    addItemToCart(cartId, quantity, params, sku, merchantReference) {
         const addItemToCartResponse = this.http.sendPostRequest(
             this.http.url`${this.getCartsUrl()}/${cartId}/items`,
             JSON.stringify({
@@ -107,7 +113,7 @@ export class CartHelper {
                     attributes: {
                         sku: sku,
                         quantity: quantity,
-                        merchantReference: 'MER000008'
+                        merchantReference: merchantReference
                     }
                 }
             }),

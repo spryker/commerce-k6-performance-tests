@@ -2,7 +2,7 @@ import { browser } from 'k6/browser';
 import { SharedCheckoutScenario } from '../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js';
 import {
     getBasicAuthCredentials,
-    loadDefaultOptions,
+    loadDefaultOptions, sortRandom,
 } from '../../../../lib/utils.js';
 import BrowserHandler from '../../../../helpers/browser/browser.js';
 import BasicAuth from '../../../../helpers/basicAuth.js';
@@ -10,10 +10,11 @@ import {Metrics} from '../../../../helpers/browser/metrics.js';
 import BackOffice from '../../../../helpers/browser/backOffice.js';
 import VisitAndSave from '../../../../helpers/browser/action/visitAndSave.js';
 import Visit from '../../../../helpers/browser/action/visit.js';
+import {handleSummary} from '../../../../lib/summary.js';
 
-let amountOfIterations = 70
-let amountOfVirtualUsers = 50
-let timeout = Math.ceil(60000)
+let amountOfIterations = Number(__ENV.AMOUNT_OF_BACKOFFICE_ITERATIONS)
+let amountOfVirtualUsers = Number(__ENV.AMOUNT_OF_BACKOFFICE_VUS)
+let timeout = Math.ceil(10000)
 let visitList = [
     new Visit('dashboard'),
     new Visit('sales/matrix'),
@@ -40,13 +41,15 @@ let visitList = [
     new Visit('company-role-gui/list-company-role'),
     new VisitAndSave('company-role-gui/edit-company-role?id-company-role=1'),
     new Visit('product-management'),
-    new VisitAndSave('product-management/edit?id-product-abstract=224'),
-    new VisitAndSave('product-management/edit?id-product-abstract=223'),
-    new VisitAndSave('product-management/edit?id-product-abstract=222'),
-    new VisitAndSave('product-management/edit?id-product-abstract=221'),
-    new VisitAndSave('product-management/edit?id-product-abstract=220'),
+    new VisitAndSave('product-management/edit?id-product-abstract=TARGET_ID'),
+    new Visit('product-management'),
+    new VisitAndSave('product-management/edit?id-product-abstract=TARGET_ID'),
+    new Visit('company-role-gui/list-company-role'),
+    // new VisitAndSave('product-management/edit?id-product-abstract=222'),
+    // new VisitAndSave('product-management/edit?id-product-abstract=221'),
+    // new VisitAndSave('product-management/edit?id-product-abstract=220'),
     new Visit('category-gui/list'),
-    new VisitAndSave('category-gui/edit?id-category=15'),
+    // new VisitAndSave('category-gui/edit?id-category=15'),
     new Visit('product-attribute-gui/attribute'),
     new VisitAndSave('product-attribute-gui/attribute/edit?id=1'),
     new Visit('product-attribute-gui/attribute'),
@@ -90,7 +93,8 @@ let configurationArray = [
         },
         iterations: amountOfIterations,
         vus: amountOfVirtualUsers,
-        maxDuration: '120m',
+        maxDuration: '60m',
+        gracefulStop: '10m',
     }]
 ]
 
@@ -98,15 +102,20 @@ options.scenarios = Object.fromEntries(configurationArray)
 
 options.thresholds = metrics.getThresholds()
 
+options.discardResponseBodies = true
+
 const targetEnv = __ENV.DATA_EXCHANGE_ENV
 const checkoutScenario = new SharedCheckoutScenario(targetEnv);
 const basicAuth = getBasicAuthCredentials(targetEnv);
 
+export { handleSummary }
+
 export async function browseBackOffice() {
-    let page = await browser.newPage()
+    let page = await browser.newPage({ timeout: 60000 })
+
     await page.setDefaultTimeout(timeout * 10)
     await page.setDefaultNavigationTimeout(60000)
-
+    console.log(basicAuth.username, basicAuth.password)
     try {
         let backoffice = new BackOffice(
             new BrowserHandler(
@@ -121,7 +130,7 @@ export async function browseBackOffice() {
             metrics,
             timeout,
         )
-        await backoffice.browse(visitList)
+        await backoffice.browse(sortRandom(visitList))
     } catch (e) {
         console.error('Failed to execute browseBackOffice', e.message)
     } finally {

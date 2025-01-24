@@ -13,6 +13,11 @@ export default class Default {
         return String(locator).replaceAll('\\', '');
     }
 
+    collectTotals(browser, ignoreValidation = false) {
+        browser.metrics.addCounter('success_total', browser.getTargetUrl(this.value) === browser.getCurrentUrl() ? 1 : 0);
+        browser.metrics.addCounter('failed_total', !ignoreValidation && browser.getTargetUrl(this.value) !== browser.getCurrentUrl() ? 1 : 0);
+    }
+
     // eslint-disable-next-line no-unused-vars
     async act(browser) {
 

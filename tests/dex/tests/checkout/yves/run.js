@@ -1,42 +1,36 @@
-import { browser } from 'k6/browser';
-import { SharedCheckoutScenario } from '../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js';
+import { SharedCheckoutScenario } from '../../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js';
 import {
     getBasicAuthCredentials,
     getStoreWhiteList,
     loadDefaultOptions,
     loadEnvironmentConfig,
     sortRandom
-} from '../../../../lib/utils.js';
-import Checkout from '../../../../helpers/browser/checkout.js';
-import Browser from '../../../../helpers/browser/browser.js';
-import BasicAuth from '../../../../helpers/basicAuth.js';
-import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
-import {Metrics} from '../../../../helpers/browser/metrics.js';
-import {Http} from '../../../../lib/http.js';
-import {UrlHelper} from '../../../../helpers/url-helper.js';
-import AdminHelper from '../../../../helpers/admin-helper.js';
-import {BapiHelper} from '../../../../helpers/bapi-helper.js';
-import ConfigHandler from '../../../../helpers/dynamicEntity/handler/configHandler.js';
-import Handler from '../../../../helpers/dynamicEntity/handler.js';
+} from '../../../../../lib/utils.js';
+import {AssertionsHelper} from '../../../../../helpers/assertions-helper.js';
+import {Metrics} from '../../../../../helpers/browser/metrics.js';
+import {Http} from '../../../../../lib/http.js';
+import {UrlHelper} from '../../../../../helpers/url-helper.js';
+import AdminHelper from '../../../../../helpers/admin-helper.js';
+import {BapiHelper} from '../../../../../helpers/bapi-helper.js';
+import ConfigHandler from '../../../../../helpers/dynamicEntity/handler/configHandler.js';
+import Handler from '../../../../../helpers/dynamicEntity/handler.js';
 import file from 'k6/x/file';
 import read from 'k6/x/read';
 import fail from 'k6';
+import {handleSummary} from '../../../../../lib/summary.js';
+import Customer from "../../../../../helpers/api/customer.js";
+import Api from "../../../../../helpers/api/api.js";
 
 const maxCartSize= Number(__ENV.MAX_CART_SIZE)
 const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
-let amountOfIterations = 50
-let amountOfVirtualUsers = 2
-let timeout = Math.ceil(60000 * amountOfVirtualUsers)
+let amountOfIterations = Number(__ENV.AMOUNT_OF_CHECKOUT_ITERATIONS)
+let amountOfVirtualUsers = Number(__ENV.AMOUNT_OF_CHECKOUT_VUS)
+
+const checkoutScenario = new SharedCheckoutScenario(__ENV.DATA_EXCHANGE_ENV);
+
+let timeout = Math.ceil(20000 * amountOfVirtualUsers)
 
 let metricsConfig = [
-    'home_page',
-    'catalog_page',
-    'product_page',
-    'cart_page',
-    'checkout_page',
-    'shipping_address',
-    'shipping_method',
-    'summary_page',
     'success_page',
 ].map((code) => {
     return {
@@ -102,11 +96,6 @@ let configurationArray = [
         exec: 'generateProductList',
     }],
     [`CHECKOUT_RANDOM_1_TO_${maxCartSize}_ITEMS`, {
-        options: {
-            browser: {
-                type: 'chromium',
-            },
-        },
         exec: 'executeCheckoutScenario',
         executor: 'per-vu-iterations',
         env: {
@@ -119,17 +108,16 @@ let configurationArray = [
         iterations: amountOfIterations,
         vus: amountOfVirtualUsers,
         maxDuration: '1200m',
-        startTime: '15s',
+        startTime: '30s',
     }]
 ]
 
 options.scenarios = Object.fromEntries(configurationArray)
 
 options.thresholds = metrics.getThresholds()
+options.discardResponseBodies = true
 
 const targetEnv = __ENV.DATA_EXCHANGE_ENV
-const checkoutScenario = new SharedCheckoutScenario(targetEnv);
-const basicAuth = getBasicAuthCredentials(targetEnv);
 
 let http = new Http(targetEnv);
 let targetEnvConfig = loadEnvironmentConfig(targetEnv);
@@ -146,25 +134,49 @@ export async function generateProductList() {
     let storeInfo = storeConfig.getStoreConfig(__ENV.STORE)
     let products = []
     if (!parseInt(__ENV.USE_PREDEFINED_PRODUCTS)) {
-        handler.getDataFromTableWithPagination('products?include=productStocks,productAbstractUrls', 500, (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100)
+        handler.getDataFromTableWithPagination(
+            'products?include=productStocks,productAbstractUrls',
+            500,
+            (product) => product.productStocks.filter((stock) => stock.is_never_out_of_stock).length, 100
+        )
             .map((product) => {
-                return product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
+                let urls = product.productAbstractUrls && product.productAbstractUrls.filter((url) => storeInfo.fk_locale === url.fk_locale && !url.url.includes('gift-card'))
+                return {
+                    sku: product.sku,
+                    urls: urls
+                }
+
             })
-            .map((urls) => {
-                if (Array.isArray(urls)) {
-                    products.push(...urls.map((url) => url.url))
+            .map((config) => {
+                if (Array.isArray(config.urls) && config.urls.length) {
+                    let url = config.urls.map((url) => url.url).shift()
+                    products.push({
+                        sku: config.sku,
+                        url: `${url}`.replace('/en-us/', '/en/')
+                    })
                 }
             })
 
         file.writeString(PRODUCTS_LIST_FILE, JSON.stringify(products));
     } else {
         file.writeString(PRODUCTS_LIST_FILE, JSON.stringify([
-            '/en/canon-ixus-285-8',
-            '/en/canon-ixus-165-13',
-            '/en/canon-ixus-177-14',
+            {
+                sku: '008_30692992',
+                url: '/en/canon-ixus-285-8'
+            },
+            {
+                sku: '013_25904584',
+                url: '/en/canon-ixus-165-13'
+            },
+            {
+                sku: '015_25904009',
+                url: '/en/canon-ixus-177-15'
+            }
         ]));
     }
 }
+
+export { handleSummary }
 
 export async function executeCheckoutScenario() {
     let products = JSON.parse(read.readFile(PRODUCTS_LIST_FILE).content)
@@ -173,33 +185,10 @@ export async function executeCheckoutScenario() {
         fail('No products retrieved from instance!!!')
     }
 
-    let page = await browser.newPage()
-
     try {
-        await page.setDefaultTimeout(timeout * 10)
-        let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)
-        let checkout = new Checkout(
-            new Browser(
-                page,
-                new BasicAuth(basicAuth.username, basicAuth.password),
-                metrics,
-                checkoutScenario.getStorefrontBaseUrl(),
-                targetEnv,
-                Boolean(parseInt(__ENV.SCREENSHOT_ACTIVE)),
-                Boolean(parseInt(__ENV.VALIDATE_VISITED_URL))
-            ),
-            new BasicAuth(basicAuth.username, basicAuth.password),
-            metrics,
-            locale,
-            randomiseCartSize ? Math.floor(Math.random() * maxCartSize) + 1 : maxCartSize,
-            timeout,
-            Boolean(parseInt(__ENV.USE_EXISTING_CUSTOMER_ACCOUNTS))
-        );
-
-        await checkout.placeGuestOrder('dummyMarketplacePaymentInvoice', sortRandom(products));
+        checkoutScenario.execute(sortRandom(products), randomiseCartSize ? Math.floor(Math.random() * maxCartSize) + 1 : maxCartSize)
     } catch (e) {
-        console.log('Failed to execute executeCheckoutScenario', e.message)
+        console.error('Failed to execute executeCheckoutScenario:', e)
     } finally {
-        page.close()
     }
 }

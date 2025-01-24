@@ -38,6 +38,7 @@ let metricsConfig = [
 const metrics = new Metrics(metricsConfig);
 
 export const options = loadDefaultOptions();
+options.discardResponseBodies = true
 
 let configurationArray = [
     ['BACKOFFICE_ORDER_MATRIX', {

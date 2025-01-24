@@ -64,6 +64,9 @@ export class Metrics {
                 }
             }
         }
+
+        this.metrics.set('successTotalCounter', new Counter('successTotalCounter', false));
+        this.metrics.set('failedTotalCounter', new Counter('failedTotalCounter', false));
     }
 
     add(metricKey, response, successStatusCode = 200) {

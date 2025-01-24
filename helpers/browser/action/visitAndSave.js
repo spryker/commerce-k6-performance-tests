@@ -1,5 +1,6 @@
 import Default from './default.js'
 import Click from './click.js';
+import {getThread} from "../../../lib/utils.js";
 
 export default class VisitAndSave extends Default {
     constructor(targetUrl, clickLocator = 'input[type="submit"][value="Save"]', metricKey = '') {
@@ -12,14 +13,15 @@ export default class VisitAndSave extends Default {
     }
 
     async act(browser) {
-        await browser.page.goto(browser.getTargetUrl(this.value), {
+        let visitUrl = this.value.replace('TARGET_ID', getThread() + 1)
+        await browser.page.goto(browser.getTargetUrl(visitUrl), {
             waitUntil: 'networkidle',
         });
 
         await browser.waitUntilLoad('networkidle');
 
         if (browser.validateVisitedPage) {
-            browser.validatePage(this.value);
+            browser.validatePage(visitUrl);
         }
 
         this.profiler.start(this.value);
@@ -31,6 +33,6 @@ export default class VisitAndSave extends Default {
         browser.metrics.addTrend(this.locator, this.profiler.stop(this.value));
         browser.metrics.addRate(this.locator, browser.getTargetUrl(this.value) === browser.getCurrentUrl());
         browser.metrics.addCounter(this.locator, browser.getTargetUrl(this.value) === browser.getCurrentUrl() ? 1 : 0);
-
+        this.collectTotals(browser)
     }
 }

@@ -71,7 +71,9 @@ export default class Checkout {
                 } catch (e) {
                     console.error(`Was not able to add product: ${productUri} to the shopping cart. ${e}`)
                 }
+                continue
             }
+            break
         }
     }
 
@@ -87,7 +89,7 @@ export default class Checkout {
             lastName: faker.person.lastName(),
             email: this.useExistingAccount ? this.getRandomExistingEmail() : faker.person.email(),
             address1: faker.address.streetName(),
-            address2: faker.number.intRange(1, 100),
+            address2: 1,
             zip: faker.zen.zip(),
             city: faker.address.city(),
             phone: faker.person.phone(),

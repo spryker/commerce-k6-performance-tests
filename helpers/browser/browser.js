@@ -148,6 +148,9 @@ export default class Browser {
             case 'selectRandomOption':
             case 'click':
             case 'fill':
+            case 'textExists':
+            case 'resetForm':
+            case 'clear':
                 result = result && await element.act(this)
                 break;
             default:

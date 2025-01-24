@@ -19,6 +19,9 @@ export default class BackOffice {
     async browse(visitList = []) {
         await this.initialise()
         await this.visitAndAct(visitList)
+        await this.visitAndAct([
+            new Visit('auth/logout', '', true)
+        ])
     }
 
     prepareAction(url) {

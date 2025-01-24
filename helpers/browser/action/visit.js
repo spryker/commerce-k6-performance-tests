@@ -1,12 +1,14 @@
 import Default from './default.js'
 
 export default class Visit extends Default {
-    constructor(targetUrl, metricKey = '') {
+    ignoreValidation = false;
+    constructor(targetUrl, metricKey = '', ignoreValidation = false) {
         if (!metricKey) {
             metricKey = targetUrl
         }
 
         super('visit', metricKey, targetUrl)
+        this.ignoreValidation = ignoreValidation;
     }
 
     async act(browser) {
@@ -20,8 +22,9 @@ export default class Visit extends Default {
         browser.metrics.addTrend(this.locator, this.profiler.stop(this.value));
         browser.metrics.addRate(this.locator, browser.getTargetUrl(this.value) === browser.getCurrentUrl());
         browser.metrics.addCounter(this.locator, browser.getTargetUrl(this.value) === browser.getCurrentUrl() ? 1 : 0);
+        this.collectTotals(browser, this.ignoreValidation)
 
-        if (browser.validateVisitedPage) {
+        if (browser.validateVisitedPage && !this.ignoreValidation) {
             browser.validatePage(this.value);
         }
     }

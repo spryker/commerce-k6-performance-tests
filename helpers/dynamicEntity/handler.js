@@ -53,13 +53,14 @@ export default class Handler {
             this.lastResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
 
             if (this.lastResponse.status !== 200) {
-                console.error(JSON.parse(this.lastResponse.body))
+                console.error(`Requested URL: ${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, 'Target Table:', tableAlias,  'Response:', JSON.parse(this.lastResponse.body))
             }
 
             this.assertionHelper.assertResponseStatus(this.lastResponse, 200, this.lastResponse.url)
 
             return JSON.parse(this.lastResponse.body)
         } catch (e) {
+            console.error(`Error during request to the DataExchange API`, e)
             return []
         }
     }
@@ -80,6 +81,7 @@ export default class Handler {
             console.warn(`Request to get data with page[offset]=${offset}&page[limit]=${limitPerPage}`)
             filter = `page[offset]=${offset}&page[limit]=${limitPerPage}`
             res = this.getDataFromTable([tableAlias, filter].join(joinSymbol))
+            debug(`${tableAlias} response`, res)
             stop = Boolean(desiredAmount > 0 ? result.length >= desiredAmount || !res.length : !res.length)
 
             if (typeof filterCallback === 'function') {

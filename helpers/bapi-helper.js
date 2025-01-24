@@ -26,8 +26,9 @@ export class BapiHelper {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': '*/*',
-                'Store': __ENV.STORE ? __ENV.STORE : 'DE'
+                'Store': __ENV.STORE ? `${__ENV.STORE}` : 'DE'
             },
+            // responseType: 'text'
         };
 
         const urlAccessTokens = `${this.urlHelper.getBackendApiBaseUrl()}/token`;
@@ -50,7 +51,7 @@ export class BapiHelper {
         this.tokenCreationTotal.add(response.timings.duration)
 
         const responseJson = JSON.parse(response.body);
-        
+
         this.refreshAt.setDate(this.refreshAt.getDate + responseJson.expires_in)
         
         this.defaultParams.headers.Authorization = `${responseJson.token_type} ${responseJson.access_token}`;
