@@ -62,8 +62,22 @@ services:
         - RANDOM_CART_SIZE_WITHIN_TARGET_MAX=${RANDOM_CART_SIZE_WITHIN_TARGET_MAX:-0}
         - STORE=${STORE:-de}
         - STORES_FROM_ENV=${STORES_FROM_ENV:-0}
+        - SUMMARY_FILE_FULL_PATH=${SUMMARY_FILE_FULL_PATH:-'summary.json'}
+        - AMOUNT_OF_CHECKOUT_ITERATIONS=${AMOUNT_OF_CHECKOUT_ITERATIONS:-10}
+        - AMOUNT_OF_CHECKOUT_VUS=${AMOUNT_OF_CHECKOUT_VUS:-10}
+        - AMOUNT_OF_BACKOFFICE_ITERATIONS=${AMOUNT_OF_BACKOFFICE_ITERATIONS:-10}
+        - AMOUNT_OF_BACKOFFICE_VUS=${AMOUNT_OF_BACKOFFICE_VUS:-10}
+        - AMOUNT_OF_RAMP_VUS=${AMOUNT_OF_RAMP_VUS:-30}
+        - RAMP_STAGE_DURATION=${RAMP_STAGE_DURATION:-10}
+        - K6_BROWSER_HEADLESS=true
+#        - K6_BROWSER_ARGS="no-sandbox disable-dev-shm-usage arc-disable-gms-core-cache disable-backgrounding-occluded-windows disable-demo-mode disable-dev-shm-usage disable-web-security disable-zero-browsers-open-for-tests arc-disable-media-store-maintenance arc-disable-tts-cache"
+#        - K6_BROWSER_ARGS="no-sandbox disable-web-security"
         - DEX_AUTH_USERNAME=${DEX_AUTH_USERNAME}
         - DEX_AUTH_PASSWORD=${DEX_AUTH_PASSWORD}
+        - PTL_AUTH_USERNAME=${PTL_AUTH_USERNAME}
+        - PTL_AUTH_PASSWORD=${PTL_AUTH_USERNAME}
+        - OTEL_DEMO_AUTH_USERNAME=${PTL_AUTH_USERNAME}
+        - OTEL_DEMO_AUTH_PASSWORD=${PTL_AUTH_USERNAME}
         - DMS_AUTH_USERNAME=${DMS_AUTH_USERNAME}
         - DMS_AUTH_PASSWORD=${DMS_AUTH_PASSWORD}
     volumes:
