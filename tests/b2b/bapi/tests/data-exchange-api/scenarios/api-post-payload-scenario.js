@@ -2,7 +2,7 @@
 import { group } from 'k6';
 import { AbstractScenario } from '../../../../../abstract-scenario.js';
 import { DataExchangePayloadGenerator } from '../../../../../../helpers/data-exchange-payload-generator.js';
-import { debug, getIteration, getThread, uuid } from '../../../../../../lib/utils.js';
+import {customUuid, debug, getIteration, getThread, uuid} from '../../../../../../lib/utils.js';
 import { sleep } from 'k6';
 import { Profiler } from '../../../../../../helpers/profiler.js';
 import { Trend, Counter } from 'k6/metrics';
@@ -10,7 +10,7 @@ import ConfigHandler from '../../../../../../helpers/dynamicEntity/handler/confi
 import StockHandler from '../../../../../../helpers/dynamicEntity/handler/stockHandler.js';
 
 export class ApiPostPayloadScenario extends AbstractScenario {
-    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false) {
+    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false, activateProducts = true) {
         super(environment, options)
         this.chunkSize = chunkSize
         this.concreteMaxAmount = concreteMaxAmount
@@ -19,11 +19,12 @@ export class ApiPostPayloadScenario extends AbstractScenario {
         this.group = 'API POST'
         this.type = 'post'
         this.payloadGenerator = new DataExchangePayloadGenerator(
-            uuid,
+            customUuid,
             new ConfigHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist, useDefaultStoreLocale),
             new StockHandler(this.http, this.urlHelper, this.bapiHelper, storeWhitelist),
             this.chunkSize,
-            this.concreteMaxAmount
+            this.concreteMaxAmount,
+            activateProducts
         )
         this.profiler = new Profiler()
         this.tokenTrend = new Trend('token_generation', true)

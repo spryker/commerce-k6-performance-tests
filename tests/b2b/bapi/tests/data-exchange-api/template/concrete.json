@@ -1,7 +1,7 @@
 {
     "attributes": "{\"color\":\"Red\",\"upcs\":\"013803252910\"}",
     "discount": null,
-    "is_active": true,
+    "is_active": "{IS_ACTIVE_STATUS}",
     "is_quantity_splittable": true,
     "sku": "{random}",
     "warehouses": null,

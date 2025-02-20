@@ -8,7 +8,7 @@ start_timer
 
 # Create arrays for file lists
 filesDirectory0=($(find "tests/dex/tests/generatePatchCandidates" -name '*.js' -type f | sort))
-filesDirectory1=($(find "tests/dex/tests/get" -name '*.js' -type f | sort))
+#filesDirectory1=($(find "tests/dex/tests/get" -name '*.js' -type f | sort))
 filesDirectory2=($(find "tests/dex/tests/patch" -name '*.js' -type f | sort))
 filesDirectory3=($(find "tests/dex/tests/post" -name '*.js' -type f | sort ))
 

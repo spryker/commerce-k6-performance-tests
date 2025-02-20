@@ -9,8 +9,8 @@ import ConfigHandler from '../../../../../../helpers/dynamicEntity/handler/confi
 import StockHandler from '../../../../../../helpers/dynamicEntity/handler/stockHandler.js';
 
 export class ApiPutPayloadScenario extends ApiPostPayloadScenario {
-    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false) {
-        super(environment, options, concreteMaxAmount, options)
+    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false, activateProducts = true) {
+        super(environment, chunkSize, concreteMaxAmount, options, storeWhitelist, useDefaultStoreLocale, activateProducts)
         this.chunkSize = chunkSize
         this.sleepInterval = 30
         this.retryLimit = 2

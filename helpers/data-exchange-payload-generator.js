@@ -7,12 +7,13 @@ const replacement = {
 
 export class DataExchangePayloadGenerator {
 
-    constructor(uuid, storeConfigHandler, stockHandler, itemsAmount = 1000, concreteMaxAmount = 5) {
+    constructor(uuid, storeConfigHandler, stockHandler, itemsAmount = 1000, concreteMaxAmount = 5, activateProducts = true) {
         this.storeConfigHandler = storeConfigHandler;
         this.stockHandler = stockHandler;
         this.itemsAmount = itemsAmount
         this.concreteMaxAmount = concreteMaxAmount
         this.uuid = uuid
+        this.activateProducts = activateProducts
     }
 
     prepareProductsForUpdate(recentlyCreatedProducts) {
@@ -143,7 +144,8 @@ export class DataExchangePayloadGenerator {
                         'name': `test product ${random} Locale ${localeId}`
                     },)
                 }).join(','))
-                .replaceAll('"{fkStock}"', this.stockHandler.get()))
+                .replaceAll('"{fkStock}"', this.stockHandler.get())
+                .replaceAll('"{IS_ACTIVE_STATUS}"', `${this.activateProducts}`))
         }
 
         return concretes.join(',\n')
@@ -154,6 +156,7 @@ export class DataExchangePayloadGenerator {
         let result = []
         for (let index = 0; index < this.itemsAmount; index++) {
             let random = this.uuid()
+            // console.log('random part', random)
             result.push(JSON.parse(productTemplate
                 .replaceAll('"PRODUCT_ABSTRACT_STORES"', stores.map((store) => {
                     return JSON.stringify({'fk_store': store.id_store})
@@ -194,7 +197,7 @@ export class DataExchangePayloadGenerator {
                         'meta_description': `meta description for locale id: ${localeId}`,
                         'meta_keywords': `meta keywords for locale id: ${localeId}`,
                         'meta_title': `meta product title test product  for locale id: ${localeId}`,
-                        'name': `test product ${random} Locale ${localeId}`
+                        'name': `test product ${random} Locale ${localeId} ${Date.now()}`
                     },)
                 }).join(','))
                 .replaceAll('{random}', random)

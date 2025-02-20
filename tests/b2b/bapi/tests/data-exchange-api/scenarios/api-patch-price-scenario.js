@@ -4,8 +4,8 @@ import { Trend, Counter } from 'k6/metrics';
 import {ApiPatchAbstractPayloadScenario} from './api-patch-payload-scenario.js';
 
 export class ApiPatchPricePayloadScenario extends ApiPatchAbstractPayloadScenario {
-    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false) {
-        super(environment, chunkSize, concreteMaxAmount, options, storeWhitelist, useDefaultStoreLocale)
+    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false, activateProducts = true) {
+        super(environment, chunkSize, concreteMaxAmount, options, storeWhitelist, useDefaultStoreLocale, activateProducts)
         this.group = 'API PATCH PRICE'
         this.productPatchPriceTrend = new Trend('product_patch_price', true)
         this.productPatchPriceTotal = new Counter('product_patch_price_total', true)

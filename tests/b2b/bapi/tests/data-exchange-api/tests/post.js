@@ -42,7 +42,8 @@ const productCreateScenario = new ApiPostPayloadScenario(
     executionConfig.concreteMaxAmount,
     {},
     getStoreWhiteList(),
-    useOnlyDefaultStoreLocale()
+    useOnlyDefaultStoreLocale(),
+    __ENV.DATA_EXCHANGE_ACTIVATE_PRODUCTS
 );
 
 export function productPostScenario() {

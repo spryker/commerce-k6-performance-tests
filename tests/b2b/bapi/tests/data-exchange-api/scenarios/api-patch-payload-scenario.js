@@ -6,8 +6,8 @@ import { Counter } from 'k6/metrics';
 import { ApiPostPayloadScenario } from './api-post-payload-scenario.js';
 
 export class ApiPatchAbstractPayloadScenario extends ApiPostPayloadScenario {
-    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false) {
-        super(environment, chunkSize, concreteMaxAmount, options, storeWhitelist, useDefaultStoreLocale)
+    constructor(environment, chunkSize, concreteMaxAmount, options = {}, storeWhitelist = [], useDefaultStoreLocale = false, activateProducts = true) {
+        super(environment, chunkSize, concreteMaxAmount, options, storeWhitelist, useDefaultStoreLocale, activateProducts)
         this.chunkSize = chunkSize
         this.sleepInterval = 30
         this.retryLimit = 2
