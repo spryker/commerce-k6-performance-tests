@@ -1,33 +1,159 @@
 # Spryker Performance Testing Framework
 
-## Run locally
+This project contains performance tests for the Spryker Commerce applications using K6.
 
-Enable influxdb and grafana services:
+## Prerequisites
 
-```bash
-  docker-compose -f docker-compose.suite.local.yml up -d  influxdb grafana
-```
+- Node.js
+- npm
+- Docker
+- Docker Compose
 
-Run single test:
+## Setup
 
-```bash
-  ./shell/run-a-single-test-locally.sh tests/suite/sapi/tests/cart-reorder/SUITE-SAPI15-cart-reorder_50.js
-```
+1. Clone the repository:
 
-## Description
+   ```sh
+   git clone <repository-url>
+   cd commerce-k6-performance-tests
+   ```
 
-This repository contains the test scenarios and helpers that are used to perform different kinds of tests using [K6](https://k6.io/) for Sprykers products. It also provides the infrastructure to run tests against multiple products and share tests that are the same in each product.
+2. Install dependencies:
 
-## Test Suite Documentation
+   ```sh
+   npm install
+   ```
 
-- [Executing Tests](docs/Executing-Tests.md)
-- [Testing different Environments](docs/Testing-different-Environments.md)
-  - [Testing Local Environments](docs/Testing-Local-Environments.md)
-- [Uploading Test Result Artifacts to S3](docs/Uploading-Results-to-S3.md)
-- [ESLint](docs/Eslint.md)
-- [Possible Problems and Solutions](docs/Possible-Problems-and-Solutions.md)
+3. Create a `.env` file based on the provided `.env.local.example`:
 
-## Official K6 Documentation
+   ```sh
+   cp .env.local.example .env
+   ```
 
-- [Official K6 documentation](https://k6.io/docs/)
-- [Setting up K6](https://k6.io/docs/get-started/installation/)
+4. Update the `.env` file with the required environment variables.
+
+## Scripts
+
+### Build
+
+- Build all tests:
+
+  ```sh
+  npm run build:all
+  ```
+
+- Build specific test patterns:
+  ```sh
+  npm run build:checkout
+  npm run build:cart-reorder
+  ...
+  ```
+
+### Docker
+
+- Start Docker services:
+
+  ```sh
+  npm run docker:up
+  ```
+
+- Stop Docker services:
+
+  ```sh
+  npm run docker:down
+  ```
+
+- Run tests in Docker:
+  ```sh
+  npm run docker:run
+  ```
+
+### Linting and Formatting
+
+- Check code formatting:
+
+  ```sh
+  npm run prettier:check
+  ```
+
+- Fix code formatting:
+
+  ```sh
+  npm run prettier:write
+  ```
+
+- Lint code:
+  ```sh
+  npm run lint
+  ```
+
+## Running Tests
+
+1. Build the tests:
+
+   ```sh
+   npm run build:all
+   ```
+
+2. Start Docker services:
+
+   ```sh
+   npm run docker:up
+   ```
+
+3. Run the tests:
+
+   ```sh
+   npm run docker:run
+   ```
+
+4. Stop Docker services:
+   ```sh
+   npm run docker:down
+   ```
+
+## Configuration
+
+### Environment Variables
+
+- `K6_HOSTENV`: Environment for K6 (default: `local`)
+- `K6_NO_THRESHOLDS`: Disable thresholds (default: `true`)
+- `ENV_REPOSITORY_ID`: Repository ID (default: `suite`)
+- `ENV_REPOSITORY_TYPE`: Repository type (default: `smoke`)
+
+### Docker Compose Files
+
+- `docker-compose.suite.yml`: Default Docker Compose configuration
+- `docker-compose.b2b-mp.yml`: B2B Marketplace Docker Compose configuration
+- `docker-compose.b2b.yml`: B2B Docker Compose configuration
+
+## Project Structure
+
+- `src/tests`: Contains test files
+- `src/utils`: Utility functions
+- `src/resources`: API resource files
+- `src/pages`: Page objects
+- `src/fixtures`: Test data fixtures
+- `dist`: Compiled test files
+
+## Using Grafana
+
+Grafana is used to visualize the performance test results.
+
+1. Start the Docker services:
+
+   ```sh
+   npm run docker:up
+   ```
+
+2. Open Grafana in your browser:
+
+   ```
+   http://localhost:3000
+   ```
+
+3. Navigate to the dashboards to view the performance metrics.
+
+## License
+
+This project is licensed under the MIT License.
