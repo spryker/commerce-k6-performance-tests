@@ -1,6 +1,7 @@
 import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
+import KSixError from '../../utils/k-six-error';
 
 export class DashboardPage {
   constructor(page) {
@@ -34,6 +35,6 @@ export class DashboardPage {
       return marks[0].startTime;
     }
 
-    throw new Error('No marks found');
+    throw new KSixError('No marks found');
   }
 }

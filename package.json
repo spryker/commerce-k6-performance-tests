@@ -1,8 +1,8 @@
 {
   "name": "commerce-k6-performance-tests",
   "version": "0.0.1",
-  "description": "TBD",
-  "license": "proprietary",
+  "description": "K6 performance tests",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "build:one": "webpack --env entryPattern=./src/tests/dashboard/M8_view_dashboard.test.js",

@@ -18,6 +18,10 @@ export default class AbstractResource {
 
     addErrorToCounter(check(response, { [`[POST] ${fullUrl} was successful.`]: (r) => r.status === 201 }));
 
+    if (response.status !== 201) {
+      console.log(response.body);
+    }
+
     return response;
   }
 

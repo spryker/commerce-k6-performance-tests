@@ -1,4 +1,5 @@
 import AbstractResource from './abstract.resource';
+import KSixError from '../utils/k-six-error';
 
 export default class OrderAmendmentResource extends AbstractResource {
   constructor(orderReference, bearerToken = null) {
@@ -7,7 +8,7 @@ export default class OrderAmendmentResource extends AbstractResource {
   }
 
   amendOrder() {
-    this._ensureConcreteOrderState('payment pending');
+    this._ensureConcreteOrderState('grace period started');
 
     return this.postRequest('cart-reorder', this._getCartReorderPayload());
   }
@@ -25,7 +26,7 @@ export default class OrderAmendmentResource extends AbstractResource {
     } while (order.data.attributes.itemStates[0] !== state && retries < maxRetries);
 
     if (retries === maxRetries) {
-      throw new Error(`Order state is not ${state} after ${maxRetries} retries`);
+      throw new KSixError(`Order state is not ${state} after ${maxRetries} retries`);
     }
   }
 
