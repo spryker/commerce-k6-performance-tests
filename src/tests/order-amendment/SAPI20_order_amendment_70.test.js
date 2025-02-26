@@ -49,7 +49,7 @@ export function setup() {
   }
 
   if (isConcurrentSetup()) {
-    return dynamicFixture.getData();
+    return dynamicFixture.getData(testConfiguration.vus, testConfiguration.iterations, 2);
   }
 }
 
@@ -83,7 +83,6 @@ export default function (data) {
 
   const cartsResource = new CartsResource(bearerToken);
   group('Cancel Order Amendment', () => {
-    cartsResource.create('default', true);
     const response = cartsResource.delete(reorderedIdCart);
     metrics['SAPI21_delete_carts'].add(response.timings.duration);
   });

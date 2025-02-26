@@ -18,12 +18,14 @@ export class CheckoutFixture extends AbstractFixture {
     this.cartCount = cartCount;
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
+    this.emptyCartCount = 0;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
-  getData(customerCount = this.customerCount, cartCount = this.cartCount) {
+  getData(customerCount = this.customerCount, cartCount = this.cartCount, emptyCartCount = this.emptyCartCount) {
     this.customerCount = customerCount;
     this.cartCount = cartCount;
+    this.emptyCartCount = emptyCartCount;
 
     const response = this.runDynamicFixture(this._getCustomersWithQuotesPayload());
 
@@ -254,6 +256,22 @@ export class CheckoutFixture extends AbstractFixture {
         },
       ],
     }));
+
+    if (this.emptyCartCount) {
+      const emptyQuotes = Array.from({ length: this.emptyCartCount }, (_, emptyQuoteIndex) => ({
+        type: 'helper',
+        name: 'havePersistentQuote',
+        key: `${customerKey}EmptyQuote${emptyQuoteIndex + 1}`,
+        arguments: [
+          {
+            customer: `#${customerKey}`,
+            items: [],
+          },
+        ],
+      }));
+
+      quotes.push(...emptyQuotes);
+    }
 
     const customer = [
       {
