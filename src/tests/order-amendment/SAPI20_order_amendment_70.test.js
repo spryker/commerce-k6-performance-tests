@@ -45,7 +45,7 @@ export function setup() {
   });
 
   if (isSequentialSetup()) {
-    return dynamicFixture.getData(testConfiguration.iterations, 1);
+    return dynamicFixture.getData(testConfiguration.iterations, 1, 2);
   }
 
   if (isConcurrentSetup()) {
