@@ -53,7 +53,8 @@ export class CheckoutFixture extends AbstractFixture {
   }
 
   _getCustomersWithQuotesPayload() {
-    const baseOperations = [
+    let companyPermissions = [];
+    let baseOperations = [
       {
         type: 'transfer',
         name: 'LocaleTransfer',
@@ -83,7 +84,7 @@ export class CheckoutFixture extends AbstractFixture {
     ];
 
     if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
-      const companyPermissions = [
+      companyPermissions = [
         {
           type: 'helper',
           name: 'haveCompany',
@@ -141,10 +142,9 @@ export class CheckoutFixture extends AbstractFixture {
           ],
         },
       ];
-
-      baseOperations.push(...companyPermissions);
     }
 
+    baseOperations.push(...companyPermissions);
     const products = Array.from({ length: this.itemCount }, (_, i) => this._createProductPayload(i)).flat();
     const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
 
@@ -161,6 +161,7 @@ export class CheckoutFixture extends AbstractFixture {
 
   _createProductPayload(index) {
     const productKey = `product${index + 1}`;
+    let productOffer = [];
     let product = [
       {
         type: 'helper',
@@ -207,7 +208,7 @@ export class CheckoutFixture extends AbstractFixture {
 
     if (this.repositoryId === 'b2b-mp') {
       const productOfferKey = `productOffer${index + 1}`;
-      const productOffer = [
+      productOffer = [
         {
           type: 'helper',
           name: 'haveProductOffer',
@@ -236,16 +237,18 @@ export class CheckoutFixture extends AbstractFixture {
           ],
         },
       ];
-
-      product.push(...productOffer);
     }
+
+    product.push(...productOffer);
 
     return product;
   }
 
   _createCustomerPayload(index) {
     const customerKey = `customer${index + 1}`;
-    const quotes = Array.from({ length: this.cartCount }, (_, quoteIndex) => ({
+    let emptyQuotes = [];
+    let companyUser = [];
+    let quotes = Array.from({ length: this.cartCount }, (_, quoteIndex) => ({
       type: 'helper',
       name: 'havePersistentQuote',
       key: `${customerKey}Quote${quoteIndex + 1}`,
@@ -258,7 +261,7 @@ export class CheckoutFixture extends AbstractFixture {
     }));
 
     if (this.emptyCartCount) {
-      const emptyQuotes = Array.from({ length: this.emptyCartCount }, (_, emptyQuoteIndex) => ({
+      emptyQuotes = Array.from({ length: this.emptyCartCount }, (_, emptyQuoteIndex) => ({
         type: 'helper',
         name: 'havePersistentQuote',
         key: `${customerKey}EmptyQuote${emptyQuoteIndex + 1}`,
@@ -269,9 +272,9 @@ export class CheckoutFixture extends AbstractFixture {
           },
         ],
       }));
-
-      quotes.push(...emptyQuotes);
     }
+
+    quotes.push(...emptyQuotes);
 
     const customer = [
       {
@@ -289,7 +292,7 @@ export class CheckoutFixture extends AbstractFixture {
     ];
 
     if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
-      const companyUser = [
+      companyUser = [
         {
           type: 'helper',
           name: 'haveCompanyUser',
@@ -304,11 +307,10 @@ export class CheckoutFixture extends AbstractFixture {
           ],
         },
       ];
-
-      customer.push(...companyUser);
     }
 
-    customer.push(...quotes);
+    customer.push(...companyUser);
+    customer.push(...(quotes || []));
 
     return customer;
   }

@@ -4,10 +4,8 @@ This project contains performance tests for the Spryker Commerce applications us
 
 ## Prerequisites
 
-- Node.js
-- npm
-- Docker
-- Docker Compose
+- Node.js & NPM
+- Docker & Docker Compose
 
 ## Setup
 
@@ -118,8 +116,8 @@ This project contains performance tests for the Spryker Commerce applications us
 
 - `K6_HOSTENV`: Environment for K6 (default: `local`)
 - `K6_NO_THRESHOLDS`: Disable thresholds (default: `true`)
-- `ENV_REPOSITORY_ID`: Repository ID (default: `suite`)
-- `ENV_REPOSITORY_TYPE`: Repository type (default: `smoke`)
+- `SPRYKER_REPOSITORY_ID`: Repository ID (default: `suite`)
+- `SPRYKER_TEST_TYPE`: Test type (default: `smoke`)
 
 ### Docker Compose Files
 

@@ -85,6 +85,7 @@ export class ProductFixture extends AbstractFixture {
 
   _createProductPayload(index) {
     const productKey = `product${index + 1}`;
+    let productOffer = [];
     let product = [
       {
         type: 'helper',
@@ -130,7 +131,7 @@ export class ProductFixture extends AbstractFixture {
 
     if (this.repositoryId === 'b2b-mp') {
       const productOfferKey = `productOffer${index + 1}`;
-      const productOffer = [
+      productOffer = [
         {
           type: 'helper',
           name: 'haveProductOffer',
@@ -159,9 +160,9 @@ export class ProductFixture extends AbstractFixture {
           ],
         },
       ];
-
-      product.push(...productOffer);
     }
+
+    product.push(...productOffer);
 
     return product;
   }

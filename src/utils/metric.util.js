@@ -10,7 +10,7 @@ export function createMetrics(testConfiguration) {
   testConfiguration.metrics.forEach((metricName) => {
     metrics[metricName] = new Trend(metricName);
     const thresholds = testConfiguration.thresholds[metricName];
-    metricThresholds[metricName] = thresholds[EnvironmentUtil.getRepositoryType()] || thresholds.smoke;
+    metricThresholds[metricName] = thresholds[EnvironmentUtil.getTestType()] || thresholds.smoke;
   });
 
   return { metrics, metricThresholds };

@@ -4,7 +4,7 @@ export default class PaymentUtil {
   }
 
   static getPaymentProviderName() {
-    switch (__ENV.ENV_REPOSITORY_ID) {
+    switch (__ENV.SPRYKER_REPOSITORY_ID) {
       case 'suite':
         return 'DummyPayment';
       case 'b2b':
