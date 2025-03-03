@@ -8,7 +8,7 @@ import CatalogSearchResource from '../../resources/catalog-search.resource';
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI2',
-  group: 'Search Product By SKU',
+  group: 'Product Search',
   metrics: ['SAPI2_get_catalog_search'],
   minimumProductsCount: 100,
   thresholds: {
