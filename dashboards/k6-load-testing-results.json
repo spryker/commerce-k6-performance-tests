@@ -1669,9 +1669,14 @@
             "selected": false,
             "text": "SAPI3_get_concrete_products",
             "value": "SAPI3_get_concrete_products"
+          },
+          {
+            "selected": false,
+            "text": "SAPI4_get_carts",
+            "value": "SAPI4_get_carts"
           }
         ],
-        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,S2_get_search,M8_get_mp_dashboard,SAPI2_get_catalog_search,SAPI3_get_concrete_products",
+        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,S2_get_search,M8_get_mp_dashboard,SAPI2_get_catalog_search,SAPI3_get_concrete_products,SAPI4_get_carts",
         "type": "custom"
       }
     ]
