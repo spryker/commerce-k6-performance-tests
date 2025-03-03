@@ -10,7 +10,6 @@ const testConfiguration = {
   id: 'SAPI2',
   group: 'Product Search',
   metrics: ['SAPI2_get_catalog_search'],
-  minimumProductsCount: 100,
   thresholds: {
     SAPI2_get_catalog_search: {
       smoke: ['avg<200'],
@@ -24,7 +23,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 
 export function setup() {
   const dynamicFixture = new ProductFixture({
-    productCount: testConfiguration.minimumProductsCount,
+    productCount: 100,
   });
 
   return dynamicFixture.getData();
