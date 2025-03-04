@@ -25,14 +25,14 @@ export class CartFixture extends AbstractFixture {
     this.customerCount = customerCount;
     this.cartCount = cartCount;
 
-    const response = this.runDynamicFixture(this._getCustomersWithCartsPayload());
+    const response = this.runDynamicFixture(this._getCustomersWithQuotesPayload());
 
     const responseData = JSON.parse(response.body).data;
     const customers = responseData.filter((item) => /^customer\d+$/.test(item.attributes.key));
 
     return customers.map((customer) => {
       const carts = responseData
-        .filter((item) => item.attributes.key.startsWith(`${customer.attributes.key}Cart`))
+        .filter((item) => item.attributes.key.startsWith(`${customer.attributes.key}Quote`))
         .map((cart) => cart.attributes.data.uuid);
 
       return {
@@ -50,7 +50,7 @@ export class CartFixture extends AbstractFixture {
     return { customerEmail, idCart: cartIds[cartIndex] };
   }
 
-  _getCustomersWithCartsPayload() {
+  _getCustomersWithQuotesPayload() {
     let companyPermissions = [];
     let baseOperations = [
       {
@@ -115,10 +115,28 @@ export class CartFixture extends AbstractFixture {
         },
         {
           type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission4',
+          arguments: ['PlaceOrderWithAmountUpToPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission5',
+          arguments: ['PlaceOrderPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission6',
+          arguments: ['SeeBusinessUnitOrdersPermissionPlugin'],
+        },
+        {
+          type: 'helper',
           name: 'haveCompanyRoleWithPermissions',
           arguments: [
             { isDefault: true, fkCompany: '#company.id_company' },
-            ['#permission1', '#permission2', '#permission3'],
+            ['#permission1', '#permission2', '#permission3', '#permission4', '#permission5', '#permission6'],
           ],
         },
       ];
