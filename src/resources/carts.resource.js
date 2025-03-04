@@ -21,8 +21,13 @@ export default class CartsResource extends AbstractResource {
     return this.getRequest(`carts/${idCart}`);
   }
 
-  getWithItems(idCart) {
+  getIncludeItems(idCart) {
     return this.getRequest(`carts/${idCart}?include=items`);
+  }
+
+  postCartsItems(idCart, sku, quantity = 1) {
+    var payload = this._getCartsItemsPayload(sku, quantity);
+    return this.postRequest(`carts/${idCart}/items`, payload);
   }
 
   _getCreateCartPayload(cartName, isDefault = false) {
@@ -35,6 +40,18 @@ export default class CartsResource extends AbstractResource {
           currency: 'EUR',
           store: 'DE',
           isDefault: isDefault,
+        },
+      },
+    };
+  }
+
+  _getCartsItemsPayload(sku, quantity) {
+    return {
+      data: {
+        type: 'items',
+        attributes: {
+          sku: sku,
+          quantity: quantity,
         },
       },
     };

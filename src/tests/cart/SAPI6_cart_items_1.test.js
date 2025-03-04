@@ -8,11 +8,11 @@ import CartsResource from '../../resources/carts.resource';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
-  id: 'SAPI5',
+  id: 'SAPI6',
   group: 'Cart',
-  metrics: ['SAPI5_get_carts_with_items'],
+  metrics: ['SAPI6_get_carts_items'],
   thresholds: {
-    SAPI5_get_carts_with_items: {
+    SAPI6_get_carts_items: {
       smoke: ['avg<600'],
       load: ['avg<1200'],
     },
@@ -25,15 +25,16 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 export function setup() {
   const dynamicFixture = new CartFixture({
     customerCount: testConfiguration.vus,
-    cartCount: 1,
+    cartCount: 0,
     itemCount: 1,
+    emptyCartCount: testConfiguration.iterations,
   });
 
   return dynamicFixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail, idCart } = CartFixture.iterateData(data);
+  const { customerEmail, idEmptyCart, productSku } = CartFixture.iterateData(data);
 
   let bearerToken;
   group('Authorization', () => {
@@ -42,7 +43,7 @@ export default function (data) {
 
   group(testConfiguration.group, () => {
     const cartsResource = new CartsResource(bearerToken);
-    const response = cartsResource.getWithItems(idCart);
+    const response = cartsResource.postCartsItems(idEmptyCart, productSku);
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });

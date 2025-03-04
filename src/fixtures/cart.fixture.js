@@ -12,12 +12,12 @@ const DEFAULT_STOCK_NAME = 'Warehouse1';
 const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
 
 export class CartFixture extends AbstractFixture {
-  constructor({ customerCount, cartCount = 1, itemCount = 1 }) {
+  constructor({ customerCount, cartCount = 1, itemCount = 1, emptyCartCount = 0 }) {
     super();
     this.customerCount = customerCount;
     this.cartCount = cartCount;
     this.itemCount = itemCount;
-    this.emptyCartCount = 0;
+    this.emptyCartCount = emptyCartCount;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
@@ -35,19 +35,36 @@ export class CartFixture extends AbstractFixture {
         .filter((item) => item.attributes.key.startsWith(`${customer.attributes.key}Quote`))
         .map((cart) => cart.attributes.data.uuid);
 
+      const emptyCarts = responseData
+        .filter((item) => item.attributes.key.startsWith(`${customer.attributes.key}EmptyQuote`))
+        .map((cart) => cart.attributes.data.uuid);
+
+      const product = responseData
+        .filter((item) => item.attributes.key.startsWith('productKey'))
+        .map((product) => product.attributes.data.sku);
+
       return {
         customerEmail: customer.attributes.data.email,
         cartIds: carts,
+        emptyCartIds: emptyCarts,
+        productSkus: product,
       };
     });
   }
 
   static iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
     const customerIndex = (vus - 1) % data.length;
-    const { customerEmail, cartIds } = data[customerIndex];
+    const { customerEmail, cartIds, emptyCartIds, productSkus } = data[customerIndex];
     const cartIndex = iterations % cartIds.length;
+    const emptyCartIndex = iterations % emptyCartIds.length;
+    const product = productSkus[0];
 
-    return { customerEmail, idCart: cartIds[cartIndex] };
+    return {
+      customerEmail,
+      idCart: cartIds[cartIndex],
+      idEmptyCart: emptyCartIds[emptyCartIndex],
+      productSku: product,
+    };
   }
 
   _getCustomersWithQuotesPayload() {
@@ -158,7 +175,7 @@ export class CartFixture extends AbstractFixture {
   }
 
   _createProductPayload(index) {
-    const productKey = `product${index + 1}`;
+    const productKey = `productKey${index + 1}`;
     let productOffer = [];
     let product = [
       {
@@ -315,8 +332,8 @@ export class CartFixture extends AbstractFixture {
 
   _generateItems() {
     return Array.from({ length: this.itemCount }, (_, i) => ({
-      sku: `#product${i + 1}.sku`,
-      abstractSku: `#product${i + 1}.abstract_sku`,
+      sku: `#productKey${i + 1}.sku`,
+      abstractSku: `#productKey${i + 1}.abstract_sku`,
       quantity: 1,
       unitPrice: this.defaultItemPrice,
       productOfferReference: this.repositoryId === 'b2b-mp' ? `#productOffer${i + 1}.product_offer_reference` : null,
