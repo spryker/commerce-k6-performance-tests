@@ -41,7 +41,17 @@ export default function (data) {
 
   group(testConfiguration.group, () => {
     const abstractProductsResource = new AbstractProductsResource();
-    const response = abstractProductsResource.getWithAllIncludes(product.abstractSku);
+    const response = abstractProductsResource.get(product.abstractSku, [
+      'abstract-product-image-sets',
+      'concrete-products',
+      'abstract-product-availabilities',
+      'abstract-product-prices',
+      'category-nodes',
+      'product-labels',
+      'product-tax-sets',
+      'product-reviews',
+      'product-options',
+    ]);
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
