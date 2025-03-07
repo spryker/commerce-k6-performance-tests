@@ -1,19 +1,19 @@
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
-import { ProductFixture } from '../../fixtures/product.fixture';
 import EnvironmentUtil from '../../utils/environment.util';
+import { CategoryFixture } from '../../fixtures/category.fixture';
 import CatalogSearchResource from '../../resources/catalog-search.resource';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
-  id: 'SAPI2',
+  id: 'SAPI42',
   group: 'Product Search',
-  metrics: ['SAPI2_get_catalog_search'],
+  metrics: ['SAPI42_get_category_search'],
   thresholds: {
-    SAPI2_get_catalog_search: {
-      smoke: ['avg<400'],
-      load: ['avg<800'],
+    SAPI42_get_category_search: {
+      smoke: ['avg<300'],
+      load: ['avg<600'],
     },
   },
 };
@@ -22,7 +22,8 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  const dynamicFixture = new ProductFixture({
+  const dynamicFixture = new CategoryFixture({
+    categoryCount: 1,
     productCount: 100,
   });
 
@@ -30,11 +31,14 @@ export function setup() {
 }
 
 export default function (data) {
-  const product = ProductFixture.iterateData(data);
+  const category = CategoryFixture.iterateData(data);
 
   group(testConfiguration.group, () => {
     const catalogSearchResource = new CatalogSearchResource();
-    const response = catalogSearchResource.get({ q: product.sku });
+    const response = catalogSearchResource.get({
+      category: category.category_node.id_category_node,
+      ipp: 36,
+    });
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });

@@ -5,6 +5,7 @@ import CheckoutResource from '../../resources/checkout.resource';
 import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
+import OrdersResource from '../../resources/orders.resource';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

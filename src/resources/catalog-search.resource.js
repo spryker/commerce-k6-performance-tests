@@ -1,7 +1,17 @@
 import AbstractResource from './abstract.resource';
 
 export default class CatalogSearchResource extends AbstractResource {
-  get(sku) {
-    return this.getRequest(`catalog-search?q=${sku}`);
+  get(queryParams = {}) {
+    let queryStringData = [];
+    let queryString = '';
+    if (queryParams !== {}) {
+      for (const key in queryParams) {
+        queryStringData.push(`${key}=${queryParams[key]}`);
+      }
+
+      queryString = '?' + queryStringData.join('&');
+    }
+
+    return this.getRequest(`catalog-search${queryString}`);
   }
 }
