@@ -63,7 +63,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 export function setup() {
   const dynamicFixture = new CartFixture({
     customerCount: testConfiguration.vus,
-    cartCount: 1,
+    cartCount: testConfiguration.iterations,
     itemCount: 10,
     defaultItemPrice: 4000,
   });
