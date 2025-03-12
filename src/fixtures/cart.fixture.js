@@ -12,12 +12,13 @@ const DEFAULT_STOCK_NAME = 'Warehouse1';
 const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
 
 export class CartFixture extends AbstractFixture {
-  constructor({ customerCount, cartCount = 1, itemCount = 1, emptyCartCount = 0 }) {
+  constructor({ customerCount, cartCount = 1, itemCount = 1, emptyCartCount = 0, defaultItemPrice = 1000 }) {
     super();
     this.customerCount = customerCount;
     this.cartCount = cartCount;
     this.itemCount = itemCount;
     this.emptyCartCount = emptyCartCount;
+    this.defaultItemPrice = defaultItemPrice;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
@@ -297,6 +298,11 @@ export class CartFixture extends AbstractFixture {
         name: 'haveCustomer',
         key: customerKey,
         arguments: [{ locale: '#locale', password: DEFAULT_PASSWORD }],
+      },
+      {
+        type: 'helper',
+        name: 'haveCustomerAddress',
+        arguments: [{ email: `#${customerKey}.email` }],
       },
       {
         type: 'helper',
