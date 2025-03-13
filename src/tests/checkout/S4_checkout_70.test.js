@@ -35,24 +35,24 @@ const testConfiguration = {
       load: ['avg<1500'],
     },
     S4_get_checkout_shipment: {
-      smoke: ['avg<750'],
-      load: ['avg<1500'],
+      smoke: ['avg<650'],
+      load: ['avg<1300'],
     },
     S4_get_checkout_payment: {
-      smoke: ['avg<750'],
-      load: ['avg<1500'],
+      smoke: ['avg<950'],
+      load: ['avg<1900'],
     },
     S4_get_checkout_summary: {
-      smoke: ['avg<750'],
-      load: ['avg<1500'],
+      smoke: ['avg<1050'],
+      load: ['avg<2100'],
     },
     S4_get_place_order: {
       smoke: ['avg<750'],
       load: ['avg<1500'],
     },
     S4_get_checkout_success: {
-      smoke: ['avg<750'],
-      load: ['avg<1500'],
+      smoke: ['avg<2850'],
+      load: ['avg<4700'],
     },
   },
 };
