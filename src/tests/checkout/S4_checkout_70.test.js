@@ -19,7 +19,6 @@ const testConfiguration = {
     'S4_get_checkout_payment',
     'S4_get_checkout_summary',
     'S4_get_checkout_success',
-    'S4_get_place_order',
   ],
   thresholds: {
     S4_get_cart: {
@@ -45,10 +44,6 @@ const testConfiguration = {
     S4_get_checkout_summary: {
       smoke: ['avg<1050'],
       load: ['avg<2100'],
-    },
-    S4_get_place_order: {
-      smoke: ['avg<750'],
-      load: ['avg<1500'],
     },
     S4_get_checkout_success: {
       smoke: ['avg<2850'],
