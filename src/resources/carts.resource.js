@@ -17,15 +17,20 @@ export default class CartsResource extends AbstractResource {
     return this.getRequest('carts');
   }
 
-  get(idCart) {
-    return this.getRequest(`carts/${idCart}`);
+  get(idCart, includes = []) {
+    let includeParam = '';
+    if (includes.length > 0) {
+      includeParam = '?include=' + includes.join(',');
+    }
+
+    return this.getRequest(`carts/${idCart}` + includeParam);
   }
 
   getIncludeItems(idCart) {
     return this.getRequest(`carts/${idCart}?include=items`);
   }
 
-  postCartsItems(idCart, sku, quantity = 1) {
+  addItem(idCart, sku, quantity = 1) {
     var payload = this._getCartsItemsPayload(sku, quantity);
     return this.postRequest(`carts/${idCart}/items`, payload);
   }

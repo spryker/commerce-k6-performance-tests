@@ -10,9 +10,9 @@ const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI32',
   group: 'Cart',
-  metrics: ['SAPI32_get_carts_single_seventy_items'],
+  metrics: ['SAPI32_get_carts_by_id'],
   thresholds: {
-    SAPI32_get_carts_single_seventy_items: {
+    SAPI32_get_carts_by_id: {
       smoke: ['avg<600'],
       load: ['avg<1200'],
     },

@@ -53,7 +53,7 @@ export default function (data) {
   let orderId;
   group('Get orders', () => {
     const ordersResource = new OrdersResource(bearerToken);
-    const response = ordersResource.get();
+    const response = ordersResource.all();
 
     orderId = JSON.parse(response.body).data[0].id;
     metrics['SAPI38_get_orders'].add(response.timings.duration);
@@ -61,7 +61,7 @@ export default function (data) {
 
   group('Get order details', () => {
     const ordersResource = new OrdersResource(bearerToken);
-    const response = ordersResource.getDetails(orderId, ['order-shipments', 'concrete-products', 'abstract-products']);
+    const response = ordersResource.get(orderId, ['order-shipments', 'concrete-products', 'abstract-products']);
     metrics['SAPI38_get_orders_details'].add(response.timings.duration);
   });
 }

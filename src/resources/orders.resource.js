@@ -1,11 +1,11 @@
 import AbstractResource from './abstract.resource';
 
 export default class OrdersResource extends AbstractResource {
-  get() {
+  all() {
     return this.getRequest('orders');
   }
 
-  getDetails(orderId, includes = []) {
+  get(orderId, includes = []) {
     let includeParam = '';
     if (includes.length > 0) {
       includeParam = '?include=' + includes.join(',');
