@@ -1742,11 +1742,16 @@
           },
           {
             "selected": false,
+            "text": "S4_get_place_order",
+            "value": "S4_get_place_order"
+          },
+          {
+            "selected": false,
             "text": "S4_get_checkout_success",
             "value": "S4_get_checkout_success"
           }
         ],
-        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,S2_get_search,M8_get_mp_dashboard,SAPI2_get_catalog_search,SAPI3_get_concrete_products,SAPI4_get_carts,SAPI5_get_carts_include_items,SAPI6_post_carts_items,SAPI13_get_abstract_products_all_includes,SAPI32_get_carts_by_id,SAPI38_get_orders,SAPI38_get_orders_details,SAPI42_get_category_search,S4_get_cart,S4_get_checkout,S4_get_checkout_address,S4_get_checkout_shipment,S4_get_checkout_payment,S4_get_checkout_summary,S4_get_checkout_success",
+        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,S2_get_search,M8_get_mp_dashboard,SAPI2_get_catalog_search,SAPI3_get_concrete_products,SAPI4_get_carts,SAPI5_get_carts_include_items,SAPI6_post_carts_items,SAPI13_get_abstract_products_all_includes,SAPI32_get_carts_by_id,SAPI38_get_orders,SAPI38_get_orders_details,SAPI42_get_category_search,S4_get_cart,S4_get_checkout,S4_get_checkout_address,S4_get_checkout_shipment,S4_get_checkout_payment,S4_get_checkout_summary,S4_get_place_order,S4_get_checkout_success",
         "type": "custom"
       }
     ]

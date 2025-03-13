@@ -2,6 +2,7 @@ import AbstractPage from '../abstract.page';
 import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
+import http from 'k6/http';
 import KSixError from '../../utils/k-six-error';
 
 export default class CheckoutPage extends AbstractPage {
@@ -61,11 +62,13 @@ export default class CheckoutPage extends AbstractPage {
 
   async selectPaymentOption() {
     const paymentMethodRadioButtons = await this.page.$$(this.paymentMethodRadioButtonSelector);
-    await paymentMethodRadioButtons[1].click();
+    await Promise.all([
+      this.page.waitForSelector(this.paymentDateOfBirthInputSelector, { timeout: 5000 }),
+      paymentMethodRadioButtons[1].click(),
+    ]);
   }
 
   async fillPaymentInput() {
-    await this.page.waitForSelector(this.paymentDateOfBirthInputSelector);
     const paymentDateOfBirthInput = await this.page.locator(this.paymentDateOfBirthInputSelector);
     await paymentDateOfBirthInput.fill('01.01.2000');
   }
@@ -98,23 +101,46 @@ export default class CheckoutPage extends AbstractPage {
     );
   }
 
-  async acceptTerms() {
-    const acceptTermsCheckbox = await this.page.locator(this.acceptTermsCheckboxSelector);
-    await acceptTermsCheckbox.click();
-  }
+  async placeOrder() {
+    const summaryFormTokenInput = await this.page.locator('input[name="summaryForm[_token]"]');
+    const summaryFormToken = await summaryFormTokenInput.inputValue();
 
-  async submitSummaryForm() {
-    const checkoutButton = await this.page.locator(this.checkoutButtonSelector);
-    await Promise.all([this.page.waitForNavigation(), checkoutButton.click()]);
+    const contextCookies = await this.page.context().cookies();
+    const cookies = contextCookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ');
 
-    await this.headerSuccessPage.waitFor();
-    const headerText = await this.headerSuccessPage.textContent();
+    let headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Cookie: cookies,
+    };
 
-    addErrorToCounter(
-      check(headerText, {
-        'Checkout was submitted': (text) => text === 'Your order has been placed successfully!',
-      })
-    );
+    const payload = {
+      'summaryForm[_token]': summaryFormToken,
+      acceptTermsAndConditions: 1,
+    };
+
+    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/checkout/summary`, payload, {
+      headers: headers,
+      redirects: 0,
+    });
+
+    const placeOrderLocation = response.headers['Location'];
+    headers = {
+      Cookie: cookies,
+    };
+
+    const placeOrderResponse = http.get(`${EnvironmentUtil.getStorefrontUrl()}${placeOrderLocation}`, {
+      headers: headers,
+      redirects: 0,
+    });
+
+    const checkoutSuccessResponse = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/success`, {
+      headers: headers,
+    });
+
+    return {
+      placeOrderDurationTime: placeOrderResponse.timings.duration,
+      successPageDurationTime: checkoutSuccessResponse.timings.duration,
+    };
   }
 
   async getDurationTime() {
@@ -128,15 +154,5 @@ export default class CheckoutPage extends AbstractPage {
     }
 
     throw new KSixError('No marks found');
-  }
-
-  async getNavigationTime() {
-    const navigationEntries = await this.page.evaluate(() =>
-      JSON.parse(JSON.stringify(window.performance.getEntriesByType('navigation')))
-    );
-
-    if (navigationEntries.length > 0) {
-      return navigationEntries[0].responseEnd - navigationEntries[0].requestStart;
-    }
   }
 }

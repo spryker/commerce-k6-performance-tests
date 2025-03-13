@@ -19,6 +19,7 @@ const testConfiguration = {
     'S4_get_checkout_payment',
     'S4_get_checkout_summary',
     'S4_get_checkout_success',
+    'S4_get_place_order',
   ],
   thresholds: {
     S4_get_cart: {
@@ -48,6 +49,10 @@ const testConfiguration = {
     S4_get_checkout_success: {
       smoke: ['avg<2850'],
       load: ['avg<4700'],
+    },
+    S4_get_place_order: {
+      smoke: ['avg<1100'],
+      load: ['avg<2200'],
     },
   },
 };
@@ -88,8 +93,10 @@ export default async function (data) {
     const checkoutPaymentPageDurationTime = await processCheckoutPaymentStep(browserContext);
     metrics['S4_get_checkout_payment'].add(checkoutPaymentPageDurationTime);
 
-    const [summaryPageDurationTime, successPageDurationTime] = await processCheckoutSummaryStep(browserContext);
+    const [summaryPageDurationTime, placeOrderDurationTime, successPageDurationTime] =
+      await processCheckoutSummaryStep(browserContext);
     metrics['S4_get_checkout_summary'].add(summaryPageDurationTime);
+    metrics['S4_get_place_order'].add(placeOrderDurationTime);
     metrics['S4_get_checkout_success'].add(successPageDurationTime);
   } finally {
     await browserContext.close();
@@ -195,11 +202,9 @@ async function processCheckoutSummaryStep(browserContext) {
     await checkoutPage.navigateToSummary();
     const summaryPageDurationTime = await checkoutPage.getDurationTime();
 
-    await checkoutPage.acceptTerms();
-    await checkoutPage.submitSummaryForm();
-    const successPageDurationTime = await checkoutPage.getNavigationTime();
+    const { placeOrderDurationTime, successPageDurationTime } = await checkoutPage.placeOrder();
 
-    return [summaryPageDurationTime, successPageDurationTime];
+    return [summaryPageDurationTime, placeOrderDurationTime, successPageDurationTime];
   } finally {
     await page.close();
   }
