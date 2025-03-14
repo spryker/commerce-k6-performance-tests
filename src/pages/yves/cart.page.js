@@ -6,15 +6,10 @@ export default class CartPage extends AbstractPage {
   constructor(page) {
     super();
     this.page = page;
-    this.checkoutButton = page.locator('[data-test=cart-go-to-checkout]');
   }
 
   async navigate() {
     await this.page.goto(`${EnvironmentUtil.getStorefrontUrl()}/cart`);
-  }
-
-  async goToCheckout() {
-    await this.page.click(this.checkoutButton);
   }
 
   async getDurationTime() {

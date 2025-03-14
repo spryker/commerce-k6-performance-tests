@@ -12,13 +12,10 @@ export default class CheckoutPage extends AbstractPage {
     this.addressSubmitButtonSelector = '[name="addressesForm"] button[type="submit"]';
     this.shipmentSubmitButtonSelector = '[name="shipmentCollectionForm"] button[type="submit"]';
     this.paymentSubmitButtonSelector = '[name="paymentForm"] button[type="submit"]';
-    this.checkoutButtonSelector = '[name="summaryForm"] button.form__action';
     this.header = page.locator('h1');
-    this.headerSuccessPage = page.locator('h3');
     this.shipmentMethodRadioButtonSelector = '[name="shipmentCollectionForm"] label > span.radio__label';
     this.paymentMethodRadioButtonSelector = '[name="paymentForm"] label > span.toggler-radio__label';
     this.paymentDateOfBirthInputSelector = '[name="paymentForm[dummyPaymentInvoice][date_of_birth]"]';
-    this.acceptTermsCheckboxSelector = '#summaryForm_acceptTermsAndConditions .checkbox__box';
   }
 
   async navigate() {

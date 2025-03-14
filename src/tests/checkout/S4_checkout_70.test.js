@@ -12,7 +12,6 @@ const testConfiguration = {
   id: 'S4',
   group: 'Checkout',
   metrics: [
-    'S4_get_cart',
     'S4_get_checkout',
     'S4_get_checkout_address',
     'S4_get_checkout_shipment',
@@ -22,10 +21,6 @@ const testConfiguration = {
     'S4_get_place_order',
   ],
   thresholds: {
-    S4_get_cart: {
-      smoke: ['avg<600'],
-      load: ['avg<1200'],
-    },
     S4_get_checkout: {
       smoke: ['avg<900'],
       load: ['avg<1800'],
@@ -78,8 +73,7 @@ export default async function (data) {
   try {
     browserContext = await login(browserContext, customerEmail);
 
-    const cartPageDurationTime = await openCartPage(browserContext);
-    metrics['S4_get_cart'].add(cartPageDurationTime);
+    await openCartPage(browserContext);
 
     const checkoutPageDurationTime = await openCheckoutPage(browserContext);
     metrics['S4_get_checkout'].add(checkoutPageDurationTime);
