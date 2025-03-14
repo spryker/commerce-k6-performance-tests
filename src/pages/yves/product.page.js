@@ -8,7 +8,6 @@ export default class ProductPage extends AbstractPage {
   get(url) {
     const fullUrl = `${EnvironmentUtil.getStorefrontUrl()}/${url}`;
     const response = http.get(fullUrl);
-    console.log('url', fullUrl);
 
     addErrorToCounter(
       check(response, {
