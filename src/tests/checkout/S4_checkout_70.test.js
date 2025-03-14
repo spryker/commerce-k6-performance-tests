@@ -59,8 +59,8 @@ export function setup() {
   const dynamicFixture = new CartFixture({
     customerCount: testConfiguration.vus,
     cartCount: testConfiguration.iterations,
-    itemCount: 10,
-    defaultItemPrice: 4000,
+    itemCount: 70,
+    defaultItemPrice: 100,
   });
 
   return dynamicFixture.getData();
