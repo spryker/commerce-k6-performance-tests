@@ -28,6 +28,7 @@ export class FullProductFixture extends AbstractFixture {
         const { id_product_concrete, sku, fk_product_abstract, is_active, abstract_sku, localized_attributes } =
           item.attributes.data;
         const localized = localized_attributes[0] || {};
+        const url = this.buildProductUrl(localized.localeName, localized.name, fk_product_abstract);
 
         return {
           id: id_product_concrete,
@@ -39,6 +40,7 @@ export class FullProductFixture extends AbstractFixture {
           description: localized.description || null,
           locale: localized.locale?.locale_name || null,
           searchable: localized.is_searchable === '1',
+          url: url,
         };
       });
   }
@@ -76,6 +78,16 @@ export class FullProductFixture extends AbstractFixture {
         type: 'array-object',
         key: 'stores',
         arguments: ['#store'],
+      },
+      {
+        type: 'helper',
+        name: 'haveLocale',
+        key: 'locale',
+        arguments: [
+          {
+            localeName: DEFAULT_LOCALE,
+          },
+        ],
       },
     ];
 
@@ -265,19 +277,6 @@ export class FullProductFixture extends AbstractFixture {
   }
 
   _addProductReviewsPayload(product, index, productKey) {
-    let locale = {
-      type: 'helper',
-      name: 'haveLocale',
-      key: 'locale',
-      arguments: [
-        {
-          localeName: DEFAULT_LOCALE,
-        },
-      ],
-    };
-
-    product.push(locale);
-
     let customer = {
       type: 'helper',
       name: 'haveCustomer',
@@ -326,5 +325,11 @@ export class FullProductFixture extends AbstractFixture {
 
       product.push(...additionalConcreteProduct);
     }
+  }
+
+  buildProductUrl(localeName, name, abstractId) {
+    const localePrefix = localeName ? `${localeName.toLowerCase().replace('_', '-')}` : 'en-us';
+
+    return `${localePrefix}/${name.replace('.', '').replace('#', '').replace(' ', '-').toLowerCase()}-${abstractId}`;
   }
 }
