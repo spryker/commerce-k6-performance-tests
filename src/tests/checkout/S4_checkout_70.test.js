@@ -1,11 +1,11 @@
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
-import { browser } from 'k6/browser';
 import { CartFixture } from '../../fixtures/cart.fixture';
 import { LoginPage } from '../../pages/yves/login.page';
-import CartPage from '../../pages/yves/cart.page';
 import CheckoutPage from '../../pages/yves/checkout.page';
+import { parseHTML } from 'k6/html';
+import { group } from 'k6';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -14,9 +14,13 @@ const testConfiguration = {
   metrics: [
     'S4_get_checkout',
     'S4_get_checkout_address',
+    'S4_post_checkout_address',
     'S4_get_checkout_shipment',
+    'S4_post_checkout_shipment',
     'S4_get_checkout_payment',
+    'S4_post_checkout_payment',
     'S4_get_checkout_summary',
+    'S4_post_checkout_summary',
     'S4_get_checkout_success',
     'S4_get_place_order',
   ],
@@ -29,7 +33,15 @@ const testConfiguration = {
       smoke: ['avg<750'],
       load: ['avg<1500'],
     },
+    S4_post_checkout_address: {
+      smoke: ['avg<750'],
+      load: ['avg<1500'],
+    },
     S4_get_checkout_shipment: {
+      smoke: ['avg<650'],
+      load: ['avg<1300'],
+    },
+    S4_post_checkout_shipment: {
       smoke: ['avg<650'],
       load: ['avg<1300'],
     },
@@ -37,7 +49,15 @@ const testConfiguration = {
       smoke: ['avg<950'],
       load: ['avg<1900'],
     },
+    S4_post_checkout_payment: {
+      smoke: ['avg<950'],
+      load: ['avg<1900'],
+    },
     S4_get_checkout_summary: {
+      smoke: ['avg<1050'],
+      load: ['avg<2100'],
+    },
+    S4_post_checkout_summary: {
       smoke: ['avg<1050'],
       load: ['avg<2100'],
     },
@@ -60,146 +80,88 @@ export function setup() {
     customerCount: testConfiguration.vus,
     cartCount: testConfiguration.iterations,
     itemCount: 70,
-    defaultItemPrice: 100,
+    defaultItemPrice: 1000,
   });
 
   return dynamicFixture.getData();
 }
 
-export default async function (data) {
+export default function (data) {
   const { customerEmail } = CartFixture.iterateData(data);
-  let browserContext = await browser.newContext();
 
-  try {
-    browserContext = await login(browserContext, customerEmail);
+  const loginPage = new LoginPage(customerEmail);
+  const headers = loginPage.login();
 
-    await openCartPage(browserContext);
+  const checkoutPage = new CheckoutPage(headers);
 
-    const checkoutPageDurationTime = await openCheckoutPage(browserContext);
-    metrics['S4_get_checkout'].add(checkoutPageDurationTime);
+  group('Checkout', () => {
+    const checkoutResponse = checkoutPage.getCheckout();
+    metrics['S4_get_checkout'].add(checkoutResponse.timings.duration);
+  });
 
-    const checkoutAddressPageDurationTime = await processCheckoutAddressStep(browserContext);
-    metrics['S4_get_checkout_address'].add(checkoutAddressPageDurationTime);
+  let checkoutAddressResponse;
+  group('Checkout Address', () => {
+    checkoutAddressResponse = checkoutPage.getCheckoutAddress();
+    metrics['S4_get_checkout_address'].add(checkoutAddressResponse.timings.duration);
+  });
 
-    const checkoutShipmentPageDurationTime = await processCheckoutShipmentStep(browserContext);
-    metrics['S4_get_checkout_shipment'].add(checkoutShipmentPageDurationTime);
+  let addressesForm = parseHTML(checkoutAddressResponse.body);
+  const addressesFormToken = addressesForm.find('#addressesForm__token').attr('value');
 
-    const checkoutPaymentPageDurationTime = await processCheckoutPaymentStep(browserContext);
-    metrics['S4_get_checkout_payment'].add(checkoutPaymentPageDurationTime);
+  group('Checkout Address Submit', () => {
+    const checkoutAddressSubmitResponse = checkoutPage.submitCheckoutAddress(addressesFormToken);
+    metrics['S4_post_checkout_address'].add(checkoutAddressSubmitResponse.timings.duration);
+  });
 
-    const [summaryPageDurationTime, placeOrderDurationTime, successPageDurationTime] =
-      await processCheckoutSummaryStep(browserContext);
-    metrics['S4_get_checkout_summary'].add(summaryPageDurationTime);
-    metrics['S4_get_place_order'].add(placeOrderDurationTime);
-    metrics['S4_get_checkout_success'].add(successPageDurationTime);
-  } finally {
-    await browserContext.close();
-  }
-}
+  let checkoutShipmentResponse;
+  group('Checkout Shipment', () => {
+    checkoutShipmentResponse = checkoutPage.getCheckoutShipment();
+    metrics['S4_get_checkout_shipment'].add(checkoutShipmentResponse.timings.duration);
+  });
 
-async function login(browserContext, customerEmail) {
-  const page = await browserContext.newPage({ headless: false });
-  const loginPage = new LoginPage(page);
+  let shipmentForm = parseHTML(checkoutShipmentResponse.body);
+  const shipmentFormToken = shipmentForm.find('#shipmentCollectionForm__token').attr('value');
 
-  try {
-    await loginPage.navigate();
-    await loginPage.login(customerEmail);
+  group('Checkout Shipment Submit', () => {
+    const checkoutShipmentSubmitResponse = checkoutPage.submitCheckoutShipment(shipmentFormToken);
+    metrics['S4_post_checkout_shipment'].add(checkoutShipmentSubmitResponse.timings.duration);
+  });
 
-    return browserContext;
-  } finally {
-    await page.close();
-  }
-}
+  let checkoutPaymentResponse;
+  group('Checkout Payment', () => {
+    checkoutPaymentResponse = checkoutPage.getCheckoutPayment();
+    metrics['S4_get_checkout_payment'].add(checkoutPaymentResponse.timings.duration);
+  });
 
-async function openCartPage(browserContext) {
-  const page = await browserContext.newPage({ headless: false });
-  const cartPage = new CartPage(page);
+  let paymentForm = parseHTML(checkoutPaymentResponse.body);
+  const paymentFormToken = paymentForm.find('#paymentForm__token').attr('value');
 
-  try {
-    await cartPage.navigate();
+  group('Checkout Payment Submit', () => {
+    const checkoutPaymentSubmitResponse = checkoutPage.submitCheckoutPayment(paymentFormToken);
+    metrics['S4_post_checkout_payment'].add(checkoutPaymentSubmitResponse.timings.duration);
+  });
 
-    return await cartPage.getDurationTime();
-  } finally {
-    await page.close();
-  }
-}
+  let checkoutSummaryResponse;
+  group('Checkout Summary', () => {
+    checkoutSummaryResponse = checkoutPage.getCheckoutSummary();
+    metrics['S4_get_checkout_summary'].add(checkoutSummaryResponse.timings.duration);
+  });
 
-async function openCheckoutPage(browserContext) {
-  const page = await browserContext.newPage({ headless: false });
-  const checkoutPage = new CheckoutPage(page);
+  let summaryForm = parseHTML(checkoutSummaryResponse.body);
+  const summaryFormToken = summaryForm.find('#summaryForm__token').attr('value');
 
-  try {
-    await checkoutPage.navigate();
+  group('Checkout Summary Submit', () => {
+    const checkoutSummarySubmitResponse = checkoutPage.submitCheckoutSummary(summaryFormToken);
+    metrics['S4_post_checkout_summary'].add(checkoutSummarySubmitResponse.timings.duration);
+  });
 
-    return await checkoutPage.getDurationTime();
-  } finally {
-    await page.close();
-  }
-}
+  group('Place order', () => {
+    const placeOrderResponse = checkoutPage.getPlaceOrder();
+    metrics['S4_get_place_order'].add(placeOrderResponse.timings.duration);
+  });
 
-async function processCheckoutAddressStep(browserContext) {
-  const page = await browserContext.newPage({ headless: false });
-  const checkoutPage = new CheckoutPage(page);
-
-  try {
-    await checkoutPage.navigateToAddress();
-    const addressPageDurationTime = await checkoutPage.getDurationTime();
-
-    await checkoutPage.submitAddressForm();
-
-    return addressPageDurationTime;
-  } finally {
-    await page.close();
-  }
-}
-
-async function processCheckoutShipmentStep(browserContext) {
-  const page = await browserContext.newPage({ headless: false });
-  const checkoutPage = new CheckoutPage(page);
-
-  try {
-    await checkoutPage.navigateToShipment();
-    const shipmentPageDurationTime = await checkoutPage.getDurationTime();
-
-    await checkoutPage.selectShipmentOption();
-    await checkoutPage.submitShipmentForm();
-
-    return shipmentPageDurationTime;
-  } finally {
-    await page.close();
-  }
-}
-
-async function processCheckoutPaymentStep(browserContext) {
-  const page = await browserContext.newPage({ headless: false });
-  const checkoutPage = new CheckoutPage(page);
-
-  try {
-    await checkoutPage.navigateToPayment();
-    const paymentPageDurationTime = await checkoutPage.getDurationTime();
-
-    await checkoutPage.selectPaymentOption();
-    await checkoutPage.fillPaymentInput();
-    await checkoutPage.submitPaymentForm();
-
-    return paymentPageDurationTime;
-  } finally {
-    await page.close();
-  }
-}
-
-async function processCheckoutSummaryStep(browserContext) {
-  const page = await browserContext.newPage({ headless: false });
-  const checkoutPage = new CheckoutPage(page);
-
-  try {
-    await checkoutPage.navigateToSummary();
-    const summaryPageDurationTime = await checkoutPage.getDurationTime();
-
-    const { placeOrderDurationTime, successPageDurationTime } = await checkoutPage.placeOrder();
-
-    return [summaryPageDurationTime, placeOrderDurationTime, successPageDurationTime];
-  } finally {
-    await page.close();
-  }
+  group('Checkout Success', () => {
+    const response = checkoutPage.getCheckoutSuccess();
+    metrics['S4_get_checkout_success'].add(response.timings.duration);
+  });
 }

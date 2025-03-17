@@ -107,4 +107,8 @@ export default class EnvironmentUtil {
   static getRepositoryId() {
     return __ENV.SPRYKER_REPOSITORY_ID;
   }
+
+  static getStorefrontSessionCookieName() {
+    return this.getStorefrontUrl().replace('http://', '').replace('https://', '').replaceAll('.', '-');
+  }
 }

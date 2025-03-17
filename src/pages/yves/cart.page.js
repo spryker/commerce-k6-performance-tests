@@ -1,27 +1,24 @@
 import AbstractPage from '../abstract.page';
 import EnvironmentUtil from '../../utils/environment.util';
-import KSixError from '../../utils/k-six-error';
+import { check } from 'k6';
+import { addErrorToCounter } from '../../utils/metric.util';
+import http from 'k6/http';
 
 export default class CartPage extends AbstractPage {
-  constructor(page) {
+  constructor(headers) {
     super();
-    this.page = page;
+    this.headers = headers;
   }
 
-  async navigate() {
-    await this.page.goto(`${EnvironmentUtil.getStorefrontUrl()}/cart`);
-  }
+  get() {
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/cart`, { headers: this.headers });
 
-  async getDurationTime() {
-    await this.page.evaluate(() => window.performance.mark('page-visit'));
-    const marks = await this.page.evaluate(() =>
-      JSON.parse(JSON.stringify(window.performance.getEntriesByType('mark')))
+    addErrorToCounter(
+      check(response, {
+        'Cart was successful': (r) => r.status === 200 && r.body,
+      })
     );
 
-    if (marks.length > 0) {
-      return marks[0].startTime;
-    }
-
-    throw new KSixError('No marks found');
+    return response;
   }
 }

@@ -1,32 +1,53 @@
 import EnvironmentUtil from '../../utils/environment.util';
+import http from 'k6/http';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
+import AbstractPage from '../abstract.page';
 
 const DEFAULT_PASSWORD = 'change123';
 
-export class LoginPage {
-  constructor(page) {
-    this.page = page;
-    this.usernameInput = page.locator('#loginForm_email');
-    this.passwordInput = page.locator('#loginForm_password');
-    this.submitButton = page.locator('[name="loginForm"] button[type="submit"]');
-    this.header = page.locator('h1');
+export class LoginPage extends AbstractPage {
+  constructor(email, password = null) {
+    super();
+    this.email = email;
+    this.password = password || DEFAULT_PASSWORD;
+    this.headers = null;
   }
 
-  async navigate() {
-    await this.page.goto(`${EnvironmentUtil.getStorefrontUrl()}/login`);
-  }
+  login() {
+    const payload = {
+      'loginForm[email]': this.email,
+      'loginForm[password]': this.password,
+    };
 
-  async login(username, password = null) {
-    await this.usernameInput.type(username);
-    await this.passwordInput.type(password || DEFAULT_PASSWORD);
-    await Promise.all([this.page.waitForNavigation(), this.submitButton.click()]);
-    await this.header.waitFor();
-    const headerText = await this.header.textContent();
+    const headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      Referer: `${EnvironmentUtil.getStorefrontUrl()}/login`,
+    };
+
+    const params = {
+      headers: headers,
+      redirects: 0,
+    };
+
+    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/en/login_check`, payload, params);
+
     addErrorToCounter(
-      check(headerText, {
-        'Login was successful': (text) => text === 'Overview',
+      check(response, {
+        'Login was successful': (r) => r.status === 302,
       })
     );
+
+    const sessionCookie = this.extractSessionCookie(response);
+
+    return {
+      Cookie: sessionCookie,
+    };
+  }
+
+  extractSessionCookie(response) {
+    const cookies = response.headers['Set-Cookie'].split(';');
+
+    return cookies.find((cookie) => cookie.includes(`${EnvironmentUtil.getStorefrontSessionCookieName()}=`));
   }
 }

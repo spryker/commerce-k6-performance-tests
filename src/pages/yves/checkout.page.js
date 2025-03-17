@@ -3,153 +3,235 @@ import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
 import http from 'k6/http';
-import KSixError from '../../utils/k-six-error';
 
 export default class CheckoutPage extends AbstractPage {
-  constructor(page) {
+  constructor(headers) {
     super();
-    this.page = page;
-    this.addressSubmitButtonSelector = '[name="addressesForm"] button[type="submit"]';
-    this.shipmentSubmitButtonSelector = '[name="shipmentCollectionForm"] button[type="submit"]';
-    this.paymentSubmitButtonSelector = '[name="paymentForm"] button[type="submit"]';
-    this.header = page.locator('h1');
-    this.shipmentMethodRadioButtonSelector = '[name="shipmentCollectionForm"] label > span.radio__label';
-    this.paymentMethodRadioButtonSelector = '[name="paymentForm"] label > span.toggler-radio__label';
-    this.paymentDateOfBirthInputSelector = '[name="paymentForm[dummyPaymentInvoice][date_of_birth]"]';
+    this.headers = headers;
   }
 
-  async navigate() {
-    await this.page.goto(`${EnvironmentUtil.getStorefrontUrl()}/checkout`);
-  }
-
-  async navigateToAddress() {
-    await this.page.goto(`${EnvironmentUtil.getStorefrontUrl()}/checkout/address`);
-  }
-
-  async navigateToShipment() {
-    await this.page.goto(`${EnvironmentUtil.getStorefrontUrl()}/checkout/shipment`);
-  }
-
-  async navigateToPayment() {
-    await this.page.goto(`${EnvironmentUtil.getStorefrontUrl()}/checkout/payment`);
-  }
-
-  async navigateToSummary() {
-    await this.page.goto(`${EnvironmentUtil.getStorefrontUrl()}/checkout/summary`);
-  }
-
-  async submitAddressForm() {
-    const addressSubmitButton = await this.page.locator(this.addressSubmitButtonSelector);
-    await Promise.all([this.page.waitForNavigation(), addressSubmitButton.click()]);
-
-    await this.header.waitFor();
-    const headerText = await this.header.textContent();
+  getCheckout() {
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout`, {
+      headers: this.headers,
+      redirects: 0,
+    });
 
     addErrorToCounter(
-      check(headerText, {
-        'Address was submitted': (text) => text === 'Shipment',
+      check(response, {
+        'Checkout was successful': (r) => r.status === 302 && r.body,
       })
     );
+
+    return response;
   }
 
-  async selectShipmentOption() {
-    const shipmentMethodRadioButtons = await this.page.$$(this.shipmentMethodRadioButtonSelector);
-    await shipmentMethodRadioButtons[0].click();
-  }
-
-  async selectPaymentOption() {
-    const paymentMethodRadioButtons = await this.page.$$(this.paymentMethodRadioButtonSelector);
-    await Promise.all([
-      this.page.waitForSelector(this.paymentDateOfBirthInputSelector, { timeout: 5000 }),
-      paymentMethodRadioButtons[1].click(),
-    ]);
-  }
-
-  async fillPaymentInput() {
-    const paymentDateOfBirthInput = await this.page.locator(this.paymentDateOfBirthInputSelector);
-    await paymentDateOfBirthInput.fill('01.01.2000');
-  }
-
-  async submitShipmentForm() {
-    const shipmentSubmitButton = await this.page.locator(this.shipmentSubmitButtonSelector);
-    await Promise.all([this.page.waitForNavigation(), shipmentSubmitButton.click()]);
-
-    await this.header.waitFor();
-    const headerText = await this.header.textContent();
+  getCheckoutAddress() {
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/address`, { headers: this.headers });
 
     addErrorToCounter(
-      check(headerText, {
-        'Shipment was submitted': (text) => text === 'Payment',
+      check(response, {
+        'Checkout address was successful': (r) => r.status === 200 && r.body,
       })
     );
+
+    return response;
   }
 
-  async submitPaymentForm() {
-    const paymentSubmitButton = await this.page.locator(this.paymentSubmitButtonSelector);
-    await Promise.all([this.page.waitForNavigation(), paymentSubmitButton.click()]);
-
-    await this.header.waitFor();
-    const headerText = await this.header.textContent();
+  getCheckoutShipment() {
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/shipment`, { headers: this.headers });
 
     addErrorToCounter(
-      check(headerText, {
-        'Payment was submitted': (text) => text === 'Summary',
+      check(response, {
+        'Checkout shipment was successful': (r) => r.status === 200 && r.body,
       })
     );
+
+    return response;
   }
 
-  async placeOrder() {
-    const summaryFormTokenInput = await this.page.locator('input[name="summaryForm[_token]"]');
-    const summaryFormToken = await summaryFormTokenInput.inputValue();
+  getCheckoutPayment() {
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/payment`, { headers: this.headers });
 
-    const contextCookies = await this.page.context().cookies();
-    const cookies = contextCookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ');
+    addErrorToCounter(
+      check(response, {
+        'Checkout payment was successful': (r) => r.status === 200 && r.body,
+      })
+    );
 
-    let headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Cookie: cookies,
-    };
+    return response;
+  }
 
-    const payload = {
-      'summaryForm[_token]': summaryFormToken,
-      acceptTermsAndConditions: 1,
-    };
+  getCheckoutSummary() {
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/summary`, { headers: this.headers });
 
+    addErrorToCounter(
+      check(response, {
+        'Checkout summary was successful': (r) => r.status === 200 && r.body,
+      })
+    );
+
+    return response;
+  }
+
+  getPlaceOrder() {
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/place-order`, {
+      headers: this.headers,
+      redirects: 0,
+    });
+
+    addErrorToCounter(
+      check(response, {
+        'Place order was successful': (r) => r.status === 302 && r.body,
+      })
+    );
+
+    return response;
+  }
+
+  getCheckoutSuccess() {
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/success`, { headers: this.headers });
+
+    addErrorToCounter(
+      check(response, {
+        'Checkout success was successful': (r) => r.status === 200 && r.body,
+      })
+    );
+
+    return response;
+  }
+
+  submitCheckoutAddress(token) {
+    const payload = this._getAddressFormPayload(token);
+    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/checkout/address`, payload, {
+      headers: {
+        ...this.headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirects: 0,
+    });
+
+    addErrorToCounter(
+      check(response, {
+        'Checkout address submit was successful': (r) => r.status === 302 && r.body,
+      })
+    );
+
+    return response;
+  }
+
+  submitCheckoutShipment(token) {
+    const payload = this._getShipmentFormPayload(token);
+    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/checkout/shipment`, payload, {
+      headers: {
+        ...this.headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirects: 0,
+    });
+
+    addErrorToCounter(
+      check(response, {
+        'Checkout shipment submit was successful': (r) => r.status === 302 && r.body,
+      })
+    );
+
+    return response;
+  }
+
+  submitCheckoutPayment(token) {
+    const payload = this._getPaymentFormPayload(token);
+    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/checkout/payment`, payload, {
+      headers: {
+        ...this.headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirects: 0,
+    });
+
+    addErrorToCounter(
+      check(response, {
+        'Checkout payment submit was successful': (r) => r.status === 302 && r.body,
+      })
+    );
+
+    return response;
+  }
+
+  submitCheckoutSummary(token) {
+    const payload = this._getCheckoutSummaryPayload(token);
     const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/checkout/summary`, payload, {
-      headers: headers,
+      headers: {
+        ...this.headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
       redirects: 0,
     });
 
-    const placeOrderLocation = response.headers['Location'];
-    headers = {
-      Cookie: cookies,
-    };
+    addErrorToCounter(
+      check(response, {
+        'Checkout summary submit was successful': (r) => r.status === 302 && r.body,
+      })
+    );
 
-    const placeOrderResponse = http.get(`${EnvironmentUtil.getStorefrontUrl()}${placeOrderLocation}`, {
-      headers: headers,
-      redirects: 0,
-    });
+    return response;
+  }
 
-    const checkoutSuccessResponse = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/success`, {
-      headers: headers,
-    });
-
+  _getAddressFormPayload(token) {
     return {
-      placeOrderDurationTime: placeOrderResponse.timings.duration,
-      successPageDurationTime: checkoutSuccessResponse.timings.duration,
+      'addressesForm[shipmentType][key]': 'delivery',
+      'checkout-full-addresses': 0,
+      'addressesForm[shippingAddress][id_customer_address]': 0,
+      'addressesForm[shippingAddress][id_company_unit_address]': 0,
+      'addressesForm[shippingAddress][salutation]': 'Ms',
+      'addressesForm[shippingAddress][first_name]': 'Sonia',
+      'addressesForm[shippingAddress][last_name]': 'Wagner',
+      'addressesForm[shippingAddress][company]': 'Spryker Systems GmbH',
+      'addressesForm[shippingAddress][address1]': 'Kirncher Str.',
+      'addressesForm[shippingAddress][address2]': '7',
+      'addressesForm[shippingAddress][address3]': '',
+      'addressesForm[shippingAddress][zip_code]': '10247',
+      'addressesForm[shippingAddress][city]': 'Berlin',
+      'addressesForm[shippingAddress][iso2_code]': 'DE',
+      'addressesForm[shippingAddress][phone]': '4902890031',
+      'addressesForm[billingSameAsShipping]': 1,
+      'addressesForm[billingAddress][id_customer_address]': '',
+      'addressesForm[billingAddress][id_company_unit_address]': 0,
+      'addressesForm[billingAddress][salutation]': 'Ms',
+      'addressesForm[billingAddress][first_name]': 'Sonia',
+      'addressesForm[billingAddress][last_name]': 'Wagner',
+      'addressesForm[billingAddress][company]': 'Spryker Systems GmbH',
+      'addressesForm[billingAddress][address1]': 'Kirncher Str.',
+      'addressesForm[billingAddress][address2]': '7',
+      'addressesForm[billingAddress][address3]': '',
+      'addressesForm[billingAddress][zip_code]': '10247',
+      'addressesForm[billingAddress][city]': 'Berlin',
+      'addressesForm[billingAddress][iso2_code]': 'DE',
+      'addressesForm[billingAddress][phone]': '4902890031',
+      'addressesForm[isMultipleShipmentEnabled]': '',
+      'addressesForm[servicePoint][uuid]': '',
+      'addressesForm[_token]': token,
     };
   }
 
-  async getDurationTime() {
-    await this.page.evaluate(() => window.performance.mark('page-visit'));
-    const marks = await this.page.evaluate(() =>
-      JSON.parse(JSON.stringify(window.performance.getEntriesByType('mark')))
-    );
+  _getShipmentFormPayload(token) {
+    return {
+      'shipmentCollectionForm[shipmentGroups][0][shipment][shipmentSelection]': 1,
+      'shipmentCollectionForm[_token]': token,
+    };
+  }
 
-    if (marks.length > 0) {
-      return marks[0].startTime;
-    }
+  _getPaymentFormPayload(token) {
+    return {
+      'paymentForm[paymentSelection]': 'dummyPaymentInvoice',
+      'paymentForm[dummyPaymentInvoice][date_of_birth]': '11.11.1991',
+      'paymentForm[_token]': token,
+    };
+  }
 
-    throw new KSixError('No marks found');
+  _getCheckoutSummaryPayload(token) {
+    return {
+      acceptTermsAndConditions: 1,
+      'summaryForm[_token]': token,
+    };
   }
 }
