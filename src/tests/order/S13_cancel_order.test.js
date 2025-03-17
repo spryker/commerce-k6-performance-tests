@@ -32,8 +32,8 @@ export function setup() {
   const dynamicFixture = new CheckoutFixture({
     customerCount: testConfiguration.vus,
     cartCount: testConfiguration.iterations,
-    itemCount: 1,
-    defaultItemPrice: 10000,
+    itemCount: 70,
+    defaultItemPrice: 1000,
   });
 
   return dynamicFixture.getData();
@@ -65,13 +65,11 @@ export default function (data) {
 
   group('View order history', () => {
     const response = orderPage.all();
-
     metrics['S13_get_orders'].add(response.timings.duration);
   });
 
   group('Cancel order', () => {
     const response = orderPage.cancel(orderId);
-
     metrics['S13_post_cancel_order'].add(response.timings.duration);
   });
 }
