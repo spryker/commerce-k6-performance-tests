@@ -5,7 +5,7 @@ import { addErrorToCounter } from '../../utils/metric.util';
 import http from 'k6/http';
 
 export default class CartPage extends AbstractPage {
-  constructor(headers) {
+  constructor(headers = null) {
     super();
     this.headers = headers;
   }
@@ -20,5 +20,33 @@ export default class CartPage extends AbstractPage {
     );
 
     return response;
+  }
+
+  addItem(sku) {
+    const payload = this._getAddToCartPayload();
+
+    let params = {
+      redirects: 0,
+    };
+
+    if (this.headers) {
+      params.headers = this.headers;
+    }
+
+    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/cart/add/${sku}`, payload, params);
+
+    addErrorToCounter(
+      check(response, {
+        'Add item to cart was successful': (r) => r.status === 302 && r.body,
+      })
+    );
+
+    return response;
+  }
+
+  _getAddToCartPayload() {
+    return {
+      quantity: 1,
+    };
   }
 }

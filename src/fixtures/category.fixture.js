@@ -1,6 +1,7 @@
 import { AbstractFixture } from './abstract.fixture';
 import EnvironmentUtil from '../utils/environment.util';
 import exec from 'k6/execution';
+import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
 
 const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
 const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
@@ -14,16 +15,19 @@ export class CategoryFixture extends AbstractFixture {
     this.categoryCount = categoryCount;
     this.productCount = productCount;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
+    this.storeId = 1;
   }
 
   getData() {
     const response = this.runDynamicFixture(this._getCategoriesPayload());
     const responseData = JSON.parse(response.body).data;
-
     return responseData
       .filter((item) => /^category\d+$/.test(item.attributes.key))
       .map((item) => {
-        return item.attributes.data;
+        let category = item.attributes.data;
+        category.url = this._buildCategoryUrl(category.localized_attributes[0].name);
+
+        return category;
       });
   }
 
@@ -34,6 +38,7 @@ export class CategoryFixture extends AbstractFixture {
   }
 
   _getCategoriesPayload() {
+    this.productLabelKey = `productLabel${uuidv4().replace(/-/g, '')}`;
     const baseOperations = [
       {
         type: 'transfer',
@@ -51,9 +56,35 @@ export class CategoryFixture extends AbstractFixture {
         arguments: { id_store: 1, name: 'DE' },
       },
       {
+        type: 'transfer',
+        name: 'NodeTransfer',
+        key: 'node',
+        arguments: { fkParentCategoryNode: 0 },
+      },
+      {
+        type: 'transfer',
+        name: 'StoreRelationTransfer',
+        key: 'storeRelation',
+        arguments: { idStores: [this.storeId] },
+      },
+      {
         type: 'array-object',
         key: 'stores',
         arguments: ['#store'],
+      },
+      {
+        type: 'helper',
+        name: 'haveProductLabel',
+        key: this.productLabelKey,
+        arguments: [
+          {
+            storeRelation: '#storeRelation',
+          },
+          {
+            name: 'KSixTestLabel',
+            frontEndReference: 'KSixTestLabel',
+          },
+        ],
       },
     ];
 
@@ -79,7 +110,7 @@ export class CategoryFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveFullProduct',
         key: productKey,
-        arguments: [{}, { idTaxSet: 1 }],
+        arguments: [this._getProductLocalizedAttributes(), { idTaxSet: 1 }],
       },
       {
         type: 'helper',
@@ -165,6 +196,15 @@ export class CategoryFixture extends AbstractFixture {
       });
     }
 
+    product.push({
+      type: 'helper',
+      name: 'haveProductLabelToAbstractProductRelation',
+      arguments: {
+        idProductLabel: `#${this.productLabelKey}.id_product_label`,
+        idProductAbstract: `#${productKey}.fk_product_abstract`,
+      },
+    });
+
     return product;
   }
 
@@ -176,7 +216,11 @@ export class CategoryFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveLocalizedCategory',
         key: categoryKey,
-        arguments: [],
+        arguments: [
+          {
+            parentCategoryNode: '#node',
+          },
+        ],
       },
       {
         type: 'helper',
@@ -187,5 +231,29 @@ export class CategoryFixture extends AbstractFixture {
         },
       },
     ];
+  }
+
+  _getProductLocalizedAttributes() {
+    return {
+      attributes: this._generateAttributesValue(),
+    };
+  }
+
+  _generateProductUniqueName() {
+    return `Product #${uuidv4()}`;
+  }
+
+  _generateAttributesValue() {
+    const colors = ['Black', 'Blue', 'White'];
+    const brands = ['Adidas', 'Nike', 'Puma'];
+
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const brand = brands[Math.floor(Math.random() * brands.length)];
+
+    return { color: color, brand: brand };
+  }
+
+  _buildCategoryUrl(categoryName) {
+    return `en/${categoryName.replace(/\s+/g, '-').toLowerCase()}`;
   }
 }
