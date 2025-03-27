@@ -1,7 +1,13 @@
 FROM golang:1.22 AS builder
 
-RUN go install go.k6.io/xk6/cmd/xk6@latest
-RUN xk6 build v0.54.0 --with github.com/grafana/xk6-browser@latest --with github.com/avitalique/xk6-file@latest --with github.com/acuenca-facephi/xk6-read@latest --with github.com/grafana/xk6-faker@latest
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+RUN go install go.k6.io/xk6/cmd/xk6@v0.14.3
+RUN xk6 build v0.54.0 \
+      --with github.com/grafana/xk6-browser@v1.10.0 \
+      --with github.com/avitalique/xk6-file@v1.4.2 \
+      --with github.com/acuenca-facephi/xk6-read@v1.0.0 \
+      --with github.com/grafana/xk6-faker@v0.4.1
 
 FROM alpine:latest
 RUN apk add --no-cache ca-certificates chromium
