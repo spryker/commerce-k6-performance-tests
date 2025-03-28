@@ -6,9 +6,13 @@ import { LoginPage } from '../../pages/bo/login.page';
 import SalesPage from '../../pages/bo/sales.page';
 import { OrderFixture } from '../../fixtures/order.fixture';
 import { parseHTML } from 'k6/html';
-import KSixError from '../../utils/k-six-error';
 import MerchantSalesPage from '../../pages/bo/merchant-sales.page';
 import AbstractResource from '../../resources/abstract.resource';
+import exec from 'k6/execution';
+
+if (EnvironmentUtil.getRepositoryId() === 'b2b') {
+  exec.test.abort('Merchant Portal is not integrated into b2b demo shop.');
+}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -60,10 +64,6 @@ export function setup() {
 }
 
 export default function () {
-  if (EnvironmentUtil.getRepositoryId() === 'b2b') {
-    throw new KSixError('This test is not supported for B2B');
-  }
-
   let headers = {};
 
   group('Login', () => {

@@ -11,13 +11,17 @@ import { parseHTML } from 'k6/html';
 import AbstractResource from '../../resources/abstract.resource';
 import OrdersPage from '../../pages/mp/orders.page';
 
+if (EnvironmentUtil.getRepositoryId() === 'b2b') {
+  exec.test.abort('Merchant Portal is not integrated into b2b demo shop.');
+}
+
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'M3',
   group: 'Order management',
   metrics: ['M3_get_order_details', 'M3_post_ship_order'],
   vus: 1,
-  iterations: 1,
+  iterations: 10,
   thresholds: {
     M3_get_order_details: {
       smoke: ['avg<800'],

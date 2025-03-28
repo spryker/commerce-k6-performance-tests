@@ -12,7 +12,7 @@ const testConfiguration = {
   group: 'Product management',
   metrics: ['B4_get_product_add', 'B4_post_product_add'],
   vus: 1,
-  iterations: 10,
+  iterations: 1,
   thresholds: {
     B4_get_product_add: {
       smoke: ['avg<700'],

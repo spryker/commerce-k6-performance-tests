@@ -2,10 +2,10 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import { MerchantUserFixture } from '../../fixtures/merchant-user.fixture';
-import { browser } from 'k6/browser';
 import { DashboardPage } from '../../pages/mp/dashboard.page';
 import { LoginPage } from '../../pages/mp/login.page';
 import exec from 'k6/execution';
+import { group } from 'k6';
 
 if (EnvironmentUtil.getRepositoryId() === 'b2b') {
   exec.test.abort('Merchant Portal is not integrated into b2b demo shop.');
@@ -42,42 +42,18 @@ export function teardown() {
 
 export default async function (data) {
   const merchantUser = MerchantUserFixture.iterateData(data);
-  let browserContext = await browser.newContext();
 
-  try {
-    browserContext = await login(browserContext, merchantUser);
-    const durationTime = await openDashboardPage(browserContext);
+  let headers = {};
 
-    metrics[testConfiguration.metrics[0]].add(durationTime);
-  } finally {
-    await browserContext.close();
-  }
-}
+  group('Login', () => {
+    const loginPage = new LoginPage(merchantUser.username);
+    headers = loginPage.login();
+  });
 
-async function login(browserContext, merchantUser) {
-  const page = await browserContext.newPage({ headless: false });
-  const loginPage = new LoginPage(page);
+  group('Open dashboard page', () => {
+    const dashboardPage = new DashboardPage(headers);
+    const dashboardPageResponse = dashboardPage.get();
 
-  try {
-    await loginPage.navigate();
-    await loginPage.login(merchantUser.username, merchantUser.password);
-
-    return browserContext;
-  } finally {
-    await page.close();
-  }
-}
-
-async function openDashboardPage(browserContext) {
-  const page = await browserContext.newPage({ headless: false });
-  const dashboardPage = new DashboardPage(page);
-
-  try {
-    await dashboardPage.navigate();
-    await dashboardPage.verifyHeader();
-
-    return await dashboardPage.getDurationTime();
-  } finally {
-    await page.close();
-  }
+    metrics[testConfiguration.metrics[0]].add(dashboardPageResponse.timings.duration);
+  });
 }

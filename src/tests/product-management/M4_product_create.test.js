@@ -5,6 +5,11 @@ import EnvironmentUtil from '../../utils/environment.util';
 import { LoginPage } from '../../pages/mp/login.page';
 import ProductPage from '../../pages/mp/product.page';
 import { parseHTML } from 'k6/html';
+import exec from 'k6/execution';
+
+if (EnvironmentUtil.getRepositoryId() === 'b2b') {
+  exec.test.abort('Merchant Portal is not integrated into b2b demo shop.');
+}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
