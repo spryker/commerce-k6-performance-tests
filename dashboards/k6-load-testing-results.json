@@ -1769,9 +1769,99 @@
             "selected": false,
             "text": "S25_get_category",
             "value": "S25_get_category"
+          },
+          {
+            "selected": false,
+            "text": "B1_get_sales",
+            "value": "B1_get_sales"
+          },
+          {
+            "selected": false,
+            "text": "B3_get_sales_detail",
+            "value": "B3_get_sales_detail"
+          },
+          {
+            "selected": false,
+            "text": "B3_post_pay_order",
+            "value": "B3_post_pay_order"
+          },
+          {
+            "selected": false,
+            "text": "B4_get_product_add",
+            "value": "B4_get_product_add"
+          },
+          {
+            "selected": false,
+            "text": "B4_post_product_add",
+            "value": "B4_post_product_add"
+          },
+          {
+            "selected": false,
+            "text": "B12_get_merchant_sales",
+            "value": "B12_get_merchant_sales"
+          },
+          {
+            "selected": false,
+            "text": "M1_get_orders",
+            "value": "M1_get_orders"
+          },
+          {
+            "selected": false,
+            "text": "M3_get_order_details",
+            "value": "M3_get_order_details"
+          },
+          {
+            "selected": false,
+            "text": "M3_post_ship_order",
+            "value": "M3_post_ship_order"
+          },
+          {
+            "selected": false,
+            "text": "M4_get_abstract_create",
+            "value": "M4_get_abstract_create"
+          },
+          {
+            "selected": false,
+            "text": "M4_post_abstract_create",
+            "value": "M4_post_abstract_create"
+          },
+          {
+            "selected": false,
+            "text": "M4_get_concrete_create",
+            "value": "M4_get_concrete_create"
+          },
+          {
+            "selected": false,
+            "text": "M4_post_concrete_create",
+            "value": "M4_post_concrete_create"
+          },
+          {
+            "selected": false,
+            "text": "M4_get_abstract_update",
+            "value": "M4_get_abstract_update"
+          },
+          {
+            "selected": false,
+            "text": "M4_post_abstract_update",
+            "value": "M4_post_abstract_update"
+          },
+          {
+            "selected": false,
+            "text": "M4_get_concrete_update",
+            "value": "M4_get_concrete_update"
+          },
+          {
+            "selected": false,
+            "text": "M4_post_concrete_update",
+            "value": "M4_post_concrete_update"
+          },
+          {
+            "selected": false,
+            "text": "M4_send_for_approval",
+            "value": "M4_send_for_approval"
           }
         ],
-        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,S2_get_search,M8_get_mp_dashboard,SAPI2_get_catalog_search,SAPI3_get_concrete_products,SAPI4_get_carts,SAPI5_get_carts_include_items,SAPI6_post_carts_items,SAPI13_get_abstract_products_all_includes,SAPI32_get_carts_by_id,SAPI38_get_orders,SAPI38_get_orders_details,SAPI42_get_category_search,S4_get_checkout,S4_get_checkout_address,S4_post_checkout_address,S4_get_checkout_shipment,S4_post_checkout_shipment,S4_get_checkout_payment,S4_post_checkout_payment,S4_get_checkout_summary,S4_post_checkout_summary,S4_get_place_order,S4_get_checkout_success,S13_get_orders,S13_post_cancel_order,S18_get_cart,S19_post_cart_add,S25_get_category",
+        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,S2_get_search,M8_get_mp_dashboard,SAPI2_get_catalog_search,SAPI3_get_concrete_products,SAPI4_get_carts,SAPI5_get_carts_include_items,SAPI6_post_carts_items,SAPI13_get_abstract_products_all_includes,SAPI32_get_carts_by_id,SAPI38_get_orders,SAPI38_get_orders_details,SAPI42_get_category_search,S4_get_checkout,S4_get_checkout_address,S4_post_checkout_address,S4_get_checkout_shipment,S4_post_checkout_shipment,S4_get_checkout_payment,S4_post_checkout_payment,S4_get_checkout_summary,S4_post_checkout_summary,S4_get_place_order,S4_get_checkout_success,S13_get_orders,S13_post_cancel_order,S18_get_cart,S19_post_cart_add,S25_get_category,B1_get_sales,B3_get_sales_detail,B3_post_pay_order,B4_get_product_add,B4_post_product_add,B12_get_merchant_sales,M1_get_orders,M3_get_order_details,M3_post_ship_order,M4_get_abstract_create,M4_post_abstract_create,M4_get_concrete_create,M4_post_concrete_create,M4_get_abstract_update,M4_post_abstract_update,M4_get_concrete_update,M4_post_concrete_update,M4_send_for_approval",
         "type": "custom"
       }
     ]

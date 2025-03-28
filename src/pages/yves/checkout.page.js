@@ -177,8 +177,7 @@ export default class CheckoutPage extends AbstractPage {
   }
 
   _getAddressFormPayload(token) {
-    return {
-      'addressesForm[shipmentType][key]': 'delivery',
+    let payload = {
       'checkout-full-addresses': 0,
       'addressesForm[shippingAddress][id_customer_address]': 0,
       'addressesForm[shippingAddress][id_company_unit_address]': 0,
@@ -208,9 +207,15 @@ export default class CheckoutPage extends AbstractPage {
       'addressesForm[billingAddress][iso2_code]': 'DE',
       'addressesForm[billingAddress][phone]': '4902890031',
       'addressesForm[isMultipleShipmentEnabled]': '',
-      'addressesForm[servicePoint][uuid]': '',
       'addressesForm[_token]': token,
     };
+
+    if (EnvironmentUtil.getRepositoryId() === 'suite') {
+      payload['addressesForm[shipmentType][key]'] = 'delivery';
+      payload['addressesForm[servicePoint][uuid]'] = '';
+    }
+
+    return payload;
   }
 
   _getShipmentFormPayload(token) {
@@ -221,6 +226,23 @@ export default class CheckoutPage extends AbstractPage {
   }
 
   _getPaymentFormPayload(token) {
+    switch (EnvironmentUtil.getRepositoryId()) {
+      case 'b2b-mp':
+        return this._getMarketplacePaymentFormPayload(token);
+      default:
+        return this._getPaymentFormPayloadDefault(token);
+    }
+  }
+
+  _getMarketplacePaymentFormPayload(token) {
+    return {
+      'paymentForm[paymentSelection]': 'dummyMarketplacePaymentInvoice',
+      'paymentForm[dummyMarketplacePaymentInvoice][dateOfBirth]': '11.11.1991',
+      'paymentForm[_token]': token,
+    };
+  }
+
+  _getPaymentFormPayloadDefault(token) {
     return {
       'paymentForm[paymentSelection]': 'dummyPaymentInvoice',
       'paymentForm[dummyPaymentInvoice][date_of_birth]': '11.11.1991',

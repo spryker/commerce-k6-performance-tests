@@ -340,8 +340,10 @@ export class CartFixture extends AbstractFixture {
     return Array.from({ length: this.itemCount }, (_, i) => ({
       sku: `#productKey${i + 1}.sku`,
       abstractSku: `#productKey${i + 1}.abstract_sku`,
+      idProductAbstract: `#productKey${i + 1}.fk_product_abstract`,
       quantity: 1,
       unitPrice: this.defaultItemPrice,
+      unitGrossPrice: this.defaultItemPrice,
       productOfferReference: this.repositoryId === 'b2b-mp' ? `#productOffer${i + 1}.product_offer_reference` : null,
       merchantReference: this.repositoryId === 'b2b-mp' ? `#productOffer${i + 1}.merchant_reference` : null,
     }));

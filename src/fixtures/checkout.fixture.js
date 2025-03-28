@@ -9,10 +9,10 @@ const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486
 const DEFAULT_PASSWORD = 'change123';
 const DEFAULT_STOCK_ID = 1;
 const DEFAULT_STOCK_NAME = 'Warehouse1';
-const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
+const DEFAULT_MERCHANT_REFERENCE = 'MER000001';
 
 export class CheckoutFixture extends AbstractFixture {
-  constructor({ customerCount, cartCount = 1, itemCount = 10, defaultItemPrice = 1000 }) {
+  constructor({ customerCount, cartCount = 1, itemCount = 10, defaultItemPrice = 1000, forceMarketplace = false }) {
     super();
     this.customerCount = customerCount;
     this.cartCount = cartCount;
@@ -20,6 +20,7 @@ export class CheckoutFixture extends AbstractFixture {
     this.defaultItemPrice = defaultItemPrice;
     this.emptyCartCount = 0;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
+    this.forceMarketplace = forceMarketplace;
   }
 
   getData(customerCount = this.customerCount, cartCount = this.cartCount, emptyCartCount = this.emptyCartCount) {
@@ -28,7 +29,6 @@ export class CheckoutFixture extends AbstractFixture {
     this.emptyCartCount = emptyCartCount;
 
     const response = this.runDynamicFixture(this._getCustomersWithQuotesPayload());
-
     const responseData = JSON.parse(response.body).data;
     const customers = responseData.filter((item) => /^customer\d+$/.test(item.attributes.key));
 
@@ -206,7 +206,7 @@ export class CheckoutFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp') {
+    if (this.repositoryId === 'b2b-mp' || this.forceMarketplace) {
       const productOfferKey = `productOffer${index + 1}`;
       productOffer = [
         {
@@ -319,10 +319,16 @@ export class CheckoutFixture extends AbstractFixture {
     return Array.from({ length: this.itemCount }, (_, i) => ({
       sku: `#product${i + 1}.sku`,
       abstractSku: `#product${i + 1}.abstract_sku`,
+      idProductAbstract: `#product${i + 1}.fk_product_abstract`,
       quantity: 1,
       unitPrice: this.defaultItemPrice,
-      productOfferReference: this.repositoryId === 'b2b-mp' ? `#productOffer${i + 1}.product_offer_reference` : null,
-      merchantReference: this.repositoryId === 'b2b-mp' ? `#productOffer${i + 1}.merchant_reference` : null,
+      unitGrossPrice: this.defaultItemPrice,
+      productOfferReference:
+        this.repositoryId === 'b2b-mp' || this.forceMarketplace
+          ? `#productOffer${i + 1}.product_offer_reference`
+          : null,
+      merchantReference:
+        this.repositoryId === 'b2b-mp' || this.forceMarketplace ? `#productOffer${i + 1}.merchant_reference` : null,
     }));
   }
 }

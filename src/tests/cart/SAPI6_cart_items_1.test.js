@@ -13,7 +13,7 @@ const testConfiguration = {
   description: 'Adds an item to the cart',
   metrics: ['SAPI6_post_carts_items'],
   thresholds: {
-    SAPI6_get_carts_items: {
+    SAPI6_post_carts_items: {
       smoke: ['avg<600'],
       load: ['avg<1200'],
     },
