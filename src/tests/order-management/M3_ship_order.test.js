@@ -40,7 +40,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 export function setup() {
   const dynamicFixture = new OrderFixture({
     customerCount: testConfiguration.vus,
-    ordersCount: 1,
+    ordersCount: testConfiguration.iterations,
     itemCount: 70,
     defaultItemPrice: 1000,
     forceMarketplace: true,

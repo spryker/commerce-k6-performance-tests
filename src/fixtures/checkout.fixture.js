@@ -9,7 +9,7 @@ const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486
 const DEFAULT_PASSWORD = 'change123';
 const DEFAULT_STOCK_ID = 1;
 const DEFAULT_STOCK_NAME = 'Warehouse1';
-const DEFAULT_MERCHANT_REFERENCE = 'MER000001';
+const DEFAULT_MERCHANT_REFERENCE = EnvironmentUtil.getRepositoryId() === 'b2b-mp' ? 'MER000008' : 'MER000001';
 
 export class CheckoutFixture extends AbstractFixture {
   constructor({ customerCount, cartCount = 1, itemCount = 10, defaultItemPrice = 1000, forceMarketplace = false }) {

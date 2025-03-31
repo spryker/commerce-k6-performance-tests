@@ -82,11 +82,7 @@ export default class OrdersPage extends AbstractPage {
   triggerEvent(merchantOrderId, event) {
     const eventName = event.replaceAll(' ', '%20');
     const triggerEventUrl = `${EnvironmentUtil.getMerchantPortalUrl()}/sales-merchant-portal-gui/trigger-merchant-oms?merchant-order-id=${merchantOrderId}&event-name=${eventName}`;
-    console.log(triggerEventUrl);
-    console.log(this.headers);
     const triggerEventResponse = http.get(triggerEventUrl, { headers: this.headers });
-
-    console.log(triggerEventResponse);
 
     addErrorToCounter(
       check(triggerEventResponse, {
