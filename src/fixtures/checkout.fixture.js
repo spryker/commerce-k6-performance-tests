@@ -20,7 +20,7 @@ export class CheckoutFixture extends AbstractFixture {
     this.defaultItemPrice = defaultItemPrice;
     this.emptyCartCount = 0;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
-    this.forceMarketplace = forceMarketplace;
+    this.isMarketplace = this.repositoryId === 'b2b-mp' || forceMarketplace;
   }
 
   getData(customerCount = this.customerCount, cartCount = this.cartCount, emptyCartCount = this.emptyCartCount) {
@@ -206,7 +206,7 @@ export class CheckoutFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp' || this.forceMarketplace) {
+    if (this.isMarketplace) {
       const productOfferKey = `productOffer${index + 1}`;
       productOffer = [
         {
@@ -323,12 +323,8 @@ export class CheckoutFixture extends AbstractFixture {
       quantity: 1,
       unitPrice: this.defaultItemPrice,
       unitGrossPrice: this.defaultItemPrice,
-      productOfferReference:
-        this.repositoryId === 'b2b-mp' || this.forceMarketplace
-          ? `#productOffer${i + 1}.product_offer_reference`
-          : null,
-      merchantReference:
-        this.repositoryId === 'b2b-mp' || this.forceMarketplace ? `#productOffer${i + 1}.merchant_reference` : null,
+      productOfferReference: this.isMarketplace ? `#productOffer${i + 1}.product_offer_reference` : null,
+      merchantReference: this.isMarketplace ? `#productOffer${i + 1}.merchant_reference` : null,
     }));
   }
 }

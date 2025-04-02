@@ -20,10 +20,29 @@ export default class SalesPage extends AbstractPage {
       })
     );
 
-    const salesTableUrl = `${EnvironmentUtil.getBackofficeUrl()}/sales/index/table?draw=1`;
-    const salesTableResponse = http.get(salesTableUrl, { headers: this.headers });
+    const salesTableResponse = this.table();
 
     return (salesResponse.timings.duration + salesTableResponse.timings.duration) * 1.05;
+  }
+
+  table(params = {}) {
+    let queryString = '?';
+    params.draw = 1;
+    for (const key in params) {
+      queryString += `${key}=${params[key]}&`;
+    }
+    queryString = queryString.slice(0, -1);
+
+    const salesTableUrl = `${EnvironmentUtil.getBackofficeUrl()}/sales/index/table${queryString}`;
+    const salesTableResponse = http.get(salesTableUrl, { headers: this.headers });
+
+    addErrorToCounter(
+      check(salesTableResponse, {
+        'Sales table was successful': (r) => r.status === 200 && r.body,
+      })
+    );
+
+    return salesTableResponse;
   }
 
   get(orderId) {
@@ -54,5 +73,18 @@ export default class SalesPage extends AbstractPage {
     );
 
     return triggerEventResponse;
+  }
+
+  retrieveOrderIdByReference(orderReference) {
+    const salesTableResponse = this.table({ 'search[value]': orderReference });
+
+    addErrorToCounter(
+      check(salesTableResponse, {
+        'Sales Table contains order reference': (r) =>
+          r.status === 200 && r.body && JSON.parse(r.body).recordsFiltered > 0,
+      })
+    );
+
+    return JSON.parse(salesTableResponse.body).data[0][0];
   }
 }

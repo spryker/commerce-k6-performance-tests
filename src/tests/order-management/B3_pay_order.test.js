@@ -42,7 +42,7 @@ export function setup() {
 }
 
 export default function (data) {
-  const { orderIds } = OrderFixture.iterateData(data);
+  const { orderReferences } = OrderFixture.iterateData(data);
 
   let headers = {};
 
@@ -52,7 +52,8 @@ export default function (data) {
   });
 
   const salesPage = new SalesPage(headers);
-  const orderId = orderIds[exec.scenario.iterationInTest];
+  const orderReference = orderReferences[exec.scenario.iterationInTest];
+  const orderId = salesPage.retrieveOrderIdByReference(orderReference);
 
   let omsTriggerFormToken;
   group('Order Details', () => {

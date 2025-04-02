@@ -5,6 +5,7 @@ import EnvironmentUtil from '../../utils/environment.util';
 import { CartFixture } from '../../fixtures/cart.fixture';
 import AuthUtil from '../../utils/auth.util';
 import CartsResource from '../../resources/carts.resource';
+import exec from 'k6/execution';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -33,7 +34,7 @@ export function setup() {
 }
 
 export default function (data) {
-  const { customerEmail, idCart } = CartFixture.iterateData(data);
+  const { customerEmail, idCart } = CartFixture.iterateData(data, exec.vu.idInTest, 0);
 
   let bearerToken;
   group('Authorization', () => {
@@ -42,7 +43,7 @@ export default function (data) {
 
   group(testConfiguration.group, () => {
     const cartsResource = new CartsResource(bearerToken);
-    const response = cartsResource.getIncludeItems(idCart);
+    const response = cartsResource.getCartWithItems(idCart);
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });

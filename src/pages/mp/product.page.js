@@ -3,7 +3,7 @@ import AbstractPage from '../abstract.page';
 import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
-import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
+import { uuidv4 } from '../../utils/uuid.util';
 import { FormData } from '../../assets/form-data';
 
 export default class ProductPage extends AbstractPage {

@@ -3,7 +3,15 @@ import AbstractPage from '../abstract.page';
 import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
-import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
+import { uuidv4 } from '../../utils/uuid.util';
+
+const FK_CURRENCY_EUR = 93;
+const FK_CURRENCY_CHF = 61;
+const FK_STORE_DE = 1;
+const FK_STORE_AT = 2;
+const FK_PRICE_TYPE_1 = 1;
+const FK_PRICE_TYPE_2 = 2;
+const DEFAULT_PRICE = 999;
 
 export default class ProductPage extends AbstractPage {
   constructor(headers = null) {
@@ -47,7 +55,7 @@ export default class ProductPage extends AbstractPage {
 
     let payload = {
       'product_form_add[store_relation][id_entity]': '',
-      'product_form_add[store_relation][id_stores][]': 1,
+      'product_form_add[store_relation][id_stores][]': FK_STORE_DE,
       'product_form_add[sku]': this._getProductSku(),
       'product_form_add[general_de_DE][name]': productName,
       'product_form_add[general_de_DE][description]': '',
@@ -56,46 +64,55 @@ export default class ProductPage extends AbstractPage {
       'product_form_add[new_from]': '',
       'product_form_add[new_to]': '',
       'product_form_add[price_dimension][PRICE_DIMENSION_MERCHANT_RELATIONSHIP][idMerchantRelationship]': '',
-      'product_form_add[prices][2-61-DEFAULT-BOTH][moneyValue][gross_amount]': '',
-      'product_form_add[prices][2-61-DEFAULT-BOTH][moneyValue][fk_currency]': 61,
-      'product_form_add[prices][2-61-DEFAULT-BOTH][moneyValue][fk_store]': 2,
-      'product_form_add[prices][2-61-DEFAULT-BOTH][fk_price_type]': 1,
-      'product_form_add[prices][2-61-ORIGINAL-BOTH][moneyValue][gross_amount]': '',
-      'product_form_add[prices][2-61-ORIGINAL-BOTH][moneyValue][fk_currency]': 61,
-      'product_form_add[prices][2-61-ORIGINAL-BOTH][moneyValue][fk_store]': 2,
-      'product_form_add[prices][2-61-ORIGINAL-BOTH][fk_price_type]': 2,
-      'product_form_add[prices][2-61-DEFAULT-BOTH][moneyValue][net_amount]': '',
-      'product_form_add[prices][2-61-ORIGINAL-BOTH][moneyValue][net_amount]': '',
-      'product_form_add[prices][2-93-DEFAULT-BOTH][moneyValue][gross_amount]': '',
-      'product_form_add[prices][2-93-DEFAULT-BOTH][moneyValue][fk_currency]': 93,
-      'product_form_add[prices][2-93-DEFAULT-BOTH][moneyValue][fk_store]': 2,
-      'product_form_add[prices][2-93-DEFAULT-BOTH][fk_price_type]': 1,
-      'product_form_add[prices][2-93-ORIGINAL-BOTH][moneyValue][gross_amount]': '',
-      'product_form_add[prices][2-93-ORIGINAL-BOTH][moneyValue][fk_currency]': 93,
-      'product_form_add[prices][2-93-ORIGINAL-BOTH][moneyValue][fk_store]': 2,
-      'product_form_add[prices][2-93-ORIGINAL-BOTH][fk_price_type]': 2,
-      'product_form_add[prices][2-93-DEFAULT-BOTH][moneyValue][net_amount]': '',
-      'product_form_add[prices][2-93-ORIGINAL-BOTH][moneyValue][net_amount]': '',
-      'product_form_add[prices][1-61-DEFAULT-BOTH][moneyValue][gross_amount]': '',
-      'product_form_add[prices][1-61-DEFAULT-BOTH][moneyValue][fk_currency]': 61,
-      'product_form_add[prices][1-61-DEFAULT-BOTH][moneyValue][fk_store]': 1,
-      'product_form_add[prices][1-61-DEFAULT-BOTH][fk_price_type]': 1,
-      'product_form_add[prices][1-61-ORIGINAL-BOTH][moneyValue][gross_amount]': '',
-      'product_form_add[prices][1-61-ORIGINAL-BOTH][moneyValue][fk_currency]': 61,
-      'product_form_add[prices][1-61-ORIGINAL-BOTH][moneyValue][fk_store]': 1,
-      'product_form_add[prices][1-61-ORIGINAL-BOTH][fk_price_type]': 2,
-      'product_form_add[prices][1-61-DEFAULT-BOTH][moneyValue][net_amount]': '',
-      'product_form_add[prices][1-61-ORIGINAL-BOTH][moneyValue][net_amount]': '',
-      'product_form_add[prices][1-93-DEFAULT-BOTH][moneyValue][gross_amount]': 999,
-      'product_form_add[prices][1-93-DEFAULT-BOTH][moneyValue][fk_currency]': 93,
-      'product_form_add[prices][1-93-DEFAULT-BOTH][moneyValue][fk_store]': 1,
-      'product_form_add[prices][1-93-DEFAULT-BOTH][fk_price_type]': 1,
-      'product_form_add[prices][1-93-ORIGINAL-BOTH][moneyValue][gross_amount]': '',
-      'product_form_add[prices][1-93-ORIGINAL-BOTH][moneyValue][fk_currency]': 93,
-      'product_form_add[prices][1-93-ORIGINAL-BOTH][moneyValue][fk_store]': 1,
-      'product_form_add[prices][1-93-ORIGINAL-BOTH][fk_price_type]': 2,
-      'product_form_add[prices][1-93-DEFAULT-BOTH][moneyValue][net_amount]': '',
-      'product_form_add[prices][1-93-ORIGINAL-BOTH][moneyValue][net_amount]': '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][moneyValue][gross_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][moneyValue][net_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][moneyValue][fk_currency]`]:
+        FK_CURRENCY_CHF,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][moneyValue][fk_store]`]: FK_STORE_AT,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][fk_price_type]`]: FK_PRICE_TYPE_1,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][moneyValue][gross_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][moneyValue][net_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][moneyValue][fk_currency]`]:
+        FK_CURRENCY_CHF,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][moneyValue][fk_store]`]: FK_STORE_AT,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][fk_price_type]`]: FK_PRICE_TYPE_2,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][moneyValue][gross_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][moneyValue][net_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][moneyValue][fk_currency]`]:
+        FK_CURRENCY_EUR,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][moneyValue][fk_store]`]: FK_STORE_AT,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][fk_price_type]`]: FK_PRICE_TYPE_1,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][moneyValue][gross_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][moneyValue][net_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][moneyValue][fk_currency]`]:
+        FK_CURRENCY_EUR,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][moneyValue][fk_store]`]: FK_STORE_AT,
+      [`product_form_add[prices][${FK_STORE_AT}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][fk_price_type]`]: FK_PRICE_TYPE_2,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][moneyValue][gross_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][moneyValue][net_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][moneyValue][fk_currency]`]:
+        FK_CURRENCY_CHF,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][moneyValue][fk_store]`]: FK_STORE_DE,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-DEFAULT-BOTH][fk_price_type]`]: FK_PRICE_TYPE_1,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][moneyValue][gross_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][moneyValue][net_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][moneyValue][fk_currency]`]:
+        FK_CURRENCY_CHF,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][moneyValue][fk_store]`]: FK_STORE_DE,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_CHF}-ORIGINAL-BOTH][fk_price_type]`]: FK_PRICE_TYPE_2,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][moneyValue][gross_amount]`]:
+        DEFAULT_PRICE,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][moneyValue][net_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][moneyValue][fk_currency]`]:
+        FK_CURRENCY_EUR,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][moneyValue][fk_store]`]: FK_STORE_DE,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-DEFAULT-BOTH][fk_price_type]`]: FK_PRICE_TYPE_1,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][moneyValue][gross_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][moneyValue][net_amount]`]: '',
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][moneyValue][fk_currency]`]:
+        FK_CURRENCY_EUR,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][moneyValue][fk_store]`]: FK_STORE_DE,
+      [`product_form_add[prices][${FK_STORE_DE}-${FK_CURRENCY_EUR}-ORIGINAL-BOTH][fk_price_type]`]: FK_PRICE_TYPE_2,
       'product_form_add[tax_rate]': 1,
       'product_form_add[seo_de_DE][meta_title]': '',
       'product_form_add[seo_de_DE][meta_keywords]': '',

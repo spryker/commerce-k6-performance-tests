@@ -12,12 +12,11 @@ const DEFAULT_STOCK_NAME = 'Warehouse1';
 const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
 
 export class CartFixture extends AbstractFixture {
-  constructor({ customerCount, cartCount = 1, itemCount = 1, emptyCartCount = 0, defaultItemPrice = 1000 }) {
+  constructor({ customerCount, cartCount = 1, itemCount = 1, defaultItemPrice = 1000 }) {
     super();
     this.customerCount = customerCount;
     this.cartCount = cartCount;
     this.itemCount = itemCount;
-    this.emptyCartCount = emptyCartCount;
     this.defaultItemPrice = defaultItemPrice;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
@@ -36,34 +35,27 @@ export class CartFixture extends AbstractFixture {
         .filter((item) => item.attributes.key.startsWith(`${customer.attributes.key}Quote`))
         .map((cart) => cart.attributes.data.uuid);
 
-      const emptyCarts = responseData
-        .filter((item) => item.attributes.key.startsWith(`${customer.attributes.key}EmptyQuote`))
-        .map((cart) => cart.attributes.data.uuid);
-
-      const product = responseData
+      const productSkus = responseData
         .filter((item) => item.attributes.key.startsWith('productKey'))
         .map((product) => product.attributes.data.sku);
 
       return {
         customerEmail: customer.attributes.data.email,
         cartIds: carts,
-        emptyCartIds: emptyCarts,
-        productSkus: product,
+        productSkus: productSkus,
       };
     });
   }
 
   static iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
     const customerIndex = (vus - 1) % data.length;
-    const { customerEmail, cartIds, emptyCartIds, productSkus } = data[customerIndex];
+    const { customerEmail, cartIds, productSkus } = data[customerIndex];
     const cartIndex = iterations % cartIds.length;
-    const emptyCartIndex = iterations % emptyCartIds.length;
     const product = productSkus[0];
 
     return {
       customerEmail,
       idCart: cartIds[cartIndex],
-      idEmptyCart: emptyCartIds[emptyCartIndex],
       productSku: product,
     };
   }
@@ -262,7 +254,6 @@ export class CartFixture extends AbstractFixture {
 
   _createCustomerPayload(index) {
     const customerKey = `customer${index + 1}`;
-    let emptyQuotes = [];
     let companyUser = [];
     let quotes = Array.from({ length: this.cartCount }, (_, quoteIndex) => ({
       type: 'helper',
@@ -275,22 +266,6 @@ export class CartFixture extends AbstractFixture {
         },
       ],
     }));
-
-    if (this.emptyCartCount) {
-      emptyQuotes = Array.from({ length: this.emptyCartCount }, (_, emptyQuoteIndex) => ({
-        type: 'helper',
-        name: 'havePersistentQuote',
-        key: `${customerKey}EmptyQuote${emptyQuoteIndex + 1}`,
-        arguments: [
-          {
-            customer: `#${customerKey}`,
-            items: [],
-          },
-        ],
-      }));
-    }
-
-    quotes.push(...emptyQuotes);
 
     const customer = [
       {

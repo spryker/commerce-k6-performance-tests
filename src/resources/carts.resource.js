@@ -26,7 +26,7 @@ export default class CartsResource extends AbstractResource {
     return this.getRequest(`carts/${idCart}` + includeParam);
   }
 
-  getIncludeItems(idCart) {
+  getCartWithItems(idCart) {
     return this.getRequest(`carts/${idCart}?include=items`);
   }
 

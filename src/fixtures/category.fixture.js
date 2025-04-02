@@ -1,13 +1,19 @@
 import { AbstractFixture } from './abstract.fixture';
 import EnvironmentUtil from '../utils/environment.util';
 import exec from 'k6/execution';
-import { uuidv4 } from 'https://jslib.k6.io/k6-utils/1.4.0/index.js';
+import { uuidv4 } from '../utils/uuid.util';
 
 const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
 const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
 const DEFAULT_STOCK_ID = 1;
 const DEFAULT_STOCK_NAME = 'Warehouse1';
 const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
+const DEFAULT_STORE_ID = 1;
+const DEFAULT_STORE_NAME = 'DE';
+const DEFAULT_PARENT_CATEGORY_NODE = 0;
+const DEFAULT_TAX_SET_ID = 1;
+const DEFAULT_COLORS = ['Black', 'Blue', 'White'];
+const DEFAULT_BRANDS = ['Adidas', 'Nike', 'Puma'];
 
 export class CategoryFixture extends AbstractFixture {
   constructor({ categoryCount = 1, productCount = 1 }) {
@@ -15,7 +21,7 @@ export class CategoryFixture extends AbstractFixture {
     this.categoryCount = categoryCount;
     this.productCount = productCount;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
-    this.storeId = 1;
+    this.storeId = DEFAULT_STORE_ID;
   }
 
   getData() {
@@ -53,13 +59,13 @@ export class CategoryFixture extends AbstractFixture {
         type: 'transfer',
         name: 'StoreTransfer',
         key: 'store',
-        arguments: { id_store: 1, name: 'DE' },
+        arguments: { id_store: this.storeId, name: DEFAULT_STORE_NAME },
       },
       {
         type: 'transfer',
         name: 'NodeTransfer',
         key: 'node',
-        arguments: { fkParentCategoryNode: 0 },
+        arguments: { fkParentCategoryNode: DEFAULT_PARENT_CATEGORY_NODE },
       },
       {
         type: 'transfer',
@@ -110,7 +116,7 @@ export class CategoryFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveFullProduct',
         key: productKey,
-        arguments: [this._getProductLocalizedAttributes(), { idTaxSet: 1 }],
+        arguments: [this._getProductLocalizedAttributes(), { idTaxSet: DEFAULT_TAX_SET_ID }],
       },
       {
         type: 'helper',
@@ -239,13 +245,9 @@ export class CategoryFixture extends AbstractFixture {
     };
   }
 
-  _generateProductUniqueName() {
-    return `Product #${uuidv4()}`;
-  }
-
   _generateAttributesValue() {
-    const colors = ['Black', 'Blue', 'White'];
-    const brands = ['Adidas', 'Nike', 'Puma'];
+    const colors = DEFAULT_COLORS;
+    const brands = DEFAULT_BRANDS;
 
     const color = colors[Math.floor(Math.random() * colors.length)];
     const brand = brands[Math.floor(Math.random() * brands.length)];

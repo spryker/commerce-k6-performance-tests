@@ -3,11 +3,8 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import { LoginPage } from '../../pages/bo/login.page';
-import SalesPage from '../../pages/bo/sales.page';
 import { OrderFixture } from '../../fixtures/order.fixture';
-import { parseHTML } from 'k6/html';
 import MerchantSalesPage from '../../pages/bo/merchant-sales.page';
-import AbstractResource from '../../resources/abstract.resource';
 import exec from 'k6/execution';
 
 if (EnvironmentUtil.getRepositoryId() === 'b2b') {
@@ -42,25 +39,7 @@ export function setup() {
   });
 
   const data = dynamicFixture.getData();
-
-  const loginPage = new LoginPage();
-  const headers = loginPage.login();
-  const salesPage = new SalesPage(headers);
-  const abstractResource = new AbstractResource();
-
-  for (let i in data) {
-    const { orderIds } = data[i];
-    for (let j in orderIds) {
-      let orderId = orderIds[j];
-
-      const salesDetailPageResponse = salesPage.get(orderId);
-      let omsTriggerFormToken = parseHTML(salesDetailPageResponse.body).find('#oms_trigger_form__token').attr('value');
-
-      salesPage.triggerEvent(orderId, 'pay', omsTriggerFormToken);
-    }
-  }
-
-  abstractResource.runConsoleCommands(['oms:check-condition']);
+  dynamicFixture.preparePaidOrders(data);
 }
 
 export default function () {

@@ -8,6 +8,11 @@ const DEFAULT_STOCK_ID = 1;
 const DEFAULT_STOCK_NAME = 'Warehouse1';
 const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
 const DEFAULT_LOCALE = 'de_DE';
+const DEFAULT_STORE_ID = 1;
+const DEFAULT_STORE_NAME = 'DE';
+const DEFAULT_CURRENCY_CODE = 'EUR';
+const DEFAULT_TAX_SET_ID = 1;
+const DEFAULT_PRODUCT_URL_PREFIX = 'en-us';
 
 export class FullProductFixture extends AbstractFixture {
   constructor({ productCount = 1, additionalConcreteCount = 0, includes = {} }) {
@@ -15,7 +20,7 @@ export class FullProductFixture extends AbstractFixture {
     this.productCount = productCount;
     this.additionalConcreteCount = additionalConcreteCount;
     this.includes = includes;
-    this.storeId = 1;
+    this.storeId = DEFAULT_STORE_ID;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
@@ -66,7 +71,7 @@ export class FullProductFixture extends AbstractFixture {
         type: 'transfer',
         name: 'StoreTransfer',
         key: 'store',
-        arguments: { id_store: this.storeId, name: 'DE', defaultCurrencyIsoCode: 'EUR' },
+        arguments: { id_store: this.storeId, name: DEFAULT_STORE_NAME, defaultCurrencyIsoCode: DEFAULT_CURRENCY_CODE },
       },
       {
         type: 'transfer',
@@ -112,7 +117,7 @@ export class FullProductFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveFullProduct',
         key: productKey,
-        arguments: [{}, { idTaxSet: 1 }],
+        arguments: [{}, { idTaxSet: DEFAULT_TAX_SET_ID }],
       },
       {
         type: 'helper',
@@ -328,7 +333,7 @@ export class FullProductFixture extends AbstractFixture {
   }
 
   buildProductUrl(localeName, name, abstractId) {
-    const localePrefix = localeName ? `${localeName.toLowerCase().replace('_', '-')}` : 'en-us';
+    const localePrefix = localeName ? `${localeName.toLowerCase().replace('_', '-')}` : DEFAULT_PRODUCT_URL_PREFIX;
 
     return `${localePrefix}/${name.replace('.', '').replace('#', '').replace(' ', '-').toLowerCase()}-${abstractId}`;
   }
