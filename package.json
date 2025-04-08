@@ -18,6 +18,7 @@
     "build:dashboard": "webpack --env entryPattern=./src/tests/dashboard/*.test.js",
     "build:marketplace": "webpack --env entryPattern=./src/tests/marketplace/*.test.js",
     "build:order-amendment": "webpack --env entryPattern=./src/tests/order-amendment/*.test.js",
+    "build:order-management": "webpack --env entryPattern=./src/tests/order-management/*.test.js",
     "build:product": "webpack --env entryPattern=./src/tests/product/*.test.js",
     "build:product-details": "webpack --env entryPattern=./src/tests/product-details/*.test.js",
     "build:product-management": "webpack --env entryPattern=./src/tests/product-management/*.test.js",
