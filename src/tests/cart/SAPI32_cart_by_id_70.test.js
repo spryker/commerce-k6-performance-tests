@@ -43,7 +43,7 @@ export default function (data) {
 
   group(testConfiguration.group, () => {
     const cartsResource = new CartsResource(bearerToken);
-    const response = cartsResource.getCartWithItems(idCart);
+    const response = cartsResource.get(idCart, ['items']);
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
