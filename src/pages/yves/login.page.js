@@ -4,25 +4,25 @@ import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
 import AbstractPage from '../abstract.page';
 
-const DEFAULT_EMAIL = 'harald@spryker.com';
 const DEFAULT_PASSWORD = 'change123';
 
 export class LoginPage extends AbstractPage {
-  constructor(email = null, password = null) {
+  constructor(email, password = null) {
     super();
-    this.email = email || DEFAULT_EMAIL;
+    this.email = email;
     this.password = password || DEFAULT_PASSWORD;
     this.headers = null;
   }
 
   login() {
     const payload = {
-      'security-merchant-portal-gui[username]': this.email,
-      'security-merchant-portal-gui[password]': this.password,
+      'loginForm[email]': this.email,
+      'loginForm[password]': this.password,
     };
 
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
+      Referer: `${EnvironmentUtil.getStorefrontUrl()}/login`,
     };
 
     const params = {
@@ -30,11 +30,7 @@ export class LoginPage extends AbstractPage {
       redirects: 0,
     };
 
-    const response = http.post(
-      `${EnvironmentUtil.getMerchantPortalUrl()}/security-merchant-portal-gui/login_check`,
-      payload,
-      params
-    );
+    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/en/login_check`, payload, params);
 
     addErrorToCounter(
       check(response, {
@@ -52,6 +48,6 @@ export class LoginPage extends AbstractPage {
   extractSessionCookie(response) {
     const cookies = response.headers['Set-Cookie'].split(';');
 
-    return cookies.find((cookie) => cookie.includes(`${EnvironmentUtil.getMerchantPortalSessionCookieName()}=`));
+    return cookies.find((cookie) => cookie.includes(`${EnvironmentUtil.getStorefrontSessionCookieName()}=`));
   }
 }

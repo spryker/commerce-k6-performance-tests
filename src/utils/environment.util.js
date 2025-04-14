@@ -107,4 +107,16 @@ export default class EnvironmentUtil {
   static getRepositoryId() {
     return __ENV.SPRYKER_REPOSITORY_ID;
   }
+
+  static getStorefrontSessionCookieName() {
+    return this.getStorefrontUrl().replace('http://', '').replace('https://', '').replaceAll('.', '-');
+  }
+
+  static getBackofficeSessionCookieName() {
+    return this.getBackofficeUrl().replace('http://', '').replace('https://', '').replaceAll('.', '-');
+  }
+
+  static getMerchantPortalSessionCookieName() {
+    return this.getMerchantPortalUrl().replace('http://', '').replace('https://', '').replaceAll('.', '-');
+  }
 }

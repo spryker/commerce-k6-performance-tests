@@ -1,40 +1,24 @@
 import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
-import KSixError from '../../utils/k-six-error';
+import http from 'k6/http';
 
 export class DashboardPage {
-  constructor(page) {
-    this.page = page;
-    this.header = page.locator('h1');
+  constructor(headers) {
+    this.headers = headers;
   }
 
-  async navigate() {
-    await this.page.goto(`${EnvironmentUtil.getMerchantPortalUrl()}/dashboard-merchant-portal-gui/dashboard`);
-    await this.page.waitForLoadState('load');
-  }
-
-  async verifyHeader() {
-    await this.header.waitFor();
-    const headerText = await this.header.textContent();
+  get() {
+    const response = http.get(`${EnvironmentUtil.getMerchantPortalUrl()}/dashboard-merchant-portal-gui/dashboard`, {
+      headers: this.headers,
+    });
 
     addErrorToCounter(
-      check(headerText, {
-        'Dashboard page was loaded': (text) => text === 'Dashboard',
+      check(response, {
+        'Dashboard page status is 200': (r) => r.status === 200,
       })
     );
-  }
 
-  async getDurationTime() {
-    await this.page.evaluate(() => window.performance.mark('page-visit'));
-    const marks = await this.page.evaluate(() =>
-      JSON.parse(JSON.stringify(window.performance.getEntriesByType('mark')))
-    );
-
-    if (marks.length > 0) {
-      return marks[0].startTime;
-    }
-
-    throw new KSixError('No marks found');
+    return response;
   }
 }

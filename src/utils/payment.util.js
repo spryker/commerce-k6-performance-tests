@@ -3,7 +3,11 @@ export default class PaymentUtil {
     return 'Invoice';
   }
 
-  static getPaymentProviderName() {
+  static getPaymentProviderName(forceMarketplace = false) {
+    if (forceMarketplace) {
+      return 'DummyMarketplacePayment';
+    }
+
     switch (__ENV.SPRYKER_REPOSITORY_ID) {
       case 'suite':
         return 'DummyPayment';

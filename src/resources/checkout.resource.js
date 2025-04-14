@@ -2,10 +2,11 @@ import PaymentUtil from '../utils/payment.util';
 import AbstractResource from './abstract.resource';
 
 export default class CheckoutResource extends AbstractResource {
-  constructor(idCart, email, bearerToken = null) {
+  constructor(idCart, email, bearerToken = null, forceMarketplace = false) {
     super(bearerToken);
     this.idCart = idCart;
     this.email = email;
+    this.forceMarketplace = forceMarketplace;
   }
 
   checkout() {
@@ -46,7 +47,7 @@ export default class CheckoutResource extends AbstractResource {
           payments: [
             {
               paymentMethodName: PaymentUtil.getPaymentMethodName(),
-              paymentProviderName: PaymentUtil.getPaymentProviderName(),
+              paymentProviderName: PaymentUtil.getPaymentProviderName(this.forceMarketplace),
             },
           ],
           shipment: {
