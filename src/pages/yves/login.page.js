@@ -3,6 +3,7 @@ import http from 'k6/http';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
 import AbstractPage from '../abstract.page';
+import { parseHTML } from 'k6/html';
 
 const DEFAULT_PASSWORD = 'change123';
 
@@ -15,9 +16,12 @@ export class LoginPage extends AbstractPage {
   }
 
   login() {
+    const loginPageCsrfToken = this.getLoginPageToken();
+
     const payload = {
       'loginForm[email]': this.email,
       'loginForm[password]': this.password,
+      'loginForm[_token]': loginPageCsrfToken,
     };
 
     const headers = {
@@ -49,5 +53,28 @@ export class LoginPage extends AbstractPage {
     const cookies = response.headers['Set-Cookie'].split(';');
 
     return cookies.find((cookie) => cookie.includes(`${EnvironmentUtil.getStorefrontSessionCookieName()}=`));
+  }
+
+  logout(headers) {
+    const params = {
+      headers: headers,
+      redirects: 0,
+    };
+
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/logout`, params);
+
+    addErrorToCounter(
+      check(response, {
+        'Logout was successful': (r) => r.status === 302,
+      })
+    );
+
+    return response;
+  }
+
+  getLoginPageToken() {
+    const loginPageResponse = http.get(`${EnvironmentUtil.getStorefrontUrl()}/en/login`);
+
+    return parseHTML(loginPageResponse.body).find('#loginForm__token"]').attr('value');
   }
 }

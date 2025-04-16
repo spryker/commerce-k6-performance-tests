@@ -4,14 +4,14 @@ import EnvironmentUtil from '../../utils/environment.util';
 import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
 
-export default class ProductPage extends AbstractPage {
-  get(url) {
-    const fullUrl = `${EnvironmentUtil.getStorefrontUrl()}/${url}`;
-    const response = http.get(fullUrl, { redirects: 0 });
+export default class HomePage extends AbstractPage {
+  get() {
+    const fullUrl = `${EnvironmentUtil.getStorefrontUrl()}/`;
+    const response = http.get(fullUrl);
 
     addErrorToCounter(
       check(response, {
-        'Product detail page was successful': (r) => r.status === 200 && r.body,
+        'Home Page was successful': (r) => r.status === 200 && r.body,
       })
     );
 

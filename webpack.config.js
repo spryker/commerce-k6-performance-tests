@@ -1,6 +1,7 @@
 const path = require('path');
 const glob = require('glob');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env) => {
   const pattern = env && env.entryPattern ? env.entryPattern : './src/tests/**/*.test.js';
@@ -35,6 +36,24 @@ module.exports = (env) => {
     target: 'web',
     externals: /k6(\/.*)?/,
     devtool: 'source-map',
-    plugins: [new CleanWebpackPlugin()],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: path.resolve(__dirname, 'src/static-data/customers.csv'),
+            to: path.resolve(__dirname, 'dist/static-data/customers.csv'),
+          },
+          {
+            from: path.resolve(__dirname, 'src/static-data/concrete_products.csv'),
+            to: path.resolve(__dirname, 'dist/static-data/concrete_products.csv'),
+          },
+          {
+            from: path.resolve(__dirname, 'src/static-data/abstract_products.csv'),
+            to: path.resolve(__dirname, 'dist/static-data/abstract_products.csv'),
+          },
+        ],
+      }),
+    ],
   };
 };

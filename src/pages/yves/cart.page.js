@@ -22,8 +22,8 @@ export default class CartPage extends AbstractPage {
     return response;
   }
 
-  addItem(sku) {
-    const payload = this._getAddToCartPayload();
+  addItem(sku, token) {
+    const payload = this._getAddToCartPayload(token);
 
     let params = {
       redirects: 0,
@@ -37,16 +37,18 @@ export default class CartPage extends AbstractPage {
 
     addErrorToCounter(
       check(response, {
-        'Add item to cart was successful': (r) => r.status === 302 && r.body,
+        [`Add item to cart [${EnvironmentUtil.getStorefrontUrl()}/cart/add/${sku}] was successful`]: (r) =>
+          r.status === 302 && r.body,
       })
     );
 
     return response;
   }
 
-  _getAddToCartPayload() {
+  _getAddToCartPayload(token) {
     return {
       quantity: 1,
+      'add_to_cart_form[_token]': token,
     };
   }
 }

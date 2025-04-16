@@ -26,7 +26,14 @@ export default class CheckoutPage extends AbstractPage {
   }
 
   getCheckoutAddress() {
-    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/address`, { headers: this.headers });
+    const response = http.get(`${EnvironmentUtil.getStorefrontUrl()}/checkout/address`, {
+      headers: this.headers,
+      redirects: 0,
+    });
+
+    if (response.status === 302) {
+      console.log(response);
+    }
 
     addErrorToCounter(
       check(response, {

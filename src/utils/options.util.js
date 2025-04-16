@@ -12,7 +12,25 @@ export default class OptionsUtil {
       options.thresholds[metric] = testThresholds[metric];
     });
 
+    if (testConfiguration.stages) {
+      options.stages = testConfiguration.stages;
+    }
+
     options.scenarios.default = createDefaultScenario(testConfiguration);
+
+    return options;
+  }
+
+  static loadSoakOptions(testConfiguration, testThresholds) {
+    let options = this._getDefaultOptions();
+
+    options.thresholds = {};
+
+    testConfiguration.metrics.forEach((metric) => {
+      options.thresholds[metric] = testThresholds[metric];
+    });
+
+    options.stages = testConfiguration.stages;
 
     return options;
   }

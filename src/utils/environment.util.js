@@ -119,4 +119,24 @@ export default class EnvironmentUtil {
   static getMerchantPortalSessionCookieName() {
     return this.getMerchantPortalUrl().replace('http://', '').replace('https://', '').replaceAll('.', '-');
   }
+
+  static getDefaultRampVus() {
+    return 10;
+  }
+
+  static getDefaultSoakTestConfiguration() {
+    const rampVus = this.getDefaultRampVus();
+    return {
+      rampVus: rampVus,
+      stages: [
+        { duration: '5m', target: rampVus },
+        { duration: '30m', target: rampVus },
+        { duration: '5m', target: 0 },
+      ],
+    };
+  }
+
+  static getUseStaticFixtures() {
+    return __ENV.SPRYKER_USE_STATIC_FIXTURES === 'true';
+  }
 }

@@ -1,0 +1,39 @@
+import papaparse from './../utils/papaparse.util.js';
+import { SharedArray } from 'k6/data';
+
+const abstractProductsCsv = new SharedArray('abstract_products', function () {
+  return papaparse.parse(open('./static-data/abstract_products.csv'), { header: true }).data;
+});
+
+const concreteProductsCsv = new SharedArray('concrete_products', function () {
+  return papaparse.parse(open('./static-data/concrete_products.csv'), { header: true }).data;
+});
+
+export class ProductStaticFixture {
+  constructor({ productCount = 1 }) {
+    this.productCount = productCount;
+  }
+
+  getData() {
+    // Create a map of abstract products for quick lookup
+    const abstractProductMap = {};
+    abstractProductsCsv.forEach((product) => {
+      abstractProductMap[product.id_product_abstract] = product;
+    });
+
+    // Limit the number of products based on productCount parameter
+    const limitedProducts = this.productCount ? concreteProductsCsv.slice(0, this.productCount) : concreteProductsCsv;
+
+    return limitedProducts.map((product) => {
+      const abstractProduct = abstractProductMap[product.fk_product_abstract] || {};
+
+      return {
+        id: product.id_product_concrete,
+        sku: product.sku,
+        abstractSku: abstractProduct.abstract_sku || '',
+        abstractId: product.fk_product_abstract,
+        url: abstractProduct.url,
+      };
+    });
+  }
+}
