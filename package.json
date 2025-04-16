@@ -29,12 +29,14 @@
     "prettier:check": "prettier . --check",
     "prettier:write": "prettier . --write",
     "lint": "npx eslint ./src",
-    "build:soak:one": "webpack --env entryPattern=./src/soak-tests/checkout/SOAKUI5_checkout.test.js",
+    "build:soak:one": "webpack --env entryPattern=./src/soak-tests/product-search/SOAKAPI3_product_search.test.js",
     "build:soak:all": "webpack --env entryPattern=./src/soak-tests/**/*.test.js",
     "build:soak:cart": "webpack --env entryPattern=./src/soak-tests/cart/*.test.js",
     "build:soak:homepage": "webpack --env entryPattern=./src/soak-tests/homepage/*.test.js",
     "build:soak:search": "webpack --env entryPattern=./src/soak-tests/product-search/*.test.js",
-    "build:soak:checkout": "webpack --env entryPattern=./src/soak-tests/checkout/*.test.js"
+    "build:soak:checkout": "webpack --env entryPattern=./src/soak-tests/checkout/*.test.js",
+    "build:soak:ui": "webpack --env entryPattern=./src/soak-tests/**/SOAKUI*.test.js",
+    "build:soak:api": "webpack --env entryPattern=./src/soak-tests/**/SOAKAPI*.test.js"
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",
