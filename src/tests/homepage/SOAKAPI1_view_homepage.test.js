@@ -1,21 +1,22 @@
-// tags: smoke, load, soak
-import { group } from 'k6';
+// tags: soak
+import { group, sleep } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
-import CatalogPage from '../../pages/yves/catalog.page';
 import ConfigResolver from '../../utils/config-resolver.util';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
 import IteratorUtil from '../../utils/iterator.util';
+import CmsPagesResource from '../../resources/cms-pages.resource';
 
 const testConfiguration = new ConfigResolver({
   params: {
-    id: 'S2',
-    group: 'Product Search',
-    metrics: ['S2_get_search'],
+    id: 'SOAKAPI1',
+    group: 'Homepage',
+    metrics: ['SOAKAPI1_get_cms_pages'],
     thresholds: {
-      S2_get_search: {
+      SOAKAPI1_get_cms_pages: {
         smoke: ['avg<200'],
-        load: ['avg<200'],
+        load: ['avg<300'],
+        soak: ['avg<300'],
       },
     },
   },
@@ -25,20 +26,22 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  const fixture = FixturesResolver.resolveFixture('product', {
-    productCount: testConfiguration.vus,
+  const fixture = FixturesResolver.resolveFixture('cms-page', {
+    cmsPagesCount: testConfiguration.vus,
   });
 
   return fixture.getData();
 }
 
 export default function (data) {
-  const product = IteratorUtil.iterateData({ fixtureName: 'product', data });
+  const { uuid } = IteratorUtil.iterateData({ fixtureName: 'cms-page', data });
 
   group(testConfiguration.group, () => {
-    const catalogPage = new CatalogPage();
-    const response = catalogPage.search(product);
+    const cmsPagesResource = new CmsPagesResource();
+    const response = cmsPagesResource.get(uuid);
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
+
+  sleep(1);
 }

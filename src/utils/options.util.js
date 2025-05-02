@@ -1,7 +1,18 @@
+import EnvironmentUtil from './environment.util';
 import { createDefaultScenario } from './scenario.util';
 
 export default class OptionsUtil {
   static loadOptions(testConfiguration, testThresholds) {
+    const testType = EnvironmentUtil.getTestType();
+
+    if (testType === 'smoke' || testType === 'load') {
+      return this.loadSmokeLoadOptions(testConfiguration, testThresholds);
+    }
+
+    return this.loadSoakOptions(testConfiguration, testThresholds);
+  }
+
+  static loadSmokeLoadOptions(testConfiguration, testThresholds) {
     let options = this._getDefaultOptions();
 
     options.tags = {};
@@ -11,10 +22,6 @@ export default class OptionsUtil {
     testConfiguration.metrics.forEach((metric) => {
       options.thresholds[metric] = testThresholds[metric];
     });
-
-    if (testConfiguration.stages) {
-      options.stages = testConfiguration.stages;
-    }
 
     options.scenarios.default = createDefaultScenario(testConfiguration);
 

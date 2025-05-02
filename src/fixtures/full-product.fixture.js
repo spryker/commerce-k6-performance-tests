@@ -1,6 +1,7 @@
 import { AbstractFixture } from './abstract.fixture';
 import EnvironmentUtil from '../utils/environment.util';
 import exec from 'k6/execution';
+import RandomUtil from '../utils/random.util';
 
 const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
 const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
@@ -51,6 +52,10 @@ export class FullProductFixture extends AbstractFixture {
   }
 
   static iterateData(data, vus = exec.vu.idInTest) {
+    if (EnvironmentUtil.getTestType() === 'soak') {
+      return RandomUtil.getRandomItem(data);
+    }
+
     const productIndex = (vus - 1) % data.length;
 
     return data[productIndex];

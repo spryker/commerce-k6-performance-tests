@@ -37,13 +37,22 @@ export class CustomerFixture extends AbstractFixture {
           const localized = item.attributes.data.localized_attributes[0] || {};
           const url = this.buildProductUrl(item.attributes.data.localeName, localized.name, fk_product_abstract);
 
-          return {
+          let productData = {
             id: id_product_concrete,
             sku,
             abstractSku: abstract_sku,
             abstractId: fk_product_abstract,
             url,
           };
+
+          if (this.repositoryId === 'b2b-mp') {
+            const productOfferKey = item.attributes.key.replace('productKey', 'productOffer');
+            const productOffer = responseData.filter((item) => item.attributes.key.startsWith(productOfferKey));
+            const productOfferReference = productOffer[0].attributes.data.product_offer_reference;
+            productData.productOfferReference = productOfferReference;
+          }
+
+          return productData;
         });
 
       return {
@@ -53,16 +62,13 @@ export class CustomerFixture extends AbstractFixture {
     });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
+  static iterateData(data, vus = exec.vu.idInTest) {
     const customerIndex = (vus - 1) % data.length;
-    const { customerEmail, cartIds, productSkus } = data[customerIndex];
-    const cartIndex = iterations % cartIds.length;
-    const product = productSkus[0];
+    const { customerEmail, products } = data[customerIndex];
 
     return {
       customerEmail,
-      idCart: cartIds[cartIndex],
-      productSku: product,
+      products,
     };
   }
 

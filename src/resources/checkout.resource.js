@@ -10,7 +10,8 @@ export default class CheckoutResource extends AbstractResource {
   }
 
   checkout() {
-    return this.postRequest('checkout', this._getCheckoutPayload());
+    const payload = this._getCheckoutPayload();
+    return this.postRequest('checkout', payload);
   }
 
   _getCheckoutPayload() {

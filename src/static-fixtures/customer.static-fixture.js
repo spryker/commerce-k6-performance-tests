@@ -1,6 +1,7 @@
 import { randomIntBetween } from '../utils/uuid.util';
 import papaparse from './../utils/papaparse.util.js';
 import { SharedArray } from 'k6/data';
+import RandomUtil from '../utils/random.util.js';
 
 const DEFAULT_PASSWORD = 'change123';
 
@@ -55,5 +56,13 @@ export class CustomerStaticFixture {
         products: products,
       };
     });
+  }
+
+  static iterateData(data, vus = null) {
+    if (vus) {
+      return data[vus - 1];
+    }
+
+    return RandomUtil.getRandomItem(data);
   }
 }

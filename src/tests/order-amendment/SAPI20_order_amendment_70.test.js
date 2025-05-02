@@ -1,3 +1,4 @@
+// tags: smoke, load
 import { group } from 'k6';
 import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';

@@ -48,6 +48,16 @@ export class CartFixture extends AbstractFixture {
   }
 
   static iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
+    if (EnvironmentUtil.getTestType() === 'soak') {
+      const { customerEmail, cartIds, productSkus } = data[exec.vu.idInTest - 1];
+
+      return {
+        customerEmail,
+        idCart: cartIds[0],
+        productSku: productSkus[0],
+      };
+    }
+
     const customerIndex = (vus - 1) % data.length;
     const { customerEmail, cartIds, productSkus } = data[customerIndex];
     const cartIndex = iterations % cartIds.length;

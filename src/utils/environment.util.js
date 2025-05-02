@@ -127,11 +127,11 @@ export default class EnvironmentUtil {
   static getDefaultSoakTestConfiguration() {
     const rampVus = this.getDefaultRampVus();
     return {
-      rampVus: rampVus,
+      vus: rampVus,
       stages: [
-        { duration: '5m', target: rampVus },
-        { duration: '30m', target: rampVus },
-        { duration: '5m', target: 0 },
+        { duration: '1m', target: rampVus },
+        { duration: '1m', target: rampVus },
+        { duration: '1m', target: 0 },
       ],
     };
   }

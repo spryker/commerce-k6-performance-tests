@@ -1,5 +1,6 @@
 import papaparse from './../utils/papaparse.util.js';
 import { SharedArray } from 'k6/data';
+import RandomUtil from './../utils/random.util';
 
 const abstractProductsCsv = new SharedArray('abstract_products', function () {
   return papaparse.parse(open('./static-data/abstract_products.csv'), { header: true }).data;
@@ -15,13 +16,11 @@ export class ProductStaticFixture {
   }
 
   getData() {
-    // Create a map of abstract products for quick lookup
     const abstractProductMap = {};
     abstractProductsCsv.forEach((product) => {
       abstractProductMap[product.id_product_abstract] = product;
     });
 
-    // Limit the number of products based on productCount parameter
     const limitedProducts = this.productCount ? concreteProductsCsv.slice(0, this.productCount) : concreteProductsCsv;
 
     return limitedProducts.map((product) => {
@@ -35,5 +34,9 @@ export class ProductStaticFixture {
         url: abstractProduct.url,
       };
     });
+  }
+
+  static iterateData(data) {
+    return RandomUtil.getRandomItem(data);
   }
 }
