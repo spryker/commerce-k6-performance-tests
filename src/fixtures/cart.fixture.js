@@ -3,6 +3,7 @@ import exec from 'k6/execution';
 import EnvironmentUtil from '../utils/environment.util';
 
 export class CartFixture extends AbstractFixture {
+
   constructor({ customerCount, cartCount = 1, itemCount = 1, defaultItemPrice = 1000 }) {
     super();
     this.customerCount = customerCount;
@@ -10,6 +11,15 @@ export class CartFixture extends AbstractFixture {
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
+  }
+
+  static createFixture(params = {}) {
+    if (AbstractFixture.shouldUseStaticFixtures()) {
+      const { CartFixture: StaticCartFixture } = require('./static/cart.fixture');
+
+      return new StaticCartFixture(params);
+    }
+    return new CartFixture(params);
   }
 
   getData(customerCount = this.customerCount, cartCount = this.cartCount) {

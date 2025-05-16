@@ -4,7 +4,7 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import IteratorUtil from '../../utils/iterator.util';
 import ProductPage from '../../pages/yves/product.page';
-import FixturesResolver from '../../utils/fixtures-resolver.util';
+import { FullProductFixture } from '../../fixtures/full-product.fixture';
 import EnvironmentUtil from "../../utils/environment.util";
 
 const testConfiguration = {
@@ -24,13 +24,8 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  const dynamicFixture = FixturesResolver.resolveFixture('product', {
+  const dynamicFixture = FullProductFixture.createFixture({
     productCount: testConfiguration.vus,
-    includes: {
-      labels: 3,
-      reviews: 10,
-      options: 3,
-    },
   });
 
   return dynamicFixture.getData();

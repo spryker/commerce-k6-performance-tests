@@ -3,7 +3,7 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import IteratorUtil from '../../utils/iterator.util';
-import FixturesResolver from '../../utils/fixtures-resolver.util';
+import { FullProductFixture } from '../../fixtures/full-product.fixture';
 import AbstractProductsResource from '../../resources/abstract-products.resource';
 import EnvironmentUtil from "../../utils/environment.util";
 
@@ -24,15 +24,9 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  const dynamicFixture = FixturesResolver.resolveFixture('product', {
-    productCount: 1,
-    additionalConcreteCount: 4,
-    includes: {
-      options: 3,
-      labels: 2,
-      categories: 1,
-      reviews: 10,
-    },
+  const dynamicFixture = FullProductFixture.createFixture({
+    productCount: testConfiguration.vus,
+    includes: testConfiguration.includes,
   });
 
   return dynamicFixture.getData();

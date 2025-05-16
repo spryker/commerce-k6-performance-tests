@@ -7,7 +7,7 @@ import { LoginPage } from '../../pages/yves/login.page';
 import CheckoutPage from '../../pages/yves/checkout.page';
 import { parseHTML } from 'k6/html';
 import { group } from 'k6';
-import FixturesResolver from '../../utils/fixtures-resolver.util';
+import { CustomerFixture } from '../../fixtures/customer.fixture';
 import IteratorUtil from '../../utils/iterator.util';
 import exec from 'k6/execution';
 import ProductPage from '../../pages/yves/product.page';
@@ -82,9 +82,11 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
+  // Why fixture are different?
   if (EnvironmentUtil.getTestType() === 'soak') {
-    const fixture = FixturesResolver.resolveFixture('customer', {
+    const fixture = CustomerFixture.createFixture({
       customerCount: testConfiguration.vus,
+      itemCount: 1,
     });
 
     return fixture.getData();

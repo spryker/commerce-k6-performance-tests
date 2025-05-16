@@ -4,6 +4,7 @@ import exec from 'k6/execution';
 import RandomUtil from '../utils/random.util';
 
 export class FullProductFixture extends AbstractFixture {
+
   constructor({ productCount = 1, additionalConcreteCount = 0, includes = {} }) {
     super();
     this.productCount = productCount;
@@ -11,6 +12,15 @@ export class FullProductFixture extends AbstractFixture {
     this.includes = includes;
     this.storeId = AbstractFixture.DEFAULT_STORE_ID;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
+  }
+
+  static createFixture(params = {}) {
+    if (AbstractFixture.shouldUseStaticFixtures()) {
+      const { ProductFixture: StaticProductFixture } = require('./static/product.fixture');
+
+      return new StaticProductFixture(params);
+    }
+    return new FullProductFixture(params);
   }
 
   getData() {

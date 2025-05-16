@@ -3,12 +3,22 @@ import exec from 'k6/execution';
 import EnvironmentUtil from '../utils/environment.util';
 
 export class CustomerFixture extends AbstractFixture {
+
   constructor({ customerCount, itemCount = 1, defaultItemPrice = 10000 }) {
     super();
     this.customerCount = customerCount;
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
+  }
+
+  static createFixture(params = {}) {
+    if (AbstractFixture.shouldUseStaticFixtures()) {
+      const { CustomerFixture: StaticCustomerFixture } = require('./static/customer.fixture');
+
+      return new StaticCustomerFixture(params);
+    }
+    return new CustomerFixture(params);
   }
 
   getData(customerCount = this.customerCount) {

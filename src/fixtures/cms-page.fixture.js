@@ -2,9 +2,18 @@ import { AbstractFixture } from './abstract.fixture';
 import RandomUtil from '../utils/random.util';
 
 export class CmsPageFixture extends AbstractFixture {
+
   constructor({ cmsPagesCount = 1 }) {
     super();
     this.cmsPagesCount = cmsPagesCount;
+  }
+
+  static createFixture(params = {}) {
+    if (AbstractFixture.shouldUseStaticFixtures()) {
+      const { CmsPageFixture: StaticCmsPageFixture } = require('./static/cms-page.fixture');
+      return new StaticCmsPageFixture(params);
+    }
+    return new CmsPageFixture(params);
   }
 
   getData() {

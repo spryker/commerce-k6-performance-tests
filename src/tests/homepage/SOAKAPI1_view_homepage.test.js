@@ -2,7 +2,7 @@
 import { group, sleep } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
-import FixturesResolver from '../../utils/fixtures-resolver.util';
+import { CmsPageFixture } from '../../fixtures/cms-page.fixture';
 import IteratorUtil from '../../utils/iterator.util';
 import CmsPagesResource from '../../resources/cms-pages.resource';
 import EnvironmentUtil from "../../utils/environment.util";
@@ -25,7 +25,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  const fixture = FixturesResolver.resolveFixture('cms-page', {
+  const fixture = CmsPageFixture.createFixture({
     cmsPagesCount: testConfiguration.vus,
   });
 

@@ -3,7 +3,7 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import CatalogPage from '../../pages/yves/catalog.page';
-import FixturesResolver from '../../utils/fixtures-resolver.util';
+import { FullProductFixture } from '../../fixtures/full-product.fixture';
 import IteratorUtil from '../../utils/iterator.util';
 import EnvironmentUtil from "../../utils/environment.util";
 
@@ -24,7 +24,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  const fixture = FixturesResolver.resolveFixture('product', {
+  const fixture = FullProductFixture.createFixture({
     productCount: testConfiguration.vus,
   });
 

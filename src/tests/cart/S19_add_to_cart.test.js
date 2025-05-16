@@ -3,13 +3,13 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import CartPage from '../../pages/yves/cart.page';
-import FixturesResolver from '../../utils/fixtures-resolver.util';
 import IteratorUtil from '../../utils/iterator.util';
 import exec from 'k6/execution';
 import EnvironmentUtil from '../../utils/environment.util';
 import { LoginPage } from '../../pages/yves/login.page';
 import ProductPage from '../../pages/yves/product.page';
 import { parseHTML } from 'k6/html';
+import { CustomerFixture } from '../../fixtures/customer.fixture';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -28,7 +28,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  const dynamicFixture = FixturesResolver.resolveFixture('customer', {
+  const dynamicFixture = CustomerFixture.createFixture({
     customerCount: testConfiguration.vus,
     itemCount: 1,
     randomItems: true,

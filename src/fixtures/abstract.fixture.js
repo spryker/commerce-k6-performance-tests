@@ -20,6 +20,10 @@ export class AbstractFixture {
   static DEFAULT_CURRENCY_CODE = 'EUR';
   static DEFAULT_PARENT_CATEGORY_NODE = 0;
 
+  static shouldUseStaticFixtures() {
+    return EnvironmentUtil.getUseStaticFixtures() && EnvironmentUtil.getTestType() === 'soak';
+  }
+
   runDynamicFixture(payload) {
     const res = http.post(http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`, payload, {
       headers: {

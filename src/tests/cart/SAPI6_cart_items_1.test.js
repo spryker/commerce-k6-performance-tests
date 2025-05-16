@@ -4,7 +4,7 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import AuthUtil from '../../utils/auth.util';
 import CartsResource from '../../resources/carts.resource';
-import FixturesResolver from '../../utils/fixtures-resolver.util';
+import { CartFixture } from '../../fixtures/cart.fixture';
 import IteratorUtil from '../../utils/iterator.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
@@ -26,10 +26,9 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  const cartCount = EnvironmentUtil.getTestType() === 'soak' ? 1 : testConfiguration.iterations;
-  const dynamicFixture = FixturesResolver.resolveFixture('cart', {
+  const dynamicFixture = CartFixture.createFixture({
     customerCount: testConfiguration.vus,
-    cartCount,
+    cartCount: 1,
     itemCount: 1,
   });
 

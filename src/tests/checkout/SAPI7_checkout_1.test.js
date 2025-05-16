@@ -1,12 +1,12 @@
 // tags: smoke, load, soak
-import { group, sleep } from 'k6';
+import { group } from 'k6';
 import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';
 import CheckoutResource from '../../resources/checkout.resource';
 import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
-import FixturesResolver from '../../utils/fixtures-resolver.util';
+import { CustomerFixture } from '../../fixtures/customer.fixture';
 import CartsResource from '../../resources/carts.resource';
 import exec from 'k6/execution';
 import IteratorUtil from '../../utils/iterator.util';
@@ -28,22 +28,12 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 export function setup() {
-  if (EnvironmentUtil.getTestType() === 'soak') {
-    const fixture = FixturesResolver.resolveFixture('customer', {
-      customerCount: testConfiguration.vus,
-    });
-
-    return fixture.getData();
-  }
-
-  const dynamicFixture = new CheckoutFixture({
+  const fixture = CustomerFixture.createFixture({
     customerCount: testConfiguration.vus,
-    cartCount: testConfiguration.iterations,
-    itemCount: 1,
-    defaultItemPrice: 10000, // Skipping global thresholds during checkout
+    itemCount: 5,
   });
 
-  return dynamicFixture.getData();
+  return fixture.getData();
 }
 
 export default function (data) {
@@ -52,8 +42,6 @@ export default function (data) {
   } else {
     processSmokeLoad(data);
   }
-
-  sleep(5);
 }
 
 function processSoak(data) {
