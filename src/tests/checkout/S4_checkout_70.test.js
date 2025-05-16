@@ -10,75 +10,73 @@ import { group } from 'k6';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
 import IteratorUtil from '../../utils/iterator.util';
 import exec from 'k6/execution';
-import ConfigResolver from '../../utils/config-resolver.util';
 import ProductPage from '../../pages/yves/product.page';
 import CartPage from '../../pages/yves/cart.page';
 
-const testConfiguration = new ConfigResolver({
-  params: {
-    id: 'S4',
-    group: 'Checkout',
-    metrics: [
-      'S4_get_checkout',
-      'S4_get_checkout_address',
-      'S4_post_checkout_address',
-      'S4_get_checkout_shipment',
-      'S4_post_checkout_shipment',
-      'S4_get_checkout_payment',
-      'S4_post_checkout_payment',
-      'S4_get_checkout_summary',
-      'S4_post_checkout_summary',
-      'S4_get_checkout_success',
-      'S4_get_place_order',
-    ],
-    thresholds: {
-      S4_get_checkout: {
-        smoke: ['avg<900'],
-        load: ['avg<1800'],
-      },
-      S4_get_checkout_address: {
-        smoke: ['avg<750'],
-        load: ['avg<1500'],
-      },
-      S4_post_checkout_address: {
-        smoke: ['avg<750'],
-        load: ['avg<1500'],
-      },
-      S4_get_checkout_shipment: {
-        smoke: ['avg<650'],
-        load: ['avg<1300'],
-      },
-      S4_post_checkout_shipment: {
-        smoke: ['avg<650'],
-        load: ['avg<1300'],
-      },
-      S4_get_checkout_payment: {
-        smoke: ['avg<950'],
-        load: ['avg<1900'],
-      },
-      S4_post_checkout_payment: {
-        smoke: ['avg<950'],
-        load: ['avg<1900'],
-      },
-      S4_get_checkout_summary: {
-        smoke: ['avg<1050'],
-        load: ['avg<2100'],
-      },
-      S4_post_checkout_summary: {
-        smoke: ['avg<1050'],
-        load: ['avg<2100'],
-      },
-      S4_get_checkout_success: {
-        smoke: ['avg<2850'],
-        load: ['avg<4700'],
-      },
-      S4_get_place_order: {
-        smoke: ['avg<1100'],
-        load: ['avg<2200'],
-      },
+const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
+  id: 'S4',
+  group: 'Checkout',
+  metrics: [
+    'S4_get_checkout',
+    'S4_get_checkout_address',
+    'S4_post_checkout_address',
+    'S4_get_checkout_shipment',
+    'S4_post_checkout_shipment',
+    'S4_get_checkout_payment',
+    'S4_post_checkout_payment',
+    'S4_get_checkout_summary',
+    'S4_post_checkout_summary',
+    'S4_get_checkout_success',
+    'S4_get_place_order',
+  ],
+  thresholds: {
+    S4_get_checkout: {
+      smoke: ['avg<900'],
+      load: ['avg<1800'],
+    },
+    S4_get_checkout_address: {
+      smoke: ['avg<750'],
+      load: ['avg<1500'],
+    },
+    S4_post_checkout_address: {
+      smoke: ['avg<750'],
+      load: ['avg<1500'],
+    },
+    S4_get_checkout_shipment: {
+      smoke: ['avg<650'],
+      load: ['avg<1300'],
+    },
+    S4_post_checkout_shipment: {
+      smoke: ['avg<650'],
+      load: ['avg<1300'],
+    },
+    S4_get_checkout_payment: {
+      smoke: ['avg<950'],
+      load: ['avg<1900'],
+    },
+    S4_post_checkout_payment: {
+      smoke: ['avg<950'],
+      load: ['avg<1900'],
+    },
+    S4_get_checkout_summary: {
+      smoke: ['avg<1050'],
+      load: ['avg<2100'],
+    },
+    S4_post_checkout_summary: {
+      smoke: ['avg<1050'],
+      load: ['avg<2100'],
+    },
+    S4_get_checkout_success: {
+      smoke: ['avg<2850'],
+      load: ['avg<4700'],
+    },
+    S4_get_place_order: {
+      smoke: ['avg<1100'],
+      load: ['avg<2200'],
     },
   },
-}).resolveConfig();
+};
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);

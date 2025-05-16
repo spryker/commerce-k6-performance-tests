@@ -87,6 +87,10 @@ export default class EnvironmentUtil {
     }
   }
 
+  static getRampVus() {
+    return 10;
+  }
+
   static getTestType() {
     return __ENV.SPRYKER_TEST_TYPE;
   }
@@ -96,6 +100,19 @@ export default class EnvironmentUtil {
   }
 
   static getDefaultTestConfiguration() {
+    if (EnvironmentUtil.getTestType() === 'soak') {
+      const rampVus = this.getRampVus();
+
+      return {
+        vus: rampVus,
+        stages: [
+          { duration: '1m', target: rampVus },
+          { duration: '1m', target: rampVus },
+          { duration: '1m', target: 0 },
+        ],
+      };
+    }
+
     return {
       vus: EnvironmentUtil.getVus(),
       iterations: EnvironmentUtil.getIterations(),
@@ -118,22 +135,6 @@ export default class EnvironmentUtil {
 
   static getMerchantPortalSessionCookieName() {
     return this.getMerchantPortalUrl().replace('http://', '').replace('https://', '').replaceAll('.', '-');
-  }
-
-  static getDefaultRampVus() {
-    return 10;
-  }
-
-  static getDefaultSoakTestConfiguration() {
-    const rampVus = this.getDefaultRampVus();
-    return {
-      vus: rampVus,
-      stages: [
-        { duration: '1m', target: rampVus },
-        { duration: '1m', target: rampVus },
-        { duration: '1m', target: 0 },
-      ],
-    };
   }
 
   static getUseStaticFixtures() {

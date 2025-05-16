@@ -1,7 +1,7 @@
-import { randomIntBetween } from '../utils/uuid.util';
-import papaparse from './../utils/papaparse.util.js';
 import { SharedArray } from 'k6/data';
-import RandomUtil from '../utils/random.util.js';
+import { randomIntBetween } from '../../utils/uuid.util';
+import papaparse from "@babel/core/lib/parse";
+import RandomUtil from "../../utils/random.util";
 
 const DEFAULT_PASSWORD = 'change123';
 
@@ -17,7 +17,7 @@ const concreteProductsCsv = new SharedArray('concrete_products', function () {
   return papaparse.parse(open('./static-data/concrete_products.csv'), { header: true }).data;
 });
 
-export class CustomerStaticFixture {
+export class CustomerFixture {
   constructor({ customerCount, itemCount = 1, randomItems = false }) {
     this.customerCount = customerCount;
     this.itemCount = itemCount;

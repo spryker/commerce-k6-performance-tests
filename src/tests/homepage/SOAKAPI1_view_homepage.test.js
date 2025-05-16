@@ -2,25 +2,24 @@
 import { group, sleep } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
-import ConfigResolver from '../../utils/config-resolver.util';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
 import IteratorUtil from '../../utils/iterator.util';
 import CmsPagesResource from '../../resources/cms-pages.resource';
+import EnvironmentUtil from "../../utils/environment.util";
 
-const testConfiguration = new ConfigResolver({
-  params: {
-    id: 'SOAKAPI1',
-    group: 'Homepage',
-    metrics: ['SOAKAPI1_get_cms_pages'],
-    thresholds: {
-      SOAKAPI1_get_cms_pages: {
-        smoke: ['avg<200'],
-        load: ['avg<300'],
-        soak: ['avg<300'],
-      },
+const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
+  id: 'SOAKAPI1',
+  group: 'Homepage',
+  metrics: ['SOAKAPI1_get_cms_pages'],
+  thresholds: {
+    SOAKAPI1_get_cms_pages: {
+      smoke: ['avg<200'],
+      load: ['avg<300'],
+      soak: ['avg<300'],
     },
   },
-}).resolveConfig();
+};
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
@@ -42,6 +41,4 @@ export default function (data) {
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
-
-  sleep(1);
 }

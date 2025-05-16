@@ -3,25 +3,13 @@ import EnvironmentUtil from '../utils/environment.util';
 import exec from 'k6/execution';
 import RandomUtil from '../utils/random.util';
 
-const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
-const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
-const DEFAULT_STOCK_ID = 1;
-const DEFAULT_STOCK_NAME = 'Warehouse1';
-const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
-const DEFAULT_LOCALE = 'de_DE';
-const DEFAULT_STORE_ID = 1;
-const DEFAULT_STORE_NAME = 'DE';
-const DEFAULT_CURRENCY_CODE = 'EUR';
-const DEFAULT_TAX_SET_ID = 1;
-const DEFAULT_PRODUCT_URL_PREFIX = 'en-us';
-
 export class FullProductFixture extends AbstractFixture {
   constructor({ productCount = 1, additionalConcreteCount = 0, includes = {} }) {
     super();
     this.productCount = productCount;
     this.additionalConcreteCount = additionalConcreteCount;
     this.includes = includes;
-    this.storeId = DEFAULT_STORE_ID;
+    this.storeId = AbstractFixture.DEFAULT_STORE_ID;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
@@ -68,15 +56,15 @@ export class FullProductFixture extends AbstractFixture {
         name: 'ProductImageTransfer',
         key: 'productImage',
         arguments: {
-          externalUrlSmall: DEFAULT_IMAGE_SMALL,
-          externalUrlLarge: DEFAULT_IMAGE_LARGE,
+          externalUrlSmall: AbstractFixture.DEFAULT_IMAGE_SMALL,
+          externalUrlLarge: AbstractFixture.DEFAULT_IMAGE_LARGE,
         },
       },
       {
         type: 'transfer',
         name: 'StoreTransfer',
         key: 'store',
-        arguments: { id_store: this.storeId, name: DEFAULT_STORE_NAME, defaultCurrencyIsoCode: DEFAULT_CURRENCY_CODE },
+        arguments: { id_store: this.storeId, name: AbstractFixture.DEFAULT_STORE_NAME, defaultCurrencyIsoCode: AbstractFixture.DEFAULT_CURRENCY_CODE },
       },
       {
         type: 'transfer',
@@ -95,7 +83,7 @@ export class FullProductFixture extends AbstractFixture {
         key: 'locale',
         arguments: [
           {
-            localeName: DEFAULT_LOCALE,
+            localeName: AbstractFixture.DEFAULT_LOCALE,
           },
         ],
       },
@@ -122,7 +110,7 @@ export class FullProductFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveFullProduct',
         key: productKey,
-        arguments: [{}, { idTaxSet: DEFAULT_TAX_SET_ID }],
+        arguments: [{}, { idTaxSet: AbstractFixture.DEFAULT_TAX_SET_ID }],
       },
       {
         type: 'helper',
@@ -153,8 +141,8 @@ export class FullProductFixture extends AbstractFixture {
           {
             sku: `#${productKey}.sku`,
             isNeverOutOfStock: '1',
-            fkStock: DEFAULT_STOCK_ID,
-            stockType: DEFAULT_STOCK_NAME,
+            fkStock: AbstractFixture.DEFAULT_STOCK_ID,
+            stockType: AbstractFixture.DEFAULT_STOCK_NAME,
           },
         ],
       },
@@ -173,7 +161,7 @@ export class FullProductFixture extends AbstractFixture {
               status: 'approved',
               idProductConcrete: `#${productKey}.id_product_concrete`,
               concreteSku: `#${productKey}.sku`,
-              merchantReference: DEFAULT_MERCHANT_REFERENCE,
+              merchantReference: AbstractFixture.DEFAULT_MERCHANT_REFERENCE,
               stores: '#stores',
             },
           ],
@@ -187,7 +175,7 @@ export class FullProductFixture extends AbstractFixture {
               productOfferReference: `#${productOfferKey}.product_offer_reference`,
               isNeverOutOfStock: true,
             },
-            [{ idStock: DEFAULT_STOCK_ID }],
+            [{ idStock: AbstractFixture.DEFAULT_STOCK_ID }],
           ],
         },
       ];
@@ -338,7 +326,7 @@ export class FullProductFixture extends AbstractFixture {
   }
 
   buildProductUrl(localeName, name, abstractId) {
-    const localePrefix = localeName ? `${localeName.toLowerCase().replace('_', '-')}` : DEFAULT_PRODUCT_URL_PREFIX;
+    const localePrefix = localeName ? `${localeName.toLowerCase().replace('_', '-')}` : AbstractFixture.DEFAULT_PRODUCT_URL_PREFIX;
 
     return `${localePrefix}/${name.replace('.', '').replace('#', '').replace(' ', '-').toLowerCase()}-${abstractId}`;
   }

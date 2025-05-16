@@ -4,22 +4,21 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import IteratorUtil from '../../utils/iterator.util';
 import ProductPage from '../../pages/yves/product.page';
-import ConfigResolver from '../../utils/config-resolver.util';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
+import EnvironmentUtil from "../../utils/environment.util";
 
-const testConfiguration = new ConfigResolver({
-  params: {
-    id: 'S8',
-    group: 'Product',
-    metrics: ['S8_get_product'],
-    thresholds: {
-      S8_get_product: {
-        smoke: ['avg<300'],
-        load: ['avg<600'],
-      },
+const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
+  id: 'S8',
+  group: 'Product',
+  metrics: ['S8_get_product'],
+  thresholds: {
+    S8_get_product: {
+      smoke: ['avg<300'],
+      load: ['avg<600'],
     },
   },
-}).resolveConfig();
+};
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);

@@ -1,7 +1,7 @@
-import CmsPagesResource from '../resources/cms-pages.resource';
-import RandomUtil from '../utils/random.util';
+import CmsPagesResource from "../../resources/cms-pages.resource";
+import RandomUtil from "../../utils/random.util";
 
-export class CmsPageStaticFixture {
+export class CmsPageFixture {
   constructor({ cmsPagesCount = 1 }) {
     this.cmsPagesCount = cmsPagesCount;
   }

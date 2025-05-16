@@ -3,15 +3,6 @@ import EnvironmentUtil from '../utils/environment.util';
 import exec from 'k6/execution';
 import { uuidv4 } from '../utils/uuid.util';
 
-const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
-const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
-const DEFAULT_STOCK_ID = 1;
-const DEFAULT_STOCK_NAME = 'Warehouse1';
-const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
-const DEFAULT_STORE_ID = 1;
-const DEFAULT_STORE_NAME = 'DE';
-const DEFAULT_PARENT_CATEGORY_NODE = 0;
-const DEFAULT_TAX_SET_ID = 1;
 const DEFAULT_COLORS = ['Black', 'Blue', 'White'];
 const DEFAULT_BRANDS = ['Adidas', 'Nike', 'Puma'];
 
@@ -21,7 +12,6 @@ export class CategoryFixture extends AbstractFixture {
     this.categoryCount = categoryCount;
     this.productCount = productCount;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
-    this.storeId = DEFAULT_STORE_ID;
   }
 
   getData() {
@@ -51,27 +41,27 @@ export class CategoryFixture extends AbstractFixture {
         name: 'ProductImageTransfer',
         key: 'productImage',
         arguments: {
-          externalUrlSmall: DEFAULT_IMAGE_SMALL,
-          externalUrlLarge: DEFAULT_IMAGE_LARGE,
+          externalUrlSmall: AbstractFixture.DEFAULT_IMAGE_SMALL,
+          externalUrlLarge: AbstractFixture.DEFAULT_IMAGE_LARGE,
         },
       },
       {
         type: 'transfer',
         name: 'StoreTransfer',
         key: 'store',
-        arguments: { id_store: this.storeId, name: DEFAULT_STORE_NAME },
+        arguments: { id_store: AbstractFixture.DEFAULT_STORE_ID, name: AbstractFixture.DEFAULT_STORE_NAME },
       },
       {
         type: 'transfer',
         name: 'NodeTransfer',
         key: 'node',
-        arguments: { fkParentCategoryNode: DEFAULT_PARENT_CATEGORY_NODE },
+        arguments: { fkParentCategoryNode: AbstractFixture.DEFAULT_PARENT_CATEGORY_NODE },
       },
       {
         type: 'transfer',
         name: 'StoreRelationTransfer',
         key: 'storeRelation',
-        arguments: { idStores: [this.storeId] },
+        arguments: { idStores: [AbstractFixture.DEFAULT_STORE_ID] },
       },
       {
         type: 'array-object',
@@ -116,7 +106,7 @@ export class CategoryFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveFullProduct',
         key: productKey,
-        arguments: [this._getProductLocalizedAttributes(), { idTaxSet: DEFAULT_TAX_SET_ID }],
+        arguments: [this._getProductLocalizedAttributes(), { idTaxSet: AbstractFixture.DEFAULT_TAX_SET_ID }],
       },
       {
         type: 'helper',
@@ -147,8 +137,8 @@ export class CategoryFixture extends AbstractFixture {
           {
             sku: `#${productKey}.sku`,
             isNeverOutOfStock: '1',
-            fkStock: DEFAULT_STOCK_ID,
-            stockType: DEFAULT_STOCK_NAME,
+            fkStock: AbstractFixture.DEFAULT_STOCK_ID,
+            stockType: AbstractFixture.DEFAULT_STOCK_NAME,
           },
         ],
       },
@@ -167,7 +157,7 @@ export class CategoryFixture extends AbstractFixture {
               status: 'approved',
               idProductConcrete: `#${productKey}.id_product_concrete`,
               concreteSku: `#${productKey}.sku`,
-              merchantReference: DEFAULT_MERCHANT_REFERENCE,
+              merchantReference: AbstractFixture.DEFAULT_MERCHANT_REFERENCE,
               stores: '#stores',
             },
           ],
@@ -181,7 +171,7 @@ export class CategoryFixture extends AbstractFixture {
               productOfferReference: `#${productOfferKey}.product_offer_reference`,
               isNeverOutOfStock: true,
             },
-            [{ idStock: DEFAULT_STOCK_ID }],
+            [{ idStock: AbstractFixture.DEFAULT_STOCK_ID }],
           ],
         },
       ];

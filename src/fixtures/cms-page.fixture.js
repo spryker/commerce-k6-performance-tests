@@ -1,9 +1,6 @@
 import { AbstractFixture } from './abstract.fixture';
 import RandomUtil from '../utils/random.util';
 
-const LOCALE_ID = 66;
-const LOCALE_NAME = 'en_US';
-
 export class CmsPageFixture extends AbstractFixture {
   constructor({ cmsPagesCount = 1 }) {
     super();
@@ -33,13 +30,13 @@ export class CmsPageFixture extends AbstractFixture {
         type: 'transfer',
         name: 'LocaleTransfer',
         key: 'locale',
-        arguments: { id_locale: LOCALE_ID, locale_name: LOCALE_NAME },
+        arguments: { id_locale: AbstractFixture.DEFAULT_LOCALE_ID, locale_name: AbstractFixture.DEFAULT_LOCALE_NAME },
       },
       {
         type: 'transfer',
         name: 'StoreTransfer',
         key: 'store',
-        arguments: { id_store: 1, name: 'DE' },
+        arguments: { id_store: AbstractFixture.DEFAULT_STORE_ID, name: AbstractFixture.DEFAULT_STORE_NAME },
       },
       {
         type: 'array-object',

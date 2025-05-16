@@ -9,22 +9,20 @@ import EnvironmentUtil from '../../utils/environment.util';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
 import CartsResource from '../../resources/carts.resource';
 import exec from 'k6/execution';
-import ConfigResolver from '../../utils/config-resolver.util';
 import IteratorUtil from '../../utils/iterator.util';
 
-const testConfiguration = new ConfigResolver({
-  params: {
-    id: 'SAPI7',
-    group: 'Checkout',
-    metrics: ['SAPI7_post_checkout'],
-    thresholds: {
-      SAPI7_post_checkout: {
-        smoke: ['avg<300'],
-        load: ['avg<500'],
-      },
+const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
+  id: 'SAPI7',
+  group: 'Checkout',
+  metrics: ['SAPI7_post_checkout'],
+  thresholds: {
+    SAPI7_post_checkout: {
+      smoke: ['avg<300'],
+      load: ['avg<500'],
     },
   },
-}).resolveConfig();
+};
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);

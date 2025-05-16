@@ -31,10 +31,6 @@ export default class CheckoutPage extends AbstractPage {
       redirects: 0,
     });
 
-    if (response.status === 302) {
-      console.log(response);
-    }
-
     addErrorToCounter(
       check(response, {
         'Checkout address was successful': (r) => r.status === 200 && r.body,

@@ -3,23 +3,22 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import IteratorUtil from '../../utils/iterator.util';
-import ConfigResolver from '../../utils/config-resolver.util';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
 import AbstractProductsResource from '../../resources/abstract-products.resource';
+import EnvironmentUtil from "../../utils/environment.util";
 
-const testConfiguration = new ConfigResolver({
-  params: {
-    id: 'SAPI13',
-    group: 'Product',
-    metrics: ['SAPI13_get_abstract_products_all_includes'],
-    thresholds: {
-      SAPI13_get_abstract_products_all_includes: {
-        smoke: ['avg<600'],
-        load: ['avg<1200'],
-      },
+const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
+  id: 'SAPI13',
+  group: 'Product',
+  metrics: ['SAPI13_get_abstract_products_all_includes'],
+  thresholds: {
+    SAPI13_get_abstract_products_all_includes: {
+      smoke: ['avg<600'],
+      load: ['avg<1200'],
     },
   },
-}).resolveConfig();
+};
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);

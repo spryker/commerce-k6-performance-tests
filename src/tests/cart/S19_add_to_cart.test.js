@@ -6,26 +6,23 @@ import CartPage from '../../pages/yves/cart.page';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
 import IteratorUtil from '../../utils/iterator.util';
 import exec from 'k6/execution';
-import ConfigResolver from '../../utils/config-resolver.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import { LoginPage } from '../../pages/yves/login.page';
 import ProductPage from '../../pages/yves/product.page';
 import { parseHTML } from 'k6/html';
-import { sleep } from 'k6';
 
-const testConfiguration = new ConfigResolver({
-  params: {
-    id: 'S19',
-    group: 'Cart',
-    metrics: ['S19_post_cart_add'],
-    thresholds: {
-      S19_post_cart_add: {
-        smoke: ['avg<300'],
-        load: ['avg<600'],
-      },
+const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
+  id: 'S19',
+  group: 'Cart',
+  metrics: ['S19_post_cart_add'],
+  thresholds: {
+    S19_post_cart_add: {
+      smoke: ['avg<300'],
+      load: ['avg<600'],
     },
   },
-}).resolveConfig();
+};
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
@@ -76,6 +73,4 @@ export default function (data) {
   group('Logout', () => {
     loginPage.logout(headers);
   });
-
-  sleep(1);
 }

@@ -3,23 +3,22 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import CatalogPage from '../../pages/yves/catalog.page';
-import ConfigResolver from '../../utils/config-resolver.util';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
 import IteratorUtil from '../../utils/iterator.util';
+import EnvironmentUtil from "../../utils/environment.util";
 
-const testConfiguration = new ConfigResolver({
-  params: {
-    id: 'S2',
-    group: 'Product Search',
-    metrics: ['S2_get_search'],
-    thresholds: {
-      S2_get_search: {
-        smoke: ['avg<200'],
-        load: ['avg<200'],
-      },
+const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
+  id: 'S2',
+  group: 'Product Search',
+  metrics: ['S2_get_search'],
+  thresholds: {
+    S2_get_search: {
+      smoke: ['avg<200'],
+      load: ['avg<200'],
     },
   },
-}).resolveConfig();
+};
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);

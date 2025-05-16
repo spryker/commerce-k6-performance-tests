@@ -4,25 +4,23 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import AuthUtil from '../../utils/auth.util';
 import CartsResource from '../../resources/carts.resource';
-import ConfigResolver from '../../utils/config-resolver.util';
 import FixturesResolver from '../../utils/fixtures-resolver.util';
 import IteratorUtil from '../../utils/iterator.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
 
-const testConfiguration = new ConfigResolver({
-  params: {
-    id: 'SAPI6',
-    group: 'Cart',
-    metrics: ['SAPI6_post_carts_items'],
-    thresholds: {
-      SAPI6_post_carts_items: {
-        smoke: ['avg<600'],
-        load: ['avg<1200'],
-      },
+const testConfiguration = {
+  ...EnvironmentUtil.getDefaultTestConfiguration(),
+  id: 'SAPI6',
+  group: 'Cart',
+  metrics: ['SAPI6_post_carts_items'],
+  thresholds: {
+    SAPI6_post_carts_items: {
+      smoke: ['avg<600'],
+      load: ['avg<1200'],
     },
   },
-}).resolveConfig();
+};
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
