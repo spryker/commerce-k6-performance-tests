@@ -58,7 +58,7 @@ export class CustomerFixture {
     });
   }
 
-  static iterateData(data, vus = null) {
+  iterateData(data, vus = null) {
     if (vus) {
       return data[vus - 1];
     }

@@ -7,8 +7,6 @@ import { LoginPage } from '../../pages/yves/login.page';
 import CheckoutPage from '../../pages/yves/checkout.page';
 import { parseHTML } from 'k6/html';
 import { group } from 'k6';
-import { CustomerFixture } from '../../fixtures/customer.fixture';
-import IteratorUtil from '../../utils/iterator.util';
 import exec from 'k6/execution';
 import ProductPage from '../../pages/yves/product.page';
 import CartPage from '../../pages/yves/cart.page';
@@ -81,36 +79,19 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  // Why fixture are different?
-  if (EnvironmentUtil.getTestType() === 'soak') {
-    const fixture = CustomerFixture.createFixture({
-      customerCount: testConfiguration.vus,
-      itemCount: 1,
-    });
-
-    return fixture.getData();
-  }
-
-  const dynamicFixture = new CartFixture({
+const fixture = new CartFixture({
     customerCount: testConfiguration.vus,
     cartCount: testConfiguration.iterations,
     itemCount: 70,
     defaultItemPrice: 1000,
-  });
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  let headers;
-  if (EnvironmentUtil.getTestType() === 'soak') {
-    headers = getCustomerWithCartSoak(data);
-  } else {
-    headers = getCustomerWithCartSmokeLoad(data);
-  }
-
-  const checkoutPage = new CheckoutPage(headers);
+  const checkoutPage = new CheckoutPage(prepareHeaders(data));
 
   group('Checkout', () => {
     const checkoutResponse = checkoutPage.getCheckout();
@@ -184,25 +165,12 @@ export default function (data) {
   });
 }
 
-function getCustomerWithCartSmokeLoad(data) {
-  const customer = IteratorUtil.iterateData({
-    fixtureName: 'cart',
-    data,
-    vus: exec.vu.idInTest,
-  });
+function prepareHeaders(data) {
+  const customer = fixture.iterateData(data, exec.vu.idInTest);
 
-  const loginPage = new LoginPage(customer.customerEmail);
-  const headers = loginPage.login();
-
-  return headers;
-}
-
-function getCustomerWithCartSoak(data) {
-  const customer = IteratorUtil.iterateData({
-    fixtureName: 'customer',
-    data,
-    vus: exec.vu.idInTest,
-  });
+  if (EnvironmentUtil.getTestType() !== 'soak') {
+    return (new LoginPage(customer.customerEmail)).login();
+  }
 
   const product = customer.products[0];
 

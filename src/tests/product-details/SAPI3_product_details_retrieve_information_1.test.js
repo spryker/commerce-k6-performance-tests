@@ -22,16 +22,16 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new ProductFixture({
-    productCount: 1,
-  });
+const fixture = new ProductFixture({
+  productCount: 1,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const product = ProductFixture.iterateData(data);
+  const product = fixture.iterateData(data);
 
   group(testConfiguration.group, () => {
     const concreteProductsResource = new ConcreteProductsResource();

@@ -19,6 +19,7 @@ export class CartFixture extends AbstractFixture {
 
       return new StaticCartFixture(params);
     }
+
     return new CartFixture(params);
   }
 
@@ -48,7 +49,7 @@ export class CartFixture extends AbstractFixture {
     });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
+  iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
     if (EnvironmentUtil.getTestType() === 'soak') {
       const { customerEmail, cartIds, productSkus } = data[exec.vu.idInTest - 1];
 

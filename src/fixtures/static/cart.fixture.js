@@ -44,7 +44,7 @@ export class CartFixture {
     });
   }
 
-  static iterateData(data, vus = null) {
+  iterateData(data, vus = null) {
     let record;
     if (vus) {
       record = data[vus - 1];

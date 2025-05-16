@@ -29,18 +29,18 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CheckoutFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: testConfiguration.iterations,
-    itemCount: 70,
-  });
+const fixture = new CheckoutFixture({
+  customerCount: testConfiguration.vus,
+  cartCount: testConfiguration.iterations,
+  itemCount: 70,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail, idCart } = CheckoutFixture.iterateData(data);
+  const { customerEmail, idCart } = fixture.iterateData(data);
 
   let bearerToken;
   group('Authorization', () => {

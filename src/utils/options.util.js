@@ -1,18 +1,7 @@
 import EnvironmentUtil from './environment.util';
-import { createDefaultScenario } from './scenario.util';
 
 export default class OptionsUtil {
   static loadOptions(testConfiguration, testThresholds) {
-    const testType = EnvironmentUtil.getTestType();
-
-    if (testType === 'smoke' || testType === 'load') {
-      return this.loadSmokeLoadOptions(testConfiguration, testThresholds);
-    }
-
-    return this.loadSoakOptions(testConfiguration, testThresholds);
-  }
-
-  static loadSmokeLoadOptions(testConfiguration, testThresholds) {
     let options = this._getDefaultOptions();
 
     options.tags = {};
@@ -23,21 +12,11 @@ export default class OptionsUtil {
       options.thresholds[metric] = testThresholds[metric];
     });
 
-    options.scenarios.default = createDefaultScenario(testConfiguration);
+    options.scenarios.default = this._createDefaultScenario(testConfiguration);
 
-    return options;
-  }
-
-  static loadSoakOptions(testConfiguration, testThresholds) {
-    let options = this._getDefaultOptions();
-
-    options.thresholds = {};
-
-    testConfiguration.metrics.forEach((metric) => {
-      options.thresholds[metric] = testThresholds[metric];
-    });
-
-    options.stages = testConfiguration.stages;
+    if (EnvironmentUtil.getTestType() === 'soak') {
+      options.stages = testConfiguration.stages;
+    }
 
     return options;
   }
@@ -50,6 +29,24 @@ export default class OptionsUtil {
       thresholds: {
         http_req_failed: ['rate == 0.00'],
         checks: ['rate == 1.0'],
+      },
+    };
+  }
+
+  static _createDefaultScenario(testConfiguration) {
+    return {
+      tags: {
+        testId: testConfiguration.id,
+        testGroup: testConfiguration.group,
+      },
+      executor: testConfiguration.executor,
+      vus: testConfiguration.vus,
+      iterations: testConfiguration.iterations,
+      maxDuration: testConfiguration.maxDuration,
+      options: {
+        browser: {
+          type: 'chromium',
+        },
       },
     };
   }

@@ -1,9 +1,8 @@
 // tags: soak
-import { group, sleep } from 'k6';
+import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import { CmsPageFixture } from '../../fixtures/cms-page.fixture';
-import IteratorUtil from '../../utils/iterator.util';
 import CmsPagesResource from '../../resources/cms-pages.resource';
 import EnvironmentUtil from "../../utils/environment.util";
 
@@ -24,16 +23,16 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const fixture = CmsPageFixture.createFixture({
-    cmsPagesCount: testConfiguration.vus,
-  });
+const fixture = CmsPageFixture.createFixture({
+  cmsPagesCount: testConfiguration.vus,
+});
 
+export function setup() {
   return fixture.getData();
 }
 
 export default function (data) {
-  const { uuid } = IteratorUtil.iterateData({ fixtureName: 'cms-page', data });
+  const { uuid } = fixture.iterateData(data);
 
   group(testConfiguration.group, () => {
     const cmsPagesResource = new CmsPagesResource();

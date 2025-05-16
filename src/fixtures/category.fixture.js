@@ -27,7 +27,7 @@ export class CategoryFixture extends AbstractFixture {
       });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     const categoryIndex = (vus - 1) % data.length;
 
     return data[categoryIndex];

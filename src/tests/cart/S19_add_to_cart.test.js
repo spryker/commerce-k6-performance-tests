@@ -3,7 +3,6 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import CartPage from '../../pages/yves/cart.page';
-import IteratorUtil from '../../utils/iterator.util';
 import exec from 'k6/execution';
 import EnvironmentUtil from '../../utils/environment.util';
 import { LoginPage } from '../../pages/yves/login.page';
@@ -27,21 +26,20 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = CustomerFixture.createFixture({
-    customerCount: testConfiguration.vus,
-    itemCount: 1,
-    randomItems: true,
-  });
+const fixture = CustomerFixture.createFixture({
+  customerCount: testConfiguration.vus,
+  itemCount: 1,
+  randomItems: true,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const customer = IteratorUtil.iterateData({ fixtureName: 'customer', data, vus: exec.vu.idInTest });
-
-  const email = customer.customerEmail;
+  const customer = fixture.iterateData(data, exec.vu.idInTest);
   const product = customer.products[0];
+  const email = customer.customerEmail;
 
   let password = null;
   if (EnvironmentUtil.getUseStaticFixtures()) {

@@ -4,7 +4,6 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import CatalogPage from '../../pages/yves/catalog.page';
 import { FullProductFixture } from '../../fixtures/full-product.fixture';
-import IteratorUtil from '../../utils/iterator.util';
 import EnvironmentUtil from "../../utils/environment.util";
 
 const testConfiguration = {
@@ -23,16 +22,16 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const fixture = FullProductFixture.createFixture({
-    productCount: testConfiguration.vus,
-  });
+const fixture = FullProductFixture.createFixture({
+  productCount: testConfiguration.vus,
+});
 
+export function setup() {
   return fixture.getData();
 }
 
 export default function (data) {
-  const product = IteratorUtil.iterateData({ fixtureName: 'product', data });
+  const product = fixture.iterateData(data);
 
   group(testConfiguration.group, () => {
     const catalogPage = new CatalogPage();

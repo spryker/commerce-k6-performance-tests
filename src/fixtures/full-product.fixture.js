@@ -16,10 +16,11 @@ export class FullProductFixture extends AbstractFixture {
 
   static createFixture(params = {}) {
     if (AbstractFixture.shouldUseStaticFixtures()) {
-      const { ProductFixture: StaticProductFixture } = require('./static/product.fixture');
+      const { FullProductFixture: StaticFullProductFixture } = require('./static/full-product.fixture');
 
-      return new StaticProductFixture(params);
+      return new StaticFullProductFixture(params);
     }
+
     return new FullProductFixture(params);
   }
 
@@ -49,7 +50,7 @@ export class FullProductFixture extends AbstractFixture {
       });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     if (EnvironmentUtil.getTestType() === 'soak') {
       return RandomUtil.getRandomItem(data);
     }

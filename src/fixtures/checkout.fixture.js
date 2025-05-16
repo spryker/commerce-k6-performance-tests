@@ -35,7 +35,7 @@ export class CheckoutFixture extends AbstractFixture {
     });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
+  iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
     const customerIndex = (vus - 1) % data.length;
     const { customerEmail, quoteIds } = data[customerIndex];
     const quoteIndex = iterations % quoteIds.length;

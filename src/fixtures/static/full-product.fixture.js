@@ -10,7 +10,7 @@ const concreteProductsCsv = new SharedArray('concrete_products', function () {
   return papaparse.parse(open('./static-data/concrete_products.csv'), { header: true }).data;
 });
 
-export class ProductFixture {
+export class FullProductFixture {
   constructor({ productCount = 1 }) {
     this.productCount = productCount;
   }
@@ -36,7 +36,7 @@ export class ProductFixture {
     });
   }
 
-  static iterateData(data) {
+  iterateData(data) {
     return RandomUtil.getRandomItem(data);
   }
 }

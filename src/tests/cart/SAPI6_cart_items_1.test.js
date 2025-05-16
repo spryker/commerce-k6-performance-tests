@@ -5,7 +5,6 @@ import { createMetrics } from '../../utils/metric.util';
 import AuthUtil from '../../utils/auth.util';
 import CartsResource from '../../resources/carts.resource';
 import { CartFixture } from '../../fixtures/cart.fixture';
-import IteratorUtil from '../../utils/iterator.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
 
@@ -25,22 +24,18 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = CartFixture.createFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: 1,
-    itemCount: 1,
-  });
+const fixture = CartFixture.createFixture({
+  customerCount: testConfiguration.vus,
+  cartCount: 1,
+  itemCount: 1,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail, idCart, productSku } = IteratorUtil.iterateData({
-    fixtureName: 'cart',
-    data,
-    vus: exec.vu.idInTest,
-  });
+  const { customerEmail, idCart, productSku } = fixture.iterateData(data, exec.vu.idInTest);
 
   let bearerToken;
   group('Authorization', () => {
@@ -54,3 +49,4 @@ export default function (data) {
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
 }
+

@@ -34,7 +34,7 @@ export class ProductFixture extends AbstractFixture {
       });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     const productIndex = (vus - 1) % data.length;
 
     return data[productIndex];

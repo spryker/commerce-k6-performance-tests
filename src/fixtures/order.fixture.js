@@ -61,7 +61,7 @@ export class OrderFixture extends AbstractFixture {
     return response;
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     const orderIndex = (vus - 1) % data.length;
 
     return data[orderIndex];

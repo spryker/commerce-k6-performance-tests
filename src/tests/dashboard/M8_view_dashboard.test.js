@@ -28,13 +28,13 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new MerchantUserFixture({
-    idMerchant: 1,
-    merchantUserCount: testConfiguration.vus,
-  });
+const fixture = new MerchantUserFixture({
+  idMerchant: 1,
+  merchantUserCount: testConfiguration.vus,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export function teardown() {
@@ -42,10 +42,9 @@ export function teardown() {
 }
 
 export default async function (data) {
-  const merchantUser = MerchantUserFixture.iterateData(data);
+  const merchantUser = fixture.iterateData(data);
 
   let headers = {};
-
   group('Login', () => {
     const loginPage = new LoginPage(merchantUser.username);
     headers = loginPage.login();

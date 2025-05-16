@@ -11,8 +11,10 @@ export class CmsPageFixture extends AbstractFixture {
   static createFixture(params = {}) {
     if (AbstractFixture.shouldUseStaticFixtures()) {
       const { CmsPageFixture: StaticCmsPageFixture } = require('./static/cms-page.fixture');
+
       return new StaticCmsPageFixture(params);
     }
+
     return new CmsPageFixture(params);
   }
 
@@ -29,7 +31,7 @@ export class CmsPageFixture extends AbstractFixture {
     });
   }
 
-  static iterateData(data) {
+  iterateData(data) {
     return RandomUtil.getRandomItem(data);
   }
 

@@ -18,6 +18,7 @@ export class CustomerFixture extends AbstractFixture {
 
       return new StaticCustomerFixture(params);
     }
+
     return new CustomerFixture(params);
   }
 
@@ -48,8 +49,7 @@ export class CustomerFixture extends AbstractFixture {
           if (this.repositoryId === 'b2b-mp') {
             const productOfferKey = item.attributes.key.replace('productKey', 'productOffer');
             const productOffer = responseData.filter((item) => item.attributes.key.startsWith(productOfferKey));
-            const productOfferReference = productOffer[0].attributes.data.product_offer_reference;
-            productData.productOfferReference = productOfferReference;
+            productData.productOfferReference = productOffer[0].attributes.data.product_offer_reference;
           }
 
           return productData;
@@ -62,7 +62,7 @@ export class CustomerFixture extends AbstractFixture {
     });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     const customerIndex = (vus - 1) % data.length;
     const { customerEmail, products } = data[customerIndex];
 

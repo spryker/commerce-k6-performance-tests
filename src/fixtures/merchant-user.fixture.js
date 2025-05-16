@@ -28,7 +28,7 @@ export class MerchantUserFixture extends AbstractFixture {
       });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     const merchantUserIndex = (vus - 1) % data.length;
 
     return data[merchantUserIndex];

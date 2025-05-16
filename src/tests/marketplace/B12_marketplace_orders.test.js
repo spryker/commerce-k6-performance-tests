@@ -29,32 +29,28 @@ const testConfiguration = {
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
+const fixture = new OrderFixture({
+  customerCount: testConfiguration.vus,
+  ordersCount: testConfiguration.iterations,
+  itemCount: 1,
+  defaultItemPrice: 5000,
+  forceMarketplace: true,
+});
 
 export function setup() {
-  const dynamicFixture = new OrderFixture({
-    customerCount: testConfiguration.vus,
-    ordersCount: testConfiguration.iterations,
-    itemCount: 1,
-    defaultItemPrice: 5000,
-    forceMarketplace: true,
-  });
-
-  const data = dynamicFixture.getData();
-  dynamicFixture.preparePaidOrders(data);
+  const data = fixture.getData();
+  fixture.preparePaidOrders(data);
 }
 
 export default function () {
   let headers = {};
-
   group('Login', () => {
     const loginPage = new LoginPage('richard@spryker.com');
     headers = loginPage.login();
   });
 
-  const merchantSalesPage = new MerchantSalesPage(headers);
-
   group('Marketplace orders', () => {
-    const merchantSalesResponse = merchantSalesPage.all();
+    const merchantSalesResponse = (new MerchantSalesPage(headers)).all();
 
     metrics[testConfiguration.metrics[0]].add(merchantSalesResponse.timings.duration);
   });

@@ -23,7 +23,7 @@ export class CmsPageFixture {
     });
   }
 
-  static iterateData(data) {
+  iterateData(data) {
     return RandomUtil.getRandomItem(data);
   }
 }

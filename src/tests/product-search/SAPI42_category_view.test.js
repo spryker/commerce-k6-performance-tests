@@ -22,17 +22,17 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CategoryFixture({
-    categoryCount: 1,
-    productCount: 100,
-  });
+const fixture = new CategoryFixture({
+  categoryCount: 1,
+  productCount: 100,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const category = CategoryFixture.iterateData(data);
+  const category = fixture.iterateData(data);
 
   group(testConfiguration.group, () => {
     const catalogSearchResource = new CatalogSearchResource();
