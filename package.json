@@ -5,7 +5,7 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "build:one": "webpack --env entryPattern=./src/tests/homepage/SOAKAPI1_view_homepage.test.js",
+    "build:one": "webpack --env entryPattern=./src/tests/cart/SAPI6_cart_items_1.test.js",
     "build:all": "webpack --env entryPattern=./src/tests/**/*.test.js",
     "build:S": "webpack --env entryPattern=./src/tests/**/S*.test.js",
     "build:M": "webpack --env entryPattern=./src/tests/**/M*.test.js",
@@ -37,7 +37,10 @@
   "devDependencies": {
     "@babel/core": "^7.22.0",
     "@babel/preset-env": "^7.22.0",
+    "assert": "^2.1.0",
     "babel-loader": "^9.1.2",
+    "browserify-fs": "^1.0.0",
+    "buffer": "^6.0.3",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^13.0.0",
     "eslint": "^8.39.0",
@@ -45,7 +48,9 @@
     "eslint-plugin-prettier": "^5.2.2",
     "k6": "^0.0.0",
     "mkdirp": "^3.0.1",
+    "path-browserify": "^1.0.1",
     "prettier": "^3.4.2",
+    "stream-browserify": "^3.0.0",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4"
   }

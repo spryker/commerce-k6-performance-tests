@@ -3,11 +3,11 @@ import papaparse from "@babel/core/lib/parse";
 import RandomUtil from "../../utils/random.util";
 
 const abstractProductsCsv = new SharedArray('abstract_products', function () {
-  return papaparse.parse(open('./static-data/abstract_products.csv'), { header: true }).data;
+  return papaparse.parse(open('./assets/fixtures/abstract_products.csv'), { header: true }).data;
 });
 
 const concreteProductsCsv = new SharedArray('concrete_products', function () {
-  return papaparse.parse(open('./static-data/concrete_products.csv'), { header: true }).data;
+  return papaparse.parse(open('./assets/fixtures/concrete_products.csv'), { header: true }).data;
 });
 
 export class FullProductFixture {

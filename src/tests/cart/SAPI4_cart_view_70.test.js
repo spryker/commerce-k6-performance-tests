@@ -25,7 +25,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = new CartFixture({
-  customerCount: testConfiguration.vus,
+  customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
   cartCount: 10,
   itemCount: 70,
 });

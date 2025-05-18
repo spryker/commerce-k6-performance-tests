@@ -104,7 +104,8 @@ export default class EnvironmentUtil {
       const rampVus = this.getRampVus();
 
       return {
-        vus: rampVus,
+        startVUs: 0,
+        executor: 'ramping-vus',
         stages: [
           { duration: '1m', target: rampVus },
           { duration: '1m', target: rampVus },

@@ -17,6 +17,7 @@ const testConfiguration = {
     SAPI6_post_carts_items: {
       smoke: ['avg<600'],
       load: ['avg<1200'],
+      soak: ['avg<1200'],
     },
   },
 };
@@ -25,7 +26,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = CartFixture.createFixture({
-  customerCount: testConfiguration.vus,
+  customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
   cartCount: 1,
   itemCount: 1,
 });

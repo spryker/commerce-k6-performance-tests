@@ -55,21 +55,30 @@ module.exports = (env) => {
     target: 'web',
     externals: /k6(\/.*)?/,
     devtool: 'source-map',
+    resolve: {
+      fallback: {
+        "path": require.resolve("path-browserify"),
+        "assert": require.resolve("assert/"),
+        "fs": require.resolve("browserify-fs"),
+        "buffer": require.resolve("buffer/"),
+        "stream": require.resolve("stream-browserify")
+      }
+    },
     plugins: [
       new CleanWebpackPlugin(),
       new CopyWebpackPlugin({
         patterns: [
           {
-            from: path.resolve(__dirname, 'src/static-data/customers.csv'),
-            to: path.resolve(__dirname, 'dist/static-data/customers.csv'),
+            from: path.resolve(__dirname, 'src/assets/fixtures/customers.csv'),
+            to: path.resolve(__dirname, 'dist/assets/fixtures/customers.csv'),
           },
           {
-            from: path.resolve(__dirname, 'src/static-data/concrete_products.csv'),
-            to: path.resolve(__dirname, 'dist/static-data/concrete_products.csv'),
+            from: path.resolve(__dirname, 'src/assets/fixtures/concrete_products.csv'),
+            to: path.resolve(__dirname, 'dist/assets/fixtures/concrete_products.csv'),
           },
           {
-            from: path.resolve(__dirname, 'src/static-data/abstract_products.csv'),
-            to: path.resolve(__dirname, 'dist/static-data/abstract_products.csv'),
+            from: path.resolve(__dirname, 'src/assets/fixtures/abstract_products.csv'),
+            to: path.resolve(__dirname, 'dist/assets/fixtures/abstract_products.csv'),
           },
         ],
       }),

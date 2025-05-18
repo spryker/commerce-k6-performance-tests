@@ -6,15 +6,15 @@ import RandomUtil from "../../utils/random.util";
 const DEFAULT_PASSWORD = 'change123';
 
 const customersCsv = new SharedArray('customers', function () {
-  return papaparse.parse(open('./static-data/customers.csv'), { header: true }).data;
+  return papaparse.parse(open('./assets/fixtures/customers.csv'), { header: true }).data;
 });
 
 const abstractProductsCsv = new SharedArray('abstract_products', function () {
-  return papaparse.parse(open('./static-data/abstract_products.csv'), { header: true }).data;
+  return papaparse.parse(open('./assets/fixtures/abstract_products.csv'), { header: true }).data;
 });
 
 const concreteProductsCsv = new SharedArray('concrete_products', function () {
-  return papaparse.parse(open('./static-data/concrete_products.csv'), { header: true }).data;
+  return papaparse.parse(open('./assets/fixtures/concrete_products.csv'), { header: true }).data;
 });
 
 export class CustomerFixture {
