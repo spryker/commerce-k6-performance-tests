@@ -9,8 +9,8 @@ import CartReorderResource from '../../resources/cart-reorder.resource';
 import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
 
-if (EnvironmentUtil.getRepositoryId() !== 'suite') {
-  exec.test.abort('Cart Reorder is not integrated into demo shops.');
+if (EnvironmentUtil.getRepositoryId() !== 'suite' || EnvironmentUtil.getTestType() === 'soak') {
+  exec.test.abort('Cart Reorder is not integrated into demo shops or not applicable for soak tests.');
 }
 
 const testConfiguration = {

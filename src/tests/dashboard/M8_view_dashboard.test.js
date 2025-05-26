@@ -30,7 +30,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 
 const fixture = new MerchantUserFixture({
   idMerchant: 1,
-  merchantUserCount: testConfiguration.vus,
+  merchantUserCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
 });
 
 export function setup() {

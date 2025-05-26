@@ -75,7 +75,7 @@ export class CmsPageFixture extends AbstractFixture {
     return [
       {
         type: 'helper',
-        name: 'havePublishedCmsPage',
+        name: 'haveCmsPagePublished',
         key: cmsPageKey,
         arguments: [
           {

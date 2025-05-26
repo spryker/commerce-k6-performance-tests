@@ -10,8 +10,8 @@ import CartsResource from '../../resources/carts.resource';
 import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
 
-if (EnvironmentUtil.getRepositoryId() !== 'suite') {
-  exec.test.abort('Order Amendment is not integrated into demo shops.');
+if (EnvironmentUtil.getRepositoryId() !== 'suite' || EnvironmentUtil.getTestType() === 'soak') {
+  exec.test.abort('Order Amendment is not integrated into demo shops or not applicable for soak tests.');
 }
 
 const testConfiguration = {

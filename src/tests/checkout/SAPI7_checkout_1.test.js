@@ -5,9 +5,8 @@ import OptionsUtil from '../../utils/options.util';
 import CheckoutResource from '../../resources/checkout.resource';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
-import { CustomerFixture } from '../../fixtures/customer.fixture';
-import CartsResource from '../../resources/carts.resource';
 import exec from 'k6/execution';
+import {CheckoutFixture} from "../../fixtures/checkout.fixture";
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -18,6 +17,7 @@ const testConfiguration = {
     SAPI7_post_checkout: {
       smoke: ['avg<300'],
       load: ['avg<500'],
+      soak: ['avg<500'],
     },
   },
 };
@@ -25,10 +25,14 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const fixture = CustomerFixture.createFixture({
-  customerCount: testConfiguration.vus,
-  itemCount: 5,
-});
+const fixtureConfig = {
+  customerCount: EnvironmentUtil.getTestType() === 'soak' ? EnvironmentUtil.getRampVus() : testConfiguration.vus,
+  cartCount: EnvironmentUtil.getTestType() === 'soak' ? 300 : testConfiguration.iterations, // 600 is approximate number for soak test
+  itemCount: 1,
+  defaultItemPrice: 10000,
+};
+
+let fixture = new CheckoutFixture(fixtureConfig);
 
 export function setup() {
   return fixture.getData();
@@ -36,9 +40,8 @@ export function setup() {
 
 export default function (data) {
   const customer = fixture.iterateData(data, exec.vu.idInTest);
-  const product = customer.products[0];
-
   const customerEmail = customer.customerEmail;
+  let idCart = customer.idCart;
 
   let bearerToken;
   group('Authorization', () => {
@@ -48,21 +51,6 @@ export default function (data) {
       bearerToken = AuthUtil.getInstance().getBearerToken(customerEmail);
     }
   });
-
-  if (EnvironmentUtil.getTestType() === 'soak') {
-    let idCart;
-    group('Create cart', () => {
-      const cartsResource = new CartsResource(bearerToken);
-      const response = cartsResource.create(`Cart-${exec.vu.idInTest}`);
-
-      idCart = JSON.parse(response.body).data.id;
-    });
-
-    group('Add to cart', () => {
-      const cartsResource = new CartsResource(bearerToken);
-      cartsResource.addItem(idCart, product.sku, 1, product.productOfferReference);
-    });
-  }
 
   group(testConfiguration.group, () => {
     const checkoutResource = new CheckoutResource(idCart, customerEmail, bearerToken);

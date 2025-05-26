@@ -5,7 +5,7 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "build:one": "webpack --env entryPattern=./src/tests/cart/SAPI6_cart_items_1.test.js",
+    "build:one": "webpack --env entryPattern=./src/tests/order-amendment/SAPI20_order_amendment_70.test.js",
     "build:all": "webpack --env entryPattern=./src/tests/**/*.test.js",
     "build:S": "webpack --env entryPattern=./src/tests/**/S*.test.js",
     "build:M": "webpack --env entryPattern=./src/tests/**/M*.test.js",

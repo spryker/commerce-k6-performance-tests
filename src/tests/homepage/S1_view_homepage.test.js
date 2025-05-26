@@ -14,6 +14,7 @@ const testConfiguration = {
     S1_get_homepage: {
       smoke: ['avg<200'],
       load: ['avg<400'],
+      soak: ['avg<400'],
     },
   },
 };

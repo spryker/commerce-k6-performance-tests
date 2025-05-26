@@ -10,6 +10,7 @@ import { group } from 'k6';
 import exec from 'k6/execution';
 import ProductPage from '../../pages/yves/product.page';
 import CartPage from '../../pages/yves/cart.page';
+import {CustomerFixture} from "../../fixtures/customer.fixture";
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -32,46 +33,57 @@ const testConfiguration = {
     S4_get_checkout: {
       smoke: ['avg<900'],
       load: ['avg<1800'],
+      soak: ['avg<1800'],
     },
     S4_get_checkout_address: {
       smoke: ['avg<750'],
       load: ['avg<1500'],
+      soak: ['avg<1500'],
     },
     S4_post_checkout_address: {
       smoke: ['avg<750'],
       load: ['avg<1500'],
+      soak: ['avg<1500'],
     },
     S4_get_checkout_shipment: {
       smoke: ['avg<650'],
       load: ['avg<1300'],
+      soak: ['avg<1300'],
     },
     S4_post_checkout_shipment: {
       smoke: ['avg<650'],
       load: ['avg<1300'],
+      soak: ['avg<1300'],
     },
     S4_get_checkout_payment: {
       smoke: ['avg<950'],
       load: ['avg<1900'],
+      soak: ['avg<1900'],
     },
     S4_post_checkout_payment: {
       smoke: ['avg<950'],
       load: ['avg<1900'],
+      soak: ['avg<1900'],
     },
     S4_get_checkout_summary: {
       smoke: ['avg<1050'],
       load: ['avg<2100'],
+      soak: ['avg<2100'],
     },
     S4_post_checkout_summary: {
       smoke: ['avg<1050'],
       load: ['avg<2100'],
+      soak: ['avg<2100'],
     },
     S4_get_checkout_success: {
       smoke: ['avg<2850'],
       load: ['avg<4700'],
+      soak: ['avg<4700'],
     },
     S4_get_place_order: {
       smoke: ['avg<1100'],
       load: ['avg<2200'],
+      soak: ['avg<2200'],
     },
   },
 };
@@ -79,12 +91,14 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const fixture = new CartFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: testConfiguration.iterations,
-    itemCount: 70,
-    defaultItemPrice: 1000,
-});
+let fixture = EnvironmentUtil.getTestType() === 'soak'
+  ? new CustomerFixture({ customerCount: EnvironmentUtil.getRampVus()  })
+  : new CartFixture({
+      customerCount: testConfiguration.vus,
+      cartCount: testConfiguration.iterations,
+      itemCount: 70,
+      defaultItemPrice: 1000,
+    });
 
 export function setup() {
   return fixture.getData();
@@ -92,6 +106,7 @@ export function setup() {
 
 export default function (data) {
   const checkoutPage = new CheckoutPage(prepareHeaders(data));
+
 
   group('Checkout', () => {
     const checkoutResponse = checkoutPage.getCheckout();

@@ -6,6 +6,10 @@ import { CmsPageFixture } from '../../fixtures/cms-page.fixture';
 import CmsPagesResource from '../../resources/cms-pages.resource';
 import EnvironmentUtil from "../../utils/environment.util";
 
+if (EnvironmentUtil.getTestType() !== 'soak') {
+    exec.test.abort('This test is only applicable for soak tests.');
+}
+
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SOAKAPI1',
@@ -13,8 +17,6 @@ const testConfiguration = {
   metrics: ['SOAKAPI1_get_cms_pages'],
   thresholds: {
     SOAKAPI1_get_cms_pages: {
-      smoke: ['avg<200'],
-      load: ['avg<300'],
       soak: ['avg<300'],
     },
   },
@@ -24,7 +26,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = CmsPageFixture.createFixture({
-  cmsPagesCount: testConfiguration.vus,
+  cmsPagesCount: EnvironmentUtil.getRampVus(),
 });
 
 export function setup() {

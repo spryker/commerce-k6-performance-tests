@@ -63,7 +63,7 @@ export default class SalesPage extends AbstractPage {
       'oms_trigger_form[_token]': omsTriggerFormToken,
     };
 
-    const triggerEventUrl = `${EnvironmentUtil.getBackofficeUrl()}/oms/trigger/submit-trigger-event-for-order?event=${event}&id-sales-order=${orderId}&redirect=/sales/detail?id-sales-order=${orderId}`;
+    const triggerEventUrl = `${EnvironmentUtil.getBackofficeUrl()}/oms/trigger/submit-trigger-event-for-order?event=${encodeURIComponent(event)}&id-sales-order=${orderId}&redirect=/sales/detail?id-sales-order=${orderId}`;
     const triggerEventResponse = http.post(triggerEventUrl, payload, { headers: this.headers, redirects: 0 });
 
     addErrorToCounter(
@@ -85,6 +85,11 @@ export default class SalesPage extends AbstractPage {
       })
     );
 
-    return JSON.parse(salesTableResponse.body).data[0][0];
+    let orderId = JSON.parse(salesTableResponse.body).data[0][0];
+    if (orderId && orderId.includes(',')) {
+      orderId = orderId.replace(/,/g, '');
+    }
+
+    return orderId;
   }
 }

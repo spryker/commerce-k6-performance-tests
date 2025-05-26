@@ -13,7 +13,7 @@ export class AbstractFixture {
   static DEFAULT_PASSWORD = 'change123';
   static DEFAULT_STOCK_ID = 1;
   static DEFAULT_STOCK_NAME = 'Warehouse1';
-  static DEFAULT_MERCHANT_REFERENCE = 'MER000008';
+  static DEFAULT_MERCHANT_REFERENCE = 'MER000001';
   static DEFAULT_TAX_SET_ID = 1;
   static DEFAULT_PRODUCT_URL_PREFIX = 'en-us';
   static DEFAULT_LOCALE = 'de_DE';

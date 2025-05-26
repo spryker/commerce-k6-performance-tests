@@ -8,8 +8,8 @@ import { OrderFixture } from '../../fixtures/order.fixture';
 import MerchantSalesPage from '../../pages/bo/merchant-sales.page';
 import exec from 'k6/execution';
 
-if (EnvironmentUtil.getRepositoryId() === 'b2b') {
-  exec.test.abort('Merchant Portal is not integrated into b2b demo shop.');
+if (EnvironmentUtil.getRepositoryId() === 'b2b' || EnvironmentUtil.getTestType() === 'soak') {
+    exec.test.abort('Merchant Portal is not integrated into b2b demo shop or this test is not applicable for soak tests.');
 }
 
 const testConfiguration = {
@@ -19,6 +19,7 @@ const testConfiguration = {
   metrics: ['B12_get_merchant_sales'],
   vus: 1,
   iterations: 10,
+  setupTimeout: '100s',
   thresholds: {
     B12_get_merchant_sales: {
       smoke: ['avg<600'],
@@ -29,6 +30,7 @@ const testConfiguration = {
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
+
 const fixture = new OrderFixture({
   customerCount: testConfiguration.vus,
   ordersCount: testConfiguration.iterations,

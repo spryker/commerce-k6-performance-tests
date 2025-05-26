@@ -7,6 +7,10 @@ import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
 
+if (EnvironmentUtil.getTestType() === 'soak') {
+  exec.test.abort('Checkout is not applicable for soak tests.');
+}
+
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI9',
