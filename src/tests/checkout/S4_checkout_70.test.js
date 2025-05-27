@@ -1,4 +1,4 @@
-// tags: smoke, load, soak
+// tags: smoke, load, soak, checkout, S
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';

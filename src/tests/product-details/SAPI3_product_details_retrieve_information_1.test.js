@@ -1,4 +1,4 @@
-// tags: smoke, load
+// tags: smoke, load, product-details, SAPI
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';

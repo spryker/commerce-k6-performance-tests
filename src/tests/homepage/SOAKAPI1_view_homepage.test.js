@@ -1,4 +1,4 @@
-// tags: soak
+// tags: soak, homepage, SAPI
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';

@@ -1,4 +1,4 @@
-// tags: smoke
+// tags: smoke, product-management, M
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';

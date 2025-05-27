@@ -1,4 +1,4 @@
-// tags: smoke, load, soak
+// tags: smoke, load, soak, product, S
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';

@@ -1,4 +1,4 @@
-// tags: smoke, load, soak
+// tags: smoke, load, soak, checkout, SAPI
 import { group } from 'k6';
 import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';

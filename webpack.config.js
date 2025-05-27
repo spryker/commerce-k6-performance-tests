@@ -6,19 +6,37 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env) => {
   let pattern = env && env.entryPattern ? env.entryPattern : './src/tests/**/*.test.js';
-  const entryTag = env && env.entryTag;
-  
+  const entryTags = env && env.entryTags ? env.entryTags.split(',') : [];
+  const entryTag = env && env.entryTag; // Keep for backward compatibility
+
   const files = glob.sync(pattern);
   
   let filteredFiles = files;
   
-  // Filter files by tag if entryTag is provided
-  if (entryTag) {
+  // Filter files by tags if entryTags is provided
+  if (entryTags.length > 0 || entryTag) {
+    const tagsToCheck = entryTags.length > 0 ? entryTags : [entryTag];
+
     filteredFiles = files.filter(file => {
       try {
         const content = fs.readFileSync(file, 'utf8');
         const firstLine = content.split('\n')[0];
-        return firstLine.includes(`tags:`) && firstLine.includes(entryTag);
+
+        if (!firstLine.includes('tags:')) {
+          return false;
+        }
+
+        // Extract the actual tags from the first line
+        const tagLine = firstLine.split('tags:')[1].trim();
+        const fileTags = tagLine.split(',').map(tag => tag.trim());
+
+        // Check if ALL of the specified tags are present (for multiple tags)
+        // or if the single tag is present (for backward compatibility)
+        if (tagsToCheck.length === 1) {
+          return fileTags.includes(tagsToCheck[0]);
+        } else {
+          return tagsToCheck.every(tag => fileTags.includes(tag));
+        }
       } catch (error) {
         console.error(`Error reading file ${file}:`, error);
         return false;
@@ -27,7 +45,12 @@ module.exports = (env) => {
   }
 
   if (filteredFiles.length === 0) {
-    console.error(`No files found matching pattern: ${pattern}${entryTag ? ` with tag: ${entryTag}` : ''}`);
+    const tagsInfo = entryTags.length > 0
+      ? ` with tags: ${entryTags.join(', ')}`
+      : entryTag
+        ? ` with tag: ${entryTag}`
+        : '';
+    console.error(`No files found matching pattern: ${pattern}${tagsInfo}`);
     process.exit(1);
   }
 
