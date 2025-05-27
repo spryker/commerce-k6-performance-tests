@@ -35,14 +35,26 @@ export class LoginPage extends AbstractPage {
     };
 
     const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/en/login_check`, payload, params);
+    let sessionCookie = this.extractSessionCookie(response);
 
-    addErrorToCounter(
-      check(response, {
-        'Login was successful': (r) => r.status === 302,
-      })
-    );
+    if (!sessionCookie) {
+        console.log('Session cookie not found, retrying login...');
 
-    const sessionCookie = this.extractSessionCookie(response);
+        const retryResponse = http.post(`${EnvironmentUtil.getStorefrontUrl()}/en/login_check`, payload, params);
+        addErrorToCounter(
+          check(retryResponse, {
+            'Login was successful': (r) => r.status === 302,
+          })
+        );
+
+        sessionCookie = this.extractSessionCookie(retryResponse);
+    } else {
+        addErrorToCounter(
+          check(response, {
+            'Login was successful': (r) => r.status === 302,
+          })
+        );
+    }
 
     return {
       Cookie: sessionCookie,
@@ -50,9 +62,14 @@ export class LoginPage extends AbstractPage {
   }
 
   extractSessionCookie(response) {
+    if (!response.headers['Set-Cookie']) {
+      console.log('No Set-Cookie header found in response');
+      return '';
+    }
+
     const cookies = response.headers['Set-Cookie'].split(';');
 
-    return cookies.find((cookie) => cookie.includes(`${EnvironmentUtil.getStorefrontSessionCookieName()}=`));
+    return cookies.find((cookie) => cookie.includes(`${EnvironmentUtil.getStorefrontSessionCookieName()}=`)) || '';
   }
 
   logout(headers) {

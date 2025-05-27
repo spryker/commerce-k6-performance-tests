@@ -5,7 +5,7 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "build:one": "webpack --env entryPattern=./src/tests/product-search/SAPI42_category_view.test.js",
+    "build:one": "webpack --env entryPattern=./src/tests/cart/S19_add_to_cart.test.js",
     "build:all": "webpack --env entryPattern=./src/tests/**/*.test.js",
     "build:S": "webpack --env entryPattern=./src/tests/**/S*.test.js",
     "build:M": "webpack --env entryPattern=./src/tests/**/M*.test.js",
