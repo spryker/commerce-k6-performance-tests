@@ -16,6 +16,7 @@ const testConfiguration = {
     SAPI13_get_abstract_products_all_includes: {
       smoke: ['avg<600'],
       load: ['avg<1200'],
+      soak: ['avg<1200'],
     },
   },
 };
@@ -24,8 +25,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = FullProductFixture.createFixture({
-  productCount: testConfiguration.vus,
-  includes: testConfiguration.includes,
+  productCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
 });
 
 export function setup() {

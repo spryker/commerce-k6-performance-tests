@@ -12,8 +12,6 @@ const testConfiguration = {
   id: 'B4',
   group: 'Product management',
   metrics: ['B4_get_product_add', 'B4_post_product_add'],
-  vus: 1,
-  iterations: 10,
   thresholds: {
     B4_get_product_add: {
       smoke: ['avg<700'],

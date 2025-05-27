@@ -15,6 +15,7 @@ const testConfiguration = {
     S2_get_search: {
       smoke: ['avg<200'],
       load: ['avg<200'],
+      soak: ['avg<200'],
     },
   },
 };
@@ -23,7 +24,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = FullProductFixture.createFixture({
-  productCount: testConfiguration.vus,
+  productCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
 });
 
 export function setup() {

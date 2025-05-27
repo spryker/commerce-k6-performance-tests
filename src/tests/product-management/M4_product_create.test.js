@@ -1,4 +1,4 @@
-// tags: smoke, load
+// tags: smoke
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
@@ -8,8 +8,8 @@ import ProductPage from '../../pages/mp/product.page';
 import { parseHTML } from 'k6/html';
 import exec from 'k6/execution';
 
-if (EnvironmentUtil.getRepositoryId() === 'b2b') {
-  exec.test.abort('Merchant Portal is not integrated into b2b demo shop.');
+if (EnvironmentUtil.getRepositoryId() === 'b2b' || EnvironmentUtil.getTestType() !== 'smoke') {
+  exec.test.abort('Merchant Portal is not integrated into b2b demo shop or this test is applicable only for smoke tests.');
 }
 
 const testConfiguration = {
@@ -27,44 +27,33 @@ const testConfiguration = {
     'M4_post_concrete_update',
     'M4_send_for_approval',
   ],
-  vus: 1,
-  iterations: 10,
   thresholds: {
     M4_get_abstract_create: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
     M4_post_abstract_create: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
     M4_get_concrete_create: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
     M4_post_concrete_create: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
     M4_get_abstract_update: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
     M4_post_abstract_update: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
     M4_get_concrete_update: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
     M4_post_concrete_update: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
     M4_send_for_approval: {
       smoke: ['avg<700'],
-      load: ['avg<1400'],
     },
   },
 };

@@ -8,6 +8,11 @@ import AuthUtil from '../../utils/auth.util';
 import CheckoutResource from '../../resources/checkout.resource';
 import { LoginPage } from '../../pages/yves/login.page';
 import OrderPage from '../../pages/yves/order.page';
+import exec from 'k6/execution';
+
+if (EnvironmentUtil.getTestType() === 'soak') {
+    exec.test.abort('Order cancellation is not applicable for soak tests.');
+}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -29,19 +34,19 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CheckoutFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: testConfiguration.iterations,
-    itemCount: 70,
-    defaultItemPrice: 1000,
-  });
+const fixture = new CheckoutFixture({
+  customerCount: testConfiguration.vus,
+  cartCount: testConfiguration.iterations,
+  itemCount: 70,
+  defaultItemPrice: 1000,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail, idCart } = CheckoutFixture.iterateData(data);
+  const { customerEmail, idCart } = fixture.iterateData(data);
 
   let bearerToken;
   group('Authorization', () => {

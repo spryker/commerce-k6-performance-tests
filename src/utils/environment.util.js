@@ -99,7 +99,7 @@ export default class EnvironmentUtil {
     return 'per-vu-iterations';
   }
 
-  static getDefaultTestConfiguration() {
+  static getDefaultTestConfiguration(options) {
     if (EnvironmentUtil.getTestType() === 'soak') {
       const rampVus = this.getRampVus();
 
@@ -115,8 +115,8 @@ export default class EnvironmentUtil {
     }
 
     return {
-      vus: EnvironmentUtil.getVus(),
-      iterations: EnvironmentUtil.getIterations(),
+      vus: options && options.vus ? options.vus : EnvironmentUtil.getVus(),
+      iterations: options && options.iterations ? options.iterations : EnvironmentUtil.getIterations(),
       executor: EnvironmentUtil.getExecutor(),
       maxDuration: '60m',
     };

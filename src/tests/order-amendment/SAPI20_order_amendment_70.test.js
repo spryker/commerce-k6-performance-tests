@@ -38,19 +38,19 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CheckoutFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: testConfiguration.iterations,
-    itemCount: 70,
-  });
+const fixture = new CheckoutFixture({
+  customerCount: testConfiguration.vus,
+  cartCount: testConfiguration.iterations,
+  itemCount: 70,
+});
 
+export function setup() {
   if (isSequentialSetup()) {
-    return dynamicFixture.getData(testConfiguration.iterations, 1, 2);
+    return fixture.getData(testConfiguration.iterations, 1, 2);
   }
 
   if (isConcurrentSetup()) {
-    return dynamicFixture.getData(testConfiguration.vus, testConfiguration.iterations, 2);
+    return fixture.getData(testConfiguration.vus, testConfiguration.iterations, 2);
   }
 }
 

@@ -31,17 +31,17 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new OrderFixture({
-    customerCount: testConfiguration.vus,
-    ordersCount: 25,
-    itemCount: 1,
-    defaultItemPrice: 5000,
-    forceMarketplace: true,
-  });
+const fixture = new OrderFixture({
+  customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
+  ordersCount: 25,
+  itemCount: 1,
+  defaultItemPrice: 5000,
+  forceMarketplace: true,
+});
 
-  const data = dynamicFixture.getData();
-  dynamicFixture.preparePaidOrders(data);
+export function setup() {
+  const data = fixture.getData();
+  fixture.preparePaidOrders(data);
 }
 
 export default function () {

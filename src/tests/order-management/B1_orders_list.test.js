@@ -25,15 +25,15 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new OrderFixture({
-    customerCount: testConfiguration.vus,
-    ordersCount: testConfiguration.iterations,
-    itemCount: 1,
-    defaultItemPrice: 10000,
-  });
+const fixture = new OrderFixture({
+  customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
+  ordersCount: testConfiguration.iterations,
+  itemCount: 1,
+  defaultItemPrice: 10000,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function () {

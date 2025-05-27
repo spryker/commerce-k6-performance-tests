@@ -9,6 +9,10 @@ import { OrderFixture } from '../../fixtures/order.fixture';
 import exec from 'k6/execution';
 import { parseHTML } from 'k6/html';
 
+if (EnvironmentUtil.getTestType() === 'soak') {
+    exec.test.abort('This test is not applicable for soak tests.');
+}
+
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'B3',
@@ -31,19 +35,19 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new OrderFixture({
-    customerCount: testConfiguration.vus,
-    ordersCount: testConfiguration.iterations,
-    itemCount: 70,
-    defaultItemPrice: 1000,
-  });
+const fixture = new OrderFixture({
+  customerCount: testConfiguration.vus,
+  ordersCount: testConfiguration.iterations,
+  itemCount: 70,
+  defaultItemPrice: 1000,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const { orderReferences } = OrderFixture.iterateData(data);
+  const { orderReferences } = fixture.iterateData(data);
 
   let headers = {};
 

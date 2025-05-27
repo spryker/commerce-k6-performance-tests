@@ -7,6 +7,11 @@ import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import OrdersResource from '../../resources/orders.resource';
+import exec from 'k6/execution';
+
+if (EnvironmentUtil.getTestType() === 'soak') {
+    exec.test.abort('Order History View is not applicable for soak tests.');
+}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -28,18 +33,18 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CheckoutFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: 10,
-    itemCount: 70,
-  });
+const fixture = new CheckoutFixture({
+  customerCount: testConfiguration.vus,
+  cartCount: 10,
+  itemCount: 70,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail, idCart } = CheckoutFixture.iterateData(data);
+  const { customerEmail, idCart } = fixture.iterateData(data);
 
   let bearerToken;
   group('Authorization', () => {
