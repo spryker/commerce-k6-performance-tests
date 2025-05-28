@@ -6,11 +6,13 @@
  * - npm run build (builds all tests)
  * - npm run build --tags=smoke,checkout (builds only tests that have BOTH smoke AND checkout tags)
  * - npm run build --tags=load (builds all tests with load tag)
+ * - npm run build --test-type=smoke (overrides SPRYKER_TEST_TYPE from .env with "smoke")
+ * - npm run build --repository-id=b2b (overrides SPRYKER_REPOSITORY_ID from .env with "b2b")
+ * - npm run build --tags=cart --test-type=smoke --repository-id=b2b (combines all parameters)
  */
 
 const { execSync } = require('child_process');
 
-// Extract tags from npm_config environment variables
 const npmConfigTags = process.env.npm_config_tags;
 let tags = [];
 
@@ -19,21 +21,35 @@ if (npmConfigTags) {
   console.log(`Tags detected from npm config: ${tags.join(', ')}`);
 }
 
-// Build the webpack command
+const testType = process.env.npm_config_test_type;
+if (testType) {
+  console.log(`Test type detected from npm config: ${testType}`);
+  process.env.SPRYKER_TEST_TYPE = testType;
+}
+
+const repositoryId = process.env.npm_config_repository_id;
+if (repositoryId) {
+  console.log(`Repository ID detected from npm config: ${repositoryId}`);
+  process.env.SPRYKER_REPOSITORY_ID = repositoryId;
+}
+
 let webpackCommand = 'webpack';
 
-// Default to all test files
-webpackCommand += ' --env entryPattern=./src/tests/**/*.test.js';
-
-// Add tags filtering if provided
 if (tags.length > 0) {
   webpackCommand += ` --env entryTags=${tags.join(',')}`;
+}
+
+if (testType) {
+  webpackCommand += ` --env testType=${testType}`;
+}
+
+if (repositoryId) {
+  webpackCommand += ` --env repositoryId=${repositoryId}`;
 }
 
 console.log(`Executing: ${webpackCommand}`);
 
 try {
-  // Execute the webpack command
   execSync(webpackCommand, { stdio: 'inherit' });
   console.log('Build completed successfully');
 } catch (error) {

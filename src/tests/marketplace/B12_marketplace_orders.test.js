@@ -9,7 +9,9 @@ import MerchantSalesPage from '../../pages/bo/merchant-sales.page';
 import exec from 'k6/execution';
 
 if (EnvironmentUtil.getRepositoryId() === 'b2b' || EnvironmentUtil.getTestType() === 'soak') {
-    exec.test.abort('Merchant Portal is not integrated into b2b demo shop or this test is not applicable for soak tests.');
+  exec.test.abort(
+    'Merchant Portal is not integrated into b2b demo shop or this test is not applicable for soak tests.'
+  );
 }
 
 const testConfiguration = {
@@ -52,7 +54,7 @@ export default function () {
   });
 
   group('Marketplace orders', () => {
-    const merchantSalesResponse = (new MerchantSalesPage(headers)).all();
+    const merchantSalesResponse = new MerchantSalesPage(headers).all();
 
     metrics[testConfiguration.metrics[0]].add(merchantSalesResponse.timings.duration);
   });

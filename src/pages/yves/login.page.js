@@ -38,22 +38,22 @@ export class LoginPage extends AbstractPage {
     let sessionCookie = this.extractSessionCookie(response);
 
     if (!sessionCookie) {
-        console.log('Session cookie not found, retrying login...');
+      console.log('Session cookie not found, retrying login...');
 
-        const retryResponse = http.post(`${EnvironmentUtil.getStorefrontUrl()}/en/login_check`, payload, params);
-        addErrorToCounter(
-          check(retryResponse, {
-            'Login was successful': (r) => r.status === 302,
-          })
-        );
+      const retryResponse = http.post(`${EnvironmentUtil.getStorefrontUrl()}/en/login_check`, payload, params);
+      addErrorToCounter(
+        check(retryResponse, {
+          'Login was successful': (r) => r.status === 302,
+        })
+      );
 
-        sessionCookie = this.extractSessionCookie(retryResponse);
+      sessionCookie = this.extractSessionCookie(retryResponse);
     } else {
-        addErrorToCounter(
-          check(response, {
-            'Login was successful': (r) => r.status === 302,
-          })
-        );
+      addErrorToCounter(
+        check(response, {
+          'Login was successful': (r) => r.status === 302,
+        })
+      );
     }
 
     return {

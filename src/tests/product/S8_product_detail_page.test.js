@@ -4,7 +4,7 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import ProductPage from '../../pages/yves/product.page';
 import { FullProductFixture } from '../../fixtures/full-product.fixture';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

@@ -10,7 +10,7 @@ import { group } from 'k6';
 import exec from 'k6/execution';
 import ProductPage from '../../pages/yves/product.page';
 import CartPage from '../../pages/yves/cart.page';
-import {CustomerFixture} from "../../fixtures/customer.fixture";
+import { CustomerFixture } from '../../fixtures/customer.fixture';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -91,14 +91,17 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-let fixture = EnvironmentUtil.getTestType() === 'soak'
-  ? new CustomerFixture({ customerCount: EnvironmentUtil.getRampVus()  })
-  : new CartFixture({
-      customerCount: testConfiguration.vus,
-      cartCount: testConfiguration.iterations,
-      itemCount: 70,
-      defaultItemPrice: 1000,
-    });
+let fixture;
+if (EnvironmentUtil.getTestType() === 'soak') {
+  fixture = new CustomerFixture({ customerCount: EnvironmentUtil.getRampVus() });
+} else {
+  fixture = new CartFixture({
+    customerCount: testConfiguration.vus,
+    cartCount: testConfiguration.iterations,
+    itemCount: 70,
+    defaultItemPrice: 1000,
+  });
+}
 
 export function setup() {
   return fixture.getData();
@@ -106,7 +109,6 @@ export function setup() {
 
 export default function (data) {
   const checkoutPage = new CheckoutPage(prepareHeaders(data));
-
 
   group('Checkout', () => {
     const checkoutResponse = checkoutPage.getCheckout();
@@ -184,7 +186,7 @@ function prepareHeaders(data) {
   const customer = fixture.iterateData(data, exec.vu.idInTest);
 
   if (EnvironmentUtil.getTestType() !== 'soak') {
-    return (new LoginPage(customer.customerEmail)).login();
+    return new LoginPage(customer.customerEmail).login();
   }
 
   const product = customer.products[0];

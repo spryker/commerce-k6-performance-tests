@@ -4,7 +4,6 @@ import exec from 'k6/execution';
 import RandomUtil from '../utils/random.util';
 
 export class FullProductFixture extends AbstractFixture {
-
   constructor({ productCount = 1, additionalConcreteCount = 0, includes = {} }) {
     super();
     this.productCount = productCount;
@@ -75,7 +74,11 @@ export class FullProductFixture extends AbstractFixture {
         type: 'transfer',
         name: 'StoreTransfer',
         key: 'store',
-        arguments: { id_store: this.storeId, name: AbstractFixture.DEFAULT_STORE_NAME, defaultCurrencyIsoCode: AbstractFixture.DEFAULT_CURRENCY_CODE },
+        arguments: {
+          id_store: this.storeId,
+          name: AbstractFixture.DEFAULT_STORE_NAME,
+          defaultCurrencyIsoCode: AbstractFixture.DEFAULT_CURRENCY_CODE,
+        },
       },
       {
         type: 'transfer',
@@ -337,7 +340,9 @@ export class FullProductFixture extends AbstractFixture {
   }
 
   buildProductUrl(localeName, name, abstractId) {
-    const localePrefix = localeName ? `${localeName.toLowerCase().replace('_', '-')}` : AbstractFixture.DEFAULT_PRODUCT_URL_PREFIX;
+    const localePrefix = localeName
+      ? `${localeName.toLowerCase().replace('_', '-')}`
+      : AbstractFixture.DEFAULT_PRODUCT_URL_PREFIX;
 
     return `${localePrefix}/${name.replace('.', '').replace('#', '').replace(' ', '-').toLowerCase()}-${abstractId}`;
   }

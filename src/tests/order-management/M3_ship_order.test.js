@@ -9,7 +9,9 @@ import exec from 'k6/execution';
 import OrdersPage from '../../pages/mp/orders.page';
 
 if (EnvironmentUtil.getRepositoryId() === 'b2b' || EnvironmentUtil.getTestType() === 'soak') {
-    exec.test.abort('Merchant Portal is not integrated into b2b demo shop or this test is not applicable for soak tests.');
+  exec.test.abort(
+    'Merchant Portal is not integrated into b2b demo shop or this test is not applicable for soak tests.'
+  );
 }
 
 const testConfiguration = {

@@ -1,7 +1,7 @@
 import { CustomerFixture } from './customer.fixture';
-import AuthUtil from "../../utils/auth.util";
-import CartsResource from "../../resources/carts.resource";
-import RandomUtil from "../../utils/random.util";
+import AuthUtil from '../../utils/auth.util';
+import CartsResource from '../../resources/carts.resource';
+import RandomUtil from '../../utils/random.util';
 
 export class CartFixture {
   constructor({ customerCount = 1, cartCount = 1, itemCount = 1, randomItems = false }) {

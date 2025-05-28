@@ -22,7 +22,7 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const fixture = new ProductFixture({productCount: 1});
+const fixture = new ProductFixture({ productCount: 1 });
 
 export function setup() {
   return fixture.getData();

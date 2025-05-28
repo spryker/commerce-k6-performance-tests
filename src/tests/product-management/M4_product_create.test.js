@@ -9,7 +9,9 @@ import { parseHTML } from 'k6/html';
 import exec from 'k6/execution';
 
 if (EnvironmentUtil.getRepositoryId() === 'b2b' || EnvironmentUtil.getTestType() !== 'smoke') {
-  exec.test.abort('Merchant Portal is not integrated into b2b demo shop or this test is applicable only for smoke tests.');
+  exec.test.abort(
+    'Merchant Portal is not integrated into b2b demo shop or this test is applicable only for smoke tests.'
+  );
 }
 
 const testConfiguration = {

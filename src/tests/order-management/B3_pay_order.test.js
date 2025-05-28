@@ -10,7 +10,7 @@ import exec from 'k6/execution';
 import { parseHTML } from 'k6/html';
 
 if (EnvironmentUtil.getTestType() === 'soak') {
-    exec.test.abort('This test is not applicable for soak tests.');
+  exec.test.abort('This test is not applicable for soak tests.');
 }
 
 const testConfiguration = {

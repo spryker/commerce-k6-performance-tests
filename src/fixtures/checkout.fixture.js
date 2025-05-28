@@ -319,4 +319,3 @@ export class CheckoutFixture extends AbstractFixture {
     }));
   }
 }
-

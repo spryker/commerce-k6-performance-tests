@@ -10,7 +10,7 @@ import OrdersResource from '../../resources/orders.resource';
 import exec from 'k6/execution';
 
 if (EnvironmentUtil.getTestType() === 'soak') {
-    exec.test.abort('Order History View is not applicable for soak tests.');
+  exec.test.abort('Order History View is not applicable for soak tests.');
 }
 
 const testConfiguration = {

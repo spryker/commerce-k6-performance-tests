@@ -3,7 +3,6 @@ import exec from 'k6/execution';
 import EnvironmentUtil from '../utils/environment.util';
 
 export class CartFixture extends AbstractFixture {
-
   constructor({ customerCount, cartCount = 1, itemCount = 1, defaultItemPrice = 1000 }) {
     super();
     this.customerCount = customerCount;

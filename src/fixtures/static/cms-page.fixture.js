@@ -1,5 +1,5 @@
-import CmsPagesResource from "../../resources/cms-pages.resource";
-import RandomUtil from "../../utils/random.util";
+import CmsPagesResource from '../../resources/cms-pages.resource';
+import RandomUtil from '../../utils/random.util';
 
 export class CmsPageFixture {
   constructor({ cmsPagesCount = 1 }) {

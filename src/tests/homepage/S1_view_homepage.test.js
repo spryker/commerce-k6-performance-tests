@@ -3,7 +3,7 @@ import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import HomePage from '../../pages/yves/home.page';
 import { createMetrics } from '../../utils/metric.util';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

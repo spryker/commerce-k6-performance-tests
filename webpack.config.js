@@ -3,20 +3,40 @@ const glob = require('glob');
 const fs = require('fs');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+require('dotenv').config();
 
-module.exports = (env) => {
-  let pattern = env && env.entryPattern ? env.entryPattern : './src/tests/**/*.test.js';
-  const entryTags = env && env.entryTags ? env.entryTags.split(',') : [];
-  const entryTag = env && env.entryTag; // Keep for backward compatibility
+module.exports = (env = {}) => {
+  // Extract parameters from env
+  const entryTags = env.entryTags ? env.entryTags.split(',') : [];
+  const testType = env.testType;
+  const repositoryId = env.repositoryId;
 
-  const files = glob.sync(pattern);
-  
+  const envVars = {};
+
+  Object.keys(process.env).forEach(key => {
+    if (key.startsWith('SPRYKER_') || key.startsWith('K6_')) {
+      envVars[key] = process.env[key];
+    }
+  });
+
+  if (testType) {
+    envVars.SPRYKER_TEST_TYPE = testType;
+  }
+
+  if (repositoryId) {
+    envVars.SPRYKER_REPOSITORY_ID = repositoryId;
+  }
+
+  console.log('Environment variables for webpack:');
+  Object.entries(envVars).forEach(([key, value]) => {
+    console.log(`${key}: ${value}`);
+  });
+
+  const files = glob.sync('./src/tests/**/*.test.js');
   let filteredFiles = files;
-  
-  // Filter files by tags if entryTags is provided
-  if (entryTags.length > 0 || entryTag) {
-    const tagsToCheck = entryTags.length > 0 ? entryTags : [entryTag];
 
+  if (entryTags.length > 0) {
     filteredFiles = files.filter(file => {
       try {
         const content = fs.readFileSync(file, 'utf8');
@@ -26,17 +46,10 @@ module.exports = (env) => {
           return false;
         }
 
-        // Extract the actual tags from the first line
         const tagLine = firstLine.split('tags:')[1].trim();
         const fileTags = tagLine.split(',').map(tag => tag.trim());
 
-        // Check if ALL of the specified tags are present (for multiple tags)
-        // or if the single tag is present (for backward compatibility)
-        if (tagsToCheck.length === 1) {
-          return fileTags.includes(tagsToCheck[0]);
-        } else {
-          return tagsToCheck.every(tag => fileTags.includes(tag));
-        }
+        return entryTags.every(tag => fileTags.includes(tag));
       } catch (error) {
         console.error(`Error reading file ${file}:`, error);
         return false;
@@ -45,17 +58,13 @@ module.exports = (env) => {
   }
 
   if (filteredFiles.length === 0) {
-    const tagsInfo = entryTags.length > 0
-      ? ` with tags: ${entryTags.join(', ')}`
-      : entryTag
-        ? ` with tag: ${entryTag}`
-        : '';
-    console.error(`No files found matching pattern: ${pattern}${tagsInfo}`);
+    const tagsInfo = entryTags.length > 0 ? ` with tags: ${entryTags.join(', ')}` : '';
+    console.error(`No test files found${tagsInfo}`);
     process.exit(1);
   }
 
   const entry = filteredFiles.reduce((acc, file) => {
-    const name = path.basename(file, path.extname(file)); // Use the file name without extension
+    const name = path.basename(file, path.extname(file));
     acc[name] = file;
     return acc;
   }, {});
@@ -104,6 +113,10 @@ module.exports = (env) => {
             to: path.resolve(__dirname, 'dist/assets/fixtures/abstract_products.csv'),
           },
         ],
+      }),
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify(envVars),
+        __ENV: JSON.stringify(envVars)
       }),
     ],
   };

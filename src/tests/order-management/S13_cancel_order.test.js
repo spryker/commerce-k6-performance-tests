@@ -11,7 +11,7 @@ import OrderPage from '../../pages/yves/order.page';
 import exec from 'k6/execution';
 
 if (EnvironmentUtil.getTestType() === 'soak') {
-    exec.test.abort('Order cancellation is not applicable for soak tests.');
+  exec.test.abort('Order cancellation is not applicable for soak tests.');
 }
 
 const testConfiguration = {

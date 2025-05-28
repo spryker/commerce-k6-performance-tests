@@ -3,7 +3,6 @@ import exec from 'k6/execution';
 import EnvironmentUtil from '../utils/environment.util';
 
 export class CustomerFixture extends AbstractFixture {
-
   constructor({ customerCount, itemCount = 1, defaultItemPrice = 10000 }) {
     super();
     this.customerCount = customerCount;
@@ -312,7 +311,9 @@ export class CustomerFixture extends AbstractFixture {
   }
 
   buildProductUrl(localeName, name, abstractId) {
-    const localePrefix = localeName ? `${localeName.toLowerCase().replace('_', '-')}` : AbstractFixture.DEFAULT_PRODUCT_URL_PREFIX;
+    const localePrefix = localeName
+      ? `${localeName.toLowerCase().replace('_', '-')}`
+      : AbstractFixture.DEFAULT_PRODUCT_URL_PREFIX;
 
     return `${localePrefix}/${name.replace('.', '').replace('#', '').replace(' ', '-').toLowerCase()}-${abstractId}`;
   }

@@ -2,7 +2,6 @@ import { AbstractFixture } from './abstract.fixture';
 import RandomUtil from '../utils/random.util';
 
 export class CmsPageFixture extends AbstractFixture {
-
   constructor({ cmsPagesCount = 1 }) {
     super();
     this.cmsPagesCount = cmsPagesCount;

@@ -4,7 +4,7 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import { FullProductFixture } from '../../fixtures/full-product.fixture';
 import AbstractProductsResource from '../../resources/abstract-products.resource';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
 
 const testConfiguration = {

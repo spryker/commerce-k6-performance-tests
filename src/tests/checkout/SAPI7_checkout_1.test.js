@@ -6,7 +6,7 @@ import CheckoutResource from '../../resources/checkout.resource';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
-import {CheckoutFixture} from "../../fixtures/checkout.fixture";
+import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

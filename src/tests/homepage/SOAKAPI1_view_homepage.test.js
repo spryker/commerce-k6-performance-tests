@@ -4,10 +4,11 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import { CmsPageFixture } from '../../fixtures/cms-page.fixture';
 import CmsPagesResource from '../../resources/cms-pages.resource';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
+import exec from 'k6/execution';
 
 if (EnvironmentUtil.getTestType() !== 'soak') {
-    exec.test.abort('This test is only applicable for soak tests.');
+  exec.test.abort('This test is only applicable for soak tests.');
 }
 
 const testConfiguration = {

@@ -6,8 +6,8 @@ export default class OptionsUtil {
       thresholds: thresholds,
       setupTimeout: options.setupTimeout || '60s',
       scenarios: {
-        default: {}
-      }
+        default: {},
+      },
     };
 
     k6Options.scenarios.default = EnvironmentUtil.getDefaultTestConfiguration(options);

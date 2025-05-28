@@ -99,8 +99,8 @@ export class OrderFixture extends AbstractFixture {
 
         const salesDetailPageResponse = salesPage.get(orderId);
         let omsTriggerFormToken = parseHTML(salesDetailPageResponse.body)
-            .find(OMS_TRIGGER_FORM_TOKEN_SELECTOR)
-            .attr('value');
+          .find(OMS_TRIGGER_FORM_TOKEN_SELECTOR)
+          .attr('value');
 
         salesPage.triggerEvent(orderId, EVENT_PAY, omsTriggerFormToken);
       }

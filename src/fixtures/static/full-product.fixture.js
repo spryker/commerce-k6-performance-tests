@@ -1,6 +1,6 @@
 import { SharedArray } from 'k6/data';
-import papaparse from "@babel/core/lib/parse";
-import RandomUtil from "../../utils/random.util";
+import papaparse from '@babel/core/lib/parse';
+import RandomUtil from '../../utils/random.util';
 
 const abstractProductsCsv = new SharedArray('abstract_products', function () {
   return papaparse.parse(open('./assets/fixtures/abstract_products.csv'), { header: true }).data;

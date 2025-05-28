@@ -1,20 +1,20 @@
 import { SharedArray } from 'k6/data';
 import { randomIntBetween } from '../../utils/uuid.util';
-import papaparse from "@babel/core/lib/parse";
-import RandomUtil from "../../utils/random.util";
+import Papa from 'papaparse';
+import RandomUtil from '../../utils/random.util';
 
 const DEFAULT_PASSWORD = 'change123';
 
 const customersCsv = new SharedArray('customers', function () {
-  return papaparse.parse(open('./assets/fixtures/customers.csv'), { header: true }).data;
+  return Papa.parse(open('./assets/fixtures/customers.csv'), { header: true }).data;
 });
 
 const abstractProductsCsv = new SharedArray('abstract_products', function () {
-  return papaparse.parse(open('./assets/fixtures/abstract_products.csv'), { header: true }).data;
+  return Papa.parse(open('./assets/fixtures/abstract_products.csv'), { header: true }).data;
 });
 
 const concreteProductsCsv = new SharedArray('concrete_products', function () {
-  return papaparse.parse(open('./assets/fixtures/concrete_products.csv'), { header: true }).data;
+  return Papa.parse(open('./assets/fixtures/concrete_products.csv'), { header: true }).data;
 });
 
 export class CustomerFixture {

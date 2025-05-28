@@ -50,4 +50,3 @@ export default function (data) {
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
 }
-

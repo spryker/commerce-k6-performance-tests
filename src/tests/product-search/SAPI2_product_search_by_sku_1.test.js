@@ -4,7 +4,7 @@ import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import CatalogSearchResource from '../../resources/catalog-search.resource';
 import { FullProductFixture } from '../../fixtures/full-product.fixture';
-import EnvironmentUtil from "../../utils/environment.util";
+import EnvironmentUtil from '../../utils/environment.util';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

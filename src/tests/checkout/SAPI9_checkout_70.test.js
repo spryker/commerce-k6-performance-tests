@@ -6,6 +6,7 @@ import CheckoutResource from '../../resources/checkout.resource';
 import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
+import exec from 'k6/execution';
 
 if (EnvironmentUtil.getTestType() === 'soak') {
   exec.test.abort('Checkout is not applicable for soak tests.');
