@@ -5,10 +5,10 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "build": "node scripts/build.js",
-    "up": "docker-compose -f docker-compose.suite.yml up -d influxdb grafana",
-    "down": "docker-compose -f docker-compose.suite.yml down -v --remove-orphans",
-    "start": "node scripts/start.js",
+    "webpack:build": "node scripts/webpack.js",
+    "docker:up": "node scripts/docker.js up",
+    "docker:down": "node scripts/docker.js down",
+    "docker:run": "node scripts/docker.js run",
     "prettier:check": "prettier ./src --check",
     "prettier:write": "prettier ./src --write",
     "lint": "npx eslint ./src"
