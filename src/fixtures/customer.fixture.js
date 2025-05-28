@@ -238,7 +238,7 @@ export class CustomerFixture extends AbstractFixture {
               status: 'approved',
               idProductConcrete: `#${productKey}.id_product_concrete`,
               concreteSku: `#${productKey}.sku`,
-              merchantReference: AbstractFixture.DEFAULT_MERCHANT_REFERENCE,
+              merchantReference: this.getSprykerMerchantReference(),
               stores: '#stores',
             },
           ],

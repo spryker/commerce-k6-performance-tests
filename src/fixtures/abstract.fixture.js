@@ -36,6 +36,10 @@ export class AbstractFixture {
     return res;
   }
 
+  getSprykerMerchantReference() {
+    return EnvironmentUtil.getRepositoryId() === 'b2b-mp' ? 'MER000008' : AbstractFixture.DEFAULT_MERCHANT_REFERENCE;
+  }
+
   static runConsoleCommands(commands) {
     const operations = commands.map((command) => {
       return {
