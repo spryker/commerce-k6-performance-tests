@@ -27,7 +27,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 
 const fixtureConfig = {
   customerCount: EnvironmentUtil.getTestType() === 'soak' ? EnvironmentUtil.getRampVus() : testConfiguration.vus,
-  cartCount: EnvironmentUtil.getTestType() === 'soak' ? 300 : testConfiguration.iterations, // 600 is approximate number for soak test
+  cartCount: EnvironmentUtil.getTestType() === 'soak' ? 400 : testConfiguration.iterations,
   itemCount: 1,
   defaultItemPrice: 10000,
 };

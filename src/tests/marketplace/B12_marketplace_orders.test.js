@@ -21,7 +21,6 @@ const testConfiguration = {
   metrics: ['B12_get_merchant_sales'],
   vus: 1,
   iterations: 10,
-  setupTimeout: '100s',
   thresholds: {
     B12_get_merchant_sales: {
       smoke: ['avg<600'],

@@ -11,7 +11,12 @@ export default class ProductPage extends AbstractPage {
 
     addErrorToCounter(
       check(response, {
-        'Product detail page was successful': (r) => r.status === 200 && r.body,
+        'Product detail page was successful': (r) => {
+            if (r.status !== 200) {
+                console.error(`Failed to load product page: ${fullUrl} with status ${r.status}`);
+            }
+          return r.status === 200 && r.body
+        },
       })
     );
 
