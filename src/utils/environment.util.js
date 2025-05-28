@@ -119,7 +119,7 @@ export default class EnvironmentUtil {
       iterations: options && options.iterations ? options.iterations : EnvironmentUtil.getIterations(),
       executor: EnvironmentUtil.getExecutor(),
       maxDuration: '60m',
-      gracefulStop: '300s'
+      gracefulStop: '300s',
     };
   }
 
