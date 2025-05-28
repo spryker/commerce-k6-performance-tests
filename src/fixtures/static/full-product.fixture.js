@@ -1,13 +1,13 @@
 import { SharedArray } from 'k6/data';
-import papaparse from '@babel/core/lib/parse';
+import Papa from 'papaparse';
 import RandomUtil from '../../utils/random.util';
 
 const abstractProductsCsv = new SharedArray('abstract_products', function () {
-  return papaparse.parse(open('./assets/fixtures/abstract_products.csv'), { header: true }).data;
+  return Papa.parse(open('./assets/fixtures/abstract_products.csv'), { header: true }).data;
 });
 
 const concreteProductsCsv = new SharedArray('concrete_products', function () {
-  return papaparse.parse(open('./assets/fixtures/concrete_products.csv'), { header: true }).data;
+  return Papa.parse(open('./assets/fixtures/concrete_products.csv'), { header: true }).data;
 });
 
 export class FullProductFixture {
