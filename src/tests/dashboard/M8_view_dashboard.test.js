@@ -38,7 +38,7 @@ export function setup() {
 }
 
 export function teardown() {
-  MerchantUserFixture.runConsoleCommands(['console queue:worker:start --stop-when-empty']);
+  MerchantUserFixture.runConsoleCommands(['vendor/bin/console queue:worker:start --stop-when-empty']);
 }
 
 export default async function (data) {

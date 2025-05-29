@@ -3,12 +3,12 @@
 /**
  * Dynamic build script for K6 performance tests
  * Usage examples:
- * - npm run build (builds all tests)
- * - npm run build --tags=smoke,checkout (builds only tests that have BOTH smoke AND checkout tags)
- * - npm run build --tags=load (builds all tests with load tag)
- * - npm run build --test-type=smoke (overrides SPRYKER_TEST_TYPE from .env with "smoke")
- * - npm run build --repository-id=b2b (overrides SPRYKER_REPOSITORY_ID from .env with "b2b")
- * - npm run build --tags=cart --test-type=smoke --repository-id=b2b (combines all parameters)
+ * - npm run webpack:build (builds all tests)
+ * - npm run webpack:build --tags=smoke,checkout (builds only tests that have BOTH smoke AND checkout tags)
+ * - npm run webpack:build --tags=load (builds all tests with load tag)
+ * - npm run webpack:build --test-type=smoke (overrides SPRYKER_TEST_TYPE from .env with "smoke")
+ * - npm run webpack:build --repository-id=b2b (overrides SPRYKER_REPOSITORY_ID from .env with "b2b")
+ * - npm run webpack:build --tags=cart --test-type=smoke --repository-id=b2b (combines all parameters)
  */
 
 const { execSync } = require('child_process');

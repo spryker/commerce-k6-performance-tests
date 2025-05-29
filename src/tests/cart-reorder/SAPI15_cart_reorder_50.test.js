@@ -1,4 +1,4 @@
-// tags: smoke, load, cart-reorder, SAPI
+// tags: smoke, load, cart-reorder, SAPI, aldi-oa-tag
 import { group } from 'k6';
 import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';

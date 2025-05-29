@@ -74,7 +74,7 @@ export class OrderFixture extends AbstractFixture {
     const salesPage = new SalesPage(headers);
     const abstractResource = new AbstractResource();
 
-    abstractResource.runConsoleCommands(['console oms:check-condition', 'console oms:check-timeout']);
+    abstractResource.runConsoleCommands(['vendor/bin/console oms:check-condition', 'vendor/bin/console oms:check-timeout']);
 
     for (let i in data) {
       const { orderReferences } = data[i];
@@ -90,7 +90,7 @@ export class OrderFixture extends AbstractFixture {
       }
     }
 
-    abstractResource.runConsoleCommands(['console oms:check-condition', 'console oms:check-timeout']);
+    abstractResource.runConsoleCommands(['vendor/bin/console oms:check-condition', 'vendor/bin/console oms:check-timeout']);
 
     for (let i in data) {
       const { orderReferences } = data[i];
@@ -106,6 +106,6 @@ export class OrderFixture extends AbstractFixture {
       }
     }
 
-    abstractResource.runConsoleCommands(['console oms:check-condition', 'console oms:check-timeout']);
+    abstractResource.runConsoleCommands(['vendor/bin/console oms:check-condition', 'vendor/bin/console oms:check-timeout']);
   }
 }
