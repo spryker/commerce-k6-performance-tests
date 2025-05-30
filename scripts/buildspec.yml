@@ -22,6 +22,8 @@ phases:
       - export SPRYKER_USE_STATIC_FIXTURES=false
       - export SPRYKER_SMOKE_ITERATIONS=30
       - export SPRYKER_LOAD_ITERATIONS=3
+      - mkdir -p output/csv
+      - chmod -R 777 output
   build:
     commands:
       - npm run webpack:build --tags=$SPRYKER_TEST_TYPE
@@ -29,6 +31,8 @@ phases:
   post_build:
     commands:
       - npm run docker:down
+      - find output -type d -exec chmod 755 {} \;
+      - find output -type f -exec chmod 644 {} \;
 artifacts:
   files:
     - output/csv/**/*
