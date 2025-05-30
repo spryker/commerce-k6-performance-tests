@@ -6,18 +6,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      - K6_HOSTENV=staging
-      - K6_NO_THRESHOLDS=true
-      - SPRYKER_REPOSITORY_ID=suite
-      - SPRYKER_TEST_TYPE=smoke
-      - SPRYKER_STOREFRONT_URL=https://yves.eu.spryker-suiteperformance.cloud.spryker.toys
-      - SPRYKER_MERCHANT_PORTAL_URL=https://mp.eu.spryker-suiteperformance.cloud.spryker.toys
-      - SPRYKER_STOREFRONT_API_URL=https://glue.eu.spryker-suiteperformance.cloud.spryker.toys
-      - SPRYKER_BACKEND_API_URL=https://glue-backend.eu.spryker-suiteperformance.cloud.spryker.toys
-      - SPRYKER_BACKOFFICE_URL=https://backoffice.eu.spryker-suiteperformance.cloud.spryker.toys
-      - SPRYKER_BACKOFFICE_API_URL=https://backend-api.eu.spryker-suiteperformance.cloud.spryker.toys
-      - SPRYKER_USE_STATIC_FIXTURES=false
     networks:
       - k6
     volumes:

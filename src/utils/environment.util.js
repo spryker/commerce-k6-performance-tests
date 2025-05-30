@@ -79,11 +79,11 @@ export default class EnvironmentUtil {
   static getIterations() {
     switch (this.getTestType()) {
       case 'smoke':
-        return 10;
+        return __ENV.SPRYKER_SMOKE_ITERATIONS ?? 10;
       case 'load':
-        return 1;
+        return __ENV.SPRYKER_LOAD_ITERATIONS ?? 1;
       default:
-        console.error('Vus not defined');
+        console.error('Iterations not defined');
     }
   }
 
