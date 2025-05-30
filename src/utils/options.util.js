@@ -4,7 +4,7 @@ export default class OptionsUtil {
   static loadOptions(options, thresholds) {
     const k6Options = {
       thresholds: thresholds,
-      setupTimeout: options.setupTimeout || '500s',
+      setupTimeout: options.setupTimeout || '1000s',
       scenarios: {
         default: {},
       },

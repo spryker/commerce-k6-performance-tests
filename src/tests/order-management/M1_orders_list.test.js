@@ -19,7 +19,6 @@ const testConfiguration = {
   metrics: ['M1_get_orders'],
   vus: 1,
   iterations: 10,
-  setupTimeout: '400s',
   thresholds: {
     M1_get_orders: {
       smoke: ['avg<700'],
