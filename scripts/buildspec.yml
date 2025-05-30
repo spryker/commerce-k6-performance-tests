@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - npm ci
+  pre_build:
+    commands:
+      - cp .env.example.staging .env
+  build:
+    commands:
+      - npm run webpack:build --tags=smoke
+      - npm run docker:up
+      - npm run docker:run
+artifacts:
+  files:
+    - '**/*'

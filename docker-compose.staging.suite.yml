@@ -1,0 +1,55 @@
+networks:
+  k6:
+  grafana:
+
+services:
+  influxdb:
+    image: influxdb:1.8
+    networks:
+      - k6
+      - grafana
+    ports:
+      - '8086:8086'
+    environment:
+      - INFLUXDB_DB=k6
+
+  grafana:
+    image: grafana/grafana:latest
+    networks:
+      - grafana
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    volumes:
+      - ./dashboards:/var/lib/grafana/dashboards
+      - ./grafana-dashboard.yaml:/etc/grafana/provisioning/dashboards/dashboard.yaml
+      - ./grafana-datasource.yaml:/etc/grafana/provisioning/datasources/datasource.yaml
+
+  k6:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - K6_OUT=influxdb=http://influxdb:8086/k6
+      - K6_STATSD_ADDR=nrstatsd:8125
+      - K6_STATSD_NAMESPACE=spryker_k6_
+      - K6_HOSTENV=${K6_HOSTENV:-local}
+      - K6_NO_THRESHOLDS=${K6_NO_THRESHOLDS:-true}
+      - SPRYKER_REPOSITORY_ID=${SPRYKER_REPOSITORY_ID:-suite}
+      - SPRYKER_TEST_TYPE=${SPRYKER_TEST_TYPE:-smoke}
+      - SPRYKER_STOREFRONT_URL=${SPRYKER_STOREFRONT_URL:-}
+      - SPRYKER_MERCHANT_PORTAL_URL=${SPRYKER_MERCHANT_PORTAL_URL:-}
+      - SPRYKER_STOREFRONT_API_URL=${SPRYKER_STOREFRONT_API_URL:-}
+      - SPRYKER_BACKEND_API_URL=${SPRYKER_BACKEND_API_URL:-}
+      - SPRYKER_BACKOFFICE_URL=${SPRYKER_BACKOFFICE_URL:-}
+      - SPRYKER_BACKOFFICE_API_URL=${SPRYKER_BACKOFFICE_API_URL:-}
+      - SPRYKER_USE_STATIC_FIXTURES=${SPRYKER_USE_STATIC_FIXTURES:-false}
+    networks:
+      - k6
+    volumes:
+      - ./dist:/dist
+    ports:
+      - '6565:6565'

@@ -62,33 +62,37 @@ function parseRepositoryIdArg() {
  * @returns {string} - Docker Compose file name
  */
 function getDockerComposeFile() {
+  // New logic: check K6_HOSTENV and SPRYKER_REPOSITORY_ID
+  const k6HostEnv = process.env.K6_HOSTENV;
   const repositoryId = parseRepositoryIdArg();
-  const envRepositoryId = process.env.REPOSITORY_ID || process.env.SPRYKER_REPOSITORY_ID;
+  const envRepositoryId = process.env.REPOSITORY_ID || process.env.SPRYKER_REPOSITORY_ID || 'suite';
+  const selectedId = repositoryId || envRepositoryId;
 
-  const selectedId = repositoryId || envRepositoryId || 'suite';
-
-  const validIds = ['suite', 'b2b', 'b2b-mp'];
-  if (!validIds.includes(selectedId)) {
-    console.error(`Error: Invalid repository ID '${selectedId}'. Valid options are: ${validIds.join(', ')}`);
+  // Compose possible filenames
+  let dockerComposeFile = null;
+  if (k6HostEnv) {
+    // Try most specific: docker-compose.<K6_HOSTENV>.<REPO_ID>.yml
+    const candidate = `docker-compose.${k6HostEnv}.${selectedId}.yml`;
+    const candidatePath = path.resolve(process.cwd(), candidate);
+    if (fs.existsSync(candidatePath)) {
+      dockerComposeFile = candidate;
+      console.log(`Using docker compose file: ${candidate} (from K6_HOSTENV and repository)`);
+    }
+  }
+  // Fallback: docker-compose.<REPO_ID>.yml
+  if (!dockerComposeFile) {
+    const fallback = `docker-compose.${selectedId}.yml`;
+    const fallbackPath = path.resolve(process.cwd(), fallback);
+    if (fs.existsSync(fallbackPath)) {
+      dockerComposeFile = fallback;
+      console.log(`Using docker compose file: ${fallback} (from repository)`);
+    }
+  }
+  // If still not found, error
+  if (!dockerComposeFile) {
+    console.error(`Error: Docker compose file not found for K6_HOSTENV='${k6HostEnv}', REPOSITORY_ID='${selectedId}'.`);
     process.exit(1);
   }
-
-  const dockerComposeFile = `docker-compose.${selectedId}.yml`;
-
-  const filePath = path.resolve(process.cwd(), dockerComposeFile);
-  if (!fs.existsSync(filePath)) {
-    console.error(`Error: Docker compose file not found: ${dockerComposeFile}`);
-    process.exit(1);
-  }
-
-  if (repositoryId) {
-    console.log(`Using repository ID from command line: ${selectedId}`);
-  } else if (envRepositoryId) {
-    console.log(`Using repository ID from environment: ${selectedId}`);
-  } else {
-    console.log(`Using default repository ID: ${selectedId}`);
-  }
-
   return dockerComposeFile;
 }
 
