@@ -4,12 +4,20 @@ phases:
   install:
     commands:
       - npm ci
+  pre_build:
+    commands:
+      - cp .env.example.staging .env
   build:
     commands:
       - npm run webpack:build --tags=smoke
       - export SPRYKER_TEST_TYPE=smoke
+      - export SPRYKER_REPOSITORY_ID=suite
+      - export K6_HOSTENV=staging
       - npm run docker:up
       - npm run docker:run
+  post_build:
+    commands:
+      - npm run docker:down
 artifacts:
   files:
     - '**/*'

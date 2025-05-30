@@ -101,7 +101,13 @@ function getDockerComposeFile() {
  */
 function dockerComposeUp() {
   const dockerComposeFile = getDockerComposeFile();
-  const command = `docker-compose -f ${dockerComposeFile} up -d influxdb grafana`;
+  const k6HostEnv = process.env.K6_HOSTENV;
+
+  // For staging environment, only start k6 (no influxdb/grafana)
+  // For other environments (like local), start all services
+  const command = k6HostEnv === 'staging'
+    ? `docker-compose -f ${dockerComposeFile} up -d k6`
+    : `docker-compose -f ${dockerComposeFile} up -d influxdb grafana`;
 
   console.log(`Executing: ${command}`);
 
