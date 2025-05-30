@@ -11,7 +11,8 @@
     "docker:run": "node scripts/docker.js run",
     "prettier:check": "prettier ./src --check",
     "prettier:write": "prettier ./src --write",
-    "lint": "npx eslint ./src"
+    "lint": "npx eslint ./src",
+    "parse": "node scripts/parser.js"
   },
   "devDependencies": {
     "@babel/core": "^7.22.0",
@@ -22,6 +23,7 @@
     "buffer": "^6.0.3",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^13.0.0",
+    "csv-parse": "^5.6.0",
     "dotenv": "^16.5.0",
     "eslint": "^8.39.0",
     "eslint-config-prettier": "^10.0.1",

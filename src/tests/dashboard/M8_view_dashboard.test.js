@@ -1,4 +1,4 @@
-// tags: smoke, load, dashboard, M, test
+// tags: smoke, load, dashboard, M
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';

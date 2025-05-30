@@ -1,4 +1,4 @@
-// tags: smoke, load, soak, homepage, S, test
+// tags: smoke, load, soak, homepage, S
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import HomePage from '../../pages/yves/home.page';
