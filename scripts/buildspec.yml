@@ -9,6 +9,7 @@ phases:
       - cp .env.example.staging .env
       - echo "Setting up environment variables for staging..."
       - export K6_HOSTENV=staging
+      - export K6_CSV_OUTPUT=true
       - export K6_NO_THRESHOLDS=true
       - export SPRYKER_REPOSITORY_ID=suite
       - export SPRYKER_TEST_TYPE=smoke
@@ -24,11 +25,12 @@ phases:
   build:
     commands:
       - npm run webpack:build --tags=$SPRYKER_TEST_TYPE
-      - npm run docker:up
       - npm run docker:run
   post_build:
     commands:
       - npm run docker:down
 artifacts:
   files:
-    - '**/*'
+    - output/csv/**/*
+  discard-paths: no
+  base-directory: '.'

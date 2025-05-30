@@ -190,6 +190,13 @@ function runTests() {
     envVars.push(`SPRYKER_REPOSITORY_ID=${repositoryId}`);
   }
 
+  // Create output directory for CSV files if it doesn't exist
+  const outputDir = path.join(process.cwd(), 'output', 'csv');
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+    console.log(`Created output directory for CSV files: ${outputDir}`);
+  }
+
   // Find all test files in the dist directory
   try {
     // Check if dist directory exists
@@ -210,7 +217,41 @@ function runTests() {
     testFiles.forEach(testFile => {
       const envString = envVars.length > 0 ? `-e ${envVars.join(' -e ')} ` : '';
       const dockerComposeFile = getDockerComposeFile();
-      const dockerCommand = `docker-compose -f ${dockerComposeFile} run --rm ${envString}k6 run /${path.relative(process.cwd(), testFile)}`;
+
+      // Generate timestamp and test name for unique CSV filename
+      const timestamp = new Date().toISOString().replace(/:/g, '-').replace(/\..+/, '');
+      const testName = path.basename(testFile, '.test.js');
+      const csvFilename = `${testName}_${timestamp}.csv`;
+      const csvOutputPath = path.join('output', 'csv', csvFilename);
+
+      // Mount the output directory for CSV files
+      const volumeMount = `-v ${path.join(process.cwd(), 'output')}:/output`;
+
+      // Base command
+      let dockerCommand = `docker-compose -f ${dockerComposeFile} run --rm ${volumeMount} ${envString}k6 run /${path.relative(process.cwd(), testFile)}`;
+
+      // Add output options
+      const k6HostEnv = process.env.K6_HOSTENV;
+      const useCSV = process.env.K6_CSV_OUTPUT === 'true' || process.env.K6_CSV_OUTPUT === '1';
+
+      // Output flags
+      let outputFlags = [];
+
+      // Add existing outputs
+      if (k6HostEnv === 'staging' && process.env.K6_OUT) {
+        outputFlags.push(process.env.K6_OUT);
+      }
+
+      // Add CSV output
+      if (useCSV) {
+        outputFlags.push(`csv=/output/csv/${csvFilename}`);
+        console.log(`CSV output will be saved to: ${csvOutputPath}`);
+      }
+
+      // Add output flags to command
+      if (outputFlags.length > 0) {
+        dockerCommand += ` --out ${outputFlags.join(',')}`;
+      }
 
       console.log(`Executing: ${dockerCommand}`);
 
@@ -246,12 +287,6 @@ function main() {
     case 'run':
       runTests();
       break;
-    case 'start': // keep for backward compatibility
-      runTests();
-      break;
-    case 'compose-file':
-      console.log(getDockerComposeFile());
-      break;
     default:
       console.log(`
 Docker Utilities for K6 Tests
@@ -260,7 +295,6 @@ Usage:
   node docker.js up           - Start Docker containers
   node docker.js down         - Stop Docker containers
   node docker.js run          - Run all tests
-  node docker.js compose-file - Get the docker-compose file name
 
 Options:
   --repository-id=<id>  - Specify repository ID (suite, b2b, or b2b-mp)
