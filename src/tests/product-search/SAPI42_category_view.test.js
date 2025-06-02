@@ -10,9 +10,9 @@ const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI42',
   group: 'Product Search',
-  metrics: ['SAPI42_get_category_search'],
+  metrics: ['SAPI43_get_category_search'],
   thresholds: {
-    SAPI42_get_category_search: {
+    SAPI43_get_category_search: {
       smoke: ['avg<300'],
       load: ['avg<600'],
     },

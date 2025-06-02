@@ -17,13 +17,13 @@ const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI38',
   group: 'Order',
-  metrics: ['SAPI38_get_orders', 'SAPI38_get_orders_details'],
+  metrics: ['SAPI38_get_orders', 'SAPI39_get_orders_details'],
   thresholds: {
     SAPI38_get_orders: {
       smoke: ['avg<400'],
       load: ['avg<800'],
     },
-    SAPI38_get_orders_details: {
+    SAPI39_get_orders_details: {
       smoke: ['avg<400'],
       load: ['avg<800'],
     },
@@ -35,7 +35,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 
 const fixture = new CheckoutFixture({
   customerCount: testConfiguration.vus,
-  cartCount: 10,
+  cartCount: testConfiguration.iterations,
   itemCount: 70,
 });
 
@@ -68,6 +68,6 @@ export default function (data) {
   group('Get order details', () => {
     const ordersResource = new OrdersResource(bearerToken);
     const response = ordersResource.get(orderId, ['order-shipments', 'concrete-products', 'abstract-products']);
-    metrics['SAPI38_get_orders_details'].add(response.timings.duration);
+    metrics['SAPI39_get_orders_details'].add(response.timings.duration);
   });
 }
