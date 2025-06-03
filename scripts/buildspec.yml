@@ -6,7 +6,7 @@ phases:
       - npm ci
   pre_build:
     commands:
-      - cp .env.example.staging .env
+      - cp .env.example.staging.smoke .env
       - echo "Setting up environment variables for staging..."
       - export K6_HOSTENV=staging
       - export K6_CSV_OUTPUT=true
@@ -26,7 +26,7 @@ phases:
       - chmod -R 777 output
   build:
     commands:
-      - npm run webpack:build --tags=$SPRYKER_TEST_TYPE
+      - npm run webpack:build --tags=smoke
       - npm run docker:run
   post_build:
     commands:
