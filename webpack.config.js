@@ -28,11 +28,6 @@ module.exports = (env = {}) => {
     envVars.SPRYKER_REPOSITORY_ID = repositoryId;
   }
 
-  console.log('Environment variables for webpack:');
-  Object.entries(envVars).forEach(([key, value]) => {
-    console.log(`${key}: ${value}`);
-  });
-
   const files = glob.sync('./src/tests/**/*.test.js');
   let filteredFiles = files;
 

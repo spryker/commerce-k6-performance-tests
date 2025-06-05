@@ -76,7 +76,7 @@ function getDockerComposeFile() {
     const candidatePath = path.resolve(process.cwd(), candidate);
     if (fs.existsSync(candidatePath)) {
       dockerComposeFile = candidate;
-      console.log(`Using docker compose file: ${candidate} (from K6_HOSTENV and repository)`);
+      console.log(`Using docker compose file: ${candidate}`);
     }
   }
   // Fallback: docker-compose.<REPO_ID>.yml
@@ -227,12 +227,17 @@ function runTests() {
       // Mount the output directory for CSV files
       const volumeMount = `-v ${path.join(process.cwd(), 'output')}:/output`;
 
-      // Base command
-      let dockerCommand = `docker-compose -f ${dockerComposeFile} run --rm ${volumeMount} ${envString}k6 run /${path.relative(process.cwd(), testFile)}`;
-
       // Add output options
       const k6HostEnv = process.env.K6_HOSTENV;
       const useCSV = process.env.K6_CSV_OUTPUT === 'true' || process.env.K6_CSV_OUTPUT === '1';
+
+      // Base command
+      let dockerCommand = '';
+      if (useCSV) {
+        dockerCommand = `docker-compose -f ${dockerComposeFile} run --rm ${volumeMount} ${envString}k6 run /${path.relative(process.cwd(), testFile)}`;
+      } else {
+        dockerCommand = `docker-compose -f ${dockerComposeFile} run --rm k6 run /${path.relative(process.cwd(), testFile)}`;
+      }
 
       // Output flags
       let outputFlags = [];

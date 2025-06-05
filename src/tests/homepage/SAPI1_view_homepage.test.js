@@ -1,23 +1,20 @@
-// tags: soak, homepage, SAPI
+// tags: smoke, load, soak, homepage, SAPI
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import { CmsPageFixture } from '../../fixtures/cms-page.fixture';
 import CmsPagesResource from '../../resources/cms-pages.resource';
 import EnvironmentUtil from '../../utils/environment.util';
-import exec from 'k6/execution';
-
-if (EnvironmentUtil.getTestType() !== 'soak') {
-  exec.test.abort('This test is only applicable for soak tests.');
-}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
-  id: 'SOAKAPI1',
+  id: 'SAPI1',
   group: 'Homepage',
-  metrics: ['SOAKAPI1_get_cms_pages'],
+  metrics: ['SAPI1_get_cms_pages'],
   thresholds: {
-    SOAKAPI1_get_cms_pages: {
+    SAPI1_get_cms_pages: {
+      smoke: ['avg<150'],
+      load: ['avg<300'],
       soak: ['avg<300'],
     },
   },
@@ -27,7 +24,7 @@ const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = CmsPageFixture.createFixture({
-  cmsPagesCount: EnvironmentUtil.getRampVus(),
+  cmsPagesCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
 });
 
 export function setup() {
