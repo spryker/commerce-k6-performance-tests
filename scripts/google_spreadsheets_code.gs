@@ -2,36 +2,34 @@ function updateMasterTab() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const masterSheet = ss.getSheetByName("Master");
   const sheets = ss.getSheets();
+  const masterIndex = sheets.findIndex(s => s.getName() === "Master");
 
-  // Filter out "Master", get only date-named sheets
-  const runSheets = sheets
-    .filter(s => /^\d{2}\.\d{2}\.\d{4}$/.test(s.getName()))
-    .sort((a, b) => {
-      const aDate = new Date(a.getName().split('.').reverse().join('/'));
-      const bDate = new Date(b.getName().split('.').reverse().join('/'));
-      return bDate - aDate; // descending
-    });
-
-  if (runSheets.length < 2) {
-    SpreadsheetApp.getUi().alert("At least two test run tabs are required to calculate deltas.");
+  if (masterIndex === -1 || masterIndex + 2 >= sheets.length) {
+    SpreadsheetApp.getUi().alert("Master tab must be followed by at least two date-named tabs.");
     return;
   }
 
-  const latest = runSheets[0];   // newest
-  const previous = runSheets[1]; // second newest
+  const current = sheets[masterIndex + 1];
+  const previous = sheets[masterIndex + 2];
 
-  const latestName = latest.getName();
+  const dateRegex = /^\d{2}\.\d{2}\.\d{4}$/;
+  if (!dateRegex.test(current.getName()) || !dateRegex.test(previous.getName())) {
+    SpreadsheetApp.getUi().alert("Tabs after Master must be named in DD.MM.YYYY format.");
+    return;
+  }
+
+  const currentName = current.getName();
   const previousName = previous.getName();
 
-  const latestData = latest.getDataRange().getValues();
+  const currentData = current.getDataRange().getValues();
   const prevData = previous.getDataRange().getValues();
   const masterData = masterSheet.getDataRange().getValues();
   const header = masterData[0];
 
   // Update dynamic headers
-  header[5] = `Current Avg (${latestName})`;
-  header[6] = `Current Med (${latestName})`;
-  header[7] = `Current Errors (${latestName})`;
+  header[5] = `Current Avg (${currentName})`;
+  header[6] = `Current Med (${currentName})`;
+  header[7] = `Current Errors (${currentName})`;
   header[8] = `Prev Avg (${previousName})`;
   header[9] = `Prev Med (${previousName})`;
   header[10] = `Prev Errors (${previousName})`;
@@ -52,17 +50,17 @@ function updateMasterTab() {
     const row = [...masterData[i]];
     const metricName = row[4]; // Column E = Metric Name
 
-    const latestRow = latestData.find(r => r[metricColIndex.metric] === metricName);
+    const currentRow = currentData.find(r => r[metricColIndex.metric] === metricName);
     const prevRow = prevData.find(r => r[metricColIndex.metric] === metricName);
 
-    let avg = '', med = '', err = '';
+    let currAvg = '', currMed = '', currErr = '';
     let prevAvg = '', prevMed = '', prevErr = '';
     let deltaAvg = '', deltaMed = '', deltaErr = '';
 
-    if (latestRow) {
-      avg = parseFloat(latestRow[metricColIndex.avg]) || 0;
-      med = parseFloat(latestRow[metricColIndex.med]) || 0;
-      err = parseFloat(latestRow[metricColIndex.errors]) || 0;
+    if (currentRow) {
+      currAvg = parseFloat(currentRow[metricColIndex.avg]) || 0;
+      currMed = parseFloat(currentRow[metricColIndex.med]) || 0;
+      currErr = parseFloat(currentRow[metricColIndex.errors]) || 0;
     }
 
     if (prevRow) {
@@ -71,18 +69,19 @@ function updateMasterTab() {
       prevErr = parseFloat(prevRow[metricColIndex.errors]) || 0;
     }
 
-    if (latestRow && prevRow) {
-      deltaAvg = formatDelta(avg - prevAvg);
-      deltaMed = formatDelta(med - prevMed);
-      deltaErr = formatDelta(err - prevErr);
+    // Only calculate deltas if both sets exist
+    if (currentRow && prevRow) {
+      deltaAvg = formatDelta(currAvg - prevAvg);
+      deltaMed = formatDelta(currMed - prevMed);
+      deltaErr = formatDelta(currErr - prevErr);
     }
 
-    row[5] = avg !== '' ? avg : '';
-    row[6] = med !== '' ? med : '';
-    row[7] = err !== '' ? err : '';
-    row[8] = prevAvg !== '' ? prevAvg : '';
-    row[9] = prevMed !== '' ? prevMed : '';
-    row[10] = prevErr !== '' ? prevErr : '';
+    row[5] = currentRow ? currAvg : '';
+    row[6] = currentRow ? currMed : '';
+    row[7] = currentRow ? currErr : '';
+    row[8] = prevRow ? prevAvg : '';
+    row[9] = prevRow ? prevMed : '';
+    row[10] = prevRow ? prevErr : '';
     row[11] = deltaAvg;
     row[12] = deltaMed;
     row[13] = deltaErr;
@@ -91,7 +90,6 @@ function updateMasterTab() {
   }
 
   masterSheet.getRange(1, 1, updatedData.length, updatedData[0].length).setValues(updatedData);
-
   applyConditionalFormatting(masterSheet, updatedData.length);
 }
 
@@ -109,37 +107,37 @@ function applyConditionalFormatting(sheet, rowCount) {
 
   rules.push(
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied('=VALUE(L2) > 0.1 * F2')
+      .whenFormulaSatisfied('=ISNUMBER(L2) * (L2 > 0.1 * F2)')
       .setBackground("#f4cccc")
       .setRanges([deltaAvgRange])
       .build(),
 
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied('=VALUE(L2) < -0.1 * F2')
+      .whenFormulaSatisfied('=ISNUMBER(L2) * (L2 < -0.1 * F2)')
       .setBackground("#d9ead3")
       .setRanges([deltaAvgRange])
       .build(),
 
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied('=VALUE(M2) > 0.1 * G2')
+      .whenFormulaSatisfied('=ISNUMBER(M2) * (M2 > 0.1 * G2)')
       .setBackground("#f4cccc")
       .setRanges([deltaMedRange])
       .build(),
 
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied('=VALUE(M2) < -0.1 * G2')
+      .whenFormulaSatisfied('=ISNUMBER(M2) * (M2 < -0.1 * G2)')
       .setBackground("#d9ead3")
       .setRanges([deltaMedRange])
       .build(),
 
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied('=VALUE(N2) > 0')
+      .whenFormulaSatisfied('=ISNUMBER(N2) * (N2 > 0)')
       .setBackground("#f4cccc")
       .setRanges([deltaErrRange])
       .build(),
 
     SpreadsheetApp.newConditionalFormatRule()
-      .whenFormulaSatisfied('=VALUE(N2) < 0')
+      .whenFormulaSatisfied('=ISNUMBER(N2) * (N2 < 0)')
       .setBackground("#d9ead3")
       .setRanges([deltaErrRange])
       .build()
