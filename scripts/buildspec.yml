@@ -42,5 +42,6 @@ phases:
 artifacts:
   files:
     - output/csv/**/*
+    - output/metrics_table.csv
   discard-paths: no
   base-directory: '.'
