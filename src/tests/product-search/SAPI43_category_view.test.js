@@ -8,7 +8,7 @@ import CatalogSearchResource from '../../resources/catalog-search.resource';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
-  id: 'SAPI42',
+  id: 'SAPI43',
   group: 'Product Search',
   metrics: ['SAPI43_get_category_search'],
   thresholds: {

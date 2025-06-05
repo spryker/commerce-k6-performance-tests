@@ -1,18 +1,22 @@
 version: 0.2
 
+env:
+  variables:
+    TEST_TYPE: smoke
+
 phases:
   install:
     commands:
       - npm ci
   pre_build:
     commands:
-      - cp .env.example.staging.smoke .env
+      - cp .env.example.staging.$TEST_TYPE .env
       - echo "Setting up environment variables for staging..."
       - export K6_HOSTENV=staging
       - export K6_CSV_OUTPUT=true
       - export K6_NO_THRESHOLDS=true
       - export SPRYKER_REPOSITORY_ID=suite
-      - export SPRYKER_TEST_TYPE=smoke
+      - export SPRYKER_TEST_TYPE=$TEST_TYPE
       - export SPRYKER_STOREFRONT_URL=https://yves.eu.spryker-suiteperformance.cloud.spryker.toys
       - export SPRYKER_MERCHANT_PORTAL_URL=https://mp.eu.spryker-suiteperformance.cloud.spryker.toys
       - export SPRYKER_STOREFRONT_API_URL=https://glue.eu.spryker-suiteperformance.cloud.spryker.toys
@@ -26,13 +30,15 @@ phases:
       - chmod -R 777 output
   build:
     commands:
-      - npm run webpack:build --tags=smoke
+      - npm run webpack:build --tags=$TEST_TYPE
       - npm run docker:run
   post_build:
     commands:
       - npm run docker:down
+      - npm run parse
       - find output -type d -exec chmod 755 {} \;
       - find output -type f -exec chmod 644 {} \;
+
 artifacts:
   files:
     - output/csv/**/*
