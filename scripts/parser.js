@@ -14,20 +14,6 @@ const DEFAULT_METRICS = [
   'group_duration'
 ];
 
-// Metrics to always include, even if they're in DEFAULT_METRICS
-const INCLUDE_METRICS = ['errors'];
-
-// Function to check if a metric is a custom metric
-function isCustomMetric(metricName) {
-  // Skip the 'errors' metric itself but keep the errors column for other metrics
-  if (metricName === 'errors') {
-    return false;
-  }
-
-  // Include other metrics that match our custom pattern
-  return !DEFAULT_METRICS.includes(metricName);
-}
-
 // Function to process a single CSV file
 function processCSVFile(filePath) {
   const fileContent = fs.readFileSync(filePath, 'utf-8');

@@ -87,12 +87,18 @@ export class CategoryFixture extends AbstractFixture {
     const categories = Array.from({ length: this.categoryCount }, (_, i) => this._createCategoryPayload(i)).flat();
     const products = Array.from({ length: this.productCount }, (_, i) => this._createProductPayload(i)).flat();
 
+    const cliCommands = [
+      {
+        type: 'cli-command',
+        name: 'vendor/bin/console q:w:s --stop-when-empty',
+      },
+    ];
+
     return JSON.stringify({
       data: {
         type: 'dynamic-fixtures',
         attributes: {
-          synchronize: true,
-          operations: [...baseOperations, ...categories, ...products],
+          operations: [...baseOperations, ...categories, ...products, ...cliCommands],
         },
       },
     });
