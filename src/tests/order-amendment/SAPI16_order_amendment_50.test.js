@@ -1,4 +1,4 @@
-// tags: smoke, load, order-amendment, SAPI, aldi-oa-tag
+// tags: smoke, load, order-amendment, SAPI, aldi-oa-tag, test
 import { group } from 'k6';
 import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';
@@ -18,6 +18,7 @@ const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI16',
   group: 'Order Amendment',
+  iterations: EnvironmentUtil.getTestType() === 'load' ? 1 : EnvironmentUtil.getIterations(),
   metrics: ['SAPI16_post_cart_reorder', 'SAPI17_delete_carts', 'SAPI18_post_checkout'],
   thresholds: {
     SAPI16_post_cart_reorder: {

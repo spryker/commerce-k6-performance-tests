@@ -18,6 +18,7 @@ const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI20',
   group: 'Order Amendment',
+  iterations: EnvironmentUtil.getTestType() === 'load' ? 1 : EnvironmentUtil.getIterations(),
   metrics: ['SAPI20_post_cart_reorder', 'SAPI21_delete_carts', 'SAPI22_post_checkout'],
   thresholds: {
     SAPI20_post_cart_reorder: {
