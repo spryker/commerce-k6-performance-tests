@@ -9,6 +9,7 @@ import AbstractResource from '../resources/abstract.resource';
 import { parseHTML } from 'k6/html';
 
 const EVENT_PAY = 'pay';
+const EVENT_SKIP_GRACE_PERIOD = 'skip grace period';
 const OMS_TRIGGER_FORM_TOKEN_SELECTOR = '#oms_trigger_form__token';
 
 export class OrderFixture extends AbstractFixture {
@@ -61,7 +62,7 @@ export class OrderFixture extends AbstractFixture {
     return response;
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     const orderIndex = (vus - 1) % data.length;
 
     return data[orderIndex];
@@ -72,6 +73,30 @@ export class OrderFixture extends AbstractFixture {
     const headers = loginPage.login();
     const salesPage = new SalesPage(headers);
     const abstractResource = new AbstractResource();
+
+    abstractResource.runConsoleCommands([
+      'vendor/bin/console oms:check-condition',
+      'vendor/bin/console oms:check-timeout',
+    ]);
+
+    for (let i in data) {
+      const { orderReferences } = data[i];
+      for (let j in orderReferences) {
+        let orderId = salesPage.retrieveOrderIdByReference(orderReferences[j]);
+
+        const salesDetailPageResponse = salesPage.get(orderId);
+        let omsTriggerFormToken = parseHTML(salesDetailPageResponse.body)
+          .find(OMS_TRIGGER_FORM_TOKEN_SELECTOR)
+          .attr('value');
+
+        salesPage.triggerEvent(orderId, EVENT_SKIP_GRACE_PERIOD, omsTriggerFormToken);
+      }
+    }
+
+    abstractResource.runConsoleCommands([
+      'vendor/bin/console oms:check-condition',
+      'vendor/bin/console oms:check-timeout',
+    ]);
 
     for (let i in data) {
       const { orderReferences } = data[i];
@@ -87,6 +112,9 @@ export class OrderFixture extends AbstractFixture {
       }
     }
 
-    abstractResource.runConsoleCommands(['oms:check-condition']);
+    abstractResource.runConsoleCommands([
+      'vendor/bin/console oms:check-condition',
+      'vendor/bin/console oms:check-timeout',
+    ]);
   }
 }

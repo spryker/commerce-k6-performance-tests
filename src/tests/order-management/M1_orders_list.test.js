@@ -1,3 +1,4 @@
+// tags: smoke, load, order-management, M
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
@@ -18,7 +19,6 @@ const testConfiguration = {
   metrics: ['M1_get_orders'],
   vus: 1,
   iterations: 10,
-  setupTimeout: '400s',
   thresholds: {
     M1_get_orders: {
       smoke: ['avg<700'],
@@ -30,17 +30,17 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new OrderFixture({
-    customerCount: testConfiguration.vus,
-    ordersCount: 25,
-    itemCount: 1,
-    defaultItemPrice: 5000,
-    forceMarketplace: true,
-  });
+const fixture = new OrderFixture({
+  customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
+  ordersCount: 25,
+  itemCount: 1,
+  defaultItemPrice: 5000,
+  forceMarketplace: true,
+});
 
-  const data = dynamicFixture.getData();
-  dynamicFixture.preparePaidOrders(data);
+export function setup() {
+  const data = fixture.getData();
+  fixture.preparePaidOrders(data);
 }
 
 export default function () {

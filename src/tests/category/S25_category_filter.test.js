@@ -1,3 +1,4 @@
+// tags: smoke, load, category, S
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
@@ -21,17 +22,21 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CategoryFixture({
-    categoryCount: 1,
-    productCount: 100,
-  });
+const fixture = new CategoryFixture({
+  categoryCount: 1,
+  productCount: 100,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
+}
+
+export function teardown() {
+  CategoryFixture.runConsoleCommands(['vendor/bin/console queue:worker:start --stop-when-empty']);
 }
 
 export default function (data) {
-  const category = CategoryFixture.iterateData(data);
+  const category = fixture.iterateData(data);
 
   group('Category Filter Products', () => {
     const categoryPage = new CategoryPage();

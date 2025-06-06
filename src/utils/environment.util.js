@@ -79,12 +79,16 @@ export default class EnvironmentUtil {
   static getIterations() {
     switch (this.getTestType()) {
       case 'smoke':
-        return 10;
+        return __ENV.SPRYKER_SMOKE_ITERATIONS ?? 10;
       case 'load':
-        return 1;
+        return __ENV.SPRYKER_LOAD_ITERATIONS ?? 1;
       default:
-        console.error('Vus not defined');
+        console.error('Iterations not defined');
     }
+  }
+
+  static getRampVus() {
+    return 10;
   }
 
   static getTestType() {
@@ -95,12 +99,27 @@ export default class EnvironmentUtil {
     return 'per-vu-iterations';
   }
 
-  static getDefaultTestConfiguration() {
+  static getDefaultTestConfiguration(options) {
+    if (EnvironmentUtil.getTestType() === 'soak') {
+      const rampVus = this.getRampVus();
+
+      return {
+        startVUs: 0,
+        executor: 'ramping-vus',
+        stages: [
+          { duration: '1m', target: rampVus },
+          { duration: '1m', target: rampVus },
+          { duration: '1m', target: 0 },
+        ],
+      };
+    }
+
     return {
-      vus: EnvironmentUtil.getVus(),
-      iterations: EnvironmentUtil.getIterations(),
+      vus: options && options.vus ? options.vus : EnvironmentUtil.getVus(),
+      iterations: options && options.iterations ? options.iterations : EnvironmentUtil.getIterations(),
       executor: EnvironmentUtil.getExecutor(),
       maxDuration: '60m',
+      gracefulStop: '300s',
     };
   }
 
@@ -118,5 +137,9 @@ export default class EnvironmentUtil {
 
   static getMerchantPortalSessionCookieName() {
     return this.getMerchantPortalUrl().replace('http://', '').replace('https://', '').replaceAll('.', '-');
+  }
+
+  static getUseStaticFixtures() {
+    return __ENV.SPRYKER_USE_STATIC_FIXTURES === 'true';
   }
 }

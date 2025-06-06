@@ -1,4 +1,7 @@
+import EnvironmentUtil from '../utils/environment.util';
 import AbstractResource from './abstract.resource';
+
+const B2B_MP_MERCHANT_REFERENCE = 'MER000008';
 
 export default class CartsResource extends AbstractResource {
   constructor(bearerToken = null) {
@@ -26,9 +29,12 @@ export default class CartsResource extends AbstractResource {
     return this.getRequest(`carts/${idCart}` + includeParam);
   }
 
-  addItem(idCart, sku, quantity = 1) {
-    var payload = this._getCartsItemsPayload(sku, quantity);
-    return this.postRequest(`carts/${idCart}/items`, payload);
+  addItem(idCart, sku, quantity = 1, productOfferReference = null) {
+    const payload = this._getCartsItemsPayload(sku, quantity, productOfferReference);
+
+    return this.postRequest(`carts/${idCart}/items`, payload, {
+      redirects: 0,
+    });
   }
 
   _getCreateCartPayload(cartName, isDefault = false) {
@@ -46,8 +52,8 @@ export default class CartsResource extends AbstractResource {
     };
   }
 
-  _getCartsItemsPayload(sku, quantity) {
-    return {
+  _getCartsItemsPayload(sku, quantity, productOfferReference = null) {
+    let payload = {
       data: {
         type: 'items',
         attributes: {
@@ -56,5 +62,15 @@ export default class CartsResource extends AbstractResource {
         },
       },
     };
+
+    if (EnvironmentUtil.getRepositoryId() === 'b2b-mp' && productOfferReference) {
+      payload.data.attributes.product_offer_reference = productOfferReference;
+    }
+
+    if (EnvironmentUtil.getRepositoryId() === 'b2b-mp' && EnvironmentUtil.getUseStaticFixtures()) {
+      payload.data.attributes.merchant_reference = B2B_MP_MERCHANT_REFERENCE;
+    }
+
+    return payload;
   }
 }

@@ -1,9 +1,9 @@
 networks:
   k6:
   grafana:
-  spryker_b2b_marketplace_dev_public:
+  spryker_public:
     external: true
-  spryker_b2b_marketplace_dev_private:
+  spryker_private:
     external: true
 
 services:
@@ -50,10 +50,13 @@ services:
       - SPRYKER_BACKEND_API_URL=${SPRYKER_BACKEND_API_URL:-}
       - SPRYKER_BACKOFFICE_URL=${SPRYKER_BACKOFFICE_URL:-}
       - SPRYKER_BACKOFFICE_API_URL=${SPRYKER_BACKOFFICE_API_URL:-}
+      - SPRYKER_USE_STATIC_FIXTURES=${SPRYKER_USE_STATIC_FIXTURES:-false}
+      - SPRYKER_SMOKE_ITERATIONS=${SPRYKER_SMOKE_ITERATIONS:-10}
+      - SPRYKER_LOAD_ITERATIONS=${SPRYKER_LOAD_ITERATIONS:-1}
     networks:
       - k6
-      - spryker_b2b_marketplace_dev_private
-      - spryker_b2b_marketplace_dev_public
+      - spryker_private
+      - spryker_public
     volumes:
       - ./dist:/dist
     ports:

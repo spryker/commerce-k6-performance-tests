@@ -1,3 +1,4 @@
+// tags: smoke, load, soak, checkout, S
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
@@ -6,6 +7,10 @@ import { LoginPage } from '../../pages/yves/login.page';
 import CheckoutPage from '../../pages/yves/checkout.page';
 import { parseHTML } from 'k6/html';
 import { group } from 'k6';
+import exec from 'k6/execution';
+import ProductPage from '../../pages/yves/product.page';
+import CartPage from '../../pages/yves/cart.page';
+import { CustomerFixture } from '../../fixtures/customer.fixture';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -28,46 +33,57 @@ const testConfiguration = {
     S4_get_checkout: {
       smoke: ['avg<900'],
       load: ['avg<1800'],
+      soak: ['avg<1800'],
     },
     S4_get_checkout_address: {
       smoke: ['avg<750'],
       load: ['avg<1500'],
+      soak: ['avg<1500'],
     },
     S4_post_checkout_address: {
       smoke: ['avg<750'],
       load: ['avg<1500'],
+      soak: ['avg<1500'],
     },
     S4_get_checkout_shipment: {
       smoke: ['avg<650'],
       load: ['avg<1300'],
+      soak: ['avg<1300'],
     },
     S4_post_checkout_shipment: {
       smoke: ['avg<650'],
       load: ['avg<1300'],
+      soak: ['avg<1300'],
     },
     S4_get_checkout_payment: {
       smoke: ['avg<950'],
       load: ['avg<1900'],
+      soak: ['avg<1900'],
     },
     S4_post_checkout_payment: {
       smoke: ['avg<950'],
       load: ['avg<1900'],
+      soak: ['avg<1900'],
     },
     S4_get_checkout_summary: {
       smoke: ['avg<1050'],
       load: ['avg<2100'],
+      soak: ['avg<2100'],
     },
     S4_post_checkout_summary: {
       smoke: ['avg<1050'],
       load: ['avg<2100'],
+      soak: ['avg<2100'],
     },
     S4_get_checkout_success: {
       smoke: ['avg<2850'],
       load: ['avg<4700'],
+      soak: ['avg<4700'],
     },
     S4_get_place_order: {
       smoke: ['avg<1100'],
       load: ['avg<2200'],
+      soak: ['avg<2200'],
     },
   },
 };
@@ -75,24 +91,24 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CartFixture({
+let fixture;
+if (EnvironmentUtil.getTestType() === 'soak') {
+  fixture = new CustomerFixture({ customerCount: EnvironmentUtil.getRampVus() });
+} else {
+  fixture = new CartFixture({
     customerCount: testConfiguration.vus,
     cartCount: testConfiguration.iterations,
     itemCount: 70,
     defaultItemPrice: 1000,
   });
+}
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail } = CartFixture.iterateData(data);
-
-  const loginPage = new LoginPage(customerEmail);
-  const headers = loginPage.login();
-
-  const checkoutPage = new CheckoutPage(headers);
+  const checkoutPage = new CheckoutPage(prepareHeaders(data));
 
   group('Checkout', () => {
     const checkoutResponse = checkoutPage.getCheckout();
@@ -164,4 +180,39 @@ export default function (data) {
     const response = checkoutPage.getCheckoutSuccess();
     metrics['S4_get_checkout_success'].add(response.timings.duration);
   });
+}
+
+function prepareHeaders(data) {
+  const customer = fixture.iterateData(data, exec.vu.idInTest);
+
+  if (EnvironmentUtil.getTestType() !== 'soak') {
+    return new LoginPage(customer.customerEmail).login();
+  }
+
+  const product = customer.products[0];
+
+  let loginPage;
+  if (EnvironmentUtil.getUseStaticFixtures()) {
+    loginPage = new LoginPage(customer.customerEmail, customer.customerPassword);
+  } else {
+    loginPage = new LoginPage(customer.customerEmail);
+  }
+
+  const headers = loginPage.login();
+
+  let productDetailsResponse;
+  group('Product Details', () => {
+    const productPage = new ProductPage();
+    productDetailsResponse = productPage.get(product.url);
+  });
+
+  let productDetailsForm = parseHTML(productDetailsResponse.body);
+  const productDetailsFormToken = productDetailsForm.find('#add_to_cart_form__token').attr('value');
+
+  group('Add to cart', () => {
+    const cartPage = new CartPage(headers);
+    cartPage.addItem(product.sku, productDetailsFormToken, product.productOfferReference);
+  });
+
+  return headers;
 }

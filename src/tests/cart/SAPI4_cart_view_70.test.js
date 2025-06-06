@@ -1,3 +1,4 @@
+// tags: smoke, load, cart, SAPI
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
@@ -23,18 +24,18 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CartFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: 10,
-    itemCount: 70,
-  });
+const fixture = new CartFixture({
+  customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
+  cartCount: 10,
+  itemCount: 70,
+});
 
-  return dynamicFixture.getData();
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail } = CartFixture.iterateData(data, exec.vu.idInTest, 0);
+  const { customerEmail } = fixture.iterateData(data, exec.vu.idInTest, 0);
 
   let bearerToken;
   group('Authorization', () => {

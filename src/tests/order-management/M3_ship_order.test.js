@@ -1,3 +1,4 @@
+// tags: smoke, load, order-management, M
 import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
@@ -7,8 +8,10 @@ import { OrderFixture } from '../../fixtures/order.fixture';
 import exec from 'k6/execution';
 import OrdersPage from '../../pages/mp/orders.page';
 
-if (EnvironmentUtil.getRepositoryId() === 'b2b') {
-  exec.test.abort('Merchant Portal is not integrated into b2b demo shop.');
+if (EnvironmentUtil.getRepositoryId() === 'b2b' || EnvironmentUtil.getTestType() === 'soak') {
+  exec.test.abort(
+    'Merchant Portal is not integrated into b2b demo shop or this test is not applicable for soak tests.'
+  );
 }
 
 const testConfiguration = {
@@ -33,17 +36,17 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new OrderFixture({
-    customerCount: testConfiguration.vus,
-    ordersCount: testConfiguration.iterations,
-    itemCount: 70,
-    defaultItemPrice: 1000,
-    forceMarketplace: true,
-  });
+const fixture = new OrderFixture({
+  customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
+  ordersCount: testConfiguration.iterations,
+  itemCount: 70,
+  defaultItemPrice: 1000,
+  forceMarketplace: true,
+});
 
-  const data = dynamicFixture.getData();
-  dynamicFixture.preparePaidOrders(data);
+export function setup() {
+  const data = fixture.getData();
+  fixture.preparePaidOrders(data);
 }
 
 export default function () {

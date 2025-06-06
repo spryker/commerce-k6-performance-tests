@@ -4,7 +4,7 @@ export default class CatalogSearchResource extends AbstractResource {
   get(queryParams = {}) {
     let queryStringData = [];
     let queryString = '';
-    if (queryParams !== {}) {
+    if (Object.keys(queryParams).length > 0) {
       for (const key in queryParams) {
         queryStringData.push(`${key}=${queryParams[key]}`);
       }

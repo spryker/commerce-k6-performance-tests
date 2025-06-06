@@ -4,6 +4,8 @@ import { check } from 'k6';
 import { addErrorToCounter } from '../../utils/metric.util';
 import http from 'k6/http';
 
+const B2B_MP_MERCHANT_REFERENCE = 'MER000008';
+
 export default class CartPage extends AbstractPage {
   constructor(headers = null) {
     super();
@@ -22,8 +24,8 @@ export default class CartPage extends AbstractPage {
     return response;
   }
 
-  addItem(sku) {
-    const payload = this._getAddToCartPayload();
+  addItem(sku, token, productOfferReference = null) {
+    const payload = this._getAddToCartPayload(token, productOfferReference);
 
     let params = {
       redirects: 0,
@@ -37,16 +39,28 @@ export default class CartPage extends AbstractPage {
 
     addErrorToCounter(
       check(response, {
-        'Add item to cart was successful': (r) => r.status === 302 && r.body,
+        [`Add item to cart [${EnvironmentUtil.getStorefrontUrl()}/cart/add/${sku}] was successful`]: (r) =>
+          r.status === 302 && r.body,
       })
     );
 
     return response;
   }
 
-  _getAddToCartPayload() {
-    return {
+  _getAddToCartPayload(token, productOfferReference = null) {
+    let payload = {
       quantity: 1,
+      'add_to_cart_form[_token]': token,
     };
+
+    if (EnvironmentUtil.getRepositoryId() === 'b2b-mp' && productOfferReference) {
+      payload.product_offer_reference = productOfferReference;
+    }
+
+    if (EnvironmentUtil.getRepositoryId() === 'b2b-mp' && EnvironmentUtil.getUseStaticFixtures()) {
+      payload.merchant_reference = B2B_MP_MERCHANT_REFERENCE;
+    }
+
+    return payload;
   }
 }

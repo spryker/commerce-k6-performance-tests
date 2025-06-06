@@ -1,8 +1,6 @@
 import { AbstractFixture } from './abstract.fixture';
 import exec from 'k6/execution';
 
-const DEFAULT_PASSWORD = 'change123';
-
 export class MerchantUserFixture extends AbstractFixture {
   constructor({ idMerchant, merchantUserCount = 1 }) {
     super();
@@ -22,7 +20,7 @@ export class MerchantUserFixture extends AbstractFixture {
         return {
           id: id_user,
           username,
-          password: DEFAULT_PASSWORD,
+          password: AbstractFixture.DEFAULT_PASSWORD,
           firstName: first_name,
           lastName: last_name,
           status,
@@ -30,7 +28,7 @@ export class MerchantUserFixture extends AbstractFixture {
       });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     const merchantUserIndex = (vus - 1) % data.length;
 
     return data[merchantUserIndex];
@@ -70,7 +68,7 @@ export class MerchantUserFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveUser',
         key: merchantUserKey,
-        arguments: [{ password: DEFAULT_PASSWORD }],
+        arguments: [{ password: AbstractFixture.DEFAULT_PASSWORD }],
       },
       {
         type: 'helper',

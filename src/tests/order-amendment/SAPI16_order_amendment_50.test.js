@@ -1,3 +1,4 @@
+// tags: smoke, load, order-amendment, SAPI, aldi-oa-tag, test
 import { group } from 'k6';
 import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';
@@ -9,14 +10,15 @@ import CartsResource from '../../resources/carts.resource';
 import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
 
-if (EnvironmentUtil.getRepositoryId() !== 'suite') {
-  exec.test.abort('Order Amendment is not integrated into demo shops.');
+if (EnvironmentUtil.getRepositoryId() !== 'suite' || EnvironmentUtil.getTestType() === 'soak') {
+  exec.test.abort('Order Amendment is not integrated into demo shops or not applicable for soak tests.');
 }
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI16',
   group: 'Order Amendment',
+  iterations: EnvironmentUtil.getTestType() === 'load' ? 1 : EnvironmentUtil.getIterations(),
   metrics: ['SAPI16_post_cart_reorder', 'SAPI17_delete_carts', 'SAPI18_post_checkout'],
   thresholds: {
     SAPI16_post_cart_reorder: {
@@ -37,19 +39,19 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CheckoutFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: testConfiguration.iterations,
-    itemCount: 50,
-  });
+const fixture = new CheckoutFixture({
+  customerCount: testConfiguration.vus,
+  cartCount: testConfiguration.iterations,
+  itemCount: 50,
+});
 
+export function setup() {
   if (isSequentialSetup()) {
-    return dynamicFixture.getData(testConfiguration.iterations, 1, 2);
+    return fixture.getData(testConfiguration.iterations, 1, 2);
   }
 
   if (isConcurrentSetup()) {
-    return dynamicFixture.getData(testConfiguration.vus, testConfiguration.iterations, 2);
+    return fixture.getData(testConfiguration.vus, testConfiguration.iterations, 2);
   }
 }
 

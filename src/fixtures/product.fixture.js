@@ -2,12 +2,6 @@ import { AbstractFixture } from './abstract.fixture';
 import EnvironmentUtil from '../utils/environment.util';
 import exec from 'k6/execution';
 
-const DEFAULT_IMAGE_SMALL = 'https://images.icecat.biz/img/gallery_mediums/30691822_1486.jpg';
-const DEFAULT_IMAGE_LARGE = 'https://images.icecat.biz/img/gallery/30691822_1486.jpg';
-const DEFAULT_STOCK_ID = 1;
-const DEFAULT_STOCK_NAME = 'Warehouse1';
-const DEFAULT_MERCHANT_REFERENCE = 'MER000008';
-
 export class ProductFixture extends AbstractFixture {
   constructor({ productCount = 1 }) {
     super();
@@ -40,7 +34,7 @@ export class ProductFixture extends AbstractFixture {
       });
   }
 
-  static iterateData(data, vus = exec.vu.idInTest) {
+  iterateData(data, vus = exec.vu.idInTest) {
     const productIndex = (vus - 1) % data.length;
 
     return data[productIndex];
@@ -53,15 +47,15 @@ export class ProductFixture extends AbstractFixture {
         name: 'ProductImageTransfer',
         key: 'productImage',
         arguments: {
-          externalUrlSmall: DEFAULT_IMAGE_SMALL,
-          externalUrlLarge: DEFAULT_IMAGE_LARGE,
+          externalUrlSmall: AbstractFixture.DEFAULT_IMAGE_SMALL,
+          externalUrlLarge: AbstractFixture.DEFAULT_IMAGE_LARGE,
         },
       },
       {
         type: 'transfer',
         name: 'StoreTransfer',
         key: 'store',
-        arguments: { id_store: 1, name: 'DE' },
+        arguments: { id_store: AbstractFixture.DEFAULT_STORE_ID, name: AbstractFixture.DEFAULT_STORE_NAME },
       },
       {
         type: 'array-object',
@@ -122,8 +116,8 @@ export class ProductFixture extends AbstractFixture {
           {
             sku: `#${productKey}.sku`,
             isNeverOutOfStock: '1',
-            fkStock: DEFAULT_STOCK_ID,
-            stockType: DEFAULT_STOCK_NAME,
+            fkStock: AbstractFixture.DEFAULT_STOCK_ID,
+            stockType: AbstractFixture.DEFAULT_STOCK_NAME,
           },
         ],
       },
@@ -142,7 +136,7 @@ export class ProductFixture extends AbstractFixture {
               status: 'approved',
               idProductConcrete: `#${productKey}.id_product_concrete`,
               concreteSku: `#${productKey}.sku`,
-              merchantReference: DEFAULT_MERCHANT_REFERENCE,
+              merchantReference: this.getSprykerMerchantReference(),
               stores: '#stores',
             },
           ],
@@ -156,7 +150,7 @@ export class ProductFixture extends AbstractFixture {
               productOfferReference: `#${productOfferKey}.product_offer_reference`,
               isNeverOutOfStock: true,
             },
-            [{ idStock: DEFAULT_STOCK_ID }],
+            [{ idStock: AbstractFixture.DEFAULT_STOCK_ID }],
           ],
         },
       ];

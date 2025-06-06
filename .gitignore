@@ -2,8 +2,7 @@
 settings.json
 /node_modules/
 /.env
-/results/
-!/results/.gitkeep
-!/results/summaries/.gitkeep
+/output/
+!/output/.gitkeep
 .lh
 dist

@@ -1,10 +1,12 @@
+// tags: smoke, load, soak, checkout, SAPI
 import { group } from 'k6';
 import AuthUtil from '../../utils/auth.util';
 import OptionsUtil from '../../utils/options.util';
 import CheckoutResource from '../../resources/checkout.resource';
-import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
+import exec from 'k6/execution';
+import { CheckoutFixture } from '../../fixtures/checkout.fixture';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
@@ -15,6 +17,7 @@ const testConfiguration = {
     SAPI7_post_checkout: {
       smoke: ['avg<300'],
       load: ['avg<500'],
+      soak: ['avg<500'],
     },
   },
 };
@@ -22,23 +25,31 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-export function setup() {
-  const dynamicFixture = new CheckoutFixture({
-    customerCount: testConfiguration.vus,
-    cartCount: testConfiguration.iterations,
-    itemCount: 1,
-    defaultItemPrice: 10000, // Skipping global thresholds during checkout
-  });
+const fixtureConfig = {
+  customerCount: EnvironmentUtil.getTestType() === 'soak' ? EnvironmentUtil.getRampVus() : testConfiguration.vus,
+  cartCount: EnvironmentUtil.getTestType() === 'soak' ? 400 : testConfiguration.iterations,
+  itemCount: 1,
+  defaultItemPrice: 10000,
+};
 
-  return dynamicFixture.getData();
+let fixture = new CheckoutFixture(fixtureConfig);
+
+export function setup() {
+  return fixture.getData();
 }
 
 export default function (data) {
-  const { customerEmail, idCart } = CheckoutFixture.iterateData(data);
+  const customer = fixture.iterateData(data, exec.vu.idInTest);
+  const customerEmail = customer.customerEmail;
+  let idCart = customer.idCart;
 
   let bearerToken;
   group('Authorization', () => {
-    bearerToken = AuthUtil.getInstance().getBearerToken(customerEmail);
+    if (EnvironmentUtil.getUseStaticFixtures()) {
+      bearerToken = AuthUtil.getInstance().getBearerToken(customerEmail, customer.customerPassword);
+    } else {
+      bearerToken = AuthUtil.getInstance().getBearerToken(customerEmail);
+    }
   });
 
   group(testConfiguration.group, () => {

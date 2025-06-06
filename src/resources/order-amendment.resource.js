@@ -20,7 +20,7 @@ export default class OrderAmendmentResource extends AbstractResource {
     do {
       order = this._getCurrentOrder();
       if (order.data.attributes.itemStates[0] !== state) {
-        this.runConsoleCommands(['console oms:check-condition', 'console oms:check-timeout']);
+        this.runConsoleCommands(['vendor/bin/console oms:check-condition', 'vendor/bin/console oms:check-timeout']);
       }
       retries++;
     } while (order.data.attributes.itemStates[0] !== state && retries < maxRetries);

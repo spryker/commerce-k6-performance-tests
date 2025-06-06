@@ -37,13 +37,13 @@ This project contains performance tests for the Spryker Commerce applications us
 - Build all tests:
 
   ```sh
-  npm run build:all
+  npm run webpack:build
   ```
 
 - Build specific test patterns:
   ```sh
-  npm run build:checkout
-  npm run build:cart-reorder
+  npm run webpack:build --tags=cart-reorder
+  npm run webpack:build --tags=cart,load
   ...
   ```
 
@@ -90,7 +90,7 @@ This project contains performance tests for the Spryker Commerce applications us
 1. Build the tests:
 
    ```sh
-   npm run build:all
+   npm run webpack:build
    ```
 
 2. Start Docker services:
@@ -118,12 +118,6 @@ This project contains performance tests for the Spryker Commerce applications us
 - `K6_NO_THRESHOLDS`: Disable thresholds (default: `true`)
 - `SPRYKER_REPOSITORY_ID`: Repository ID (default: `suite`)
 - `SPRYKER_TEST_TYPE`: Test type (default: `smoke`)
-
-### Docker Compose Files
-
-- `docker-compose.suite.yml`: Default Docker Compose configuration
-- `docker-compose.b2b-mp.yml`: B2B Marketplace Docker Compose configuration
-- `docker-compose.b2b.yml`: B2B Docker Compose configuration
 
 ## Project Structure
 
