@@ -102,6 +102,7 @@ build_k6_docker_command() {
             -e 'SPRYKER_TEST_RUNNER_HOSTNAME=$(hostname)' \
             -e 'SPRYKER_TEST_PATH=$relativePath' \
             -e 'K6_BROWSER_ENABLED=true' \
+            -e 'K6_BROWSER_LOG=panic' \
             k6 run $relativePath \
             --summary-trend-stats='avg,min,med,max,p(90),p(95),count' \
             --out json='$reportFile'"

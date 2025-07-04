@@ -83,9 +83,8 @@ export class CartHelper {
         return `${this.urlHelper.getStorefrontApiBaseUrl()}/carts`;
     }
 
-    getCarts(email) {
-        const params = this.getParamsWithAuthorization(email);
-        const getCartsResponse = this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, params, false);
+    getCarts(authParams) {
+        const getCartsResponse = this.http.sendGetRequest(this.http.url`${this.getCartsUrl()}`, authParams, false);
         this.assertionsHelper.assertResponseStatus(getCartsResponse, 200, 'Get Carts');
 
         const getCartsResponseJson = JSON.parse(getCartsResponse.body);
