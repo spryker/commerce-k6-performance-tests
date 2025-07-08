@@ -26,6 +26,7 @@ export class AbstractFixture {
 
   runDynamicFixture(payload) {
     const res = http.post(http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`, payload, {
+      timeout: '300s',
       headers: {
         'Content-Type': 'application/vnd.api+json',
       },
@@ -58,6 +59,7 @@ export class AbstractFixture {
     };
 
     return http.post(http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`, payload, {
+      timeout: '300s',
       headers: {
         'Content-Type': 'application/vnd.api+json',
       },
