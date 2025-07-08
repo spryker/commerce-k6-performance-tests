@@ -31,6 +31,10 @@ export function setup() {
   return fixture.getData();
 }
 
+export function teardown() {
+  CategoryFixture.runConsoleCommands(['vendor/bin/console queue:worker:start --stop-when-empty']);
+}
+
 export default function (data) {
   const category = fixture.iterateData(data);
 

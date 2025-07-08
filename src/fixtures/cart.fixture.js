@@ -167,12 +167,18 @@ export class CartFixture extends AbstractFixture {
     const products = Array.from({ length: this.itemCount }, (_, i) => this._createProductPayload(i)).flat();
     const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
 
+    const cliCommands = [
+      {
+        type: 'cli-command',
+        name: 'vendor/bin/console q:w:s --stop-when-empty',
+      },
+    ];
+
     return JSON.stringify({
       data: {
         type: 'dynamic-fixtures',
         attributes: {
-          synchronize: true,
-          operations: [...baseOperations, ...products, ...customers],
+          operations: [...baseOperations, ...products, ...customers, ...cliCommands],
         },
       },
     });
