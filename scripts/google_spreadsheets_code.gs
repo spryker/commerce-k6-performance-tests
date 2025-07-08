@@ -94,8 +94,7 @@ function updateMasterTab() {
 }
 
 function formatDelta(delta) {
-  if (delta === 0) return '0';
-  return (delta > 0 ? '+' : '') + delta.toFixed(0);
+  return delta;  // return the raw number (positive or negative)
 }
 
 function applyConditionalFormatting(sheet, rowCount) {
