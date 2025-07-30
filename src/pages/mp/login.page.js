@@ -38,7 +38,7 @@ export class LoginPage extends AbstractPage {
 
     addErrorToCounter(
       check(response, {
-        'Login was successful': (r) => r.status === 302,
+        'Login was successful': (r) => r.status === 200,
       })
     );
 

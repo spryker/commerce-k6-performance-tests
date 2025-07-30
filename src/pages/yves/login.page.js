@@ -34,13 +34,13 @@ export class LoginPage extends AbstractPage {
       redirects: 0,
     };
 
-    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/en/login_check`, payload, params);
+    const response = http.post(`${EnvironmentUtil.getStorefrontUrl()}/DE/en/login_check`, payload, params);
     let sessionCookie = this.extractSessionCookie(response);
 
     if (!sessionCookie) {
       console.log('Session cookie not found, retrying login...');
 
-      const retryResponse = http.post(`${EnvironmentUtil.getStorefrontUrl()}/en/login_check`, payload, params);
+      const retryResponse = http.post(`${EnvironmentUtil.getStorefrontUrl()}/DE/en/login_check`, payload, params);
       addErrorToCounter(
         check(retryResponse, {
           'Login was successful': (r) => r.status === 302,
