@@ -31,6 +31,8 @@ const fixture = new CartFixture({
 });
 
 export function setup() {
+  CartFixture.runConsoleCommands(['vendor/bin/console queue:worker:start --stop-when-empty']);
+
   return fixture.getData();
 }
 
