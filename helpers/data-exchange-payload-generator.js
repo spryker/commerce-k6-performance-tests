@@ -5,6 +5,36 @@ const replacement = {
     fkPriceType: 1,
 }
 
+let description = `
+Locale Id: {LOCALE}
+Detaillierte Funktionen
+Bildperfektion im Taschenformat
+Die super-schlanke und schicke IXUS 160 ist so klein, dass sie in jede Hand- oder Jackentasche passt. Sie macht das Aufnehmen von hochwertigen Fotos und Movies ganz einfach – egal wo.
+
+Viel Zoom, großer Bildwinkel
+Das 28-mm-Weitwinkelobjektiv mit 8fach optischem Zoom bietet die Flexibilität für zahlreiche Aufnahmesituationen. Ganz nah an weit entfernte Motive bringt der 8fach optische Zoom oder der 16fach ZoomPlus, der ohne nennenswerten Qualitätsverlust den Zoombereich noch weiter steigert.
+
+Außergewöhnlicher Detailreichtum, damit alles in Erinnerung bleibt
+Die Kamera bietet außergewöhnliche Bildqualität mit hohem Detailreichtum. Ihre 20 Megapixel ermöglichen eine flexible Motivwahl, das Zuschneiden der Aufnahmen und brillante Drucke im Posterformat.
+
+Beeindruckende Aufnahmen, ganz einfach
+Smart Auto ermöglicht die mühelose Aufnahme von fantastischen Fotos und Movies – die Kamera wählt in diesem Modus automatisch die idealen Einstellungen für die jeweilige Aufnahmesituation. Sie müssen nur noch das Motiv anvisieren und auslösen. Ein Druck auf die Hilfe-Taste führt zu leicht verständlichen Erklärungen der Kamerafunktionen.
+
+Spielend kreativ sein
+Zahlreiche Kreativfilter laden zum Experimentieren ein und bieten echten Fotospaß. So lässt sich neben vielen anderen Optionen der Verzeichnungseffekt eines Fisheye-Objektivs nachempfinden oder in Fotos und Movies werden die Dinge wie Miniaturmodelle dargestellt.
+
+HD-Movieaufnahmen auf Knopfdruck
+Großartige Movies aufnehmen macht Spaß und ist ein Kinderspiel. Einfach nur die Taste drücken und schon beginnt die HD-Movieaufnahme (720p). Für kreative Vielseitigkeit lässt sich der optische Zoom auch im Movie-Modus einsetzen und die Aufnahmen werden hochwertig und gestochen scharf.
+
+Der persönliche Touch
+Durch die einfach Steuerung der Bildeinstellungen wie Helligkeit oder Farbintensität können Sie jedem Bild einen ganz persönlichen Stil verleihen. Mit der Funktion „Bildwirkung – Live“ sehen Sie das Bildergebnis schon bei der Motivsuche und das Teilen ist ganz einfach über das 6,8 cm (2,7 Zoll) LC-Display. Und wenn man die Kamera mit einer Canon Connect Station verbindet, lassen sich die Fotos und Movies ganz einfach über soziale Netzwerke oder Online-Alben mit der Welt teilen. Natürlich kann man die Aufnahmen auch mit Freunden und Familie auf einem HD-Fernsehgerät anschauen.
+
+Großartige Personenaufnahmen
+Mit der Gesichtserkennungs-Technologie gelingen ganz einfach großartige Personenaufnahmen. Diese Technologie erkennt mehrere Gesichter in einem Motiv und optimiert automatisch Fokus und Helligkeit. Die Gesichtserkennung lässt auch Hauttöne selbst bei ungewöhnlichen Lichtbedingungen ganz natürlich erscheinen.
+
+Eco-Modus
+Ideal für den Tagesausflug. Der Eco-Modus reduziert den Stromverbrauch und ermöglicht so mehr Aufnahmen pro Akkuladung.
+`
 export class DataExchangePayloadGenerator {
 
     constructor(uuid, storeConfigHandler, stockHandler, itemsAmount = 1000, concreteMaxAmount = 5, activateProducts = true) {
@@ -140,7 +170,7 @@ export class DataExchangePayloadGenerator {
                     return JSON.stringify({
                         'fk_locale': localeId,
                         'attributes': '{"color":"Weinrot"}',
-                        'description': `description for locale id: ${localeId}`,
+                        'description': `${description.replaceAll('{LOCALE}', localeId)}`,
                         'name': `test product ${random} Locale ${localeId}`
                     },)
                 }).join(','))
@@ -193,7 +223,7 @@ export class DataExchangePayloadGenerator {
                     return JSON.stringify({
                         'fk_locale': localeId,
                         'attributes': '{"color":"Weinrot"}',
-                        'description': `description for locale id: ${localeId}`,
+                        'description': `${description.replaceAll('{LOCALE}', localeId)}`,
                         'meta_description': `meta description for locale id: ${localeId}`,
                         'meta_keywords': `meta keywords for locale id: ${localeId}`,
                         'meta_title': `meta product title test product  for locale id: ${localeId}`,

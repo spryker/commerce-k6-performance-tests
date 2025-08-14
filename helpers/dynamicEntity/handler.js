@@ -53,11 +53,11 @@ export default class Handler {
             this.lastResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
 
             if (this.lastResponse.status !== 200) {
-                console.error(`Requested URL: ${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, 'Target Table:', tableAlias,  'Response:', JSON.parse(this.lastResponse.body))
+                console.error(`Requested URL: ${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, 'Target Table:', tableAlias, 'Response:', JSON.parse(this.lastResponse.body))
             }
 
             this.assertionHelper.assertResponseStatus(this.lastResponse, 200, this.lastResponse.url)
-
+            console.log('Response for', tableAlias, this.lastResponse.status, this.lastResponse)
             return JSON.parse(this.lastResponse.body)
         } catch (e) {
             console.error(`Error during request to the DataExchange API`, e)

@@ -34,9 +34,9 @@ export default class Click extends Default {
             if (typeof this.options === 'object' && 'waitForNavigation' in this.options) {
                 this.profiler.start(this.locator);
                 await targetElement.click(clickOptions)
+
                 await browser.page.waitForNavigation({timeout: timeout})
                 await browser.waitUntilLoad('networkidle')
-
                 browser.metrics.addTrend(metricKey, this.profiler.stop(this.locator));
                 return true;
             }

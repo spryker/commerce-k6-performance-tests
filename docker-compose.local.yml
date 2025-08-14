@@ -16,7 +16,10 @@ services:
       # - spryker_b2c_marketplace_private
       # - spryker_b2b_private
       # - spryker_b2c_private
-
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     environment:
         - K6_SCRIPT=${K6_SCRIPT}
         - K6_HOSTENV=${K6_HOSTENV:-local}
@@ -65,6 +68,7 @@ services:
         - STORE=${STORE:-de}
         - STORES_FROM_ENV=${STORES_FROM_ENV:-0}
         - SUMMARY_FILE_FULL_PATH=${SUMMARY_FILE_FULL_PATH:-'summary.json'}
+        - SUMMARY_CSV=${SUMMARY_CSV:-'report.csv'}
         - AMOUNT_OF_CHECKOUT_ITERATIONS=${AMOUNT_OF_CHECKOUT_ITERATIONS:-10}
         - AMOUNT_OF_CHECKOUT_VUS=${AMOUNT_OF_CHECKOUT_VUS:-10}
         - AMOUNT_OF_BACKOFFICE_ITERATIONS=${AMOUNT_OF_BACKOFFICE_ITERATIONS:-10}
@@ -84,6 +88,7 @@ services:
         - DMS_AUTH_PASSWORD=${DMS_AUTH_PASSWORD}
     volumes:
       - .:/home/k6
+      - /Users/eduardmelnytskyi/projects/platform/otel-performance/reports:/reports
     ports:
       - "6565:6565"
 

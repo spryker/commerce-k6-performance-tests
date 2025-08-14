@@ -2,6 +2,11 @@ import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
 
 export class SharedMultiCheckoutScenario extends AbstractScenario {
+    constructor(environment, options = {}, metricsHandler = null) {
+        super(environment, options)
+        this.metricsHandler = metricsHandler;
+    }
+
     execute(products = [], maxCartSize = 1) {
         let self = this;
 
@@ -14,8 +19,9 @@ export class SharedMultiCheckoutScenario extends AbstractScenario {
                     break;
                 }
 
-                self.cartHelper.addItemToCart(cartId, 1, requestParams, product.sku, product.merchantReference);
+                let response = self.cartHelper.addItemToCart(cartId, 1, requestParams, product.sku, product.merchantReference);
                 self.cartSize++;
+                self.metricsHandler.add('add_to_cart_loading_time', response, 201)
             }
 
             const checkoutResponse = self.http.sendPostRequest(
@@ -26,6 +32,7 @@ export class SharedMultiCheckoutScenario extends AbstractScenario {
             );
 
             self.assertionsHelper.assertResponseStatus(checkoutResponse, 201, 'Place order');
+            self.metricsHandler.add('order_placement_loading_time', checkoutResponse, 201)
         });
     }
 

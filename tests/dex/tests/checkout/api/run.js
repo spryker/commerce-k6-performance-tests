@@ -28,10 +28,10 @@ const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
 let amountOfIterations = Number(__ENV.AMOUNT_OF_CHECKOUT_ITERATIONS)
 let amountOfVirtualUsers = Number(__ENV.AMOUNT_OF_CHECKOUT_VUS)
 
-const checkoutScenario = new SharedMultiCheckoutScenario(__ENV.DATA_EXCHANGE_ENV);
-
 let metricsConfig = [
     'success_page',
+    'add_to_cart',
+    'order_placement',
 ].map((code) => {
     return {
         key: `${code}_loading_time`,
@@ -84,6 +84,8 @@ let orderFailedMetrics = Array.from(
 metricsConfig.push(...orderSuccessMetrics, ...orderFailedMetrics)
 
 const metrics = new Metrics(metricsConfig);
+
+const checkoutScenario = new SharedMultiCheckoutScenario(__ENV.DATA_EXCHANGE_ENV, {}, metrics);
 
 export const options = loadDefaultOptions();
 
