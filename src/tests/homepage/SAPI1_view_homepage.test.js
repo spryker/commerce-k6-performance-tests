@@ -1,5 +1,5 @@
-// tags: smoke, load, soak, homepage, SAPI
-import { group } from 'k6';
+// tags: smoke, load, soak, homepage, SAPI, test
+import { group, sleep } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import { CmsPageFixture } from '../../fixtures/cms-page.fixture';
@@ -28,7 +28,12 @@ const fixture = CmsPageFixture.createFixture({
 });
 
 export function setup() {
-  return fixture.getData();
+  const data = fixture.getData();
+
+  // sleep few seconds to make sure that the cms page is created
+  sleep(5);
+
+  return data;
 }
 
 export default function (data) {
