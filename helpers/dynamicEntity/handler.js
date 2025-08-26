@@ -57,7 +57,7 @@ export default class Handler {
             }
 
             this.assertionHelper.assertResponseStatus(this.lastResponse, 200, this.lastResponse.url)
-            console.log('Response for', tableAlias, this.lastResponse.status, this.lastResponse)
+            debug('Response for', tableAlias, this.lastResponse.status, this.lastResponse)
             return JSON.parse(this.lastResponse.body)
         } catch (e) {
             console.error(`Error during request to the DataExchange API`, e)

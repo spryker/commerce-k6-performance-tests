@@ -45,7 +45,7 @@ export class ApiPostPayloadScenario extends AbstractScenario {
             const requestParams = self.getRequestParams()
             let responseProducts = self.createProductsWithLabels(requestParams, productTemplate, productConcreteTemplate, productLabelTemplate)
             // console.log(self.payloadGenerator.storeConfigHandler.getUniqueLocaleIds())
-            self.payloadGenerator.generateProducts(productTemplate, productConcreteTemplate)
+            self.payloadGenerator.generateProducts(productTemplate, productConcreteTemplate,3)
             let count = 0
             let productImageResponse
             do {

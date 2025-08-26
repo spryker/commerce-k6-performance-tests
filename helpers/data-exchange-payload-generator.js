@@ -257,13 +257,15 @@ export class DataExchangePayloadGenerator {
         })
     }
 
-    generateLabel(productLabelTemplate) {
+    generateLabel(productLabelTemplate, productLabelId = 3) {
         let result = []
         let stores = this.storeConfigHandler.get()
         result.push(JSON.parse(productLabelTemplate
             .replaceAll('{random}', this.uuid())
             .replaceAll('"PRODUCT_LABELS_STORES_CONFIG"', stores.map((store) => {
-                return JSON.stringify({'fk_store': store.id_store})
+                return JSON.stringify({
+                    'fk_store': store.id_store,
+                })
             }).join(','))))
 
         return JSON.stringify({
