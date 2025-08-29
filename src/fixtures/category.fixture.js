@@ -3,9 +3,6 @@ import EnvironmentUtil from '../utils/environment.util';
 import exec from 'k6/execution';
 import { uuidv4 } from '../utils/uuid.util';
 
-const DEFAULT_COLORS = ['Black', 'Blue', 'White'];
-const DEFAULT_BRANDS = ['Adidas', 'Nike', 'Puma'];
-
 export class CategoryFixture extends AbstractFixture {
   constructor({ categoryCount = 1, productCount = 1 }) {
     super();
@@ -53,12 +50,6 @@ export class CategoryFixture extends AbstractFixture {
       },
       {
         type: 'transfer',
-        name: 'NodeTransfer',
-        key: 'node',
-        arguments: { fkParentCategoryNode: AbstractFixture.DEFAULT_PARENT_CATEGORY_NODE },
-      },
-      {
-        type: 'transfer',
         name: 'StoreRelationTransfer',
         key: 'storeRelation',
         arguments: { idStores: [AbstractFixture.DEFAULT_STORE_ID] },
@@ -77,8 +68,8 @@ export class CategoryFixture extends AbstractFixture {
             storeRelation: '#storeRelation',
           },
           {
-            name: 'KSixTestLabel',
-            frontEndReference: 'KSixTestLabel',
+            name: AbstractFixture.DEFAULT_PRODUCT_LABEL,
+            frontEndReference: AbstractFixture.DEFAULT_PRODUCT_LABEL,
           },
         ],
       },
@@ -218,11 +209,7 @@ export class CategoryFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveLocalizedCategory',
         key: categoryKey,
-        arguments: [
-          {
-            parentCategoryNode: '#node',
-          },
-        ],
+        arguments: [{}],
       },
       {
         type: 'helper',
@@ -242,8 +229,8 @@ export class CategoryFixture extends AbstractFixture {
   }
 
   _generateAttributesValue() {
-    const colors = DEFAULT_COLORS;
-    const brands = DEFAULT_BRANDS;
+    const colors = AbstractFixture.DEFAULT_COLORS;
+    const brands = AbstractFixture.DEFAULT_BRANDS;
 
     const color = colors[Math.floor(Math.random() * colors.length)];
     const brand = brands[Math.floor(Math.random() * brands.length)];

@@ -1,21 +1,21 @@
-// tags: smoke, load, soak, homepage, SAPI
+// tags: smoke, load, soak, category, SAPI
 import { group, sleep } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
-import { CmsPageFixture } from '../../fixtures/cms-page.fixture';
-import CmsPagesResource from '../../resources/cms-pages.resource';
 import EnvironmentUtil from '../../utils/environment.util';
+import { CategoryFixture } from '../../fixtures/category.fixture';
+import CategoryNodesResource from '../../resources/category-nodes.resource';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
-  id: 'SAPI1',
-  group: 'Homepage',
-  metrics: ['SAPI1_get_cms_pages'],
+  id: 'SAPI11',
+  group: 'Category',
+  metrics: ['SAPI11_get_category_nodes'],
   thresholds: {
-    SAPI1_get_cms_pages: {
-      smoke: ['avg<150'],
-      load: ['avg<300'],
-      soak: ['avg<300'],
+    SAPI11_get_category_nodes: {
+      smoke: ['avg<100'],
+      load: ['avg<200'],
+      soak: ['avg<200'],
     },
   },
 };
@@ -23,25 +23,24 @@ const testConfiguration = {
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const fixture = CmsPageFixture.createFixture({
-  cmsPagesCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
+const fixture = new CategoryFixture({
+  categoryCount: 1,
+  productCount: 100,
 });
 
 export function setup() {
   const data = fixture.getData();
-
-  // sleep few seconds to make sure that the cms page is created
   sleep(5);
 
   return data;
 }
 
 export default function (data) {
-  const { uuid } = fixture.iterateData(data);
+  const category = fixture.iterateData(data);
 
   group(testConfiguration.group, () => {
-    const cmsPagesResource = new CmsPagesResource();
-    const response = cmsPagesResource.get(uuid);
+    const categoryNodesResource = new CategoryNodesResource();
+    const response = categoryNodesResource.get(category.category_node.id_category_node);
 
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });

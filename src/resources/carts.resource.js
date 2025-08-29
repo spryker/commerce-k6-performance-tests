@@ -37,6 +37,18 @@ export default class CartsResource extends AbstractResource {
     });
   }
 
+  updateItem(idCart, sku, quantity = 1, productOfferReference = null) {
+    const payload = this._getCartsItemsPayload(sku, quantity, productOfferReference);
+
+    return this.patchRequest(`carts/${idCart}/items/${sku}`, payload, {
+      redirects: 0,
+    });
+  }
+
+  removeItem(idCart, sku) {
+    return this.deleteRequest(`carts/${idCart}/items/${sku}`);
+  }
+
   _getCreateCartPayload(cartName, isDefault = false) {
     return {
       data: {

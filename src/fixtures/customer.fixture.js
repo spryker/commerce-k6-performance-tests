@@ -3,12 +3,13 @@ import exec from 'k6/execution';
 import EnvironmentUtil from '../utils/environment.util';
 
 export class CustomerFixture extends AbstractFixture {
-  constructor({ customerCount, itemCount = 1, defaultItemPrice = 10000 }) {
+  constructor({ customerCount, itemCount = 1, defaultItemPrice = 10000, isCompanyUser = false }) {
     super();
     this.customerCount = customerCount;
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
+    this.isCompanyUser = isCompanyUser;
   }
 
   static createFixture(params = {}) {
@@ -102,7 +103,48 @@ export class CustomerFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b' || this.isCompanyUser === true) {
+      const permission1 = [
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission1',
+          arguments: ['AddCartItemPermissionPlugin'],
+        },
+      ];
+      const permission2 = [
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission2',
+          arguments: ['ChangeCartItemPermissionPlugin'],
+        },
+      ];
+      const permission3 = [
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission3',
+          arguments: ['RemoveCartItemPermissionPlugin'],
+        },
+      ];
+      const permission4 = [
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission4',
+          arguments: ['PlaceOrderWithAmountUpToPermissionPlugin'],
+        },
+      ];
+      const permission5 = [
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission5',
+          arguments: ['PlaceOrderPermissionPlugin'],
+        },
+      ];
+
       companyPermissions = [
         {
           type: 'helper',
@@ -116,36 +158,11 @@ export class CustomerFixture extends AbstractFixture {
           key: 'businessUnit',
           arguments: [{ fkCompany: '#company.id_company' }],
         },
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission1',
-          arguments: ['AddCartItemPermissionPlugin'],
-        },
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission2',
-          arguments: ['ChangeCartItemPermissionPlugin'],
-        },
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission3',
-          arguments: ['RemoveCartItemPermissionPlugin'],
-        },
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission4',
-          arguments: ['PlaceOrderWithAmountUpToPermissionPlugin'],
-        },
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission5',
-          arguments: ['PlaceOrderPermissionPlugin'],
-        },
+        ...(!this.isCompanyUser ? permission1 : []),
+        ...(!this.isCompanyUser ? permission2 : []),
+        ...(!this.isCompanyUser ? permission3 : []),
+        ...(!this.isCompanyUser ? permission4 : []),
+        ...(!this.isCompanyUser ? permission5 : []),
         {
           type: 'helper',
           name: 'havePermissionByKey',
@@ -157,7 +174,14 @@ export class CustomerFixture extends AbstractFixture {
           name: 'haveCompanyRoleWithPermissions',
           arguments: [
             { isDefault: true, fkCompany: '#company.id_company' },
-            ['#permission1', '#permission2', '#permission3', '#permission4', '#permission5', '#permission6'],
+            [
+              ...(!this.isCompanyUser ? ['#permission1'] : []),
+              ...(!this.isCompanyUser ? ['#permission2'] : []),
+              ...(!this.isCompanyUser ? ['#permission3'] : []),
+              ...(!this.isCompanyUser ? ['#permission4'] : []),
+              ...(!this.isCompanyUser ? ['#permission5'] : []),
+              '#permission6',
+            ],
           ],
         },
       ];
@@ -287,7 +311,7 @@ export class CustomerFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b' || this.isCompanyUser === true) {
       companyUser = [
         {
           type: 'helper',
