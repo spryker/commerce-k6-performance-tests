@@ -1,5 +1,5 @@
-// tags: smoke, load, cart, SAPI
-import { group, sleep } from 'k6';
+// tags: smoke, load, shopping-list, SAPI
+import { group } from 'k6';
 import exec from 'k6/execution';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
@@ -43,10 +43,7 @@ const fixture = CustomerFixture.createFixture({
 });
 
 export function setup() {
-  const data = fixture.getData();
-  sleep(5);
-
-  return data;
+  return fixture.getData();
 }
 
 export default function (data) {

@@ -81,6 +81,14 @@ export class CategoryFixture extends AbstractFixture {
     const cliCommands = [
       {
         type: 'cli-command',
+        name: 'vendor/bin/console publish:trigger-events -r category_node',
+      },
+      {
+        type: 'cli-command',
+        name: 'vendor/bin/console publish:trigger-events -r category',
+      },
+      {
+        type: 'cli-command',
         name: 'vendor/bin/console q:w:s --stop-when-empty',
       },
     ];

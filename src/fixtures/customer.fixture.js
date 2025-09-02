@@ -8,8 +8,8 @@ export class CustomerFixture extends AbstractFixture {
     this.customerCount = customerCount;
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
-    this.repositoryId = EnvironmentUtil.getRepositoryId();
     this.isCompanyUser = isCompanyUser;
+    this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
   static createFixture(params = {}) {
@@ -103,49 +103,8 @@ export class CustomerFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b' || this.isCompanyUser === true) {
-      const permission1 = [
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission1',
-          arguments: ['AddCartItemPermissionPlugin'],
-        },
-      ];
-      const permission2 = [
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission2',
-          arguments: ['ChangeCartItemPermissionPlugin'],
-        },
-      ];
-      const permission3 = [
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission3',
-          arguments: ['RemoveCartItemPermissionPlugin'],
-        },
-      ];
-      const permission4 = [
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission4',
-          arguments: ['PlaceOrderWithAmountUpToPermissionPlugin'],
-        },
-      ];
-      const permission5 = [
-        {
-          type: 'helper',
-          name: 'havePermissionByKey',
-          key: 'permission5',
-          arguments: ['PlaceOrderPermissionPlugin'],
-        },
-      ];
-
-      companyPermissions = [
+    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+      companyPermissions.push(
         {
           type: 'helper',
           name: 'haveCompany',
@@ -157,12 +116,42 @@ export class CustomerFixture extends AbstractFixture {
           name: 'haveCompanyBusinessUnit',
           key: 'businessUnit',
           arguments: [{ fkCompany: '#company.id_company' }],
+        }
+      );
+    }
+
+    if (this.repositoryId === 'b2b' || this.repositoryId === 'b2b-mp') {
+      companyPermissions.push(
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission1',
+          arguments: ['AddCartItemPermissionPlugin'],
         },
-        ...(!this.isCompanyUser ? permission1 : []),
-        ...(!this.isCompanyUser ? permission2 : []),
-        ...(!this.isCompanyUser ? permission3 : []),
-        ...(!this.isCompanyUser ? permission4 : []),
-        ...(!this.isCompanyUser ? permission5 : []),
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission2',
+          arguments: ['ChangeCartItemPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission3',
+          arguments: ['RemoveCartItemPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission4',
+          arguments: ['PlaceOrderWithAmountUpToPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission5',
+          arguments: ['PlaceOrderPermissionPlugin'],
+        },
         {
           type: 'helper',
           name: 'havePermissionByKey',
@@ -174,29 +163,34 @@ export class CustomerFixture extends AbstractFixture {
           name: 'haveCompanyRoleWithPermissions',
           arguments: [
             { isDefault: true, fkCompany: '#company.id_company' },
-            [
-              ...(!this.isCompanyUser ? ['#permission1'] : []),
-              ...(!this.isCompanyUser ? ['#permission2'] : []),
-              ...(!this.isCompanyUser ? ['#permission3'] : []),
-              ...(!this.isCompanyUser ? ['#permission4'] : []),
-              ...(!this.isCompanyUser ? ['#permission5'] : []),
-              '#permission6',
-            ],
+            ['#permission1', '#permission2', '#permission3', '#permission4', '#permission5', '#permission6'],
           ],
-        },
-      ];
+        }
+      );
     }
 
     baseOperations.push(...companyPermissions);
     const products = Array.from({ length: this.itemCount }, (_, i) => this._createProductPayload(i)).flat();
     const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
 
+    let cliCommands = [];
+    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+      cliCommands.push({
+        type: 'cli-command',
+        name: 'vendor/bin/console publish:trigger-events -r company_user',
+      });
+    }
+
+    cliCommands.push({
+      type: 'cli-command',
+      name: 'vendor/bin/console q:w:s --stop-when-empty',
+    });
+
     return JSON.stringify({
       data: {
         type: 'dynamic-fixtures',
         attributes: {
-          synchronize: true,
-          operations: [...baseOperations, ...products, ...customers],
+          operations: [...baseOperations, ...products, ...customers, ...cliCommands],
         },
       },
     });

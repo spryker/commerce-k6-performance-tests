@@ -1,5 +1,5 @@
 // tags: smoke, load, soak, category, SAPI
-import { group, sleep } from 'k6';
+import { group } from 'k6';
 import OptionsUtil from '../../utils/options.util';
 import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
@@ -29,10 +29,7 @@ const fixture = new CategoryFixture({
 });
 
 export function setup() {
-  const data = fixture.getData();
-  sleep(5);
-
-  return data;
+  return fixture.getData();
 }
 
 export default function (data) {

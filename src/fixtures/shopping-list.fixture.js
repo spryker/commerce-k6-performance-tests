@@ -103,29 +103,71 @@ export class ShoppingListFixture extends AbstractFixture {
         key: 'businessUnit',
         arguments: [{ fkCompany: '#company.id_company' }],
       },
-      {
-        type: 'helper',
-        name: 'havePermissionByKey',
-        key: 'permission6',
-        arguments: ['SeeBusinessUnitOrdersPermissionPlugin'],
-      },
-      {
-        type: 'helper',
-        name: 'haveCompanyRoleWithPermissions',
-        arguments: [{ isDefault: true, fkCompany: '#company.id_company' }, ['#permission6']],
-      },
     ];
+
+    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+      companyPermissions.push(
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission1',
+          arguments: ['AddCartItemPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission2',
+          arguments: ['ChangeCartItemPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission3',
+          arguments: ['RemoveCartItemPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission4',
+          arguments: ['PlaceOrderWithAmountUpToPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission5',
+          arguments: ['PlaceOrderPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'havePermissionByKey',
+          key: 'permission6',
+          arguments: ['SeeBusinessUnitOrdersPermissionPlugin'],
+        },
+        {
+          type: 'helper',
+          name: 'haveCompanyRoleWithPermissions',
+          arguments: [
+            { isDefault: true, fkCompany: '#company.id_company' },
+            ['#permission1', '#permission2', '#permission3', '#permission4', '#permission5', '#permission6'],
+          ],
+        }
+      );
+    }
 
     baseOperations.push(...companyPermissions);
     const products = Array.from({ length: this.itemCount }, (_, i) => this._createProductPayload(i)).flat();
     const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
 
-    const cliCommands = [
-      {
-        type: 'cli-command',
-        name: 'vendor/bin/console q:w:s --stop-when-empty',
-      },
-    ];
+    let cliCommands = [];
+    cliCommands.push({
+      type: 'cli-command',
+      name: 'vendor/bin/console publish:trigger-events -r company_user',
+    });
+
+    cliCommands.push({
+      type: 'cli-command',
+      name: 'vendor/bin/console q:w:s --stop-when-empty',
+    });
 
     return JSON.stringify({
       data: {

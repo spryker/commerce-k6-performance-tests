@@ -4,7 +4,7 @@ import EnvironmentUtil from '../utils/environment.util';
 const B2B_MP_MERCHANT_REFERENCE = 'MER000008';
 
 export default class ShoppingListsResource extends AbstractResource {
-  constructor(bearerToken = null) {
+  constructor(bearerToken) {
     super(bearerToken);
   }
 

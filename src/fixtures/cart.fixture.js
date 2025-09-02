@@ -3,12 +3,13 @@ import exec from 'k6/execution';
 import EnvironmentUtil from '../utils/environment.util';
 
 export class CartFixture extends AbstractFixture {
-  constructor({ customerCount, cartCount = 1, itemCount = 1, defaultItemPrice = 1000 }) {
+  constructor({ customerCount, cartCount = 1, itemCount = 1, defaultItemPrice = 1000, isCompanyUser = false }) {
     super();
     this.customerCount = customerCount;
     this.cartCount = cartCount;
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
+    this.isCompanyUser = isCompanyUser;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
@@ -102,8 +103,8 @@ export class CartFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
-      companyPermissions = [
+    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+      companyPermissions.push(
         {
           type: 'helper',
           name: 'haveCompany',
@@ -115,7 +116,12 @@ export class CartFixture extends AbstractFixture {
           name: 'haveCompanyBusinessUnit',
           key: 'businessUnit',
           arguments: [{ fkCompany: '#company.id_company' }],
-        },
+        }
+      );
+    }
+
+    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+      companyPermissions.push(
         {
           type: 'helper',
           name: 'havePermissionByKey',
@@ -159,20 +165,26 @@ export class CartFixture extends AbstractFixture {
             { isDefault: true, fkCompany: '#company.id_company' },
             ['#permission1', '#permission2', '#permission3', '#permission4', '#permission5', '#permission6'],
           ],
-        },
-      ];
+        }
+      );
     }
 
     baseOperations.push(...companyPermissions);
     const products = Array.from({ length: this.itemCount }, (_, i) => this._createProductPayload(i)).flat();
     const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
 
-    const cliCommands = [
-      {
+    let cliCommands = [];
+    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+      cliCommands.push({
         type: 'cli-command',
-        name: 'vendor/bin/console q:w:s --stop-when-empty',
-      },
-    ];
+        name: 'vendor/bin/console publish:trigger-events -r company_user',
+      });
+    }
+
+    cliCommands.push({
+      type: 'cli-command',
+      name: 'vendor/bin/console q:w:s --stop-when-empty',
+    });
 
     return JSON.stringify({
       data: {
@@ -304,7 +316,7 @@ export class CartFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
       companyUser = [
         {
           type: 'helper',
