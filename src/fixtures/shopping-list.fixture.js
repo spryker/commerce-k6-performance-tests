@@ -276,6 +276,7 @@ export class ShoppingListFixture extends AbstractFixture {
           customer: `#${customerKey}`,
           items: this._generateItems(),
         },
+        true,
       ],
     }));
 

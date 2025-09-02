@@ -1,4 +1,4 @@
-// tags: smoke, load, cart, SAPI
+// tags: smoke, load, cart, SAPI, skip
 import { group } from 'k6';
 import exec from 'k6/execution';
 import OptionsUtil from '../../utils/options.util';
@@ -6,6 +6,10 @@ import { createMetrics } from '../../utils/metric.util';
 import EnvironmentUtil from '../../utils/environment.util';
 import { ProductFixture } from '../../fixtures/product.fixture';
 import GuestCartsResource from '../../resources/guest-carts.resource';
+
+if (EnvironmentUtil.getRepositoryId() !== 'suite') {
+  exec.test.abort('guest-carts endpoint is not supported in this repository');
+}
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),

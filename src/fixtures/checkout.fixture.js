@@ -254,6 +254,7 @@ export class CheckoutFixture extends AbstractFixture {
           customer: `#${customerKey}`,
           items: this._generateItems(),
         },
+        true,
       ],
     }));
 
@@ -267,6 +268,7 @@ export class CheckoutFixture extends AbstractFixture {
             customer: `#${customerKey}`,
             items: [],
           },
+          true,
         ],
       }));
     }

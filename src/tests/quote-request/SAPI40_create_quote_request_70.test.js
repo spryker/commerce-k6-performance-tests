@@ -12,6 +12,10 @@ if (EnvironmentUtil.getTestType() === 'soak') {
   exec.test.abort('This test is not suitable for soak testing');
 }
 
+if (EnvironmentUtil.getRepositoryId() !== 'suite') {
+  exec.test.abort('quote-requests endpoint is not supported in this repository');
+}
+
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI40',
