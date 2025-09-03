@@ -18,7 +18,9 @@ export class AbstractFixture {
   static DEFAULT_PRODUCT_URL_PREFIX = 'en-us';
   static DEFAULT_LOCALE = 'de_DE';
   static DEFAULT_CURRENCY_CODE = 'EUR';
-  static DEFAULT_PARENT_CATEGORY_NODE = 0;
+  static DEFAULT_PRODUCT_LABEL = 'KSixTestLabel';
+  static DEFAULT_COLORS = ['Black', 'Blue', 'White'];
+  static DEFAULT_BRANDS = ['Adidas', 'Nike', 'Puma'];
 
   static shouldUseStaticFixtures() {
     return EnvironmentUtil.getUseStaticFixtures() && EnvironmentUtil.getTestType() === 'soak';

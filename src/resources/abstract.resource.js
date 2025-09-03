@@ -4,11 +4,13 @@ import EnvironmentUtil from '../utils/environment.util';
 import { addErrorToCounter } from '../utils/metric.util';
 
 export default class AbstractResource {
-  constructor(bearerToken = null) {
+  constructor(bearerToken = null, anonymousCustomerUniqueId = null) {
     this.bearerToken = bearerToken;
+    this.anonymousCustomerUniqueId = anonymousCustomerUniqueId;
     this.headers = {
       Accept: 'application/json',
       ...(this.bearerToken && { Authorization: this.bearerToken }),
+      ...(this.anonymousCustomerUniqueId && { 'X-Anonymous-Customer-Unique-Id': this.anonymousCustomerUniqueId }),
     };
   }
 
@@ -21,6 +23,15 @@ export default class AbstractResource {
     if (response.status !== 201) {
       console.log(response.body);
     }
+
+    return response;
+  }
+
+  patchRequest(resourceUrl, payload) {
+    const fullUrl = `${EnvironmentUtil.getStorefrontApiUrl()}/${resourceUrl}`;
+    const response = http.patch(fullUrl, JSON.stringify(payload), { headers: this.headers });
+
+    addErrorToCounter(check(response, { [`[PATCH] ${fullUrl} was successful.`]: (r) => r.status === 200 }));
 
     return response;
   }

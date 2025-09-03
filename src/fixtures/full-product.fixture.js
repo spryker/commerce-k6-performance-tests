@@ -2,7 +2,6 @@ import { AbstractFixture } from './abstract.fixture';
 import EnvironmentUtil from '../utils/environment.util';
 import exec from 'k6/execution';
 import RandomUtil from '../utils/random.util';
-
 export class FullProductFixture extends AbstractFixture {
   constructor({ productCount = 1, additionalConcreteCount = 0, includes = {} }) {
     super();

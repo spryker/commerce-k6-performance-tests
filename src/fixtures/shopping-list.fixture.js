@@ -2,40 +2,29 @@ import { AbstractFixture } from './abstract.fixture';
 import exec from 'k6/execution';
 import EnvironmentUtil from '../utils/environment.util';
 
-export class CartFixture extends AbstractFixture {
-  constructor({ customerCount, cartCount = 1, itemCount = 1, defaultItemPrice = 1000, isCompanyUser = false }) {
+export class ShoppingListFixture extends AbstractFixture {
+  constructor({ customerCount, shoppingListCount = 1, itemCount = 1, defaultItemPrice = 1000 }) {
     super();
     this.customerCount = customerCount;
-    this.cartCount = cartCount;
+    this.shoppingListCount = shoppingListCount;
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
-    this.isCompanyUser = isCompanyUser;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
-  static createFixture(params = {}) {
-    if (AbstractFixture.shouldUseStaticFixtures()) {
-      const { CartFixture: StaticCartFixture } = require('./static/cart.fixture');
-
-      return new StaticCartFixture(params);
-    }
-
-    return new CartFixture(params);
-  }
-
-  getData(customerCount = this.customerCount, cartCount = this.cartCount) {
+  getData(customerCount = this.customerCount, shoppingListCount = this.shoppingListCount) {
     this.customerCount = customerCount;
-    this.cartCount = cartCount;
+    this.shoppingListCount = shoppingListCount;
 
-    const response = this.runDynamicFixture(this._getCustomersWithQuotesPayload());
+    const response = this.runDynamicFixture(this._getCustomersWithShoppingListsPayload());
 
     const responseData = JSON.parse(response.body).data;
     const customers = responseData.filter((item) => /^customer\d+$/.test(item.attributes.key));
 
     return customers.map((customer) => {
-      const carts = responseData
-        .filter((item) => item.attributes.key.startsWith(`${customer.attributes.key}Quote`))
-        .map((cart) => cart.attributes.data.uuid);
+      const shoppingLists = responseData
+        .filter((item) => item.attributes.key.startsWith(`${customer.attributes.key}ShoppingList`))
+        .map((shoppingList) => shoppingList.attributes.data.uuid);
 
       const productSkus = responseData
         .filter((item) => item.attributes.key.startsWith('productKey'))
@@ -43,7 +32,7 @@ export class CartFixture extends AbstractFixture {
 
       return {
         customerEmail: customer.attributes.data.email,
-        cartIds: carts,
+        shoppingListIds: shoppingLists,
         productSkus: productSkus,
       };
     });
@@ -51,29 +40,27 @@ export class CartFixture extends AbstractFixture {
 
   iterateData(data, vus = exec.vu.idInTest, iterations = exec.vu.iterationInScenario) {
     if (EnvironmentUtil.getTestType() === 'soak') {
-      const { customerEmail, cartIds, productSkus } = data[exec.vu.idInTest - 1];
+      const { customerEmail, shoppingListIds, productSkus } = data[exec.vu.idInTest - 1];
 
       return {
         customerEmail,
-        idCart: cartIds[0],
+        idShoppingList: shoppingListIds[0],
         productSku: productSkus[0],
       };
     }
 
     const customerIndex = (vus - 1) % data.length;
-    const { customerEmail, cartIds, productSkus } = data[customerIndex];
-    const cartIndex = iterations % cartIds.length;
-    const product = productSkus[0];
+    const { customerEmail, shoppingListIds, productSkus } = data[customerIndex];
+    const shoppingListIndex = iterations % shoppingListIds.length;
 
     return {
       customerEmail,
-      idCart: cartIds[cartIndex],
-      productSku: product,
+      idShoppingList: shoppingListIds[shoppingListIndex],
+      productSkus: productSkus,
     };
   }
 
-  _getCustomersWithQuotesPayload() {
-    let companyPermissions = [];
+  _getCustomersWithShoppingListsPayload() {
     let baseOperations = [
       {
         type: 'transfer',
@@ -103,22 +90,20 @@ export class CartFixture extends AbstractFixture {
       },
     ];
 
-    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
-      companyPermissions.push(
-        {
-          type: 'helper',
-          name: 'haveCompany',
-          key: 'company',
-          arguments: [{ isActive: true, status: 'approved' }],
-        },
-        {
-          type: 'helper',
-          name: 'haveCompanyBusinessUnit',
-          key: 'businessUnit',
-          arguments: [{ fkCompany: '#company.id_company' }],
-        }
-      );
-    }
+    let companyPermissions = [
+      {
+        type: 'helper',
+        name: 'haveCompany',
+        key: 'company',
+        arguments: [{ isActive: true, status: 'approved' }],
+      },
+      {
+        type: 'helper',
+        name: 'haveCompanyBusinessUnit',
+        key: 'businessUnit',
+        arguments: [{ fkCompany: '#company.id_company' }],
+      },
+    ];
 
     if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
       companyPermissions.push(
@@ -174,12 +159,10 @@ export class CartFixture extends AbstractFixture {
     const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
 
     let cliCommands = [];
-    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
-      cliCommands.push({
-        type: 'cli-command',
-        name: 'vendor/bin/console publish:trigger-events -r company_user',
-      });
-    }
+    cliCommands.push({
+      type: 'cli-command',
+      name: 'vendor/bin/console publish:trigger-events -r company_user',
+    });
 
     cliCommands.push({
       type: 'cli-command',
@@ -190,6 +173,7 @@ export class CartFixture extends AbstractFixture {
       data: {
         type: 'dynamic-fixtures',
         attributes: {
+          synchronize: true,
           operations: [...baseOperations, ...products, ...customers, ...cliCommands],
         },
       },
@@ -283,8 +267,7 @@ export class CartFixture extends AbstractFixture {
 
   _createCustomerPayload(index) {
     const customerKey = `customer${index + 1}`;
-    let companyUser = [];
-    let quotes = Array.from({ length: this.cartCount }, (_, quoteIndex) => ({
+    let quotes = Array.from({ length: this.shoppingListCount }, (_, quoteIndex) => ({
       type: 'helper',
       name: 'havePersistentQuote',
       key: `${customerKey}Quote${quoteIndex + 1}`,
@@ -295,6 +278,13 @@ export class CartFixture extends AbstractFixture {
         },
         true,
       ],
+    }));
+
+    let shoppingLists = Array.from({ length: this.shoppingListCount }, (_, quoteIndex) => ({
+      type: 'helper',
+      name: 'haveShoppingListFromQuote',
+      key: `${customerKey}ShoppingList${quoteIndex + 1}`,
+      arguments: [`#${customerKey}Quote${quoteIndex + 1}.id_quote`, `#${customerKey}`],
     }));
 
     const customer = [
@@ -317,26 +307,25 @@ export class CartFixture extends AbstractFixture {
       },
     ];
 
-    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
-      companyUser = [
-        {
-          type: 'helper',
-          name: 'haveCompanyUser',
-          key: `companyUser${customerKey}`,
-          arguments: [
-            {
-              customer: `#${customerKey}`,
-              fkCustomer: `#${customerKey}.id_customer`,
-              fkCompany: '#company.id_company',
-              fkCompanyBusinessUnit: '#businessUnit.id_company_business_unit',
-            },
-          ],
-        },
-      ];
-    }
+    let companyUser = [
+      {
+        type: 'helper',
+        name: 'haveCompanyUser',
+        key: `companyUser${customerKey}`,
+        arguments: [
+          {
+            customer: `#${customerKey}`,
+            fkCustomer: `#${customerKey}.id_customer`,
+            fkCompany: '#company.id_company',
+            fkCompanyBusinessUnit: '#businessUnit.id_company_business_unit',
+          },
+        ],
+      },
+    ];
 
     customer.push(...companyUser);
     customer.push(...(quotes || []));
+    customer.push(...(shoppingLists || []));
 
     return customer;
   }

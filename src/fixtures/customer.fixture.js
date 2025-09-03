@@ -3,11 +3,12 @@ import exec from 'k6/execution';
 import EnvironmentUtil from '../utils/environment.util';
 
 export class CustomerFixture extends AbstractFixture {
-  constructor({ customerCount, itemCount = 1, defaultItemPrice = 10000 }) {
+  constructor({ customerCount, itemCount = 1, defaultItemPrice = 10000, isCompanyUser = false }) {
     super();
     this.customerCount = customerCount;
     this.itemCount = itemCount;
     this.defaultItemPrice = defaultItemPrice;
+    this.isCompanyUser = isCompanyUser;
     this.repositoryId = EnvironmentUtil.getRepositoryId();
   }
 
@@ -102,8 +103,8 @@ export class CustomerFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
-      companyPermissions = [
+    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+      companyPermissions.push(
         {
           type: 'helper',
           name: 'haveCompany',
@@ -115,7 +116,12 @@ export class CustomerFixture extends AbstractFixture {
           name: 'haveCompanyBusinessUnit',
           key: 'businessUnit',
           arguments: [{ fkCompany: '#company.id_company' }],
-        },
+        }
+      );
+    }
+
+    if (this.repositoryId === 'b2b' || this.repositoryId === 'b2b-mp') {
+      companyPermissions.push(
         {
           type: 'helper',
           name: 'havePermissionByKey',
@@ -159,20 +165,32 @@ export class CustomerFixture extends AbstractFixture {
             { isDefault: true, fkCompany: '#company.id_company' },
             ['#permission1', '#permission2', '#permission3', '#permission4', '#permission5', '#permission6'],
           ],
-        },
-      ];
+        }
+      );
     }
 
     baseOperations.push(...companyPermissions);
     const products = Array.from({ length: this.itemCount }, (_, i) => this._createProductPayload(i)).flat();
     const customers = Array.from({ length: this.customerCount }, (_, i) => this._createCustomerPayload(i)).flat();
 
+    let cliCommands = [];
+    if (this.isCompanyUser || this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+      cliCommands.push({
+        type: 'cli-command',
+        name: 'vendor/bin/console publish:trigger-events -r company_user',
+      });
+    }
+
+    cliCommands.push({
+      type: 'cli-command',
+      name: 'vendor/bin/console q:w:s --stop-when-empty',
+    });
+
     return JSON.stringify({
       data: {
         type: 'dynamic-fixtures',
         attributes: {
-          synchronize: true,
-          operations: [...baseOperations, ...products, ...customers],
+          operations: [...baseOperations, ...products, ...customers, ...cliCommands],
         },
       },
     });
@@ -287,7 +305,7 @@ export class CustomerFixture extends AbstractFixture {
       },
     ];
 
-    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b') {
+    if (this.repositoryId === 'b2b-mp' || this.repositoryId === 'b2b' || this.isCompanyUser === true) {
       companyUser = [
         {
           type: 'helper',

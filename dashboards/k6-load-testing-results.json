@@ -103,7 +103,7 @@
         "y": 1
       },
       "id": 1,
-      "interval": ">1s",
+      "interval": "1s",
       "options": {
         "legend": {
           "calcs": ["max", "min"],
@@ -504,7 +504,7 @@
         "y": 1
       },
       "id": 10,
-      "interval": ">1s",
+      "interval": "1s",
       "options": {
         "legend": {
           "calcs": ["mean", "sum"],
@@ -1251,7 +1251,7 @@
         "y": 12
       },
       "id": 5,
-      "interval": ">1s",
+      "interval": "1s",
       "options": {
         "legend": {
           "calcs": [],
@@ -1449,7 +1449,7 @@
         "y": 12
       },
       "id": 8,
-      "interval": ">1s",
+      "interval": "1s",
       "options": {
         "calculate": true,
         "calculation": {},
@@ -1692,13 +1692,78 @@
           },
           {
             "selected": false,
+            "text": "SAPI8_post_carts_items",
+            "value": "SAPI8_post_carts_items"
+          },
+          {
+            "selected": false,
+            "text": "SAPI10_get_category_trees",
+            "value": "SAPI10_get_category_trees"
+          },
+          {
+            "selected": false,
+            "text": "SAPI11_get_category_nodes",
+            "value": "SAPI11_get_category_nodes"
+          },
+          {
+            "selected": false,
+            "text": "SAPI12_get_concrete_products_all_includes",
+            "value": "SAPI12_get_concrete_products_all_includes"
+          },
+          {
+            "selected": false,
             "text": "SAPI13_get_abstract_products_all_includes",
             "value": "SAPI13_get_abstract_products_all_includes"
           },
           {
             "selected": false,
+            "text": "SAPI14_get_catalog_search",
+            "value": "SAPI14_get_catalog_search"
+          },
+          {
+            "selected": false,
+            "text": "SAPI31_post_guest_cart_items",
+            "value": "SAPI31_post_guest_cart_items"
+          },
+          {
+            "selected": false,
             "text": "SAPI32_get_carts_by_id",
             "value": "SAPI32_get_carts_by_id"
+          },
+          {
+            "selected": false,
+            "text": "SAPI33_post_carts",
+            "value": "SAPI33_post_carts"
+          },
+          {
+            "selected": false,
+            "text": "SAPI34_delete_cart_items",
+            "value": "SAPI34_delete_cart_items"
+          },
+          {
+            "selected": false,
+            "text": "SAPI35_patch_cart_items",
+            "value": "SAPI35_patch_cart_items"
+          },
+          {
+            "selected": false,
+            "text": "SAPI36_get_shopping_lists",
+            "value": "SAPI36_get_shopping_lists"
+          },
+          {
+            "selected": false,
+            "text": "SAPI37_post_shopping_lists",
+            "value": "SAPI37_post_shopping_lists"
+          },
+          {
+            "selected": false,
+            "text": "SAPI37_post_shopping_list_items",
+            "value": "SAPI37_post_shopping_list_items"
+          },
+          {
+            "selected": false,
+            "text": "SAPI37_delete_shopping_lists",
+            "value": "SAPI37_delete_shopping_lists"
           },
           {
             "selected": false,
@@ -1709,6 +1774,21 @@
             "selected": false,
             "text": "SAPI39_get_orders_details",
             "value": "SAPI39_get_orders_details"
+          },
+          {
+            "selected": false,
+            "text": "SAPI40_post_quote_requests",
+            "value": "SAPI40_post_quote_requests"
+          },
+          {
+            "selected": false,
+            "text": "SAPI41_post_vouchers",
+            "value": "SAPI41_post_vouchers"
+          },
+          {
+            "selected": false,
+            "text": "SAPI42_post_access_tokens",
+            "value": "SAPI42_post_access_tokens"
           },
           {
             "selected": false,
@@ -1876,7 +1956,7 @@
             "value": "M4_send_for_approval"
           }
         ],
-        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI1_get_cms_pages,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,M8_get_mp_dashboard,SAPI2_get_catalog_search,SAPI3_get_concrete_products,SAPI4_get_carts,SAPI5_get_carts_include_items,SAPI6_post_carts_items,SAPI13_get_abstract_products_all_includes,SAPI32_get_carts_by_id,SAPI38_get_orders,SAPI39_get_orders_details,SAPI43_get_category_search,S1_get_homepage,S2_get_search,S4_get_checkout,S4_get_checkout_address,S4_post_checkout_address,S4_get_checkout_shipment,S4_post_checkout_shipment,S4_get_checkout_payment,S4_post_checkout_payment,S4_get_checkout_summary,S4_post_checkout_summary,S4_get_place_order,S4_get_checkout_success,S8_get_product,S13_get_orders,S13_post_cancel_order,S18_get_cart,S19_post_cart_add,S25_get_category,B1_get_sales,B3_get_sales_detail,B3_post_pay_order,B4_get_product_add,B4_post_product_add,B12_get_merchant_sales,M1_get_orders,M3_get_order_details,M3_post_ship_order,M4_get_abstract_create,M4_post_abstract_create,M4_get_concrete_create,M4_post_concrete_create,M4_get_abstract_update,M4_post_abstract_update,M4_get_concrete_update,M4_post_concrete_update,M4_send_for_approval",
+        "query": "http_req_duration,http_req_blocked,http_req_connecting,http_req_looking_up,http_req_receiving,http_req_sending,http_req_waiting,SAPI1_get_cms_pages,SAPI7_post_checkout,SAPI9_post_checkout,SAPI15_post_cart_reorder,SAPI19_post_cart_reorder,SAPI16_post_cart_reorder,SAPI17_delete_carts,SAPI18_post_checkout,SAPI20_post_cart_reorder,SAPI21_delete_carts,SAPI22_post_checkout,M8_get_mp_dashboard,SAPI2_get_catalog_search,SAPI3_get_concrete_products,SAPI4_get_carts,SAPI5_get_carts_include_items,SAPI6_post_carts_items,SAPI8_post_carts_items,SAPI10_get_category_trees,SAPI11_get_category_nodes,SAPI12_get_concrete_products_all_includes,SAPI13_get_abstract_products_all_includes,SAPI14_get_catalog_search,SAPI31_post_guest_cart_items,SAPI32_get_carts_by_id,SAPI33_post_carts,SAPI34_delete_cart_items,SAPI35_patch_cart_items,SAPI36_get_shopping_lists,SAPI37_post_shopping_lists,SAPI37_post_shopping_list_items,SAPI37_delete_shopping_lists,SAPI38_get_orders,SAPI39_get_orders_details,SAPI40_post_quote_requests,SAPI41_post_vouchers,SAPI42_post_access_tokens,SAPI43_get_category_search,S1_get_homepage,S2_get_search,S4_get_checkout,S4_get_checkout_address,S4_post_checkout_address,S4_get_checkout_shipment,S4_post_checkout_shipment,S4_get_checkout_payment,S4_post_checkout_payment,S4_get_checkout_summary,S4_post_checkout_summary,S4_get_place_order,S4_get_checkout_success,S8_get_product,S13_get_orders,S13_post_cancel_order,S18_get_cart,S19_post_cart_add,S25_get_category,B1_get_sales,B3_get_sales_detail,B3_post_pay_order,B4_get_product_add,B4_post_product_add,B12_get_merchant_sales,M1_get_orders,M3_get_order_details,M3_post_ship_order,M4_get_abstract_create,M4_post_abstract_create,M4_get_concrete_create,M4_post_concrete_create,M4_get_abstract_update,M4_post_abstract_update,M4_get_concrete_update,M4_post_concrete_update,M4_send_for_approval",
         "type": "custom"
       }
     ]

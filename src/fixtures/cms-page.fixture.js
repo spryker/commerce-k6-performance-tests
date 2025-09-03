@@ -57,12 +57,22 @@ export class CmsPageFixture extends AbstractFixture {
 
     const cmsPages = Array.from({ length: this.cmsPagesCount }, (_, i) => this._createCmsPagePayload(i)).flat();
 
+    const cliCommands = [
+      {
+        type: 'cli-command',
+        name: 'vendor/bin/console publish:trigger-events -r cms_page',
+      },
+      {
+        type: 'cli-command',
+        name: 'vendor/bin/console q:w:s --stop-when-empty',
+      },
+    ];
+
     return JSON.stringify({
       data: {
         type: 'dynamic-fixtures',
         attributes: {
-          synchronize: true,
-          operations: [...baseOperations, ...cmsPages],
+          operations: [...baseOperations, ...cmsPages, ...cliCommands],
         },
       },
     });
