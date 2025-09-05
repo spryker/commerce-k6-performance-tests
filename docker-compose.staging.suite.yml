@@ -1,0 +1,14 @@
+networks:
+  k6:
+
+services:
+  k6:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - k6
+    volumes:
+      - ./dist:/dist
+    ports:
+      - '6565:6565'

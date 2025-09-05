@@ -1,5 +1,40 @@
 {
+  "name": "commerce-k6-performance-tests",
+  "version": "0.0.1",
+  "description": "K6 performance tests",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "webpack:build": "node scripts/webpack.js",
+    "docker:up": "node scripts/docker.js up",
+    "docker:down": "node scripts/docker.js down",
+    "docker:run": "node scripts/docker.js run",
+    "prettier:check": "prettier ./src --check",
+    "prettier:write": "prettier ./src --write",
+    "lint": "npx eslint ./src",
+    "parse": "node scripts/parser.js"
+  },
   "devDependencies": {
-    "eslint": "^8.39.0"
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "assert": "^2.1.0",
+    "babel-loader": "^9.1.2",
+    "browserify-fs": "^1.0.0",
+    "buffer": "^6.0.3",
+    "clean-webpack-plugin": "^4.0.0",
+    "copy-webpack-plugin": "^13.0.0",
+    "csv-parse": "^5.6.0",
+    "dotenv": "^16.5.0",
+    "eslint": "^8.39.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "k6": "^0.0.0",
+    "mkdirp": "^3.0.1",
+    "papaparse": "^5.5.3",
+    "path-browserify": "^1.0.1",
+    "prettier": "^3.4.2",
+    "stream-browserify": "^3.0.0",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
   }
 }

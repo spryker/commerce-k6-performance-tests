@@ -1,0 +1,24 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - STORE_DOMAIN=$(echo $ROUTE53_ZONE_DOMAIN | cut -d . -f 1)
+      - |
+        if [ "${DEPLOYED_SHOP}" = "B2B" ]; then
+          sed -i 's/spryker-b2bperformance/'"$STORE_DOMAIN"'/g' environments/${DEPLOYED_SHOP}.json
+        elif [ "${DEPLOYED_SHOP}" = "B2B_MP" ]; then
+          sed -i 's/spryker-b2bmpperformance/'"$STORE_DOMAIN"'/g' environments/${DEPLOYED_SHOP}.json
+        elif [ "${DEPLOYED_SHOP}" = "B2C" ]; then
+          sed -i 's/b2c/'"$STORE_DOMAIN"'/g' environments/${DEPLOYED_SHOP}.json
+        else
+          sed -i 's/b2c-marketplace/'"$STORE_DOMAIN"'/g' environments/${DEPLOYED_SHOP}.json
+        fi
+      - mv .env-default .env
+      - export DEPLOYED_SHOP_LOWER_CASE=$(echo "$DEPLOYED_SHOP" | awk '{print tolower($0)}')
+      - chmod +x shell/run-all-${DEPLOYED_SHOP_LOWER_CASE}-performance-tests.sh
+  build:
+    commands:
+      - ./shell/run-all-${DEPLOYED_SHOP_LOWER_CASE}-performance-tests.sh
+artifacts:
+  files:
+    - '**/*'
