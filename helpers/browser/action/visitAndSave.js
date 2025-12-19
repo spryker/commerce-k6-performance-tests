@@ -3,7 +3,7 @@ import Click from './click.js';
 import {getThread} from "../../../lib/utils.js";
 
 export default class VisitAndSave extends Default {
-    constructor(targetUrl, clickLocator = 'input[type="submit"][value="Save"]', metricKey = '') {
+    constructor(targetUrl, clickLocator = 'input[type="submit"][value*="Save"]', metricKey = '') {
         if (!metricKey) {
             metricKey = targetUrl
         }
@@ -26,7 +26,7 @@ export default class VisitAndSave extends Default {
 
         this.profiler.start(this.value);
 
-        let res = await new Click(this.clickLocator, {waitForNavigation: true, force: true, timeout: this.timeout, metricKey: this.locator}).act(browser)
+        let res = await new Click(this.clickLocator, {waitForNavigation: true, force: true, timeout: this.timeout, metricKey: this.locator, currentUrl: browser.getCurrentUrl()}).act(browser)
 
         console.warn(`Click result for locator: ${this.locator}`, res)
 

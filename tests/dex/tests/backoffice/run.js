@@ -45,11 +45,11 @@ let visitList = [
     new Visit('product-management'),
     new VisitAndSave('product-management/edit?id-product-abstract=TARGET_ID'),
     new Visit('company-role-gui/list-company-role'),
-    // new VisitAndSave('product-management/edit?id-product-abstract=222'),
-    // new VisitAndSave('product-management/edit?id-product-abstract=221'),
-    // new VisitAndSave('product-management/edit?id-product-abstract=220'),
+    new VisitAndSave('product-management/edit?id-product-abstract=222'),
+    new VisitAndSave('product-management/edit?id-product-abstract=221'),
+    new VisitAndSave('product-management/edit?id-product-abstract=220'),
     new Visit('category-gui/list'),
-    // new VisitAndSave('category-gui/edit?id-category=15'),
+    new VisitAndSave('category-gui/edit?id-category=15'),
     new Visit('product-attribute-gui/attribute'),
     new VisitAndSave('product-attribute-gui/attribute/edit?id=1'),
     new Visit('product-attribute-gui/attribute'),
@@ -115,7 +115,7 @@ export async function browseBackOffice() {
 
     await page.setDefaultTimeout(timeout * 10)
     await page.setDefaultNavigationTimeout(60000)
-    console.log(basicAuth.username, basicAuth.password)
+    // console.log(basicAuth.username, basicAuth.password)
     try {
         let backoffice = new BackOffice(
             new BrowserHandler(

@@ -128,38 +128,38 @@ export default class Browser {
         let result = true
         for (const element of actionList) {
             switch (element.type) {
-            case 'visit':
-            case 'suggest':
-            case 'screen':
-            case 'wait':
-            case 'sleep':
-            case 'step':
-            case 'scrollDown':
-            case 'scrollUp':
-            case 'evaluateClick':
-            case 'visitAndSave':
-                await element.act(this);
-                break;
-            case 'type':
-            case 'typeIf':
-            case 'check':
-            case 'select':
-            case 'selectRandomBulk':
-            case 'selectRandomOption':
-            case 'click':
-            case 'fill':
-            case 'textExists':
-            case 'resetForm':
-            case 'clear':
-                result = result && await element.act(this)
-                break;
-            default:
-                break;
+                case 'visit':
+                case 'suggest':
+                case 'screen':
+                case 'wait':
+                case 'sleep':
+                case 'step':
+                case 'scrollDown':
+                case 'scrollUp':
+                case 'evaluateClick':
+                case 'visitAndSave':
+                    await element.act(this);
+                    break;
+                case 'type':
+                case 'typeIf':
+                case 'check':
+                case 'select':
+                case 'selectRandomBulk':
+                case 'selectRandomOption':
+                case 'click':
+                case 'fill':
+                case 'textExists':
+                case 'resetForm':
+                case 'clear':
+                    result = result && await element.act(this)
+                    break;
+                default:
+                    break;
             }
 
             if (!result) {
-                this.addStep(`Failed to execute command: ${element.type} for locator: ${element.locator}`);
-                console.error(`Failed to execute command: ${element.type} for locator: ${element.locator} element: ${JSON.stringify(element)}`);
+                this.addStep(`Failed to execute command: ${element.type} for locator: ${element.locator}. ${this.getCurrentUrl()}`);
+                console.error(`Failed to execute command: ${element.type} for locator: ${element.locator} ${this.getCurrentUrl()} element: ${JSON.stringify(element)}`);
                 await this.screen();
             }
             await this.waitUntilLoad('networkidle');

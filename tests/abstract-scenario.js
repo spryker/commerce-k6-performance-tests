@@ -64,6 +64,10 @@ export class AbstractScenario {
         return this.urlHelper.getBackofficeBaseUrl();
     }
 
+    getMerchantPortalBaseUrl() {
+        return this.urlHelper.getMerchantPortalBaseUrl();
+    }
+
     getBackendApiUrl() {
         return this.urlHelper.getBackendApiBaseUrl();
     }

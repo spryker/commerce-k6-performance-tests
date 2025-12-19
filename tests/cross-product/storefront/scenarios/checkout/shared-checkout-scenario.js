@@ -1,8 +1,24 @@
 import { AbstractScenario } from '../../../../abstract-scenario.js';
 import { group } from 'k6';
+import {Http} from "../../../../../lib/http.js";
+import {loadEnvironmentConfig} from "../../../../../lib/utils.js";
+import {UrlHelper} from "../../../../../helpers/url-helper.js";
+import CustomerHelper from "../../../../../helpers/customer-helper.js";
+import AdminHelper from "../../../../../helpers/admin-helper.js";
+import {AssertionsHelper} from "../../../../../helpers/assertions-helper.js";
+import {CartHelper} from "../../../../../helpers/cart-helper.js";
+import {BapiHelper} from "../../../../../helpers/bapi-helper.js";
+import {StorefrontHelper} from "../../../../../helpers/storefront-helper.js";
+import {BrowserHelper} from "../../../../../helpers/browser-helper.js";
 
 export class SharedCheckoutScenario extends AbstractScenario {
     cartSize = 0
+    requireAuth = true
+    constructor(environment, options = {}) {
+        super(environment, options);
+        this.requireAuth = 'auth' in options ? options.auth : true
+    }
+
     execute(products = [], maxCartSize = 1) {
         this.cartHelper.haveCartWithProducts(0);
         // this.storefrontHelper.loginUser();

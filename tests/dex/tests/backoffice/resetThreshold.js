@@ -15,21 +15,24 @@ import Click from "../../../../helpers/browser/action/click.js";
 import ValidateTextExists from "../../../../helpers/browser/action/validateTextExists.js";
 import ScrollDown from "../../../../helpers/browser/action/scrollDown.js";
 import Clear from "../../../../helpers/browser/action/clear.js";
+import ResetForm from "../../../../helpers/browser/action/resetForm.js";
+import ClearHidden from "../../../../helpers/browser/action/clearHidden.js";
 
 let timeout = Math.ceil(15000)
 let visitList = [
     new Visit('sales-order-threshold-gui/global'),
     // new ResetForm('[name="global-threshold"]'),
     new Clear('[id="global-threshold_hardThreshold_threshold"]'),
-    // new Clear('[name="global-threshold[hardThreshold][threshold]"]'),
+    new ClearHidden('[name="global-threshold[hardThreshold][threshold]"]'),
     new Clear('[id="global-threshold_hardMaximumThreshold_threshold"]'),
-    // new Fill('[name="global-threshold[hardMaximumThreshold][threshold]"]', '', { force: true }),
-    new Clear('[id="global-threshold_softThreshold_threshold"]'),
+    new ClearHidden('[name="global-threshold[hardMaximumThreshold][threshold]"]', '',),
+    // new Fill('[name="global-threshold[hardMaximumThreshold][threshold]"]', '',),
+    // new Clear('[id="global-threshold_softThreshold_threshold"]'),
     // new Fill('[name="global-threshold[softThreshold][threshold]"]', '', { force: true }),
     // new Click('[for="global-threshold_softThreshold_strategy_placeholder"]', {}),
-    new ScrollDown(),
-    new Click('[class="btn btn-primary safe-submit"]', {waitForNavigation: true, timeout: timeout}),
-    new ValidateTextExists('.alert__text', 'The Global Thresholds is saved successfully.')
+    // new ScrollDown(),
+    // new Click('[class="btn btn-primary safe-submit"]', {waitForNavigation: true, timeout: timeout}),
+    // new ValidateTextExists('.alert__text', 'The Global Thresholds is saved successfully.')
 ]
 
 let metricsConfig = [

@@ -63,7 +63,7 @@ export default class Click extends Default {
 
             await targetElement.click(clickOptions);
         } catch (e) {
-            browser.addStep(`Error select locator ${this.locator}`);
+            browser.addStep(`Error select locator ${this.locator}, on page: ${browser.getCurrentUrl()}`);
             console.error(e);
             await browser.screen();
             return false

@@ -83,6 +83,6 @@ export class SharedMultiCheckoutScenario extends AbstractScenario {
     }
 
     _getPaymentProviderName() {
-        return 'DummyMarketplacePayment';
+        return 'DummyPayment';
     }
 }

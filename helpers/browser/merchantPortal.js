@@ -4,7 +4,7 @@ import Step from './action/step.js';
 import Visit from './action/visit.js';
 import Screen from './action/screen.js';
 
-export default class BackOffice {
+export default class MerchantPortal {
     constructor(browser, metrics, timeout) {
         this.browser = browser
         this.metrics = metrics
@@ -20,7 +20,7 @@ export default class BackOffice {
         await this.initialise()
         await this.visitAndAct(visitList)
         await this.visitAndAct([
-            new Visit('auth/logout', '', true)
+            new Visit('security-merchant-portal-gui/logout', '', true)
         ])
     }
 
@@ -50,14 +50,14 @@ export default class BackOffice {
 
     async auth() {
         await this.browser.act([
-            new Step('Login to BackOffice'),
-            new Visit('security-gui/login'),
-            new Step('Fill Admin Auth Credentials'),
-            new Fill('[name="auth[username]"]', 'admin@spryker.com'),
-            new Fill('[name="auth[password]"]', 'change123'),
+            new Step('Login to Merchant Portal'),
+            new Visit('security-merchant-portal-gui/login'),
+            new Step('Fill Merchant User Credentials'),
+            new Fill('[id="security-merchant-portal-gui_username"]', 'martha@video-king.nl'),
+            new Fill('[id="security-merchant-portal-gui_password"]', 'change123'),
             new Screen('Form filled'),
             new Click('button[type="submit"]', {waitForNavigation: true, timeout: this.timeout, clickWhenExists:true}),
-            new Screen('BackOfficeDashboard'),
+            new Screen('MerchantPortalDashboard'),
         ])
     }
 }

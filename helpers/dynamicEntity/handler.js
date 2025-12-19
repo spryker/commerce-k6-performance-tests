@@ -49,7 +49,7 @@ export default class Handler {
     }
 
     getDataFromTable(tableAlias) {
-        try {
+        // try {
             this.lastResponse = this.http.sendGetRequest(this.http.url`${this.urlHelper.getBackendApiBaseUrl()}/dynamic-entity/${tableAlias}`, this.getRequestParams(), false);
 
             if (this.lastResponse.status !== 200) {
@@ -59,10 +59,10 @@ export default class Handler {
             this.assertionHelper.assertResponseStatus(this.lastResponse, 200, this.lastResponse.url)
             debug('Response for', tableAlias, this.lastResponse.status, this.lastResponse)
             return JSON.parse(this.lastResponse.body)
-        } catch (e) {
-            console.error(`Error during request to the DataExchange API`, e)
-            return []
-        }
+        // } catch (e) {
+        //     console.error(`Error during request to the DataExchange API`, e)
+        //     return []
+        // }
     }
 
     getDataFromTableWithPagination(tableAlias, limitPerPage = 500, filterCallback = null, desiredAmount = 0) {

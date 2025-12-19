@@ -29,7 +29,6 @@ let amountOfIterations = Number(__ENV.AMOUNT_OF_CHECKOUT_ITERATIONS)
 let amountOfVirtualUsers = Number(__ENV.AMOUNT_OF_CHECKOUT_VUS)
 
 let metricsConfig = [
-    'success_page',
     'add_to_cart',
     'order_placement',
 ].map((code) => {
@@ -90,13 +89,13 @@ const checkoutScenario = new SharedMultiCheckoutScenario(__ENV.DATA_EXCHANGE_ENV
 export const options = loadDefaultOptions();
 
 let configurationArray = [
-    // ['Product_List_Generation', {
-    //     executor: 'per-vu-iterations',
-    //     vus: 1,
-    //     iterations: 1,
-    //     maxDuration: '1200m',
-    //     exec: 'generateProductList',
-    // }],
+    ['Product_List_Generation', {
+        executor: 'per-vu-iterations',
+        vus: 1,
+        iterations: 1,
+        maxDuration: '1200m',
+        exec: 'generateProductList',
+    }],
     [`CHECKOUT_RANDOM_1_TO_${maxCartSize}_ITEMS`, {
         exec: 'executeCheckoutScenario',
         executor: 'per-vu-iterations',
@@ -110,7 +109,7 @@ let configurationArray = [
         iterations: amountOfIterations,
         vus: amountOfVirtualUsers,
         maxDuration: '1200m',
-        startTime: '1s',
+        startTime: '10s',
     }]
 ]
 
@@ -187,10 +186,10 @@ export async function executeCheckoutScenario() {
         fail('No products retrieved from instance!!!')
     }
 
-    // try {
+    try {
         checkoutScenario.execute(sortRandom(products), randomiseCartSize ? Math.floor(Math.random() * maxCartSize) + 1 : maxCartSize)
-    // } catch (e) {
-    //     console.error('Failed to execute executeCheckoutScenario:', e)
-    // } finally {
-    // }
+    } catch (e) {
+        console.error('Failed to execute executeCheckoutScenario:', e)
+    } finally {
+    }
 }

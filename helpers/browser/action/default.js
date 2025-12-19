@@ -7,6 +7,7 @@ export default class Default {
         this.value = value
         this.type = type
         this.profiler = new Profiler()
+        this.timeout = typeof options === 'object' && 'timeout' in options ? options.timeout : 30000;
     }
 
     sanitise(locator) {
