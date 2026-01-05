@@ -1,5 +1,5 @@
 import { Trend, Counter } from 'k6/metrics';
-import EnvironmentUtil from './environment.util';
+import EnvironmentUtil from './environment.util.js';
 
 const errorCounter = new Counter('errors');
 

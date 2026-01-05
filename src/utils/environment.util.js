@@ -92,7 +92,7 @@ export default class EnvironmentUtil {
   }
 
   static getTestType() {
-    return __ENV.SPRYKER_TEST_TYPE;
+    return __ENV.SPRYKER_TEST_TYPE ?? 'smoke';
   }
 
   static getExecutor() {
@@ -118,8 +118,8 @@ export default class EnvironmentUtil {
       vus: options && options.vus ? options.vus : EnvironmentUtil.getVus(),
       iterations: options && options.iterations ? options.iterations : EnvironmentUtil.getIterations(),
       executor: EnvironmentUtil.getExecutor(),
-      maxDuration: '60m',
-      gracefulStop: '300s',
+      maxDuration: '1m',
+      gracefulStop: '30s',
     };
   }
 

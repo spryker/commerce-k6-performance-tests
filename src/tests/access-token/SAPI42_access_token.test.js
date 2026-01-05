@@ -1,10 +1,10 @@
 // tags: smoke, load, soak, access-token, SAPI
 import { group } from 'k6';
-import OptionsUtil from '../../utils/options.util';
-import { createMetrics } from '../../utils/metric.util';
-import EnvironmentUtil from '../../utils/environment.util';
-import { CustomerFixture } from '../../fixtures/customer.fixture';
-import AccessTokensResource from '../../resources/access-tokens.resource';
+import OptionsUtil from '../../utils/options.util.js';
+import { createMetrics } from '../../utils/metric.util.js';
+import EnvironmentUtil from '../../utils/environment.util.js';
+import { CustomerFixture } from '../../fixtures/customer.fixture.js';
+import AccessTokensResource from '../../resources/access-tokens.resource.js';
 
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
