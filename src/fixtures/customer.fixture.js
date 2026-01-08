@@ -14,7 +14,7 @@ export class CustomerFixture extends AbstractFixture {
 
   static createFixture(params = {}) {
     if (AbstractFixture.shouldUseStaticFixtures()) {
-       const { CustomerFixture: StaticCustomerFixture } = require('./static/customer.fixture');
+      const { CustomerFixture: StaticCustomerFixture } = require('./static/customer.fixture');
 
       return new StaticCustomerFixture(params);
     }
