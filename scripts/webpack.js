@@ -14,6 +14,7 @@
 const { execSync } = require('child_process');
 
 const npmConfigTags = process.env.npm_config_tags;
+const isWatch = process.argv.includes('--watch');
 let tags = [];
 
 if (npmConfigTags) {
@@ -33,7 +34,7 @@ if (repositoryId) {
   process.env.SPRYKER_REPOSITORY_ID = repositoryId;
 }
 
-let webpackCommand = 'webpack';
+let webpackCommand = isWatch ? 'webpack --watch' : 'webpack';
 
 if (tags.length > 0) {
   webpackCommand += ` --env entryTags=${tags.join(',')}`;

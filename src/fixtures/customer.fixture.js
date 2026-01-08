@@ -1,7 +1,7 @@
-import { AbstractFixture } from './abstract.fixture.js';
+import { AbstractFixture } from './abstract.fixture';
 import exec from 'k6/execution';
-import EnvironmentUtil from '../utils/environment.util.js';
-import { CustomerFixture as StaticCustomerFixture } from './static/customer.fixture.js';
+import EnvironmentUtil from '../utils/environment.util';
+import { CustomerFixture as StaticCustomerFixture } from './static/customer.fixture';
 
 export class CustomerFixture extends AbstractFixture {
   constructor({ customerCount, itemCount = 1, defaultItemPrice = 10000, isCompanyUser = false }) {

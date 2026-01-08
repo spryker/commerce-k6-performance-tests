@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "webpack:build": "node scripts/webpack.js",
+    "webpack:watch": "node scripts/webpack.js --watch",
     "docker:up": "node scripts/docker.js up",
     "docker:down": "node scripts/docker.js down",
     "docker:run": "node scripts/docker.js run",

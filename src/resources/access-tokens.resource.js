@@ -1,4 +1,4 @@
-import AbstractResource from './abstract.resource.js';
+import AbstractResource from './abstract.resource';
 
 export default class AccessTokensResource extends AbstractResource {
   get(email, password = 'change123') {

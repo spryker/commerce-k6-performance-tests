@@ -1,7 +1,7 @@
 import { check } from 'k6';
 import http from 'k6/http';
-import EnvironmentUtil from '../utils/environment.util.js';
-import { addErrorToCounter } from '../utils/metric.util.js';
+import EnvironmentUtil from '../utils/environment.util';
+import { addErrorToCounter } from '../utils/metric.util';
 
 export default class AbstractResource {
   constructor(bearerToken = null, anonymousCustomerUniqueId = null) {

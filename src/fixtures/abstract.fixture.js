@@ -1,7 +1,7 @@
 import http from 'k6/http';
 import { check } from 'k6';
-import EnvironmentUtil from '../utils/environment.util.js';
-import { addErrorToCounter } from '../utils/metric.util.js';
+import EnvironmentUtil from '../utils/environment.util';
+import { addErrorToCounter } from '../utils/metric.util';
 
 export class AbstractFixture {
   static DEFAULT_LOCALE_ID = 66;
