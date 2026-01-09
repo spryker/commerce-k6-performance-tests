@@ -118,7 +118,7 @@ export default class EnvironmentUtil {
       vus: options && options.vus ? options.vus : EnvironmentUtil.getVus(),
       iterations: options && options.iterations ? options.iterations : EnvironmentUtil.getIterations(),
       executor: EnvironmentUtil.getExecutor(),
-      maxDuration: '10m',
+      maxDuration: '30m',
       gracefulStop: '100s',
     };
   }
