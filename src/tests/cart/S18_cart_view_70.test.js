@@ -7,13 +7,13 @@ import { CartFixture } from '../../fixtures/cart.fixture';
 import CartPage from '../../pages/yves/cart.page';
 import { LoginPage } from '../../pages/yves/login.page';
 
-const testConfiguration = {
+export const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'S18',
   group: 'Cart',
-  metrics: ['S18_get_cart'],
+  metrics: ['S18_cart_view_70_items'],
   thresholds: {
-    S18_get_cart: {
+    S18_cart_view_70_items: {
       smoke: ['avg<300'],
       load: ['avg<600'],
     },
@@ -21,9 +21,10 @@ const testConfiguration = {
 };
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
+export { metrics, metricThresholds };
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const fixture = new CartFixture({
+export const fixture = new CartFixture({
   customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
   cartCount: 1,
   itemCount: 70,
@@ -34,7 +35,8 @@ export function setup() {
   return fixture.getData();
 }
 
-export default function (data) {
+// Exported test function for reuse in suite
+export function runTest(data) {
   const { customerEmail } = fixture.iterateData(data);
 
   let headers = {};
@@ -51,3 +53,6 @@ export default function (data) {
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
 }
+
+// Default export for running as standalone test
+export default runTest;

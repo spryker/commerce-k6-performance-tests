@@ -10,13 +10,13 @@ import ProductPage from '../../pages/yves/product.page';
 import { parseHTML } from 'k6/html';
 import { CustomerFixture } from '../../fixtures/customer.fixture';
 
-const testConfiguration = {
+export const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'S19',
   group: 'Cart',
-  metrics: ['S19_post_cart_add'],
+  metrics: ['S19_add_to_cart_one_product'],
   thresholds: {
-    S19_post_cart_add: {
+    S19_add_to_cart_one_product: {
       smoke: ['avg<300'],
       load: ['avg<600'],
       soak: ['avg<600'],
@@ -25,9 +25,10 @@ const testConfiguration = {
 };
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
+export { metrics, metricThresholds };
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
-const fixture = CustomerFixture.createFixture({
+export const fixture = CustomerFixture.createFixture({
   customerCount: testConfiguration.vus ?? EnvironmentUtil.getRampVus(),
   itemCount: 1,
   randomItems: true,
@@ -37,7 +38,8 @@ export function setup() {
   return fixture.getData();
 }
 
-export default function (data) {
+// Exported test function for reuse in suite
+export function runTest(data) {
   const customer = fixture.iterateData(data, exec.vu.idInTest);
   const product = customer.products[0];
   const email = customer.customerEmail;
@@ -73,3 +75,6 @@ export default function (data) {
     loginPage.logout(headers);
   });
 }
+
+// Default export for running as standalone test
+export default runTest;
