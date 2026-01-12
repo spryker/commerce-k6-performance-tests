@@ -9,7 +9,7 @@ import AccessTokensResource from '../../resources/access-tokens.resource';
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI41',
-  group: 'Discount',
+  group: 'Access Token',
   metrics: ['SAPI42_post_access_tokens'],
   thresholds: {
     SAPI42_post_access_tokens: {
