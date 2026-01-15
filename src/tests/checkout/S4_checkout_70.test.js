@@ -125,7 +125,7 @@ export default function (data) {
   const addressesFormToken = addressesForm.find('#addressesForm__token').attr('value');
 
   group('Checkout Address Submit', () => {
-    const checkoutAddressSubmitResponse = checkoutPage.submitCheckoutAddress(addressesFormToken);
+    const checkoutAddressSubmitResponse = checkoutPage.submitCheckoutAddress(addressesFormToken, 70);
     metrics['S4_post_checkout_address'].add(checkoutAddressSubmitResponse.timings.duration);
   });
 
