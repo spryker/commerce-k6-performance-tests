@@ -8,7 +8,7 @@ import AuthUtil from '../../utils/auth.util';
 import CartsResource from '../../resources/carts.resource';
 import exec from 'k6/execution';
 
-const testConfiguration = {
+export const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI4',
   group: 'Cart',
@@ -22,6 +22,7 @@ const testConfiguration = {
 };
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
+export { metrics, metricThresholds };
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = new CartFixture({
@@ -36,7 +37,8 @@ export function setup() {
   return fixture.getData();
 }
 
-export default function (data) {
+// Exported test function for reuse in suite
+export function runTest(data) {
   const { customerEmail } = fixture.iterateData(data, exec.vu.idInTest, 0);
 
   let bearerToken;
@@ -51,3 +53,6 @@ export default function (data) {
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
 }
+
+// Default export for running as standalone test
+export default runTest;

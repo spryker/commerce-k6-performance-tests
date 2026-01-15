@@ -1,0 +1,31 @@
+src/tests/cart
+    cart_ui
+    cart_API + tests from quote-request + cart-reorder (API)
+
+src/tests/category
+    ui
+    API
+src/tests/checkout
+    UI
+    API
+src/tests/dashboard
+    UI
+src/tests/discount
+    API
+src/tests/homepage
+    combined
+src/tests/marketplace
+    UI
+src/tests/order-amendment
+    API
+src/tests/order-management
+    UI
+    API
+product merge 
+    UI
+    API
+Shoping list
+    API
+Combined suite
+    src/tests/access-token
+        API

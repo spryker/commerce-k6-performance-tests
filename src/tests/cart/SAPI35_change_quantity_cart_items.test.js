@@ -12,7 +12,7 @@ if (EnvironmentUtil.getTestType() === 'soak') {
   exec.test.abort('This test is not suitable for soak testing');
 }
 
-const testConfiguration = {
+export const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI35',
   group: 'Cart',
@@ -26,6 +26,7 @@ const testConfiguration = {
 };
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
+export { metrics, metricThresholds };
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = new CartFixture({
@@ -40,7 +41,8 @@ export function setup() {
   return fixture.getData();
 }
 
-export default function (data) {
+// Exported test function for reuse in suite
+export function runTest(data) {
   const { customerEmail, idCart } = fixture.iterateData(data);
 
   let bearerToken;
@@ -63,3 +65,6 @@ export default function (data) {
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
 }
+
+// Default export for running as standalone test
+export default runTest;
