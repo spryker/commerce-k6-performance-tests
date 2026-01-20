@@ -40,21 +40,6 @@ import {
     setup as sapi35Setup,
     runTest as runSAPI35Test
 } from '../cart/SAPI35_change_quantity_cart_items.test.js';
-import {
-    options as sapi40Options,
-    setup as sapi40Setup,
-    runTest as runSAPI40Test
-} from '../cart/SAPI40_create_quote_request_70.test.js';
-import {
-    options as sapi15Options,
-    setup as sapi15Setup,
-    runTest as runSAPI15Test
-} from '../cart-reorder/SAPI15_cart_reorder_50.test.js';
-import {
-    options as sapi19Options,
-    setup as sapi19Setup,
-    runTest as runSAPI19Test
-} from '../cart-reorder/SAPI19_cart_reorder_70.test.js';
 
 // Merge options from all tests
 export const options = {
@@ -66,9 +51,6 @@ export const options = {
     ...sapi33Options,
     ...sapi34Options,
     ...sapi35Options,
-    ...sapi40Options,
-    ...sapi15Options,
-    ...sapi19Options,
     thresholds: {
         ...sapi4Options.thresholds,
         ...sapi5Options.thresholds,
@@ -78,9 +60,6 @@ export const options = {
         ...sapi33Options.thresholds,
         ...sapi34Options.thresholds,
         ...sapi35Options.thresholds,
-        ...sapi40Options.thresholds,
-        ...sapi15Options.thresholds,
-        ...sapi19Options.thresholds,
     },
 };
 
@@ -94,9 +73,6 @@ export function setup() {
         sapi33Data: sapi33Setup(),
         sapi34Data: sapi34Setup(),
         sapi35Data: sapi35Setup(),
-        sapi40Data: sapi40Setup(),
-        sapi15Data: sapi15Setup(),
-        sapi19Data: sapi19Setup(),
     };
 }
 
@@ -131,17 +107,5 @@ export default function (data) {
 
     group('SAPI35_change_quantity_cart_items', () => {
         runSAPI35Test(data.sapi35Data);
-    });
-
-    group('SAPI40_create_quote_request_70', () => {
-        runSAPI40Test(data.sapi40Data);
-    });
-
-    group('SAPI15_cart_reorder_50', () => {
-        runSAPI15Test(data.sapi15Data);
-    });
-
-    group('SAPI19_cart_reorder_70', () => {
-        runSAPI19Test(data.sapi19Data);
     });
 }

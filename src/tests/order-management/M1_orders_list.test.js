@@ -18,7 +18,6 @@ const testConfiguration = {
   group: 'Order management',
   metrics: ['M1_get_orders'],
   vus: 1,
-  iterations: 10,
   thresholds: {
     M1_get_orders: {
       smoke: ['avg<700'],

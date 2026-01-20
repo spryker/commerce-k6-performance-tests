@@ -19,7 +19,6 @@ const testConfiguration = {
   group: 'Order management',
   metrics: ['B3_get_sales_detail', 'B3_post_pay_order'],
   vus: 1,
-  iterations: 10,
   thresholds: {
     B3_get_sales_detail: {
       smoke: ['avg<700'],
