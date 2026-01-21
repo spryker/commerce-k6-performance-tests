@@ -204,17 +204,6 @@ export default class CheckoutPage extends AbstractPage {
       payload[`addressesForm[multiShippingAddresses][${i}][shipmentType][key]`] = 'delivery';
       payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][id_customer_address]`] = '';
       payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][id_company_unit_address]`] = 13;
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][salutation]`] = 'Mr';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][first_name]`] = 'Sonia';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][last_name]`] = 'Wagner';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][company]`] = 'Spryker Systems GmbH';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][address1]`] = 'Kirncher Str.';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][address2]`] = '7';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][address3]`] = '';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][zip_code]`] = '10247';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][city]`] = 'Berlin';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][iso2_code]`] = 'DE';
-      payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][phone]`] = '4902890031';
       payload[`addressesForm[multiShippingAddresses][${i}][shippingAddress][isAddressSavingSkipped]`] = 1;
       payload[`addressesForm[multiShippingAddresses][${i}][servicePoint][uuid]`] = '';
     }
@@ -222,17 +211,6 @@ export default class CheckoutPage extends AbstractPage {
     // Add billing address
     payload['addressesForm[billingAddress][id_customer_address]'] = '';
     payload['addressesForm[billingAddress][id_company_unit_address]'] = 13;
-    payload['addressesForm[billingAddress][salutation]'] = 'Mr';
-    payload['addressesForm[billingAddress][first_name]'] = 'Sonia';
-    payload['addressesForm[billingAddress][last_name]'] = 'Wagner';
-    payload['addressesForm[billingAddress][company]'] = 'Spryker Systems GmbH';
-    payload['addressesForm[billingAddress][address1]'] = 'Kirncher Str.';
-    payload['addressesForm[billingAddress][address2]'] = '7';
-    payload['addressesForm[billingAddress][address3]'] = '';
-    payload['addressesForm[billingAddress][zip_code]'] = '10247';
-    payload['addressesForm[billingAddress][city]'] = 'Berlin';
-    payload['addressesForm[billingAddress][iso2_code]'] = 'DE';
-    payload['addressesForm[billingAddress][phone]'] = '4902890031';
     payload['addressesForm[billingAddress][isAddressSavingSkipped]'] = 1;
 
     payload['addressesForm[isMultipleShipmentEnabled]'] = 1;
