@@ -92,7 +92,7 @@ export default class EnvironmentUtil {
   }
 
   static getTestType() {
-    return __ENV.SPRYKER_TEST_TYPE ?? 'smoke';
+    return __ENV.SPRYKER_TEST_TYPE;
   }
 
   static getExecutor() {

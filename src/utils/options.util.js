@@ -11,7 +11,7 @@ export default class OptionsUtil {
       cloud: {
         distribution: {
           distributionLabel1: { loadZone: 'amazon:de:frankfurt', percent: 100 },
-          },
+        },
       },
     };
 
