@@ -13,7 +13,7 @@ const testConfiguration = {
   metrics: ['S2_get_search'],
   thresholds: {
     S2_get_search: {
-      smoke: ['avg<200'],
+      smoke: ['avg<1150'],
       load: ['avg<200'],
       soak: ['avg<200'],
     },

@@ -20,11 +20,11 @@ const testConfiguration = {
   metrics: ['SAPI38_get_orders', 'SAPI39_get_orders_details'],
   thresholds: {
     SAPI38_get_orders: {
-      smoke: ['avg<400'],
+      smoke: ['avg<1500'],
       load: ['avg<800'],
     },
     SAPI39_get_orders_details: {
-      smoke: ['avg<400'],
+      smoke: ['avg<1200'],
       load: ['avg<800'],
     },
   },

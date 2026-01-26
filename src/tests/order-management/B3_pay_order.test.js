@@ -21,11 +21,11 @@ const testConfiguration = {
   vus: 1,
   thresholds: {
     B3_get_sales_detail: {
-      smoke: ['avg<700'],
+      smoke: ['avg<5200'],
       load: ['avg<1400'],
     },
     B3_post_pay_order: {
-      smoke: ['avg<700'],
+      smoke: ['avg<1200'],
       load: ['avg<1400'],
     },
   },

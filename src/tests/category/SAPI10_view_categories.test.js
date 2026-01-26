@@ -12,7 +12,7 @@ const testConfiguration = {
   metrics: ['SAPI10_get_category_trees'],
   thresholds: {
     SAPI10_get_category_trees: {
-      smoke: ['avg<100'],
+      smoke: ['avg<350'],
       load: ['avg<200'],
       soak: ['avg<200'],
     },

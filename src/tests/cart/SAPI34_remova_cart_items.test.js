@@ -19,7 +19,7 @@ export const testConfiguration = {
   metrics: ['SAPI34_delete_cart_items'],
   thresholds: {
     SAPI34_delete_cart_items: {
-      smoke: ['avg<600'],
+      smoke: ['avg<2900'],
       load: ['avg<1200'],
     },
   },

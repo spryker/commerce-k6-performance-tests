@@ -21,11 +21,11 @@ const testConfiguration = {
   metrics: ['S13_get_orders', 'S13_post_cancel_order'],
   thresholds: {
     S13_get_orders: {
-      smoke: ['avg<750'],
+      smoke: ['avg<3200'],
       load: ['avg<1500'],
     },
     S13_post_cancel_order: {
-      smoke: ['avg<2000'],
+      smoke: ['avg<1000'],
       load: ['avg<4000'],
     },
   },

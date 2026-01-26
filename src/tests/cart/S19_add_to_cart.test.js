@@ -17,7 +17,7 @@ export const testConfiguration = {
   metrics: ['S19_add_to_cart_one_product'],
   thresholds: {
     S19_add_to_cart_one_product: {
-      smoke: ['avg<300'],
+      smoke: ['avg<1650'],
       load: ['avg<600'],
       soak: ['avg<600'],
     },

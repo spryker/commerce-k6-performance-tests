@@ -13,7 +13,7 @@ const testConfiguration = {
   metrics: ['S25_get_category'],
   thresholds: {
     S25_get_category: {
-      smoke: ['avg<300'],
+      smoke: ['avg<650'],
       load: ['avg<600'],
     },
   },

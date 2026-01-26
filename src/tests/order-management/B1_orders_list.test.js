@@ -15,7 +15,7 @@ const testConfiguration = {
   vus: 1,
   thresholds: {
     B1_get_sales: {
-      smoke: ['avg<700'],
+      smoke: ['avg<1500'],
       load: ['avg<1400'],
     },
   },

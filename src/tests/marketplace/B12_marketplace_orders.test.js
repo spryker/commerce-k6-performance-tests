@@ -23,7 +23,7 @@ const testConfiguration = {
   iterations: 10,
   thresholds: {
     B12_get_merchant_sales: {
-      smoke: ['avg<600'],
+      smoke: ['avg<550'],
       load: ['avg<1200'],
     },
   },

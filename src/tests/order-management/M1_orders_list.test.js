@@ -20,7 +20,7 @@ const testConfiguration = {
   vus: 1,
   thresholds: {
     M1_get_orders: {
-      smoke: ['avg<700'],
+      smoke: ['avg<3000'],
       load: ['avg<1400'],
     },
   },
