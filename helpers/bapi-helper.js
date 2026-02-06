@@ -28,7 +28,7 @@ export class BapiHelper {
                 'Accept': '*/*',
                 'Store': __ENV.STORE ? `${__ENV.STORE}` : 'DE'
             },
-            // responseType: 'text'
+            responseType: 'text'
         };
 
         const urlAccessTokens = `${this.urlHelper.getBackendApiBaseUrl()}/token`;
@@ -52,10 +52,11 @@ export class BapiHelper {
 
         const responseJson = JSON.parse(response.body);
 
+        console.log(response.body);
         this.refreshAt.setDate(this.refreshAt.getDate + responseJson.expires_in)
         
         this.defaultParams.headers.Authorization = `${responseJson.token_type} ${responseJson.access_token}`;
-        
+
         this.tokenCreationRequestsTotal.add(1)
 
         return this.defaultParams;

@@ -1,0 +1,149 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dashboardTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyBusinessUnitGuiEditCompanyBusinessUnitIdCompanyBusinessUnit1Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+customerAccessGuiTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+securityGuiLoginTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,3140.1666666666665,3127,3138,3156,3153.5,3154.75
+customerTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+productManagementTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+salesReclamationGuiTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyUnitAddressGuiListCompanyUnitAddressTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+merchantSalesReturnMerchantUserGuiTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyRoleGuiListCompanyRoleTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+merchantSalesOrderMerchantUserGuiTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyUserGuiEditCompanyUserIdCompanyUser1Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+productManagementEditIdProductAbstract221Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+categoryGuiListTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyUnitAddressGuiEditCompanyUnitAddressIdCompanyUnitAddress17Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+salesMatrixTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyBusinessUnitGuiListCompanyBusinessUnitTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+productManagementEditIdProductAbstractTargetIdTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+salesReturnGuiTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+refundTableTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+salesTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+productAttributeGuiAttributeTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+customerGroupTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+categoryGuiEditIdCategory15Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+customerEditIdCustomer1Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyGuiEditCompanyIndexIdCompany12Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyGuiListCompanyTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+productAttributeGuiAttributeEditId1Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyRoleGuiEditCompanyRoleIdCompanyRole1Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+companyUserGuiListCompanyUserTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+giftCardBalanceTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+productManagementEditIdProductAbstract222Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+availabilityGuiTrend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+productManagementEditIdProductAbstract220Trend,BIBA,TLS off,multiPageStats,multiPageStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1590.1753710500002,742.478046,1448.9949510000001,4969.205142,2046.8510553000003,2590.395383299997
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1686.9637427899997,719.653638,1577.5586055,5859.85678,2137.6198882,2584.7865082000003
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1324.2564690500003,819.803587,1268.2484865000001,2010.663781,1712.2984122,1885.4034867
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1160.39527946,778.408807,1105.7385205,1784.655171,1456.8485998,1610.6950193
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1324.2564690500003,819.803587,1268.2484865000001,2010.663781,1712.2984122,1885.4034867
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1160.39527946,778.408807,1105.7385205,1784.655171,1456.8485998,1610.6950193
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1324.2564690500003,819.803587,1268.2484865000001,2010.663781,1712.2984122,1885.4034867
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1160.39527946,778.408807,1105.7385205,1784.655171,1456.8485998,1610.6950193
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1324.2564690500003,819.803587,1268.2484865000001,2010.663781,1712.2984122,1885.4034867
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1160.39527946,778.408807,1105.7385205,1784.655171,1456.8485998,1610.6950193
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1324.2564690500003,819.803587,1268.2484865000001,2010.663781,1712.2984122,1885.4034867
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1160.39527946,778.408807,1105.7385205,1784.655171,1456.8485998,1610.6950193
+
+
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,0,0,0,0,0,0
+addToCartLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1461.8193738799994,846.539515,1327.3294380000002,4222.01868,1891.3661043000002,2172.9085277999993
+orderPlacementLoadingTimeTrend,BIBA,TLS off,checkoutGlueStats,checkoutGlueStats TLS off,6,10,10,20,5,1699.0602014799997,823.237379,1531.768015,5443.875892,2363.5974949000006,2991.4527011999976

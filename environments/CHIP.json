@@ -1,0 +1,17 @@
+{
+  "local": {
+    "storefrontUrl": "http://yves.eu.spryker.local",
+    "storefrontApiUrl": "http://glue.eu.spryker.local",
+    "backendApiUrl": "http://glue-backend.eu.spryker.local",
+    "backofficeUrl": "http://backoffice.eu.spryker.local",
+    "backofficeApiUrl": "http://backend-api.eu.spryker.local"
+  },
+  "testing": {
+    "storefrontUrl": "https://yves.eu.chip.cloud.spryker.toys",
+    "storefrontApiUrl": "https://glue.eu.chip.cloud.spryker.toys",
+    "backendApiUrl": "https://glue-backend.eu.chip.cloud.spryker.toys",
+    "backofficeUrl": "https://backoffice.eu.chip.cloud.spryker.toys",
+    "backofficeApiUrl": "https://backend-api.eu.chip.cloud.spryker.toys",
+    "merchantPortalUrl": "https://mp.eu.chip.cloud.spryker.toys"
+  }
+}
