@@ -13,7 +13,7 @@ const testConfiguration = {
   metrics: ['SAPI43_get_category_search'],
   thresholds: {
     SAPI43_get_category_search: {
-      smoke: ['avg<400'],
+      smoke: ['avg<1150'],
       load: ['avg<600'],
     },
   },

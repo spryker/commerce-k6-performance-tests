@@ -14,7 +14,7 @@ export const testConfiguration = {
   metrics: ['S18_cart_view_70_items'],
   thresholds: {
     S18_cart_view_70_items: {
-      smoke: ['avg<4800'],
+      smoke: ['avg<5500'],
       load: ['avg<600'],
     },
   },

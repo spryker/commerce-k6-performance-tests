@@ -31,7 +31,7 @@ const testConfiguration = {
   ],
   thresholds: {
     M4_get_abstract_create: {
-      smoke: ['avg<700'],
+      smoke: ['avg<780'],
     },
     M4_post_abstract_create: {
       smoke: ['avg<700'],

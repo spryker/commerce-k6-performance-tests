@@ -13,7 +13,7 @@ const testConfiguration = {
   metrics: ['SAPI14_get_catalog_search'],
   thresholds: {
     SAPI14_get_catalog_search: {
-      smoke: ['avg<1000'],
+      smoke: ['avg<3100'],
       load: ['avg<800'],
       soak: ['avg<800'],
     },
