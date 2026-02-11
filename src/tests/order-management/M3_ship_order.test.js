@@ -22,7 +22,7 @@ const testConfiguration = {
   vus: 1,
   thresholds: {
     M3_get_order_details: {
-      smoke: ['avg<5800'],
+      smoke: ['avg<5500'],
       load: ['avg<800'],
     },
     M3_post_ship_order: {

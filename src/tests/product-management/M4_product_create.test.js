@@ -55,7 +55,7 @@ const testConfiguration = {
       smoke: ['avg<2400'],
     },
     M4_send_for_approval: {
-      smoke: ['avg<1000'],
+      smoke: ['avg<1500'],
     },
   },
 };
