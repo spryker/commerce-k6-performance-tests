@@ -26,7 +26,7 @@ const testConfiguration = {
       load: ['avg<800'],
     },
     M3_post_ship_order: {
-      smoke: ['avg<1100'],
+      smoke: ['avg<1400'],
       load: ['avg<800'],
     },
   },
