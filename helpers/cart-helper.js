@@ -70,7 +70,8 @@ export class CartHelper {
     getParamsWithAuthorization(email = this.customerHelper.getDefaultCustomerEmail(), password = this.customerHelper.getDefaultCustomerPassword()) {
         const defaultParams = {
             headers: {
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
             },
         };
 

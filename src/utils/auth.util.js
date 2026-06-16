@@ -49,6 +49,7 @@ export default class AuthUtil {
       {
         headers: {
           Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
       }
     );

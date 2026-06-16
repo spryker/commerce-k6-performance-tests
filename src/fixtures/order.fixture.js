@@ -50,7 +50,11 @@ export class OrderFixture extends AbstractFixture {
       for (let j in quoteIds) {
         let checkoutResource = new CheckoutResource(quoteIds[j], customerEmail, bearerToken, this.forceMarketplace);
         let checkoutResponse = checkoutResource.checkout();
-        orderReferences.push(JSON.parse(checkoutResponse.body).data.attributes.orderReference.replace('DE--', ''));
+        const parsedBody = JSON.parse(checkoutResponse.body);
+        if (!parsedBody.data) {
+          throw new Error(`Checkout failed for quote ${quoteIds[j]}: ${checkoutResponse.body}`);
+        }
+        orderReferences.push(parsedBody.data.attributes.orderReference.replace('DE--', ''));
       }
 
       response.push({

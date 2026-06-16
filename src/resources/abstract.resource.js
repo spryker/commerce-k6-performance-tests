@@ -9,6 +9,7 @@ export default class AbstractResource {
     this.anonymousCustomerUniqueId = anonymousCustomerUniqueId;
     this.headers = {
       Accept: 'application/json',
+      'Content-Type': 'application/json',
       ...(this.bearerToken && { Authorization: this.bearerToken }),
       ...(this.anonymousCustomerUniqueId && { 'X-Anonymous-Customer-Unique-Id': this.anonymousCustomerUniqueId }),
     };
