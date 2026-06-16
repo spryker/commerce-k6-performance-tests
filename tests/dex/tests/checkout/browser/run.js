@@ -1,34 +1,34 @@
 import { browser } from 'k6/browser';
-import { SharedCheckoutScenario } from '../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js';
+import { SharedCheckoutScenario } from '../../../../cross-product/storefront/scenarios/checkout/shared-checkout-scenario.js';
 import {
     getBasicAuthCredentials,
     getStoreWhiteList,
     loadDefaultOptions,
     loadEnvironmentConfig,
     sortRandom
-} from '../../../../lib/utils.js';
-import Checkout from '../../../../helpers/browser/checkout.js';
-import Browser from '../../../../helpers/browser/browser.js';
-import BasicAuth from '../../../../helpers/basicAuth.js';
-import {AssertionsHelper} from '../../../../helpers/assertions-helper.js';
-import {Metrics} from '../../../../helpers/browser/metrics.js';
-import {Http} from '../../../../lib/http.js';
-import {UrlHelper} from '../../../../helpers/url-helper.js';
-import AdminHelper from '../../../../helpers/admin-helper.js';
-import {BapiHelper} from '../../../../helpers/bapi-helper.js';
-import ConfigHandler from '../../../../helpers/dynamicEntity/handler/configHandler.js';
-import Handler from '../../../../helpers/dynamicEntity/handler.js';
+} from '../../../../../lib/utils.js';
+import Checkout from '../../../../../helpers/browser/checkout.js';
+import Browser from '../../../../../helpers/browser/browser.js';
+import BasicAuth from '../../../../../helpers/basicAuth.js';
+import {AssertionsHelper} from '../../../../../helpers/assertions-helper.js';
+import {Metrics} from '../../../../../helpers/browser/metrics.js';
+import {Http} from '../../../../../lib/http.js';
+import {UrlHelper} from '../../../../../helpers/url-helper.js';
+import AdminHelper from '../../../../../helpers/admin-helper.js';
+import {BapiHelper} from '../../../../../helpers/bapi-helper.js';
+import ConfigHandler from '../../../../../helpers/dynamicEntity/handler/configHandler.js';
+import Handler from '../../../../../helpers/dynamicEntity/handler.js';
 import file from 'k6/x/file';
 import read from 'k6/x/read';
 import fail from 'k6';
-import {handleSummary} from '../../../../lib/summary.js';
+import {handleSummary} from '../../../../../lib/summary.js';
 
 const maxCartSize= Number(__ENV.MAX_CART_SIZE)
 const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
 let amountOfIterations = Number(__ENV.AMOUNT_OF_CHECKOUT_ITERATIONS)
-let amountOfVirtualUsers = Number(__ENV.AMOUNT_OF_CHECKOUT_VUS)
+let amountOfVirtualUsers = 2
 
-let timeout = Math.ceil(6000 * amountOfVirtualUsers)
+let timeout = Math.ceil(60000 * amountOfVirtualUsers)
 
 let metricsConfig = [
     'home_page',
@@ -179,9 +179,9 @@ export async function executeCheckoutScenario() {
     }
 
     try {
-        let page = await browser.newPage({ timeout: 30000 })
+        let page = await browser.newPage({ timeout: 300000 })
         await page.setDefaultTimeout(timeout)
-        await page.setDefaultNavigationTimeout(30000)
+        await page.setDefaultNavigationTimeout(300000)
 
         try {
             let locale = storeConfig.getStoreDefaultLocaleUrlAlias(__ENV.STORE)

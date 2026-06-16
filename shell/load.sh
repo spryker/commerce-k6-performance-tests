@@ -1,0 +1,80 @@
+#!/bin/bash
+
+#time AMOUNT_OF_ITERATIONS=5 AMOUNT_OF_BACKOFFICE_VUS=5 AMOUNT_OF_CHECKOUT_VUS=5  AMOUNT_OF_CHECKOUT_ITERATIONS=10 AMOUNT_OF_RAMP_VUS=10 RAMP_STAGE_DURATION=5 STORE=DE DATA_EXCHANGE_ENV=CHIP TLS_STATUS=on SUMMARY_TYPE=tls  ./shell/load.sh
+#time AMOUNT_OF_ITERATIONS=1 AMOUNT_OF_BACKOFFICE_VUS=1 AMOUNT_OF_CHECKOUT_VUS=1  AMOUNT_OF_CHECKOUT_ITERATIONS=1 AMOUNT_OF_RAMP_VUS=10 RAMP_STAGE_DURATION=2 STORE=DE DATA_EXCHANGE_ENV=CHIP TLS_STATUS=on SUMMARY_TYPE=tls  ./shell/load.sh
+#time OTEL_INSTRUMENTATION=1 OTEL_TRACES_SAMPLER_ARG=0.15 OTEL_BSP_MIN_SPAN_DURATION_THRESHOLD=20 OTEL_BSP_MIN_CRITICAL_SPAN_DURATION_THRESHOLD=10 AMOUNT_OF_ITERATIONS=10 AMOUNT_OF_BACKOFFICE_VUS=30 AMOUNT_OF_CHECKOUT_VUS=22  AMOUNT_OF_CHECKOUT_ITERATIONS=30 AMOUNT_OF_RAMP_VUS=30 RAMP_STAGE_DURATION=5 STORE=DE DATA_EXCHANGE_ENV=CHIP ./shell/otelset.sh
+#sudo sysctl -w net.ipv4.ip_local_port_range="1024 65535"
+#sudo sysctl -w net.ipv4.tcp_tw_reuse=1
+#sudo sysctl -w net.ipv4.tcp_timestamps=1
+#sudo ulimit -n 250000
+
+# Accept variables with default values if not provided
+OTEL_INSTRUMENTATION="${OTEL_INSTRUMENTATION:-0}"
+AMOUNT_OF_ITERATIONS="${AMOUNT_OF_ITERATIONS:-20}"
+AMOUNT_OF_BACKOFFICE_VUS="${AMOUNT_OF_BACKOFFICE_VUS:-18}"
+AMOUNT_OF_CHECKOUT_VUS="${AMOUNT_OF_CHECKOUT_VUS:-2}"
+AMOUNT_OF_RAMP_VUS="${AMOUNT_OF_RAMP_VUS:-18}"
+RAMP_STAGE_DURATION="${RAMP_STAGE_DURATION:-10}"
+DATA_EXCHANGE_ENV="${DATA_EXCHANGE_ENV:-PTL}"
+BASIC_AUTH_USERNAME="${BASIC_AUTH_USERNAME:-cloud}"
+BASIC_AUTH_PASSWORD="${BASIC_AUTH_PASSWORD:-cloud}"
+DATA_EXCHANGE_DEBUG="${DATA_EXCHANGE_DEBUG:-0}"
+SCREENSHOT_ACTIVE="${SCREENSHOT_ACTIVE:-0}"
+STORE="${STORE:-DE}"
+
+export N="${REPETITION:-1}"
+
+#only for report - does not affect instrumentation behavior
+OTEL_TRACES_SAMPLER_ARG="${OTEL_TRACES_SAMPLER_ARG:-0.3}"
+OTEL_BSP_MIN_SPAN_DURATION_THRESHOLD="${OTEL_BSP_MIN_SPAN_DURATION_THRESHOLD:-5}"
+OTEL_BSP_MIN_CRITICAL_SPAN_DURATION_THRESHOLD="${OTEL_BSP_MIN_CRITICAL_SPAN_DURATION_THRESHOLD:-0}"
+
+AMOUNT_OF_CHECKOUT_ITERATIONS=$AMOUNT_OF_CHECKOUT_ITERATIONS
+AMOUNT_OF_BACKOFFICE_ITERATIONS=$AMOUNT_OF_ITERATIONS
+
+# Record the start time
+#targetFolderName=$(date -u +"%Y-%m-%d")
+#pathToTargetFolder="/Users/eduardmelnytskyi/projects/platform/otel-performance/reports/${targetFolderName}"
+#
+#mkdir -p $pathToTargetFolder
+
+rm -f report.csv
+
+# Array to collect all index_command values per iteration
+index_commands=()
+
+# Environment variables for Docker commands
+commonEnvVars=(
+  "-e STORE=\"$STORE\""
+  "-e AMOUNT_OF_CHECKOUT_ITERATIONS=\"$AMOUNT_OF_CHECKOUT_ITERATIONS\""
+  "-e AMOUNT_OF_BACKOFFICE_ITERATIONS=\"$AMOUNT_OF_BACKOFFICE_ITERATIONS\""
+  "-e AMOUNT_OF_ITERATIONS=\"$AMOUNT_OF_ITERATIONS\""
+  "-e AMOUNT_OF_BACKOFFICE_VUS=\"$AMOUNT_OF_BACKOFFICE_VUS\""
+  "-e AMOUNT_OF_CHECKOUT_VUS=\"$AMOUNT_OF_CHECKOUT_VUS\""
+  "-e SCREENSHOT_ACTIVE=\"$SCREENSHOT_ACTIVE\""
+  "-e DATA_EXCHANGE_ENV=\"$DATA_EXCHANGE_ENV\""
+  "-e DATA_EXCHANGE_DEBUG=\"$DATA_EXCHANGE_DEBUG\""
+  "-e BASIC_AUTH_USERNAME=\"$BASIC_AUTH_USERNAME\""
+  "-e BASIC_AUTH_PASSWORD=\"$BASIC_AUTH_PASSWORD\""
+  "-e AMOUNT_OF_RAMP_VUS=\"$AMOUNT_OF_RAMP_VUS\""
+  "-e RAMP_STAGE_DURATION=\"$RAMP_STAGE_DURATION\""
+  "-e SUMMARY_TYPE=\"$SUMMARY_TYPE\""
+  "-e TLS_STATUS=\"$TLS_STATUS\""
+)
+GLOBAL_START=$(TZ="Europe/Berlin" date +"%Y-%m-%d %H:%M")
+#
+scenarios=("checkoutGlueStats")
+testPaths=("tests/dex/tests/catalog/search.js")
+. ./shell/test-executor.sh
+
+#scenarios=("checkoutGlueStats")
+#testPaths=("tests/dex/tests/checkout/yves/run.js")
+#. ./shell/test-executor.sh
+
+
+# Print all collected commands after the script finishes
+echo
+echo "========================================"
+echo "Collected index_command entries (in order):"
+echo "========================================"
+printf '%s\n' "${index_commands[@]}"

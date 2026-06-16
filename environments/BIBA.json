@@ -1,17 +1,17 @@
 {
   "local": {
-    "storefrontUrl": "https://yves.eu.biba.cloud.spryker.toys",
-    "storefrontApiUrl": "https://glue.eu.biba.cloud.spryker.toys",
-    "backendApiUrl": "https://glue-backend.eu.biba.cloud.spryker.toys",
-    "backofficeUrl": "https://backoffice.eu.biba.cloud.spryker.toys",
-    "backofficeApiUrl": "https://backend-api.eu.biba.cloud.spryker.toys"
+    "storefrontUrl": "https://yves.eu.ok-iota.cloud.spryker.toys",
+    "storefrontApiUrl": "https://glue.eu.ok-iota.cloud.spryker.toys",
+    "backendApiUrl": "https://glue-backend.eu.ok-iota.cloud.spryker.toys",
+    "backofficeUrl": "https://backoffice.eu.ok-iota.cloud.spryker.toys",
+    "backofficeApiUrl": "https://backend-api.eu.ok-iota.cloud.spryker.toys"
   },
   "testing": {
-    "storefrontUrl": "https://yves.eu.chip.cloud.spryker.toys",
-    "storefrontApiUrl": "https://glue.eu.chip.cloud.spryker.toys",
-    "backendApiUrl": "https://glue-backend.eu.chip.cloud.spryker.toys",
-    "backofficeUrl": "https://backoffice.eu.chip.cloud.spryker.toys",
-    "backofficeApiUrl": "https://backend-api.eu.chip.cloud.spryker.toys",
-    "merchantPortalUrl": "https://mp.eu.chip.cloud.spryker.toys"
+    "storefrontUrl": "https://yves.eu.ok-iota.cloud.spryker.toys",
+    "storefrontApiUrl": "https://glue.eu.ok-iota.cloud.spryker.toys",
+    "backendApiUrl": "https://glue-backend.eu.ok-iota.cloud.spryker.toys",
+    "backofficeUrl": "https://backoffice.eu.ok-iota.cloud.spryker.toys",
+    "backofficeApiUrl": "https://backend-api.eu.ok-iota.cloud.spryker.toys",
+    "merchantPortalUrl": "https://mp.eu.ok-iota.cloud.spryker.toys"
   }
 }

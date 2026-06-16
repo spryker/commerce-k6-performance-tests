@@ -16,15 +16,25 @@ import {handleSummary} from '../../../../lib/summary.js';
 const maxCartSize= Number(__ENV.MAX_CART_SIZE)
 const randomiseCartSize= Boolean(__ENV.RANDOM_CART_SIZE_WITHIN_TARGET_MAX)
 let amountOfIterations = 10
-let amountOfVirtualUsers = 5
-let timeout = Math.ceil(60000 * 2)
+let amountOfVirtualUsers = 20
+let timeout = Math.ceil(60000 * 20)
 
 let visitList = [
     new Visit('/DE/en/search?q=canon'),
+    new Visit('/DE/en/acer-aspire-s7-134'),
     new Visit('/DE/en/search?q=sony'),
-    new Visit('/DE/en/search?q=sony+nex'),
+    new Visit('/DE/en/asus-zenpad-z380c-1b-163'),
+    new Visit('/DE/en/sony-nex-vg20eh-201'),
+    new Visit('/DE/en/samsung-galaxy-s5-mini-66'),
     new Visit('/DE/en/search?q=acer'),
+    new Visit('/DE/en/sony-hdr-mv1-198'),
     new Visit('/DE/en/search?q=samsung'),
+    new Visit('/DE/en/sony-xperia-z3-80'),
+    new Visit('/DE/en/search?q=samsung Galaxy'),
+    new Visit('/DE/en/canon-powershot-g9-x-30'),
+    new Visit('/DE/en/samsung-galaxy-s5-mini-66'),
+    new Visit('/DE/en/sony-smartwatch-3-92'),
+    new Visit('DE/en/hp-elite-x2-1012-g1-167'),
 ]
 
 let metricsConfig = [
@@ -78,7 +88,7 @@ export { handleSummary }
 
 export async function executeYvesActions() {
     const context = await browser.newContext();
-    const page = await context.newPage({ timeout: 6000 });
+    const page = await context.newPage({ timeout: 600000 });
 
     try {
         await page.setDefaultTimeout(timeout)

@@ -9,8 +9,3 @@ settings.json
 /.pki
 /.cache
 /screenshot
-tests/dex/tests/data/products.json
-tests/dex/tests/data/stores.json
-shell/data-exchange.sh
-shell/load.sh
-test-executor.sh
