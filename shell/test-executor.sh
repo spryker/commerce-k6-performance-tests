@@ -11,12 +11,17 @@ do
     testPath="${testPaths[$idx]}"
 
     # Command to run k6 test --build
-    k6_command="docker-compose -f docker-compose.local.yml run --rm  ${commonEnvVars[@]} k6 run -e SUMMARY_SCENARIO_NAME=\"$scenario\" \"$testPath\""
+    cmd=(docker-compose -f docker-compose.local.yml run --rm)
+    for var in "${commonEnvVars[@]}"; do
+      cmd+=("$var")
+    done
+    cmd+=(k6 run -e "SUMMARY_SCENARIO_NAME=$scenario" "$testPath")
 
     # Print and run k6 test command
     echo "Running k6 test command:"
-    echo "$k6_command"
-    eval "$k6_command"
+    printf '%q ' "${cmd[@]}"
+    echo
+    "${cmd[@]}"
     [ ! -f final.csv ] && cp report.csv final.csv || (echo >> final.csv && tail -n +2 report.csv >> final.csv)
 
     # Pause before the next iteration
