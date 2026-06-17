@@ -11,7 +11,7 @@ do
     testPath="${testPaths[$idx]}"
 
     # Command to run k6 test --build
-    cmd=(docker-compose -f docker-compose.local.yml run --rm)
+    cmd=(docker compose -f docker-compose.local.yml run --rm --no-TTY)
     for var in "${commonEnvVars[@]}"; do
       cmd+=("$var")
     done
