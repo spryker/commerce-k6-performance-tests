@@ -1,7 +1,7 @@
 .idea/
 settings.json
 /node_modules/
-/.env
+#/.env
 /results/
 !/results/.gitkeep
 !/results/summaries/.gitkeep
