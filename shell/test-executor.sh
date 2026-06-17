@@ -21,7 +21,7 @@ do
     echo "Running k6 test command:"
     printf '%q ' "${cmd[@]}"
     echo
-    "${cmd[@]}"
+    env SHLVL=1 "${cmd[@]}"
     [ ! -f final.csv ] && cp report.csv final.csv || (echo >> final.csv && tail -n +2 report.csv >> final.csv)
 
     # Pause before the next iteration
