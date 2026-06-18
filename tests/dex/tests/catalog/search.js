@@ -74,6 +74,7 @@ let configurationArray = [
         iterations: amountOfIterations,
         vus: amountOfVirtualUsers,
         maxDuration: '1200m',
+        gracefulStop: '30s',
     }]
 ]
 
@@ -109,8 +110,9 @@ export async function executeYvesActions() {
 
         await checkout.browse(sortRandom(visitList));
     } catch (e) {
-        console.log('Failed to execute executeYvesActions', e.message)
+        console.log('Failed to execute executeYvesActions', e?.message ?? String(e))
     } finally {
-        page.close()
+        await page.close()
+        await context.close()
     }
 }
