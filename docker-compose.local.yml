@@ -17,6 +17,7 @@ services:
 #      # - spryker_b2c_marketplace_private
 #      # - spryker_b2b_private
 #      # - spryker_b2c_private
+    shm_size: '2gb'
     ulimits:
       nofile:
         soft: 65536
