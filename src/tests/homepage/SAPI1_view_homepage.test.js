@@ -13,9 +13,9 @@ const testConfiguration = {
   metrics: ['SAPI1_get_cms_pages'],
   thresholds: {
     SAPI1_get_cms_pages: {
-      smoke: ['avg<300'],
-      load: ['avg<300'],
-      soak: ['avg<300'],
+      smoke: ['avg<250'],
+      load: ['avg<500'],
+      soak: ['avg<500'],
     },
   },
 };

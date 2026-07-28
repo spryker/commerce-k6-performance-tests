@@ -14,9 +14,9 @@ const testConfiguration = {
   metrics: ['SAPI12_get_concrete_products_all_includes'],
   thresholds: {
     SAPI12_get_concrete_products_all_includes: {
-      smoke: ['avg<850'],
-      load: ['avg<1200'],
-      soak: ['avg<1200'],
+      smoke: ['avg<400'],
+      load: ['avg<800'],
+      soak: ['avg<800'],
     },
   },
 };

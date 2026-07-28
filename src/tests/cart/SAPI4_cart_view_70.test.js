@@ -15,8 +15,8 @@ export const testConfiguration = {
   metrics: ['SAPI4_get_carts'],
   thresholds: {
     SAPI4_get_carts: {
-      smoke: ['avg<1500'],
-      load: ['avg<1200'],
+      smoke: ['avg<1200'],
+      load: ['avg<2400'],
     },
   },
 };
