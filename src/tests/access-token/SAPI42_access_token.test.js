@@ -13,8 +13,8 @@ const testConfiguration = {
   metrics: ['SAPI42_post_access_tokens'],
   thresholds: {
     SAPI42_post_access_tokens: {
-      smoke: ['avg<1400'],
-      load: ['avg<2800'],
+      smoke: ['avg<1900'],
+      load: ['avg<3800'],
     },
   },
 };

@@ -2,7 +2,6 @@ import http from 'k6/http';
 import { check, sleep } from 'k6';
 import EnvironmentUtil from '../utils/environment.util';
 import { addErrorToCounter } from '../utils/metric.util';
-import { uuidv4 } from '../utils/uuid.util';
 
 export class AbstractFixture {
   static DEFAULT_LOCALE_ID = 66;
@@ -25,22 +24,6 @@ export class AbstractFixture {
 
   static shouldUseStaticFixtures() {
     return EnvironmentUtil.getUseStaticFixtures();
-  }
-
-  // Collision-proof email for haveCustomer. The CustomerBuilder default (`unique()->email()`)
-  // draws from Faker's small name/domain dictionary and is only unique within one request —
-  // on a long-lived env the accumulated customers eventually collide with a freshly generated
-  // email (spy_customer.email is unique), failing the whole dynamic-fixtures request.
-  generateUniqueCustomerEmail() {
-    return `k6-perf-${uuidv4()}@example.com`;
-  }
-
-  // Collision-proof internal name for haveProductLabel. The ProductLabelBuilder default
-  // (`unique()->sentence(2)`) draws two words from Faker's ~180-word lorem dictionary (~33k
-  // combinations) while spy_product_label.name is unique — accumulated labels on a long-lived
-  // env eventually collide, failing the whole dynamic-fixtures request.
-  generateUniqueProductLabelName() {
-    return `K6 Label ${uuidv4()}`;
   }
 
   runDynamicFixture(payload) {

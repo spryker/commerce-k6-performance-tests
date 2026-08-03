@@ -290,9 +290,7 @@ export class CustomerFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveCustomer',
         key: customerKey,
-        arguments: [
-          { locale: '#locale', password: AbstractFixture.DEFAULT_PASSWORD, email: this.generateUniqueCustomerEmail() },
-        ],
+        arguments: [{ locale: '#locale', password: AbstractFixture.DEFAULT_PASSWORD }],
       },
       {
         type: 'helper',

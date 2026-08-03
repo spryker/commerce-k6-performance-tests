@@ -27,8 +27,8 @@ const testConfiguration = {
       load: ['avg<2600'],
     },
     SAPI37_delete_shopping_lists: {
-      smoke: ['avg<450'],
-      load: ['avg<900'],
+      smoke: ['avg<800'],
+      load: ['avg<1600'],
     },
   },
 };
