@@ -25,7 +25,14 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 const fixture = new ProductFixture({ productCount: 1 });
 
 export function setup() {
-  return fixture.getData();
+  const data = fixture.getData();
+
+  // Warm-up: hit the measured endpoint once before the timed iterations. The first request
+  // after a redeploy pays one-off warm-up costs and would otherwise skew the smoke avg.
+  const warmupProduct = fixture.iterateData(data);
+  new ConcreteProductsResource().get(warmupProduct.sku);
+
+  return data;
 }
 
 export default function (data) {

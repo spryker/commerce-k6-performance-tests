@@ -1,5 +1,5 @@
 import http from 'k6/http';
-import { check } from 'k6';
+import { check, sleep } from 'k6';
 import EnvironmentUtil from '../utils/environment.util';
 import { addErrorToCounter } from '../utils/metric.util';
 import { uuidv4 } from '../utils/uuid.util';
@@ -44,34 +44,50 @@ export class AbstractFixture {
   }
 
   runDynamicFixture(payload) {
-    const res = http.post(http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`, payload, {
-      timeout: '300s',
-      headers: {
-        'Content-Type': 'application/vnd.api+json',
-      },
-    });
+    // The backend occasionally kills the FPM worker on a heavy fixture request (data creation plus
+    // queue processing inside one HTTP call) and responds 502; the condition clears within seconds,
+    // so retry with a pause before giving up.
+    const maxAttempts = 3;
+    const retryDelaySeconds = 20;
+    let lastError;
 
-    addErrorToCounter(check(res, { 'Fixtures generated successfully.': (r) => r.status === 201 }));
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      if (attempt > 1) {
+        console.warn(`Dynamic fixture attempt ${attempt - 1} failed, retrying in ${retryDelaySeconds}s: ${lastError}`);
+        sleep(retryDelaySeconds);
+      }
 
-    // Fail fast with a descriptive error instead of letting fixtures crash later
-    // on `JSON.parse(response.body).data` with "Cannot read property 'filter' of undefined".
-    // Covers both failure shapes: a non-201 status, and a JSON body without a `data` key
-    // (e.g. a JSON:API error envelope) — the actual status and body end up in the k6 logs.
-    let responseData;
-    try {
-      responseData = JSON.parse(res.body).data;
-    } catch (e) {
-      responseData = undefined;
-    }
+      const res = http.post(http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`, payload, {
+        timeout: '300s',
+        headers: {
+          'Content-Type': 'application/vnd.api+json',
+        },
+      });
 
-    if (res.status !== 201 || !responseData) {
-      throw new Error(
+      // Guards against the fixture crashing later on `JSON.parse(response.body).data` with
+      // "Cannot read property 'filter' of undefined". Covers both failure shapes: a non-201
+      // status, and a JSON body without a `data` key (e.g. a JSON:API error envelope).
+      let responseData;
+      try {
+        responseData = JSON.parse(res.body).data;
+      } catch (e) {
+        responseData = undefined;
+      }
+
+      if (res.status === 201 && responseData) {
+        addErrorToCounter(check(res, { 'Fixtures generated successfully.': () => true }));
+
+        return res;
+      }
+
+      lastError =
         `Dynamic fixture request failed: HTTP ${res.status} from ${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures. ` +
-          `Body: ${String(res.body).slice(0, 500)}`
-      );
+        `Body: ${String(res.body).slice(0, 500)}`;
     }
 
-    return res;
+    addErrorToCounter(check(null, { 'Fixtures generated successfully.': () => false }));
+
+    throw new Error(`${lastError} (after ${maxAttempts} attempts)`);
   }
 
   getSprykerMerchantReference() {
