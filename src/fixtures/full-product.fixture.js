@@ -270,6 +270,7 @@ export class FullProductFixture extends AbstractFixture {
           arguments: [
             {
               storeRelation: '#storeRelation',
+              name: this.generateUniqueProductLabelName(),
             },
           ],
         },
@@ -295,6 +296,7 @@ export class FullProductFixture extends AbstractFixture {
       arguments: [
         {
           locale: '#locale',
+          email: this.generateUniqueCustomerEmail(),
         },
       ],
     };

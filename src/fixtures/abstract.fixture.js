@@ -2,6 +2,7 @@ import http from 'k6/http';
 import { check } from 'k6';
 import EnvironmentUtil from '../utils/environment.util';
 import { addErrorToCounter } from '../utils/metric.util';
+import { uuidv4 } from '../utils/uuid.util';
 
 export class AbstractFixture {
   static DEFAULT_LOCALE_ID = 66;
@@ -26,6 +27,22 @@ export class AbstractFixture {
     return EnvironmentUtil.getUseStaticFixtures();
   }
 
+  // Collision-proof email for haveCustomer. The CustomerBuilder default (`unique()->email()`)
+  // draws from Faker's small name/domain dictionary and is only unique within one request —
+  // on a long-lived env the accumulated customers eventually collide with a freshly generated
+  // email (spy_customer.email is unique), failing the whole dynamic-fixtures request.
+  generateUniqueCustomerEmail() {
+    return `k6-perf-${uuidv4()}@example.com`;
+  }
+
+  // Collision-proof internal name for haveProductLabel. The ProductLabelBuilder default
+  // (`unique()->sentence(2)`) draws two words from Faker's ~180-word lorem dictionary (~33k
+  // combinations) while spy_product_label.name is unique — accumulated labels on a long-lived
+  // env eventually collide, failing the whole dynamic-fixtures request.
+  generateUniqueProductLabelName() {
+    return `K6 Label ${uuidv4()}`;
+  }
+
   runDynamicFixture(payload) {
     const res = http.post(http.url`${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures`, payload, {
       timeout: '300s',
@@ -35,6 +52,24 @@ export class AbstractFixture {
     });
 
     addErrorToCounter(check(res, { 'Fixtures generated successfully.': (r) => r.status === 201 }));
+
+    // Fail fast with a descriptive error instead of letting fixtures crash later
+    // on `JSON.parse(response.body).data` with "Cannot read property 'filter' of undefined".
+    // Covers both failure shapes: a non-201 status, and a JSON body without a `data` key
+    // (e.g. a JSON:API error envelope) — the actual status and body end up in the k6 logs.
+    let responseData;
+    try {
+      responseData = JSON.parse(res.body).data;
+    } catch (e) {
+      responseData = undefined;
+    }
+
+    if (res.status !== 201 || !responseData) {
+      throw new Error(
+        `Dynamic fixture request failed: HTTP ${res.status} from ${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures. ` +
+          `Body: ${String(res.body).slice(0, 500)}`
+      );
+    }
 
     return res;
   }

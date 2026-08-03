@@ -302,7 +302,9 @@ export class CartFixture extends AbstractFixture {
         type: 'helper',
         name: 'haveCustomer',
         key: customerKey,
-        arguments: [{ locale: '#locale', password: AbstractFixture.DEFAULT_PASSWORD }],
+        arguments: [
+          { locale: '#locale', password: AbstractFixture.DEFAULT_PASSWORD, email: this.generateUniqueCustomerEmail() },
+        ],
       },
       {
         type: 'helper',

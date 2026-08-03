@@ -66,6 +66,7 @@ export class CategoryFixture extends AbstractFixture {
         arguments: [
           {
             storeRelation: '#storeRelation',
+            name: this.generateUniqueProductLabelName(),
           },
           {
             name: AbstractFixture.DEFAULT_PRODUCT_LABEL,
