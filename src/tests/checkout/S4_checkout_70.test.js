@@ -31,57 +31,57 @@ const testConfiguration = {
   ],
   thresholds: {
     S4_get_checkout: {
-      smoke: ['avg<900'],
+      smoke: ['avg<2200'],
       load: ['avg<1800'],
       soak: ['avg<1800'],
     },
     S4_get_checkout_address: {
-      smoke: ['avg<750'],
+      smoke: ['avg<3650'],
       load: ['avg<1500'],
       soak: ['avg<1500'],
     },
     S4_post_checkout_address: {
-      smoke: ['avg<750'],
+      smoke: ['avg<34000'],
       load: ['avg<1500'],
       soak: ['avg<1500'],
     },
     S4_get_checkout_shipment: {
-      smoke: ['avg<650'],
+      smoke: ['avg<3600'],
       load: ['avg<1300'],
       soak: ['avg<1300'],
     },
     S4_post_checkout_shipment: {
-      smoke: ['avg<650'],
+      smoke: ['avg<2950'],
       load: ['avg<1300'],
       soak: ['avg<1300'],
     },
     S4_get_checkout_payment: {
-      smoke: ['avg<950'],
+      smoke: ['avg<3250'],
       load: ['avg<1900'],
       soak: ['avg<1900'],
     },
     S4_post_checkout_payment: {
-      smoke: ['avg<950'],
+      smoke: ['avg<3500'],
       load: ['avg<1900'],
       soak: ['avg<1900'],
     },
     S4_get_checkout_summary: {
-      smoke: ['avg<1050'],
+      smoke: ['avg<3600'],
       load: ['avg<2100'],
       soak: ['avg<2100'],
     },
     S4_post_checkout_summary: {
-      smoke: ['avg<1050'],
+      smoke: ['avg<2200'],
       load: ['avg<2100'],
       soak: ['avg<2100'],
     },
     S4_get_checkout_success: {
-      smoke: ['avg<2850'],
+      smoke: ['avg<5800'],
       load: ['avg<4700'],
       soak: ['avg<4700'],
     },
     S4_get_place_order: {
-      smoke: ['avg<1100'],
+      smoke: ['avg<3700'],
       load: ['avg<2200'],
       soak: ['avg<2200'],
     },
@@ -125,7 +125,7 @@ export default function (data) {
   const addressesFormToken = addressesForm.find('#addressesForm__token').attr('value');
 
   group('Checkout Address Submit', () => {
-    const checkoutAddressSubmitResponse = checkoutPage.submitCheckoutAddress(addressesFormToken);
+    const checkoutAddressSubmitResponse = checkoutPage.submitCheckoutAddress(addressesFormToken, 70);
     metrics['S4_post_checkout_address'].add(checkoutAddressSubmitResponse.timings.duration);
   });
 

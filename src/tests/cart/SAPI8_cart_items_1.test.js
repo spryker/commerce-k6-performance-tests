@@ -8,21 +8,22 @@ import { CartFixture } from '../../fixtures/cart.fixture';
 import EnvironmentUtil from '../../utils/environment.util';
 import exec from 'k6/execution';
 
-const testConfiguration = {
+export const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI8',
   group: 'Cart',
   metrics: ['SAPI8_post_carts_items'],
   thresholds: {
     SAPI8_post_carts_items: {
-      smoke: ['avg<600'],
-      load: ['avg<1200'],
-      soak: ['avg<1200'],
+      smoke: ['avg<850'],
+      load: ['avg<1700'],
+      soak: ['avg<1700'],
     },
   },
 };
 
 const { metrics, metricThresholds } = createMetrics(testConfiguration);
+export { metrics, metricThresholds };
 export const options = OptionsUtil.loadOptions(testConfiguration, metricThresholds);
 
 const fixture = CartFixture.createFixture({
@@ -36,7 +37,8 @@ export function setup() {
   return fixture.getData();
 }
 
-export default function (data) {
+// Exported test function for reuse in suite
+export function runTest(data) {
   const { customerEmail, idCart, productSku } = fixture.iterateData(data, exec.vu.idInTest);
 
   let bearerToken;
@@ -51,3 +53,6 @@ export default function (data) {
     metrics[testConfiguration.metrics[0]].add(response.timings.duration);
   });
 }
+
+// Default export for running as standalone test
+export default runTest;

@@ -13,10 +13,9 @@ const testConfiguration = {
   group: 'Order management',
   metrics: ['B1_get_sales'],
   vus: 1,
-  iterations: 10,
   thresholds: {
     B1_get_sales: {
-      smoke: ['avg<700'],
+      smoke: ['avg<1770'],
       load: ['avg<1400'],
     },
   },

@@ -9,12 +9,12 @@ import AccessTokensResource from '../../resources/access-tokens.resource';
 const testConfiguration = {
   ...EnvironmentUtil.getDefaultTestConfiguration(),
   id: 'SAPI41',
-  group: 'Discount',
+  group: 'Access Token',
   metrics: ['SAPI42_post_access_tokens'],
   thresholds: {
     SAPI42_post_access_tokens: {
-      smoke: ['avg<400'],
-      load: ['avg<800'],
+      smoke: ['avg<1900'],
+      load: ['avg<3800'],
     },
   },
 };

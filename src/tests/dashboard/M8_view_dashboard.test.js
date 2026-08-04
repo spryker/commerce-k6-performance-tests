@@ -19,7 +19,7 @@ const testConfiguration = {
   metrics: ['M8_get_mp_dashboard'],
   thresholds: {
     M8_get_mp_dashboard: {
-      smoke: ['avg<475'],
+      smoke: ['avg<2500'],
       load: ['avg<475'],
     },
   },

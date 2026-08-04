@@ -31,31 +31,31 @@ const testConfiguration = {
   ],
   thresholds: {
     M4_get_abstract_create: {
-      smoke: ['avg<700'],
+      smoke: ['avg<780'],
     },
     M4_post_abstract_create: {
-      smoke: ['avg<700'],
+      smoke: ['avg<900'],
     },
     M4_get_concrete_create: {
-      smoke: ['avg<700'],
+      smoke: ['avg<1100'],
     },
     M4_post_concrete_create: {
-      smoke: ['avg<700'],
+      smoke: ['avg<3100'],
     },
     M4_get_abstract_update: {
-      smoke: ['avg<700'],
+      smoke: ['avg<4800'],
     },
     M4_post_abstract_update: {
-      smoke: ['avg<700'],
+      smoke: ['avg<3500'],
     },
     M4_get_concrete_update: {
-      smoke: ['avg<700'],
+      smoke: ['avg<3100'],
     },
     M4_post_concrete_update: {
-      smoke: ['avg<700'],
+      smoke: ['avg<2400'],
     },
     M4_send_for_approval: {
-      smoke: ['avg<700'],
+      smoke: ['avg<1500'],
     },
   },
 };

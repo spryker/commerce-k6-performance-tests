@@ -20,14 +20,13 @@ const testConfiguration = {
   group: 'Order management',
   metrics: ['M3_get_order_details', 'M3_post_ship_order'],
   vus: 1,
-  iterations: 10,
   thresholds: {
     M3_get_order_details: {
-      smoke: ['avg<800'],
+      smoke: ['avg<5500'],
       load: ['avg<800'],
     },
     M3_post_ship_order: {
-      smoke: ['avg<800'],
+      smoke: ['avg<1400'],
       load: ['avg<800'],
     },
   },

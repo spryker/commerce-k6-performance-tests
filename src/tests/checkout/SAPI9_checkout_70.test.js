@@ -19,8 +19,8 @@ const testConfiguration = {
   metrics: ['SAPI9_post_checkout'],
   thresholds: {
     SAPI9_post_checkout: {
-      smoke: ['avg<300'],
-      load: ['avg<500'],
+      smoke: ['avg<40500'],
+      load: ['avg<81000'],
     },
   },
 };

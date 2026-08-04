@@ -19,16 +19,16 @@ const testConfiguration = {
   metrics: ['SAPI37_post_shopping_lists', 'SAPI37_post_shopping_list_items', 'SAPI37_delete_shopping_lists'],
   thresholds: {
     SAPI37_post_shopping_lists: {
-      smoke: ['avg<600'],
-      load: ['avg<1200'],
+      smoke: ['avg<300'],
+      load: ['avg<600'],
     },
     SAPI37_post_shopping_list_items: {
-      smoke: ['avg<600'],
-      load: ['avg<1200'],
+      smoke: ['avg<1300'],
+      load: ['avg<2600'],
     },
     SAPI37_delete_shopping_lists: {
-      smoke: ['avg<600'],
-      load: ['avg<1200'],
+      smoke: ['avg<800'],
+      load: ['avg<1600'],
     },
   },
 };

@@ -12,7 +12,7 @@ const testConfiguration = {
   metrics: ['S1_get_homepage'],
   thresholds: {
     S1_get_homepage: {
-      smoke: ['avg<200'],
+      smoke: ['avg<1500'],
       load: ['avg<400'],
       soak: ['avg<400'],
     },

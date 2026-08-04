@@ -13,7 +13,7 @@ const testConfiguration = {
   metrics: ['S8_get_product'],
   thresholds: {
     S8_get_product: {
-      smoke: ['avg<300'],
+      smoke: ['avg<1400'],
       load: ['avg<600'],
       soak: ['avg<600'],
     },

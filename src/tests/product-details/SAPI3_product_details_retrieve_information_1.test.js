@@ -13,8 +13,8 @@ const testConfiguration = {
   metrics: ['SAPI3_get_concrete_products'],
   thresholds: {
     SAPI3_get_concrete_products: {
-      smoke: ['avg<400'],
-      load: ['avg<800'],
+      smoke: ['avg<150'],
+      load: ['avg<300'],
     },
   },
 };

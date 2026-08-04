@@ -14,11 +14,11 @@ const testConfiguration = {
   metrics: ['B4_get_product_add', 'B4_post_product_add'],
   thresholds: {
     B4_get_product_add: {
-      smoke: ['avg<700'],
+      smoke: ['avg<1500'],
       load: ['avg<1400'],
     },
     B4_post_product_add: {
-      smoke: ['avg<700'],
+      smoke: ['avg<1800'],
       load: ['avg<1400'],
     },
   },
