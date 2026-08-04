@@ -1,5 +1,5 @@
 // tags: smoke, load, soak, access-token, dashboard, homepage, marketplace, shopping-list, SAPI
-// Combined API test suite: All SAPI tests from access-token, dashboard, homepage, marketplace, and shopping-list folders
+// Combined API test suite: all SAPI tests from access-token, dashboard, homepage, marketplace, shopping-list folders
 import { group } from 'k6';
 import {
   options as sapi42Options,

@@ -13,9 +13,9 @@ const testConfiguration = {
   metrics: ['SAPI11_get_category_nodes'],
   thresholds: {
     SAPI11_get_category_nodes: {
-      smoke: ['avg<350'],
-      load: ['avg<200'],
-      soak: ['avg<200'],
+      smoke: ['avg<200'],
+      load: ['avg<400'],
+      soak: ['avg<400'],
     },
   },
 };

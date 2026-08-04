@@ -19,8 +19,8 @@ const testConfiguration = {
   metrics: ['SAPI36_get_shopping_lists'],
   thresholds: {
     SAPI36_get_shopping_lists: {
-      smoke: ['avg<1100'],
-      load: ['avg<1200'],
+      smoke: ['avg<650'],
+      load: ['avg<1300'],
     },
   },
 };

@@ -18,7 +18,6 @@ export class ShoppingListFixture extends AbstractFixture {
 
     const response = this.runDynamicFixture(this._getCustomersWithShoppingListsPayload());
 
-
     const responseData = JSON.parse(response.body).data;
     const customers = responseData.filter((item) => /^customer\d+$/.test(item.attributes.key));
 

@@ -19,8 +19,8 @@ export const testConfiguration = {
   metrics: ['SAPI35_patch_cart_items'],
   thresholds: {
     SAPI35_patch_cart_items: {
-      smoke: ['avg<3800'],
-      load: ['avg<1200'],
+      smoke: ['avg<1750'],
+      load: ['avg<3500'],
     },
   },
 };

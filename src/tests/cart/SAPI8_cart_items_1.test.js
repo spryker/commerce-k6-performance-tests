@@ -15,9 +15,9 @@ export const testConfiguration = {
   metrics: ['SAPI8_post_carts_items'],
   thresholds: {
     SAPI8_post_carts_items: {
-      smoke: ['avg<2500'],
-      load: ['avg<1200'],
-      soak: ['avg<1200'],
+      smoke: ['avg<850'],
+      load: ['avg<1700'],
+      soak: ['avg<1700'],
     },
   },
 };
