@@ -30,6 +30,11 @@ export class AbstractFixture {
     // The backend occasionally kills the FPM worker on a heavy fixture request (data creation plus
     // queue processing inside one HTTP call) and responds 502; the condition clears within seconds,
     // so retry with a pause before giving up.
+    //
+    // 504 (gateway timeout) is deliberately NOT retried: the timed-out request keeps running
+    // server-side, so a retry piles another heavy request on top (self-amplifying congestion) and
+    // each attempt burns ~80s of the k6 setupTimeout budget. Failing fast keeps the error readable
+    // and the env recoverable.
     const maxAttempts = 3;
     const retryDelaySeconds = 20;
     let lastError;
@@ -66,11 +71,15 @@ export class AbstractFixture {
       lastError =
         `Dynamic fixture request failed: HTTP ${res.status} from ${EnvironmentUtil.getBackendApiUrl()}/dynamic-fixtures. ` +
         `Body: ${String(res.body).slice(0, 500)}`;
+
+      if (res.status === 504) {
+        break;
+      }
     }
 
     addErrorToCounter(check(null, { 'Fixtures generated successfully.': () => false }));
 
-    throw new Error(`${lastError} (after ${maxAttempts} attempts)`);
+    throw new Error(lastError);
   }
 
   getSprykerMerchantReference() {

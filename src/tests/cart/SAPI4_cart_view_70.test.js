@@ -34,7 +34,14 @@ const fixture = new CartFixture({
 export function setup() {
   CartFixture.runConsoleCommands(['vendor/bin/console queue:worker:start --stop-when-empty']);
 
-  return fixture.getData();
+  const data = fixture.getData();
+
+  // Warm-up: hit the measured endpoint once before the timed iterations. The first request
+  // after a redeploy pays one-off warm-up costs and would otherwise skew the smoke avg.
+  const { customerEmail } = fixture.iterateData(data, 1, 0);
+  new CartsResource(AuthUtil.getInstance().getBearerToken(customerEmail)).all();
+
+  return data;
 }
 
 // Exported test function for reuse in suite
