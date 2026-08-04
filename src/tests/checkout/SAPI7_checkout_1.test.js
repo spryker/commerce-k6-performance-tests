@@ -27,8 +27,7 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 
 const fixtureConfig = {
   customerCount: EnvironmentUtil.getTestType() === 'soak' ? EnvironmentUtil.getRampVus() : testConfiguration.vus,
-  // One spare cart per customer for the setup warm-up checkout (iterations use carts 0..n-1).
-  cartCount: EnvironmentUtil.getTestType() === 'soak' ? 400 : testConfiguration.iterations + 1,
+  cartCount: EnvironmentUtil.getTestType() === 'soak' ? 400 : testConfiguration.iterations,
   itemCount: 1,
   defaultItemPrice: 10000,
 };
@@ -36,18 +35,7 @@ const fixtureConfig = {
 let fixture = new CheckoutFixture(fixtureConfig);
 
 export function setup() {
-  const data = fixture.getData();
-
-  // Warm-up: place one order before the timed iterations. The first checkout after a redeploy
-  // pays one-off warm-up costs and would otherwise skew the smoke avg.
-  if (EnvironmentUtil.getTestType() !== 'soak') {
-    const { customerEmail, quoteIds } = data[0];
-    const warmupCartId = quoteIds[quoteIds.length - 1];
-    const bearerToken = AuthUtil.getInstance().getBearerToken(customerEmail);
-    new CheckoutResource(warmupCartId, customerEmail, bearerToken).checkout();
-  }
-
-  return data;
+  return fixture.getData();
 }
 
 export default function (data) {

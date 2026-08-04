@@ -28,14 +28,7 @@ const fixture = FullProductFixture.createFixture({
 });
 
 export function setup() {
-  const data = fixture.getData();
-
-  // Warm-up: hit the measured endpoint once before the timed iterations. The first request
-  // after a redeploy pays one-off warm-up costs and would otherwise skew the smoke avg.
-  const warmupProduct = fixture.iterateData(data);
-  new CatalogSearchResource().get({ q: warmupProduct.sku });
-
-  return data;
+  return fixture.getData();
 }
 
 export default function (data) {

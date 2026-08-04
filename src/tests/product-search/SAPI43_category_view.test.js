@@ -28,17 +28,7 @@ const fixture = new CategoryFixture({
 });
 
 export function setup() {
-  const data = fixture.getData();
-
-  // Warm-up: hit the measured endpoint once before the timed iterations. The first request
-  // after a redeploy pays one-off warm-up costs and would otherwise skew the smoke avg.
-  const warmupCategory = fixture.iterateData(data);
-  new CatalogSearchResource().get({
-    category: warmupCategory.category_node.id_category_node,
-    ipp: 36,
-  });
-
-  return data;
+  return fixture.getData();
 }
 
 export function teardown() {

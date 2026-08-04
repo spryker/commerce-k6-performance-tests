@@ -35,27 +35,12 @@ export const options = OptionsUtil.loadOptions(testConfiguration, metricThreshol
 
 const fixture = new CheckoutFixture({
   customerCount: testConfiguration.vus,
-  // One spare cart per customer for the setup warm-up order (iterations use carts 0..n-1).
-  cartCount: testConfiguration.iterations + 1,
+  cartCount: testConfiguration.iterations,
   itemCount: 70,
 });
 
 export function setup() {
-  const data = fixture.getData();
-
-  // Warm-up: place one order and hit both measured endpoints once before the timed iterations.
-  // The first request after a redeploy pays one-off warm-up costs and would otherwise skew the smoke avg.
-  const { customerEmail, quoteIds } = data[0];
-  const warmupCartId = quoteIds[quoteIds.length - 1];
-  const bearerToken = AuthUtil.getInstance().getBearerToken(customerEmail);
-  new CheckoutResource(warmupCartId, customerEmail, bearerToken).checkout();
-
-  const ordersResource = new OrdersResource(bearerToken);
-  const ordersResponse = ordersResource.all();
-  const warmupOrderId = JSON.parse(ordersResponse.body).data[0].id;
-  ordersResource.get(warmupOrderId, ['order-shipments', 'concrete-products', 'abstract-products']);
-
-  return data;
+  return fixture.getData();
 }
 
 export default function (data) {

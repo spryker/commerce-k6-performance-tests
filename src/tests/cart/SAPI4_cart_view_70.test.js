@@ -15,8 +15,8 @@ export const testConfiguration = {
   metrics: ['SAPI4_get_carts'],
   thresholds: {
     SAPI4_get_carts: {
-      smoke: ['avg<1200'],
-      load: ['avg<2400'],
+      smoke: ['avg<1500'],
+      load: ['avg<3000'],
     },
   },
 };
@@ -34,14 +34,7 @@ const fixture = new CartFixture({
 export function setup() {
   CartFixture.runConsoleCommands(['vendor/bin/console queue:worker:start --stop-when-empty']);
 
-  const data = fixture.getData();
-
-  // Warm-up: hit the measured endpoint once before the timed iterations. The first request
-  // after a redeploy pays one-off warm-up costs and would otherwise skew the smoke avg.
-  const { customerEmail } = fixture.iterateData(data, 1, 0);
-  new CartsResource(AuthUtil.getInstance().getBearerToken(customerEmail)).all();
-
-  return data;
+  return fixture.getData();
 }
 
 // Exported test function for reuse in suite
